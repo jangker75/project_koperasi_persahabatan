@@ -14,7 +14,10 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- custom Styles & Script -->
-    @vite(['resources/sass/app-admin.scss', 'resources/js/app.js'])
+    @vite([
+        'resources/sass/app-admin.scss', 
+        'resources/js/app.js'
+        ])
 </head>
 <body>
     <div id="app">
