@@ -46,7 +46,7 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
         Fortify::loginView(function () {
-            return view('pages.login');
+            return view('admin.pages.auth.login');
         });
         Fortify::registerView(function () {
             return view('pages.register');

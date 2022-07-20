@@ -1,0 +1,1 @@
+<li><a href="{{ $link }}" class="slide-item">{{ $title }}</a></li>
