@@ -21,4 +21,16 @@ class Employee extends Model
     public function User(){
       return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function Departement(){
+      return $this->belongsTo(Departement::class, 'departement_id');
+    }
+    
+    public function Position(){
+      return $this->belongsTo(Position::class, 'position_id');
+    }
+
+    public function StatusEmployee(){
+      return $this->belongsTo(MasterDataStatus::class, 'status_employee_id');
+    }
 }
