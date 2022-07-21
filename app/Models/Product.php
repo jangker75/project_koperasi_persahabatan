@@ -14,5 +14,7 @@ class Product extends Model
       'name', 'slug', 'sku', 'upc', 'description', 'unit_measurement', 'cover', 'brand_id'
     ];
 
-
+    public function Categories(){
+      return $this->belongsToMany(Category::class, 'category_has_product','product_id','category_id');
+    }
 }
