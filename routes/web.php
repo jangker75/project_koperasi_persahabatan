@@ -14,5 +14,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('admin.pages.auth.login');
+});
+Route::group([
+    'prefix' => 'admin',
+], function(){
+    Route::get('/', function(){
+        return redirect('admin/dashboard');
+    });
+    Route::get('dashboard', function(){
+        return view('admin.pages.dashboard.index');
+    });
+    Route::get('pinjaman', function(){
+        return view('admin.pages.dashboard.index');
+    });
 });
