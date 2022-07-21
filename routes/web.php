@@ -24,8 +24,8 @@ Route::group([
     });
     Route::get('dashboard', function(){
         return view('admin.pages.dashboard.index');
-    });
+    })->name('dashboard');
     Route::get('pinjaman', function(){
         return view('admin.pages.dashboard.index');
-    });
+    })->name('pinjaman');
 });
