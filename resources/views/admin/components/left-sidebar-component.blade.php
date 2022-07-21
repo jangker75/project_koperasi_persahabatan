@@ -21,22 +21,25 @@
                 </svg>
             </div>
             <ul class="side-menu">
-                <li class="sub-category">
-                    <h3>Main</h3>
-                </li>
-                <x-basic-sidebar>
-                    <x-slot name="link">{{ url('admin/dashboard') }}</x-slot>
-                    <x-slot name="icon"><i class="side-menu__icon fe fe-home"></i></x-slot>
-                    <x-slot name="text">Dashboard</x-slot>
-                </x-basic-sidebar>
-                <li class="sub-category">
-                    <h3>UsiPA</h3>
-                </li>
-                <x-basic-sidebar>
-                    <x-slot name="link">{{ url('admin/pinjaman') }}</x-slot>
-                    <x-slot name="icon"><i class="side-menu__icon fe fe-home"></i></x-slot>
-                    <x-slot name="text">Pengajuan Pinjaman</x-slot>
-                </x-basic-sidebar>
+                @foreach ($sideMenus as $menu)
+                    @if(isset($menu['isseparator']))
+                        <li class="sub-category">
+                            <h3>{{ $menu['text'] }}</h3>
+                        </li>
+                    @elseif (isset($menu['multimenu']) && $menu['multimenu'])
+                        <x-multi-sidebar text="{{ $menu['text'] }}" icon="{{ $menu['icon'] }}">
+                            @foreach ($menu['submenus'] as $submenu)
+                                <x-sub-multi-sidebar link="{{ $submenu['link'] }}" text="{{ $submenu['text'] }}"></x-sub-multi-sidebar>
+                            @endforeach
+                        </x-multi-sidebar>
+                    @else
+                        <x-basic-sidebar>
+                            <x-slot name="link">{{ $menu['link'] }}</x-slot>
+                            <x-slot name="icon"><i class="side-menu__icon {{ $menu['icon'] }}"></i></x-slot>
+                            <x-slot name="text">{{ $menu['text'] }}</x-slot>
+                        </x-basic-sidebar>
+                    @endif
+                @endforeach
 
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
