@@ -22,14 +22,15 @@
             </div>
             <ul class="side-menu">
                 @foreach ($sideMenus as $menu)
-                    @if(isset($menu['isseparator']))
+                    @if (isset($menu['isseparator']))
                         <li class="sub-category">
                             <h3>{{ $menu['text'] }}</h3>
                         </li>
                     @elseif (isset($menu['multimenu']) && $menu['multimenu'])
                         <x-multi-sidebar text="{{ $menu['text'] }}" icon="{{ $menu['icon'] }}">
                             @foreach ($menu['submenus'] as $submenu)
-                                <x-sub-multi-sidebar link="{{ $submenu['link'] }}" text="{{ $submenu['text'] }}"></x-sub-multi-sidebar>
+                                <x-sub-multi-sidebar link="{{ $submenu['link'] }}" text="{{ $submenu['text'] }}">
+                                </x-sub-multi-sidebar>
                             @endforeach
                         </x-multi-sidebar>
                     @else

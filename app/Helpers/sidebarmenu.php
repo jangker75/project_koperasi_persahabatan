@@ -30,6 +30,10 @@ function listSideMenu()
                 [
                     'link' => url('admin/pinjaman'),
                     'text' => 'Menu Pinjaman',
+                ],
+                [
+                    'link' => url('admin/dashboard'),
+                    'text' => 'Menu Pinjaman 2',
                 ]
             ]
         ]

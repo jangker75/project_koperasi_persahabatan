@@ -113,9 +113,11 @@
                                     <a class="dropdown-item" href="profile.html">
                                         <i class="dropdown-icon fe fe-user"></i> Profile
                                     </a>
-                                    <a class="dropdown-item" href="login.html">
+                                    {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
+                                    <button class="dropdown-item">
                                         <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
-                                    </a>
+                                    </button>
+                                    {!! Form::close() !!}
                                 </div>
                             </div>
                         </div>

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('gender', ['M','F']);
             $table->string('address_1');
             $table->string('address_2');
+            $table->string('phone')->unique()->nullable();
             $table->string('bank');
             $table->string('rekening');
             $table->date('registered_date');
