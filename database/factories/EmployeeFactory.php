@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ConstantEnum;
 use App\Models\MasterDataStatus;
 use App\Models\Position;
 use Database\Seeders\MDStatusSeeder;
@@ -21,6 +22,7 @@ class EmployeeFactory extends Factory
     {
         $position = Position::pluck('id');
         $statusEmployee = MasterDataStatus::statusEmployee()->pluck('id');
+        $gender = ['P', 'L'];
         return [
             'first_name' => fake()->firstName(), 
             'last_name' => fake()->lastName(),
@@ -29,7 +31,7 @@ class EmployeeFactory extends Factory
             'address_2' => fake()->address(),
             'nik' => fake()->creditCardNumber(), 
             'nip' => fake()->creditCardNumber(), 
-            'gender' => 'Laki-Laki', 
+            'gender' => $gender[rand(0, 1)],
             'bank' => 'BCA', 
             'rekening' => fake()->creditCardNumber(),
             'registered_date' => now(),

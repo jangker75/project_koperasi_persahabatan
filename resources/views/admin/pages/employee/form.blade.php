@@ -72,7 +72,7 @@
                     <div class="row mb-4">
                         {!! Form::label('gender', __('employee.gender'), ['class' => 'col-md-3 form-label required']) !!}
                         <div class="col-md-9">
-                            {!! Form::select('gender', ['Laki-Laki', 'Perempuan'], null, [
+                            {!! Form::select('gender', \App\Enums\ConstantEnum::GENDER, null, [
                                 'required' => 'required',
                                 'class' =>
                                     'form-control form-select' .
