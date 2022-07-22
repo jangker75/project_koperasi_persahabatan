@@ -19,13 +19,13 @@ return new class extends Migration
             $table->integer('from_store_id');
             $table->integer('to_store_id');
             $table->integer('send_qty');
-            $table->integer('receive_qty');
-            $table->integer('status_id');
+            $table->integer('receive_qty')->nullable();
+            $table->integer('status_id')->nullable();
             $table->integer('req_empl_id');
-            $table->integer('send_empl_id');
+            $table->integer('send_empl_id')->nullable();
             $table->datetime('order_date');
-            $table->datetime('send_date');
-            $table->datetime('receive_date');
+            $table->datetime('send_date')->nullable();
+            $table->datetime('receive_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

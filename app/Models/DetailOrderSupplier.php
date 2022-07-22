@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OrderSupplier extends Model
+class DetailOrderSupplier extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'order_supplier_code', 'supplier_id', 'to_store_id',
-      'status_id', 'req_empl_id', 'order_date', 'received_date'
+      'order_supplier_id', 'product_id', 'send_qty',
+      'receive_qty', 'reject_qty'
     ];
+    
 }
