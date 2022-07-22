@@ -46,3 +46,9 @@ Route::group([
     //Logout custom
     Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
 });
+
+
+//Redirect all wild domain
+Route::get('{any}', function () {
+    return redirect(route('admin.dashboard'));
+})->where('any', '.*');

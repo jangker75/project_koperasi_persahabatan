@@ -16,8 +16,20 @@ class PositionSeeder extends Seeder
     public function run()
     {
         Position::create([
-            'name' => 'Staff',
-            'position_code' => 'STF',
+            'name' => 'Staff Koperasi UsiPa',
+            'position_code' => 'USP',
+        ]);
+        Position::create([
+            'name' => 'Staff Koperasi Toko',
+            'position_code' => 'TKO',
+        ]);
+        Position::create([
+            'name' => 'Staff Koperasi Kasir',
+            'position_code' => 'KSR',
+        ]);
+        Position::create([
+            'name' => 'Manager Koperasi',
+            'position_code' => 'MGR',
         ]);
         Position::create([
             'name' => 'Nasabah',
