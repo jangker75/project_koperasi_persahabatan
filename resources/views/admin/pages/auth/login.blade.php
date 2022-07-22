@@ -37,12 +37,16 @@
         <!-- PAGE -->
         <div class="page">
             <div class="">
-
                 <!-- CONTAINER OPEN -->
                 <div class="col col-login mx-auto mt-7">
                     <div class="text-center">
                         <img src="{{ asset('assets/images/brand/logo-white.png') }}" class="header-brand-img"
                             alt="">
+                    </div>
+                </div>
+                <div class="col col-login mx-auto mt-7">
+                    <div class="text-center">
+                        <span class="login-application-name">{{ env("APP_NAME") }}</span>
                     </div>
                 </div>
 

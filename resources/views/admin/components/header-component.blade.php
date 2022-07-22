@@ -5,8 +5,8 @@
                 href="javascript:void(0)"></a>
             <!-- sidebar-toggle-->
             <a class="logo-horizontal " href="index.html">
-                <img src="{{ asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-logo" alt="logo">
-                <img src="{{ asset('assets/images/brand/logo-3.png') }}" class="header-brand-img light-logo1" alt="logo">
+                <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}" class="header-brand-img desktop-logo" alt="logo">
+                <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}" class="header-brand-img light-logo1" alt="logo">
             </a>
             <!-- LOGO -->
             <div class="d-flex order-lg-2 ms-auto header-right-icons">
@@ -105,8 +105,8 @@
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <div class="drop-heading">
                                         <div class="text-center">
-                                            <h5 class="text-dark mb-0 fs-14 fw-semibold">Percy Kewshun</h5>
-                                            <small class="text-muted">Senior Admin</small>
+                                            <h5 class="text-dark mb-0 fs-14 fw-semibold">{{ auth()->user()->employee->full_name }}</h5>
+                                            <small class="text-muted">{{ getUserRole() }}</small>
                                         </div>
                                     </div>
                                     <div class="dropdown-divider m-0"></div>

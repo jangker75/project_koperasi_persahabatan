@@ -17,25 +17,39 @@ function listSideMenu()
             'text' => "USiPa"
         ],
         [
-            'link' => url('admin/pinjaman'),
+            'multimenu' => true,
             'icon' => 'fe fe-home',
             'text' => 'Menu Pinjaman',
+            'submenus' => [
+                [
+                    'link' => '#',
+                    'text' => 'Pengajuan Pinjaman',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Approve Pinjaman',
+                ]
+            ]
+        ],
+        [
+            'isseparator' => true,
+            'text' => "Divisi Umum"
+        ],
+        [
+            'link' => route('admin.employee.index'),
+            'icon' => 'fe fe-users',
+            'text' => 'Data Karyawan',
 
         ],
         [
-            'multimenu' => true,
-            'icon' => 'fe fe-home',
-            'text' => 'multi Menu',
-            'submenus' => [
-                [
-                    'link' => url('admin/pinjaman'),
-                    'text' => 'Menu Pinjaman',
-                ],
-                [
-                    'link' => url('admin/dashboard'),
-                    'text' => 'Menu Pinjaman 2',
-                ]
-            ]
-        ]
+            'isseparator' => true,
+            'text' => "Setting Application"
+        ],
+        [
+            'link' => url('admin/switcher'),
+            'icon' => 'mdi mdi-wrench',
+            'text' => 'Switcher',
+
+        ],
     ];
 }

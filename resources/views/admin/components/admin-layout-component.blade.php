@@ -1,3 +1,4 @@
+@props(['titlePage' => ''])
 <!doctype html>
 <html lang="en" dir="ltr">
 
@@ -7,28 +8,28 @@
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="{{ env("APP_NAME") }}">
+    <meta name="description" content="{{ env('APP_NAME') }}">
     <meta name="author" content="Spruko Technologies Private Limited">
     <meta name="keywords"
         content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
 
     <!-- FAVICON -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/brand/favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/logo/logo.png') }}" />
 
     <!-- TITLE -->
-    <title>{{ env("APP_NAME") }}</title>
+    <title>{{ env('APP_NAME') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     @include('admin.components.style-header')
-    {{ isset($styleVendor) ? $styleVendor : "" }}
+    {{ isset($styleVendor) ? $styleVendor : '' }}
 
-    {{ isset($style) ? $style : "" }}
+    {{ isset($style) ? $style : '' }}
 </head>
 
 <body class="app sidebar-mini ltr">
-
+    @include('admin.shared.toast-component')
     <!-- GLOBAL-LOADER -->
     <div id="global-loader">
         <img src="{{ asset('assets/images/loader.svg') }}" class="loader-img" alt="Loader">
@@ -56,21 +57,24 @@
 
                         <!-- PAGE-HEADER -->
                         <div class="page-header">
-                            <h1 class="page-title">{{ isset($titlePage) ? $titlePage : "" }}</h1>
+                            <h1 class="page-title">{{ $titlePage }}</h1>
                             <div>
                                 @if (Request::segment(1) !== null)
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ str(Request::segment(1))->title() }}</a></li>
-                                    @if (Request::segment(2)  !== null)
-                                    <li class="breadcrumb-item active" aria-current="page">{{ str(Request::segment(2))->title() }}</li>
-                                    @endif
-                                </ol>
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a
+                                                href="{{ url('/') }}">{{ str(Request::segment(1))->title() }}</a>
+                                        </li>
+                                        @if (Request::segment(2) !== null)
+                                            <li class="breadcrumb-item active" aria-current="page">
+                                                {{ str(Request::segment(2))->title() }}</li>
+                                        @endif
+                                    </ol>
                                 @endif
                             </div>
                         </div>
                         <!-- PAGE-HEADER END -->
-
-                        {{  $slot }}
+                        
+                        {{ $slot }} {{-- Content --}}
                     </div>
                     <!-- CONTAINER CLOSED -->
 
@@ -91,18 +95,13 @@
     <!-- BACK-TO-TOP -->
     <a href="#top" id="back-to-top"><i class="fa fa-angle-up"></i></a>
 
-    {{-- SCRIPT  --}}
+    {{-- SCRIPT --}}
     @include('admin.components.script-footer')
-    {{ isset($scriptVendor) ? $scriptVendor : "" }}
-    <script>
-        $(document).ready(function(){
-            $('.dataTable').DataTable();
-        })
-    </script>
-
-    {{ isset($script) ? $script : "" }}
-
-    {{-- SCRIPT  --}}
+    @include('admin.shared.toast-script')
+    @include('admin.shared.script_delete_index')
+    {{ isset($scriptVendor) ? $scriptVendor : '' }}
+    {{ isset($script) ? $script : '' }}
+    {{-- SCRIPT --}}
 </body>
 
 </html>

@@ -1,3 +1,25 @@
+
 body {
     font-family: 'Inter', sans-serif;
+}
+
+.login-application-name{
+    font-size: 2rem;
+    color: white;
+    font-weight: 700;
+}
+
+.required:after {
+    content: '*';
+    margin-left: 0.1rem;
+    color: red;
+}
+table#datatable{
+    thead tr{
+        background-color: #35b9a6; 
+        th{
+            font-weight: 700;
+            color: white;
+        }
+    }
 }
