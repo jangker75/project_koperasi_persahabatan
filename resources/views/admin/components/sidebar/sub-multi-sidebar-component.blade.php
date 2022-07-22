@@ -1,1 +1,2 @@
-<li><a href="{{ $link }}" class="slide-item">{{ $title }}</a></li>
+@props(['text' => '' , 'link' => '#'])
+<li><a href="{{ $link }}" class="slide-item{{ Str::contains(request()->url(), [$link]) ? ' active' : '' }}">{{ $text }}</a></li>

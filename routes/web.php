@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Toko\ProductController;
+use App\Http\Controllers\Umum\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,18 +17,32 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('admin.pages.auth.login');
+    return redirect('/admin');
 });
+Route::get('/admin', function () {
+    return redirect(route('admin.dashboard'));
+});
+Route::resource('product', ProductController::class);
 Route::group([
-    'prefix' => 'admin',
-], function(){
-    Route::get('/', function(){
-        return redirect('admin/dashboard');
-    });
-    Route::get('dashboard', function(){
+    'middleware' => ['web', 'auth'],
+    'as' => 'admin.',
+    'prefix' => 'admin'
+], function () {
+    Route::get('dashboard', function () {
         return view('admin.pages.dashboard.index');
-    });
-    Route::get('pinjaman', function(){
+    })->name('dashboard');
+    Route::get('pinjaman', function () {
         return view('admin.pages.dashboard.index');
-    });
+    })->name('pinjaman');
+    Route::get('switcher', function () {
+        return view('admin.pages.switcher.index');
+    })->name('switcher');
+
+    Route::resource('employee', EmployeeController::class);
+
+    // Datatables Route
+    Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
+
+    //Logout custom
+    Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
 });
