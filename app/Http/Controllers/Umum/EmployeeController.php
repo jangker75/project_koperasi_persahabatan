@@ -99,9 +99,11 @@ class EmployeeController extends BaseAdminController
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeRequest $request, Employee $employee)
     {
-        //
+        $input = $request->safe();
+        $employee->update($input->all());
+        return redirect()->route('admin.employee.index')->with('success', __('general.notif_edit_data_success'));
     }
 
     /**
@@ -122,6 +124,9 @@ class EmployeeController extends BaseAdminController
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
+            ->editColumn('salary', function($row){
+                return format_uang($row->salary);
+            })
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-group align-top">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" data-target="#user-form-modal" data-bs-toggle="" type="button">View</a>';

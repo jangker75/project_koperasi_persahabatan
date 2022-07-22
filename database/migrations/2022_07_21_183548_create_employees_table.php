@@ -32,7 +32,7 @@ return new class extends Migration
             $table->integer('departement_id')->nullable();
             $table->integer('position_id')->nullable();
             $table->integer('status_employee_id')->nullable();
-            $table->integer('salary')->nullable();
+            $table->integer('salary')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
