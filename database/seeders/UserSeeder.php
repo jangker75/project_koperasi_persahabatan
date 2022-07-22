@@ -26,14 +26,32 @@ class UserSeeder extends Seeder
             // Seed the relation with one employee
             $employee = Employee::factory()->make(['nik' => '12345678']);
             $user->employee()->save($employee);
-            $user->assignRole('admin');
+            $user->assignRole('usipa');
+        });
+        User::factory(1)->create()->each(function ($user) {
+            // Seed the relation with one employee
+            $employee = Employee::factory()->make(['nik' => '123123123']);
+            $user->employee()->save($employee);
+            $user->assignRole('toko');
+        });
+        User::factory(1)->create()->each(function ($user) {
+            // Seed the relation with one employee
+            $employee = Employee::factory()->make(['nik' => '321321321']);
+            $user->employee()->save($employee);
+            $user->assignRole('kasir');
+        });
+        User::factory(1)->create()->each(function ($user) {
+            // Seed the relation with one employee
+            $employee = Employee::factory()->make(['nik' => '100231232']);
+            $user->employee()->save($employee);
+            $user->assignRole('manager');
         });
 
         User::factory(500)->create()->each(function ($user2) {
             // Seed the relation with one employee
             $employee = Employee::factory()->make();
             $user2->employee()->save($employee);
-            $user2->assignRole('employee');
+            $user2->assignRole('nasabah');
         });
     }
 }

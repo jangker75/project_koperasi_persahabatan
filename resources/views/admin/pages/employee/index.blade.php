@@ -1,5 +1,4 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
-
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
@@ -14,7 +13,7 @@
                                 <tr>
                                     <th></th>
                                     <th>#</th>
-                                    <th>First name</th>
+                                    <th class="wd-50p">First name</th>
                                     <th>Last name</th>
                                     <th>NIK</th>
                                     <th>NIP</th>

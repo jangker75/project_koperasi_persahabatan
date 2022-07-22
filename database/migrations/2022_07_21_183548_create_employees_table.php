@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('rekening')->nullable();
             $table->date('registered_date')->nullable();
             $table->date('resign_date')->nullable();
-            $table->integer('departement_id')->nullable();
+            $table->integer('department_id')->nullable();
             $table->integer('position_id')->nullable();
             $table->integer('status_employee_id')->nullable();
             $table->integer('salary')->default(0);

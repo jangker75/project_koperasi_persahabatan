@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Umum;
 
+use App\Enums\ConstantEnum;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
+use App\Models\Department;
 use App\Models\Employee;
 use App\Models\MasterDataStatus;
 use App\Models\Position;
@@ -43,6 +45,8 @@ class EmployeeController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Add New Data';
         $data['positionList'] = Position::pluck('name', 'id');
+        $data['departmentList'] = Department::pluck('name', 'id');
+        
         $data['statusEmployeeList'] = MasterDataStatus::statusEmployee()->pluck('name', 'id');
         return view('admin.pages.employee.form', $data);
     }
@@ -73,7 +77,9 @@ class EmployeeController extends BaseAdminController
      */
     public function show(Employee $employee)
     {
-        //
+        $data = $this->data;
+        $data['employee'] = $employee;
+        return view('admin.pages.employee.detail', $data);
     }
 
     /**
@@ -87,8 +93,11 @@ class EmployeeController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Edit Data';
         $data['positionList'] = Position::pluck('name', 'id');
+        $data['departmentList'] = Department::pluck('name', 'id');
         $data['statusEmployeeList'] = MasterDataStatus::statusEmployee()->pluck('name', 'id');
         $data['employee'] = $employee;
+        
+        
         return view('admin.pages.employee.form', $data);   
     }
 
@@ -129,8 +138,8 @@ class EmployeeController extends BaseAdminController
             })
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-group align-top">';
-                $btn = $btn . '<a class="btn btn-sm btn-warning badge" data-target="#user-form-modal" data-bs-toggle="" type="button">View</a>';
-                $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.employee.edit", [$row->id]) .'" type="button">Edit</a>';
+                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.employee.show", [$row]) .'" type="button">View</a>';
+                $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.employee.edit", [$row]) .'" type="button">Edit</a>';
                 $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
                             <i class="fa fa-trash"></i>
                         </a>
