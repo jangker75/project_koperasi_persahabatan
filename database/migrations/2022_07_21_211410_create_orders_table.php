@@ -15,7 +15,18 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_code');
+            $table->dateTime('order_date');
+            $table->boolean('is_paylater')->default(false);
+            $table->integer('subtotal')->default(0);
+            $table->integer('tax')->default(0);
+            $table->integer('total')->default(0);
+            $table->integer('cash')->default(0);
+            $table->integer('exchange')->default(0);
+            $table->integer('transaction_id');
+            $table->integer('status_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

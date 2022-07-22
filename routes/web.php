@@ -16,9 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// customer
 Route::get('/', function () {
-    return redirect('/admin');
+    // return redirect('/admin');
+    return view('nasabah.pages.home');
 });
+
+// Route::get()
+// customer
+
+
 Route::get('/admin', function () {
     return redirect(route('admin.dashboard'));
 });

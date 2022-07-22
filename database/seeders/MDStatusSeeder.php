@@ -24,6 +24,36 @@ class MDStatusSeeder extends Seeder
                 'name' => 'Non PNS',
                 'type' => 'status_employee',
             ],
+            [
+                'name' => 'Open',
+                'description' => 'Tiket ini baru saja dibuat',
+                'type' => 'order_supplier,transfer_stock',
+            ],
+            [
+                'name' => 'waiting',
+                'description' => 'Tiket ini sedang menunggu untuk di process',
+                'type' => 'order_supplier,transfer_stock',
+            ],
+            [
+                'name' => 'process',
+                'description' => 'Tiket ini sedang dikerjakan',
+                'type' => 'order_supplier,transfer_stock',
+            ],
+            [
+                'name' => 'success',
+                'description' => 'Tiket ini berhasil dan sudah selesai dikerjakan',
+                'type' => 'order_supplier,transfer_stock',
+            ],
+            [
+                'name' => 'failed',
+                'description' => 'Tiket ini gagal dikerjakan, dan dibatalkan',
+                'type' => 'order_supplier,transfer_stock',
+            ],
+            [
+                'name' => 'reject',
+                'description' => 'Tiket ini dibatalkan',
+                'type' => 'order_supplier,transfer_stock',
+            ],
         ];
         collect($data)->each(function($item){
             MasterDataStatus::create($item);
