@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use PhpParser\Node\Expr\Cast\String_;
 
 class Employee extends Model
 {
@@ -18,19 +19,23 @@ class Employee extends Model
       'position_id', 'status_employee_id','salary'
     ];
 
-    public function User(){
+    public function user(){
       return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function Departement(){
+    public function departement(){
       return $this->belongsTo(Departement::class, 'departement_id');
     }
     
-    public function Position(){
+    public function position(){
       return $this->belongsTo(Position::class, 'position_id');
     }
 
-    public function StatusEmployee(){
+    public function statusEmployee(){
       return $this->belongsTo(MasterDataStatus::class, 'status_employee_id');
+    }
+    public function getFullNameAttribute()
+    {
+      return $this->first_name . $this->last_name;
     }
 }

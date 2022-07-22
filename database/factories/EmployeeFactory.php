@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\MasterDataStatus;
+use App\Models\Position;
+use Database\Seeders\MDStatusSeeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,19 +19,22 @@ class EmployeeFactory extends Factory
      */
     public function definition()
     {
+        $position = Position::pluck('id');
+        $statusEmployee = MasterDataStatus::statusEmployee()->pluck('id');
         return [
-            'user_id' => 1, 
             'first_name' => fake()->firstName(), 
             'last_name' => fake()->lastName(),
             'birthday' => fake()->date(), 
             'address_1' => fake()->address(), 
             'address_2' => fake()->address(),
-            'nik' => fake()->asciify(), 
-            'nip' => fake()->asciify(), 
-            'gender' => 'M', 
-            'bank' => 'bca', 
-            'rekening' => fake()->asciify(),
-            'registered_date' => now()
+            'nik' => fake()->creditCardNumber(), 
+            'nip' => fake()->creditCardNumber(), 
+            'gender' => 'Laki-Laki', 
+            'bank' => 'BCA', 
+            'rekening' => fake()->creditCardNumber(),
+            'registered_date' => now(),
+            'status_employee_id' => $statusEmployee[rand(0, count($statusEmployee) -1 )],
+            'position_id' => $position[rand(0, count($position) -1 )],
         ];
     }
 }

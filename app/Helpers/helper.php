@@ -39,3 +39,14 @@ if (!function_exists('format_hari_tanggal')) {
         return "$hari, $tanggal $bulan $tahun";
     }
 }
+if (!function_exists('getUserRole')) {
+    function getUserRole()
+    {
+        if (auth()->check()) {
+            $role = auth()->user()->getRoleNames()[0];
+            // $role = auth()->user()->role;
+            return $role;
+        }
+        return '';
+    }
+}

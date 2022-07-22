@@ -11,9 +11,17 @@
 <!-- SIDE-MENU JS-->
 <script src="{{ asset('assets/plugins/sidemenu/sidemenu.js') }}"></script>
 
+<!-- DATEPICKER JS -->
+<script src="{{ asset('assets/plugins/date-picker/date-picker.js') }}"></script>
+<script src="{{ asset('assets/plugins/date-picker/jquery-ui.js') }}"></script>
+
+<!-- INTERNAL Bootstrap-Datepicker js -->
+<script src="{{ asset('assets/plugins/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
+	
+
 <!-- TypeHead js -->
 <script src="{{ asset('assets/plugins/bootstrap5-typehead/autocomplete.js') }}"></script>
-<script src="{{ asset('assets/js/typehead.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/typehead.js') }}"></script> --}}
 
 <!-- SIDEBAR JS -->
 <script src="{{ asset('assets/plugins/sidebar/sidebar.js') }}"></script>
@@ -30,10 +38,15 @@
 <!-- Color Theme js -->
 <script src="{{ asset('assets/js/themeColors.js') }}"></script>
 
+<!-- SWEET-ALERT JS -->
+<script src="{{ asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('assets/js/sweet-alert.js') }}"></script>
+
 <!-- Sticky js -->
 <script src="{{ asset('assets/js/sticky.js') }}"></script>
 
 {{-- datatable --}}
+
 <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
@@ -50,3 +63,4 @@
 
 <!-- CUSTOM JS -->
 <script src="{{ asset('assets/js/custom.js') }}"></script>
+
