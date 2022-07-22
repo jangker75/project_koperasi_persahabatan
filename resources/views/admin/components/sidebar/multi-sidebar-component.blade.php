@@ -5,7 +5,7 @@
         <span class="side-menu__label">{{ $text }}</span>
         <i class="angle fe fe-chevron-right"></i>
     </a>
-    <ul class="slide-menu">
+    <ul class="slide-menu" style="display: none">
         <li class="side-menu-label1"><a href="javascript:void(0)">{{ $text }}</a></li>
         {{ $slot }}
     </ul>

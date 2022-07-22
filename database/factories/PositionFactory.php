@@ -17,7 +17,7 @@ class PositionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            
         ];
     }
 }

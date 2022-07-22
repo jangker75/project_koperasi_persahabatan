@@ -1,73 +1,119 @@
-@extends('admin.layouts.app')
+<!doctype html>
+<html lang="en" dir="ltr">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<head>
+    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="{{ env('APP_NAME') }}">
+    <meta name="author" content="Spruko Technologies Private Limited">
+    <meta name="keywords"
+        content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+    <!-- FAVICON -->
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/brand/favicon.ico') }}" />
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+    <!-- TITLE -->
+    <title>{{ env('APP_NAME') }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-                            <div class="col-md-6">
-                                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+    @include('admin.components.style-header')
+</head>
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+<body class="app sidebar-mini ltr">
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+    <!-- BACKGROUND-IMAGE -->
+    <div class="login-img">
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+        <!-- GLOABAL LOADER -->
+        <div id="global-loader">
+            <img src="{{ asset('assets/images/loader.svg') }}" class="loader-img" alt="Loader">
+        </div>
+        <!-- /GLOABAL LOADER -->
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+        <!-- PAGE -->
+        <div class="page">
+            <div class="">
+                <!-- CONTAINER OPEN -->
+                <div class="col col-login mx-auto mt-7">
+                    <div class="text-center">
+                        <img src="{{ asset('assets/images/brand/logo-white.png') }}" class="header-brand-img"
+                            alt="">
+                    </div>
+                </div>
+                <div class="col col-login mx-auto mt-7">
+                    <div class="text-center">
+                        <span class="login-application-name">{{ env("APP_NAME") }}</span>
+                    </div>
+                </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
+                <div class="container-login100">
+                    <div class="wrap-login100 p-6">
+                        <span class="login100-form-title pb-5">
+                            Login
+                        </span>
+                        @if ($errors->any())
+                                <div class="alert alert-danger" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                                    <strong>Login Failed!</strong> 
+                                        {{ __('general.login_error') }}
+                                </div>
+                        @endif
+                        <div class="panel panel-primary">
+                            <div class="tab-menu-heading">
+                                <div class="tabs-menu1">
+                                    <!-- Tabs -->
+                                    <ul class="nav panel-tabs">
+                                        <li class="mx-0"><a href="#tab5" class="active" data-bs-toggle="tab">Login
+                                                With NIK and Password</a></li>
+                                    </ul>
                                 </div>
                             </div>
+                            <form method="POST" action="{{ route('login') }}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="panel-body tabs-menu-body p-0 pt-5">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab5">
+                                            <div class="wrap-input100 validate-input input-group">
+                                                <div
+                                                    class="input-group-text bg-white text-muted">
+                                                    <i class="mdi mdi-account"></i>
+                                                </div>
+                                                <input class="input100 border-start-0 form-control ms-0" type="text"
+                                                    name="email" placeholder="Nomor Induk Koperasi">
+                                            </div>
+                                            <div class="wrap-input100 validate-input input-group" id="Password-toggle">
+                                                <div
+                                                    class="input-group-text bg-white text-muted">
+                                                    <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+                                                </div>
+                                                <input class="input100 border-start-0 form-control ms-0" type="password"
+                                                    name="password" placeholder="Password">
+                                            </div>
+                                            <div class="container-login100-form-btn">
+                                                <button type="submit" class="login100-form-btn btn-primary">
+                                                    Login
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
+                <!-- CONTAINER CLOSED -->
             </div>
         </div>
+        <!-- End PAGE -->
+
     </div>
-</div>
-@endsection
+    <!-- BACKGROUND-IMAGE CLOSED -->
+    @include('admin.components.script-footer')
+
+</body>
+
+</html>
