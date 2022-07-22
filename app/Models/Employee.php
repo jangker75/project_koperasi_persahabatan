@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use PhpParser\Node\Expr\Cast\String_;
 
 class Employee extends Model
 {
@@ -15,7 +14,7 @@ class Employee extends Model
       'user_id', 'first_name', 'last_name',
       'birthday', 'address_1', 'address_2',
       'nik', 'nip', 'gender', 'bank', 'rekening',
-      'registered_date', 'resign_date','departement_id',
+      'registered_date', 'resign_date','department_id',
       'position_id', 'status_employee_id','salary'
     ];
 
@@ -23,8 +22,8 @@ class Employee extends Model
       return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function departement(){
-      return $this->belongsTo(Departement::class, 'departement_id');
+    public function department(){
+      return $this->belongsTo(Department::class, 'department_id');
     }
     
     public function position(){

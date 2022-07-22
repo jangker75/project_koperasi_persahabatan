@@ -16,6 +16,7 @@ return [
     'registered_date' => "Tanggal Masuk",
     'resign_date' => "Tanggal Keluar",
     'position_id' => "Posisi",
+    'department_id' => "Departemen",
     'status_employee_id' => "Status Karyawan",
     
 ];
