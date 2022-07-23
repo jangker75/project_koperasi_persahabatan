@@ -9,4 +9,9 @@ class ConstantEnum
         'L' => 'Laki-Laki',
     ];
     const BANK = ['mandiri' => 'Mandiri', 'bri' => 'BRI', 'bca' => 'BCA'];
+    const RESIGNREASON = [
+        'pensiun' => 'Pensiun',
+        'mutasi' => 'Mutasi',
+        'resign' => 'Mengundurkan Diri',
+    ];
 }

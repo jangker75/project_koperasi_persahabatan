@@ -189,37 +189,37 @@
                         </div>
                     </div>
                     <div class="row mb-4">
-                        {!! Form::label('address1', __('employee.address1'), ['class' => 'col-md-3 form-label']) !!}
+                        {!! Form::label('address_1', __('employee.address_1'), ['class' => 'col-md-3 form-label']) !!}
                         <div class="col-md-9">
                             <div class="input-group">
                                 <div class="input-group-text">
                                     <i class="icon icon-map"></i>
                                 </div>
-                                {!! Form::textarea('address1', null, [
+                                {!! Form::textarea('address_1', null, [
                                     'rows' => 4,
                                     'class' =>
                                         'form-control' .
-                                        ($errors->has('address1') ? ' is-invalid' : '') .
-                                        (!$errors->has('address1') && old('address1') ? ' is-valid' : ''),
-                                    'placeholder' => 'Input ' . __('employee.address1'),
+                                        ($errors->has('address_1') ? ' is-invalid' : '') .
+                                        (!$errors->has('address_1') && old('address_1') ? ' is-valid' : ''),
+                                    'placeholder' => 'Input ' . __('employee.address_1'),
                                 ]) !!}
                             </div>
                         </div>
                     </div>
                     <div class="row mb-4">
-                        {!! Form::label('address2', __('employee.address2'), ['class' => 'col-md-3 form-label']) !!}
+                        {!! Form::label('address_2', __('employee.address_2'), ['class' => 'col-md-3 form-label']) !!}
                         <div class="col-md-9">
                             <div class="input-group">
                                 <div class="input-group-text">
                                     <i class="icon icon-map"></i>
                                 </div>
-                                {!! Form::textarea('address2', null, [
+                                {!! Form::textarea('address_2', null, [
                                     'rows' => 4,
                                     'class' =>
                                         'form-control' .
-                                        ($errors->has('address2') ? ' is-invalid' : '') .
-                                        (!$errors->has('address2') && old('address2') ? ' is-valid' : ''),
-                                    'placeholder' => 'Input ' . __('employee.address2'),
+                                        ($errors->has('address_2') ? ' is-invalid' : '') .
+                                        (!$errors->has('address_2') && old('address_2') ? ' is-valid' : ''),
+                                    'placeholder' => 'Input ' . __('employee.address_2'),
                                 ]) !!}
                             </div>
                         </div>
