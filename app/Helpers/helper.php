@@ -105,6 +105,33 @@ if (!function_exists('getUserRole')) {
             // $role = auth()->user()->role;
             return $role;
         }
-        return '';
+        return null;
+    }
+}
+
+if(!function_exists('checkPositionRole')){
+    function checkPositionRole($position_code)
+    {
+        switch ($position_code) {
+            case 'USP':
+                $role = 'usipa';
+                break;
+            case 'TKO':
+                $role = 'toko';
+                break;
+            case 'KSR':
+                $role = 'kasir';
+                break;
+            case 'NSB':
+                $role = 'nasabah';
+                break;
+            case 'MGR':
+                $role = 'manager';
+                break;
+            default:
+                $role = 'superadmin';
+                break;
+        }
+        return $role;
     }
 }

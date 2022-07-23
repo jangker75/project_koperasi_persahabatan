@@ -10,8 +10,10 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\MasterDataStatus;
 use App\Models\Position;
+use App\Models\Savings;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
@@ -31,7 +33,7 @@ class EmployeeController extends BaseAdminController
     public function index()
     {
         $data = $this->data;
-        $data['titlePage'] = 'Data Karyawan';
+        $data['titlePage'] = 'Data Anggota';
         return view('admin.pages.employee.index', $data);
     }
 
@@ -64,8 +66,13 @@ class EmployeeController extends BaseAdminController
             'password' => Hash::make('123456'),
             'profile_image' => 'default-image.jpg',
         ]);
-        $user->employee()->create($input->all());
-        $user->assignRole('employee');
+        $employee = $user->employee()->create($input->merge([
+            'registered_date' => now()
+        ])->all());
+        $savings = Savings::factory()->make();
+        $employee->savings()->save($savings);
+        $role = checkPositionRole($employee->position->position_code);
+        $user->assignRole($role);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_add_new_data_success'));
     }
 
@@ -112,6 +119,8 @@ class EmployeeController extends BaseAdminController
     {
         $input = $request->safe();
         $employee->update($input->all());
+        $role = checkPositionRole($employee->position->position_code);
+        $employee->user->syncRoles($role);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_edit_data_success'));
     }
 
@@ -129,7 +138,9 @@ class EmployeeController extends BaseAdminController
     public function getIndexDatatables()
     {
         $query = Employee::query()
-            ->select('employees.*');
+        ->with('position')
+        ->select('employees.*')
+        ->active();
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
@@ -152,5 +163,25 @@ class EmployeeController extends BaseAdminController
             })
             ->rawColumns(['actions'])
             ->make(true);
+    }
+    public function employeeOut()
+    {
+        $data = $this->data;
+        $data['titlePage'] = 'Form Anggota Keluar';
+        $data['employeeList'] = Employee::active()
+        ->select(DB::raw('concat(first_name, " ", last_name) as name'), 'id')->pluck('name', 'id');
+        return view('admin.pages.employee.form_resign', $data);
+    }
+    public function employeeOutStore(Request $request)
+    {
+        $input = $request->validate([
+            "employee_id" => "required",
+            "resign_date" => "required|date_format:Y-m-d",
+            "resign_reason" => "required",
+            "resign_notes" => "",
+        ]);
+        $employee = Employee::findOrFail($input['employee_id']);
+        $employee->update($input);
+        return redirect()->route('admin.employee.index')->with('success', __('general.notif_edit_data_success'));
     }
 }
