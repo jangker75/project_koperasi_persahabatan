@@ -38,8 +38,12 @@ function listSideMenu()
         [
             'link' => route('admin.employee.index'),
             'icon' => 'fe fe-users',
-            'text' => 'Data Karyawan',
-
+            'text' => 'Data Anggota',
+        ],
+        [
+            'link' => route('admin.ex-employee.index'),
+            'icon' => 'fe fe-users',
+            'text' => 'Data Anggota Keluar',
         ],
         [
             'isseparator' => true,

@@ -18,7 +18,7 @@
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         // dom: 'lBfrtip',
         ajax: {
-            url: "{{ route('admin.employee.index.datatables') }}",
+            url: "{{ route('admin.ex-employee.index.datatables') }}",
         },
         columns: [
             { data: "id", name: "id", visible: false},

@@ -13,9 +13,10 @@ class Employee extends Model
     protected $fillable = [
       'user_id', 'first_name', 'last_name',
       'birthday', 'address_1', 'address_2',
-      'nik', 'nip', 'gender', 'bank', 'rekening',
+      'nik', 'nip', 'gender', 'bank', 'rekening', 'phone',
       'registered_date', 'resign_date','department_id',
-      'position_id', 'status_employee_id','salary'
+      'position_id', 'status_employee_id','salary',
+      'resign_reason', 'resign_notes'
     ];
 
     public function user(){
@@ -33,8 +34,20 @@ class Employee extends Model
     public function statusEmployee(){
       return $this->belongsTo(MasterDataStatus::class, 'status_employee_id');
     }
+    public function savings()
+    {
+      return $this->hasOne(Savings::class, 'employee_id', 'id');
+    }
     public function getFullNameAttribute()
     {
       return $this->first_name . $this->last_name;
+    }
+    public function scopeActive($query)
+    {
+        return $query->whereNull('resign_date');
+    }
+    public function scopeNonActive($query)
+    {
+        return $query->whereNotNull('resign_date');
     }
 }
