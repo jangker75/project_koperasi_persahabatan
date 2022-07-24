@@ -25,6 +25,10 @@
     {{ isset($styleVendor) ? $styleVendor : '' }}
 
     <style>
+        body {
+            background-color: #ddd;
+        }
+
         .navbar-nasabah {
             background-color: #343584;
             color: #f0f0f0;
@@ -51,12 +55,52 @@
                                 </a>
                             </div>
                             <div class="col-6 d-flex justify-content-end">
-                                <a class="btn text-light">
-                                    <i class="fe fe-shopping-cart"></i>
-                                </a>
-                                <a class="btn text-light">
-                                    <i class="fe fe-user"></i>
-                                </a>
+                                <div class="dropdown">
+                                    <a class="btn text-light" role="button" id="dropdownCart" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <i class="fe fe-shopping-cart"></i>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownCart">
+                                        <li><span class="dropdown-item">List Shopping Cart</span></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li>
+                                            <div class="dropdown-item">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="p-4 bg-secondary rounded"></div>
+                                                    <div class="text ms-3">
+                                                        <span>Product 1</span><br>
+                                                        <small class="text-danger">Rp 9000</small>
+                                                    </div>
+                                                    <div class="text ms-3">
+                                                        <small>qty : <strong>4</strong></small>
+                                                    </div>
+                                                    <div class="text ms-3">
+                                                        <i class="fe fe-x"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                                <button class="btn text-light" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount"><i class="fe fe-user"></i></button>
+
+                                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAccount"
+                                    aria-labelledby="offcanvasAccountLabel">
+                                    <div class="offcanvas-header">
+                                        <h5 id="offcanvasAccountLabel" class="text-dark">Koperasi Karya Husada</h5>
+                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body">
+                                        ...
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                         <div class="p-2 w-100 mt-2">
@@ -71,7 +115,11 @@
                     </nav>
                     <!-- Navbar -->
                 </div>
-                @yield('content')
+                <div class="col-12 col-md-4 offset-md-4 bg-light">
+                    <div class="row">
+                        @yield('content')
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -14,6 +14,39 @@ function listSideMenu()
         ],
         [
             'isseparator' => true,
+            'text' => "Kelola Toko"
+        ],
+        [
+            'link' => "#",
+            'icon' => 'fe fe-dollar-sign',
+            'text' => 'Data Penjualan',
+
+        ],
+        [
+            'multimenu' => true,
+            'icon' => 'fe fe-shopping-cart',
+            'text' => 'Produk',
+            'submenus' => [
+                [
+                    'link' => '#',
+                    'text' => 'Kelola Data Produk',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Kelola Data Stock',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Kelola Data Brand',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Kelola Data Pemasok',
+                ]
+            ]
+        ],
+        [
+            'isseparator' => true,
             'text' => "USiPa"
         ],
         [
@@ -51,5 +84,14 @@ function listSideMenu()
             'text' => 'Switcher',
 
         ],
+        [
+            'isseparator' => true,
+            'text' => "MASTER DATA"
+        ],
+        [
+            'link' => "#",
+            'icon' => 'fe fe-layers',
+            'text' => 'Master Data Status',
+        ]
     ];
 }

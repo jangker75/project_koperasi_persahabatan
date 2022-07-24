@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Master\MasterDataStatusController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Umum\EmployeeController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +21,8 @@ use Illuminate\Support\Facades\Route;
 // customer
 Route::get('/', function () {
     // return redirect('/admin');
-    return view('nasabah.pages.home');
+    $data['product'] = Product::get();
+    return view('nasabah.pages.home', $data);
 });
 
 // Route::get()
@@ -44,6 +47,9 @@ Route::group([
     Route::get('switcher', function () {
         return view('admin.pages.switcher.index');
     })->name('switcher');
+
+    //toko-online
+    Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
 
     Route::resource('employee', EmployeeController::class);
 
