@@ -48,7 +48,6 @@ class EmployeeController extends BaseAdminController
         $data['titlePage'] = 'Add New Data';
         $data['positionList'] = Position::pluck('name', 'id');
         $data['departmentList'] = Department::pluck('name', 'id');
-        
         $data['statusEmployeeList'] = MasterDataStatus::statusEmployee()->pluck('name', 'id');
         return view('admin.pages.employee.form', $data);
     }
@@ -169,7 +168,8 @@ class EmployeeController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Form Anggota Keluar';
         $data['employeeList'] = Employee::active()
-        ->select(DB::raw('concat(first_name, " ", last_name) as name'), 'id')->pluck('name', 'id');
+        ->select(DB::raw('concat(first_name, " ", last_name," (", nik, ")") as name'), 'id')
+        ->pluck('name', 'id');
         return view('admin.pages.employee.form_resign', $data);
     }
     public function employeeOutStore(Request $request)

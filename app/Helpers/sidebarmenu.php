@@ -22,7 +22,7 @@ function listSideMenu()
             'text' => 'Menu Pinjaman',
             'submenus' => [
                 [
-                    'link' => '#',
+                    'link' => route('admin.loan-submission.index'),
                     'text' => 'Pengajuan Pinjaman',
                 ],
                 [

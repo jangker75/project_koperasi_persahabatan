@@ -14,4 +14,12 @@ class ConstantEnum
         'mutasi' => 'Mutasi',
         'resign' => 'Mengundurkan Diri',
     ];
+    const INTEREST_AMOUNT_TYPE = [
+        'percentage' => 'Percentage',
+        'value' => 'Value',
+    ];
+    const TRANSACTION_TYPE = [
+        'debit' => 'Debit',
+        'credit' => 'Credit',
+    ];
 }

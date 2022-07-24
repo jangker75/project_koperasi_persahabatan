@@ -61,6 +61,9 @@
 <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
 {{-- datatable --}}
 
+{{-- Money Format --}}
+<script src="{{ asset('assets/js/simple.money.format.js') }}"></script>
+
 <!-- CUSTOM JS -->
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 
