@@ -22,4 +22,10 @@ class ConstantEnum
         'debit' => 'Debit',
         'credit' => 'Credit',
     ];
+    const SAVINGS_BALANCE_TYPE = [
+        'POKOK' => 'principal_savings_balance',
+        'WAJIB' => 'mandatory_savings_balance',
+        'AKTIVITAS' => 'activity_savings_balance',
+        'SUKARELA' => 'voluntary_savings_balance',
+    ];
 }

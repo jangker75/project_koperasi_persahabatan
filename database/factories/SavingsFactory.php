@@ -17,10 +17,10 @@ class SavingsFactory extends Factory
     public function definition()
     {
         return [
-            'principal_savings_amount' => 25000,
-            'mandatory_savings_amount' => 0,
-            'activity_savings_amount' => 0,
-            'voluntary_savings_amount' => 0,
+            'principal_savings_balance' => 0,
+            'mandatory_savings_balance' => 0,
+            'activity_savings_balance' => 0,
+            'voluntary_savings_balance' => 0,
         ];
     }
 }

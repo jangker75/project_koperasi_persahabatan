@@ -20,7 +20,7 @@ class Loan extends Model
     ];
     public function employee()
     {
-        return $this->belongsTo(Employee::class, 'id', 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
     public function loanhistory()
     {

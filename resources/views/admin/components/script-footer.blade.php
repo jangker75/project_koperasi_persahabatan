@@ -61,6 +61,8 @@
 <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
 {{-- datatable --}}
 
+{{-- Moment Js --}}
+<script src="{{ asset('assets/plugins/moment/moment-with-locales.min.js') }}"></script>
 {{-- Money Format --}}
 <script src="{{ asset('assets/js/simple.money.format.js') }}"></script>
 

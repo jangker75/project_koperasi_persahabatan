@@ -18,14 +18,17 @@
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         // dom: 'lBfrtip',
         ajax: {
-            url: "{{ route('admin.loan-submission.index.datatables') }}",
+            url: "{{ route('admin.loan-list.index.datatables') }}",
+            data: function(d){
+                    d.keyword = $('.dataTables_filter input').val()
+                }
         },
         columns: [
             { data: "id", name: "id", visible: false},
             { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
             { data: "transaction_number", name: "transaction_number" },
+            { data: "full_name", name: "full_name" },
             { data: "total_loan_amount", name: "total_loan_amount" },
-            { data: "status", name: "approvalstatus.name" },
             { data: "actions", name: "actions" },
         ],
         language: {
@@ -36,33 +39,10 @@
     });
 
     // Filter event handler
-    $( table.table().container() ).on( 'keyup', 'thead input', function () {
+    $( table.table().container() ).on('keyup', 'thead input', function () {
         table
             .column($(this).data('index') )
             .search( this.value )
             .draw();
     } );
-
-    //Confirmation dialog action approval
-    $('#datatable').on('click', '.action-button', function(e) {
-            let linkbutton = $(this).prop("href");
-            console.log(linkbutton);
-            e.preventDefault();
-            swal({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "Yes, delete it!",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true,
-                },
-                function(isConfirm) {
-                    if (isConfirm) {
-                        // swal("Success!", "Your data has been edited.", "success")
-                        window.location = linkbutton
-                    }
-            });
-        })
 </script>

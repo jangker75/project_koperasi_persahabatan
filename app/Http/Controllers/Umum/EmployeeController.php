@@ -4,19 +4,21 @@ namespace App\Http\Controllers\Umum;
 
 use App\Enums\ConstantEnum;
 use App\Http\Controllers\BaseAdminController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\MasterDataStatus;
 use App\Models\Position;
+use App\Models\SavingHistory;
 use App\Models\Savings;
 use App\Models\User;
+use App\Services\EmployeeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 
 class EmployeeController extends BaseAdminController
 {
@@ -46,7 +48,7 @@ class EmployeeController extends BaseAdminController
     {
         $data = $this->data;
         $data['titlePage'] = 'Add New Data';
-        $data['positionList'] = Position::pluck('name', 'id');
+        $data['positionList'] = Position::notAdmin()->pluck('name', 'id');
         $data['departmentList'] = Department::pluck('name', 'id');
         $data['statusEmployeeList'] = MasterDataStatus::statusEmployee()->pluck('name', 'id');
         return view('admin.pages.employee.form', $data);
@@ -70,6 +72,7 @@ class EmployeeController extends BaseAdminController
         ])->all());
         $savings = Savings::factory()->make();
         $employee->savings()->save($savings);
+        (new EmployeeService())->addCreditBalance($employee->savings->id, 25000,ConstantEnum::SAVINGS_BALANCE_TYPE['POKOK']);
         $role = checkPositionRole($employee->position->position_code);
         $user->assignRole($role);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_add_new_data_success'));
@@ -98,7 +101,7 @@ class EmployeeController extends BaseAdminController
     {
         $data = $this->data;
         $data['titlePage'] = 'Edit Data';
-        $data['positionList'] = Position::pluck('name', 'id');
+        $data['positionList'] = Position::notAdmin()->pluck('name', 'id');
         $data['departmentList'] = Department::pluck('name', 'id');
         $data['statusEmployeeList'] = MasterDataStatus::statusEmployee()->pluck('name', 'id');
         $data['employee'] = $employee;
@@ -147,7 +150,7 @@ class EmployeeController extends BaseAdminController
                 return format_uang($row->salary);
             })
             ->addColumn('actions', function($row){
-                $btn = '<div class="btn-group align-top">';
+                $btn = '<div class="btn-list align-center d-flex justify-content-center">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.employee.show", [$row]) .'" type="button">View</a>';
                 $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.employee.edit", [$row]) .'" type="button">Edit</a>';
                 $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
@@ -183,5 +186,20 @@ class EmployeeController extends BaseAdminController
         $employee = Employee::findOrFail($input['employee_id']);
         $employee->update($input);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_edit_data_success'));
+    }
+    public function getEmployeeSavingsHistory(Employee $employee_id, $saving_type)
+    {
+        $history = SavingHistory::where('saving_id', $employee_id->savings->id)->{Str::camel($saving_type)}()->get();
+        $history->map(function($data){
+            $data->balance_after = format_uang($data->balance_after);
+            $data->amount = format_uang($data->amount);
+            $data->transaction_date = format_hari_tanggal_jam($data->transaction_date);
+            return $data;
+        });
+        return response()->json([
+            'message' => 'success',
+            'type' => __("savings_employee.{$saving_type}"),
+            'data' => $history,
+        ]);
     }
 }

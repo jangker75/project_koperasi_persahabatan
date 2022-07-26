@@ -26,8 +26,8 @@ function listSideMenu()
                     'text' => 'Pengajuan Pinjaman',
                 ],
                 [
-                    'link' => '#',
-                    'text' => 'Approve Pinjaman',
+                    'link' => route('admin.loan-list.index'),
+                    'text' => 'Data Pinjaman',
                 ]
             ]
         ],

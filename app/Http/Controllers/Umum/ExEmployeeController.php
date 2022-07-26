@@ -109,7 +109,7 @@ class ExEmployeeController extends BaseAdminController
                 return format_uang($row->salary);
             })
             ->addColumn('actions', function($row){
-                $btn = '<div class="btn-group align-top">';
+                $btn = '<div class="btn-list align-center d-flex justify-content-center">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.ex-employee.show", [$row]) .'" type="button">View</a>';
                 $btn = $btn . '</div>';
                 return $btn;

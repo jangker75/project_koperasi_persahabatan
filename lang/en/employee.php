@@ -14,7 +14,7 @@ return [
     'salary' => "Gaji (Salary)",
     'bank' => "Nama Bank",
     'rekening' => "Nomor Rekening",
-    'registered_date' => "Tanggal Masuk",
+    'registered_date' => "Tanggal Bergabung/Join Koperasi",
     'resign_date' => "Tanggal Keluar",
     'resign_notes' => "Notes",
     'resign_reason' => "Alasan Keluar",

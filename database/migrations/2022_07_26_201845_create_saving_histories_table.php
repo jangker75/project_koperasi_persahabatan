@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('savings', function (Blueprint $table) {
+        Schema::create('saving_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('employee_id');
-            $table->bigInteger('principal_savings_balance');
-            $table->bigInteger('mandatory_savings_balance');
-            $table->bigInteger('activity_savings_balance');
-            $table->bigInteger('voluntary_savings_balance');
+            $table->integer('saving_id');
+            $table->string('saving_type', 100);
+            $table->string('transaction_type', 100);
+            $table->bigInteger('amount');
+            $table->bigInteger('balance_before')->nullable();
+            $table->bigInteger('balance_after')->nullable();
+            $table->timestamp('transaction_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('savings');
+        Schema::dropIfExists('saving_histories');
     }
 };

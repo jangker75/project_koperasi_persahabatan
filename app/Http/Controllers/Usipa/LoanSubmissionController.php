@@ -10,6 +10,7 @@ use App\Models\Employee;
 use App\Models\InterestSchemeType;
 use App\Models\Loan;
 use App\Services\CodeService;
+use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -68,7 +69,8 @@ class LoanSubmissionController extends BaseAdminController
         $data['created_by'] = auth()->user()->employee->full_name;
         $data['loan_approval_status_id'] = 3;
         $input->received_amount = str_replace(',','',$input->received_amount);
-        Loan::create($input->merge($data)->all());
+        $loan = Loan::create($input->merge($data)->all());
+        
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_add_new_data_success'));
     }
 
@@ -114,7 +116,8 @@ class LoanSubmissionController extends BaseAdminController
      */
     public function destroy(Loan $loan)
     {
-        //
+        $loan->delete();
+        return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_delete_data_success'));
     }
     public function getIndexDatatables()
     {
@@ -127,21 +130,57 @@ class LoanSubmissionController extends BaseAdminController
             ->editColumn('total_loan_amount', function($row){
                 return format_uang($row->total_loan_amount);
             })
+            ->addColumn('status', function($row){
+                $class = ($row->loan_approval_status_id == 3) ? 'btn-warning' : (($row->loan_approval_status_id == 4) ? 'btn-success' : 'btn-danger');
+                $btn = '<a disabled class="btn '.$class.' btn-pill text-white fw-600 btn-sm">'.$row->approvalstatus->name.'</a>';
+                return $btn;
+            })
             ->addColumn('actions', function($row){
-                $btn = '<div class="btn-group align-top">';
-                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.loan-submission.show", [$row]) .'" type="button">View</a>';
+                $btn = '<div class="btn-group btn-list d-flex justify-content-center">';
+                if($row->loan_approval_status_id == 3){
+                    $btn = $btn . '<div class="dropdown">
+                        <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown">
+                                Action
+                            </button>
+                        <div class="dropdown-menu" style="">
+                            <a class="dropdown-item action-button" href="'. route('admin.loan-submission.action.approval', ['status' => 4, 'loan' => $row->id]) .'">Approve</a>
+                            <a class="dropdown-item action-button" href="'. route('admin.loan-submission.action.approval', ['status' => 5, 'loan' => $row->id]) .'">Reject</a>
+                        </div>
+                    </div>';
+                }
+                $btn = $btn . '<a class="btn btn-sm btn-warning" href="'. route("admin.loan-submission.show", [$row]) .'" type="button">View</a>';
                 // $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.loan-submission.edit", [$row]) .'" type="button">Edit</a>';
-                $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
+                $btn = $btn . '<a class="btn btn-sm btn-danger delete-button" type="button">
                             <i class="fa fa-trash"></i>
                         </a>
                         <form method="POST" action="' . route('admin.loan-submission.destroy', [$row]) . '">
                             <input name="_method" type="hidden" value="delete">
                             <input name="_token" type="hidden" value="' . Session::token() . '">
                         </form>';
+                
                 $btn = $btn . '</div>';
                 return $btn;
             })
-            ->rawColumns(['actions'])
+            ->rawColumns(['actions', 'status'])
             ->make(true);
+    }
+
+    public function actionSubmissionLoan(Loan $loan, $status)
+    {
+        $loan->update(['loan_approval_status_id' => $status]);
+        if($status == 4) {
+            $loan->loanhistory()->create([
+                'transaction_type' => 'credit',
+                'transaction_date' => now(),
+                'total_payment' => $loan->total_loan_amount,
+                'interest_amount' => 0,
+                'loan_amount_before' => 0,
+                'loan_amount_after' => $loan->total_loan_amount,
+                'profit_company_amount' => 0,
+                'profit_employee_amount' => 0,
+            ]);
+        };
+
+        return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_edit_data_success'));
     }
 }
