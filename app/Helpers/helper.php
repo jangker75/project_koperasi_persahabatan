@@ -39,9 +39,8 @@ if (!function_exists('format_hari_tanggal')) {
         return "$hari, $tanggal $bulan $tahun";
     }
 }
-
-if (!function_exists('format_hari_tanggal')) {
-    function format_hari_tanggal($waktu)
+if (!function_exists('format_hari_tanggal_jam')) {
+    function format_hari_tanggal_jam($waktu)
     {
         $hari_array = array(
             'Minggu',
@@ -72,12 +71,13 @@ if (!function_exists('format_hari_tanggal')) {
         $bl = date('n', strtotime($waktu));
         $bulan = $bulan_array[$bl];
         $tahun = date('Y', strtotime($waktu));
+        $jam = date('H:i', strtotime($waktu));
 
         //untuk menampilkan hari, tanggal bulan tahun jam
         //return "$hari, $tanggal $bulan $tahun $jam";
 
         //untuk menampilkan hari, tanggal bulan tahun
-        return "$hari, $tanggal $bulan $tahun";
+        return "$hari, $tanggal $bulan $tahun $jam";
     }
 }
 

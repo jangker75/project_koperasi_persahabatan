@@ -15,4 +15,8 @@ class MasterDataStatus extends Model
     {
         return $query->where('type', 'status_employee');
     }
+    public function scopeStatusLoanApproval($query)
+    {
+        return $query->where('type', 'status_loan_approval');
+    }
 }

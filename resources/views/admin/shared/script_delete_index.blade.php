@@ -15,8 +15,8 @@
                 },
                 function(isConfirm) {
                     if (isConfirm) {
-                        form.submit()
                         swal("Deleted!", "Your data has been deleted.", "success")
+                        form.submit()
                     }
             });
             // swal({

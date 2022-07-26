@@ -40,7 +40,7 @@ class Employee extends Model
     }
     public function getFullNameAttribute()
     {
-      return $this->first_name . $this->last_name;
+      return $this->first_name. " " . $this->last_name;
     }
     public function scopeActive($query)
     {

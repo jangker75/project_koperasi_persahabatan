@@ -11,14 +11,18 @@ class Savings extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'employee_id',
-        'principal_savings_amount',
-        'mandatory_savings_amount',
-        'activity_savings_amount',
-        'voluntary_savings_amount',
+        'principal_savings_balance',
+        'mandatory_savings_balance',
+        'activity_savings_balance',
+        'voluntary_savings_balance',
     ];
 
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
+    }
+    public function history()
+    {
+        return  $this->hasMany(SavingHistory::class, 'saving_id');
     }
 }

@@ -14,4 +14,8 @@ class Position extends Model
     public function Employee(){
       return $this->hasMany(Employee::class);
     }
+    public function scopeNotAdmin($query)
+    {
+      return $query->where('id', '!=', 1);
+    }
 }
