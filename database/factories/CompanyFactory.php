@@ -17,7 +17,10 @@ class CompanyFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => 'Koperasi Karya Husada',
+            'address' => 'Rawamangun',
+            'phone' => '0857123232',
+            'description' => 'Koperasi Karya Husada di RS Persahabatan Rawaamangun',
         ];
     }
 }

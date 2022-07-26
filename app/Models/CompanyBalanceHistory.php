@@ -10,8 +10,11 @@ class CompanyBalanceHistory extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'balance_id', 'balance_type', 'transaction_type',
+        'balance_id', 'balance_type', 'transaction_type','description',
         'transaction_date','amount', 'balance_before', 'balance_after',
-        'balance_type',
     ];
+    public function scopeLoanBalance($query)
+    {
+        return $query->where('transaction_type', 'loan_balance');
+    }
 }

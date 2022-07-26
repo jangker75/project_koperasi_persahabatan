@@ -13,4 +13,5 @@ class CompanyBalance extends Model
         'company_id', 'loan_balance', 'store_balance',
         'other_balance', 'total_balance',
     ];
+    
 }

@@ -17,7 +17,11 @@ class CompanyBalanceFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'company_id' => 1,
+            'loan_balance' => 0,
+            'store_balance' => 0,
+            'other_balance' => 0,
+            'total_balance' => 0,
         ];
     }
 }
