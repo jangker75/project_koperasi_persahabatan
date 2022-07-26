@@ -15,4 +15,8 @@ class Company extends Model
         'phone',
         'description',
     ];
+    public function balance()
+    {
+        return $this->hasOne(CompanyBalance::class, 'company_id');
+    }
 }

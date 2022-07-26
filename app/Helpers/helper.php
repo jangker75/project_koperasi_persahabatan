@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\Company;
+
 if (!function_exists('format_hari_tanggal')) {
     function format_hari_tanggal($waktu)
     {
@@ -37,6 +40,11 @@ if (!function_exists('format_hari_tanggal')) {
 
         //untuk menampilkan hari, tanggal bulan tahun
         return "$hari, $tanggal $bulan $tahun";
+    }
+}
+if (!function_exists('getCompanyData')) {
+    function getCompanyId(){
+        return Company::find(1);
     }
 }
 if (!function_exists('format_hari_tanggal_jam')) {

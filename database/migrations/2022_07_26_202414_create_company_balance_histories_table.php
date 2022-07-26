@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamp('transaction_date');
             $table->bigInteger('balance_before');
             $table->bigInteger('balance_after');
+            $table->string('description', 250)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

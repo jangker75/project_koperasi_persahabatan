@@ -10,6 +10,7 @@ use App\Models\Employee;
 use App\Models\InterestSchemeType;
 use App\Models\Loan;
 use App\Services\CodeService;
+use App\Services\CompanyService;
 use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -179,6 +180,7 @@ class LoanSubmissionController extends BaseAdminController
                 'profit_company_amount' => 0,
                 'profit_employee_amount' => 0,
             ]);
+            (new CompanyService())->addCreditBalance(getCompanyId()->balance->id, $loan->admin_fee, 'loan_balance', __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]));
         };
 
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_edit_data_success'));
