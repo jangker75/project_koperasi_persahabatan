@@ -21,7 +21,7 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalStoreLabel">Create New Status</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                        aria-label="Close">&times;</button>
                                 </div>
                                 <div class="modal-body">
                                     <form action="" id="storeForm">

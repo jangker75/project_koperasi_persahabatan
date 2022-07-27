@@ -15,7 +15,7 @@ class MDStatusSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
+        $statusEmployee = [
             [
                 'name' => 'PNS',
                 'type' => 'status_employee',
@@ -55,7 +55,26 @@ class MDStatusSeeder extends Seeder
                 'type' => 'order_supplier,transfer_stock',
             ],
         ];
-        collect($data)->each(function($item){
+        $statusLoan = [
+            [
+                'name' => 'Waiting',
+                'type' => 'status_loan_approval',
+            ],
+            [
+                'name' => 'Approved',
+                'type' => 'status_loan_approval',
+            ],
+            [
+                'name' => 'Rejected',
+                'type' => 'status_loan_approval',
+            ],
+        ];
+
+
+        collect($statusEmployee)->each(function($item){
+            MasterDataStatus::create($item);
+        });
+        collect($statusLoan)->each(function($item){
             MasterDataStatus::create($item);
         });
     }

@@ -21,12 +21,12 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalStoreLabel">Create New Kategori</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                        aria-label="Close">&times;</button>
                                 </div>
                                 <div class="modal-body">
                                     <form action="" id="storeForm">
                                         <div class="row">
-                                            <input type="hidden" name="_method" id="method" value="store">
+                                            <input type="hidden" name="_method" id="method" value="post">
                                             <input type="hidden" name="id" id="id">
                                             <input class="form-control mb-4" name="name" placeholder="Kategori Baru"
                                                 type="text">

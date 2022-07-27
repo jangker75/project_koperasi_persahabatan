@@ -36,18 +36,23 @@ function listSideMenu()
                     'text' => 'Kelola Data Stock',
                 ],
                 [
+                    'link' => url('/admin/category'),
+                    'text' => 'Kelola Data Kategori Produk',
+                ],
+                [
                     'link' => '#',
                     'text' => 'Kelola Data Brand',
                 ],
                 [
                     'link' => '#',
                     'text' => 'Kelola Data Pemasok',
-                ],
-                [
-                    'link' => url('/admin/category'),
-                    'text' => 'Kelola Data Kategori Produk',
                 ]
             ]
+        ],
+        [
+            'link' => url("admin/store"),
+            'icon' => 'fe fe-map-pin',
+            'text' => 'Data Toko',
         ],
         [
             'isseparator' => true,
@@ -55,16 +60,16 @@ function listSideMenu()
         ],
         [
             'multimenu' => true,
-            'icon' => 'fe fe-home',
+            'icon' => 'fe fe-credit-card',
             'text' => 'Menu Pinjaman',
             'submenus' => [
                 [
-                    'link' => '#',
+                    'link' => route('admin.loan-submission.index'),
                     'text' => 'Pengajuan Pinjaman',
                 ],
                 [
-                    'link' => '#',
-                    'text' => 'Approve Pinjaman',
+                    'link' => route('admin.loan-list.index'),
+                    'text' => 'Data Pinjaman',
                 ]
             ]
         ],
@@ -84,6 +89,15 @@ function listSideMenu()
         ],
         [
             'isseparator' => true,
+            'text' => "MASTER DATA"
+        ],
+        [
+            'link' => url('admin/master-data-status'),
+            'icon' => 'fe fe-layers',
+            'text' => 'Master Data Status',
+        ],
+        [
+            'isseparator' => true,
             'text' => "Setting Application"
         ],
         [
@@ -91,15 +105,6 @@ function listSideMenu()
             'icon' => 'mdi mdi-wrench',
             'text' => 'Switcher',
 
-        ],
-        [
-            'isseparator' => true,
-            'text' => "MASTER DATA"
-        ],
-        [
-            'link' => url('admin/master-data-status'),
-            'icon' => 'fe fe-layers',
-            'text' => 'Master Data Status',
         ]
     ];
 }
