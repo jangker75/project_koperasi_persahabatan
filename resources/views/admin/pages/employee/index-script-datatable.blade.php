@@ -28,6 +28,7 @@
             { data: "nik", code: "nik" },
             { data: "nip", name: "nip" },
             { data: "salary", name: "salary" },
+            { data: "position.name", name: "position.name" },
             { data: "actions", name: "actions" },
         ],
         language: {

@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Master\MasterDataStatusController;
+use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Umum\EmployeeController;
 use App\Models\Product;
+use App\Http\Controllers\Umum\ExEmployeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,19 +22,19 @@ use Illuminate\Support\Facades\Route;
 
 // customer
 Route::get('/', function () {
-    // return redirect('/admin');
-    $data['product'] = Product::get();
-    return view('nasabah.pages.home', $data);
+  // return redirect('/admin');
+  $data['product'] = Product::get();
+  return view('nasabah.pages.home', $data);
 });
-
-// Route::get()
 // customer
+
+// admin
+
 
 
 Route::get('/admin', function () {
     return redirect(route('admin.dashboard'));
 });
-Route::resource('product', ProductController::class);
 Route::group([
     'middleware' => ['web', 'auth'],
     'as' => 'admin.',
@@ -50,12 +52,26 @@ Route::group([
 
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
+    Route::resource('product', ProductController::class);
+    Route::resource('category', CategoryController::class);
+    //toko-online
 
+    
     Route::resource('employee', EmployeeController::class);
+    Route::get('employee-out', [EmployeeController::class, 'employeeOut'])->name('employee.out');
+    Route::post('employee-store', [EmployeeController::class, 'employeeOutStore'])->name('employee.out.store');
+    Route::resource('ex-employee', ExEmployeeController::class);
 
     // Datatables Route
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
+    Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
 
     //Logout custom
     Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
 });
+
+
+//Redirect all wild domain
+Route::get('{any}', function () {
+    return redirect(route('admin.dashboard'));
+})->where('any', '.*');

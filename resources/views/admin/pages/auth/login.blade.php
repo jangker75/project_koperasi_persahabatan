@@ -12,7 +12,7 @@
         content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
 
     <!-- FAVICON -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/brand/favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/logo/logo.png') }}" />
 
     <!-- TITLE -->
     <title>{{ env('APP_NAME') }}</title>
@@ -40,7 +40,7 @@
                 <!-- CONTAINER OPEN -->
                 <div class="col col-login mx-auto mt-7">
                     <div class="text-center">
-                        <img src="{{ asset('assets/images/brand/logo-white.png') }}" class="header-brand-img"
+                        <img src="{{ asset('assets/images/logo/logo2.png') }}" height="150px" class="header-brand-img"
                             alt="">
                     </div>
                 </div>

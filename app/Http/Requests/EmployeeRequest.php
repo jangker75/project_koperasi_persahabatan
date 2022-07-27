@@ -30,11 +30,15 @@ class EmployeeRequest extends FormRequest
             "nip" => '',
             "gender" => 'required',
             "position_id" => '',
+            "department_id" => '',
             "status_employee_id" => 'required',
             "salary" => 'required',
             "birthday" => 'required',
-            "address1" => '',
-            "address2" => '',
+            "address_1" => '',
+            "address_2" => '',
+            "phone" => '',
+            "rekening" => 'required',
+            "bank" => 'required',
         ];
     }
 }

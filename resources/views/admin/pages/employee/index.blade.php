@@ -1,11 +1,14 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
-
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-end">
+                    <a href="{{ route('admin.employee.out') }}">
+                        <button class="btn btn-warning me-1">Anggota Keluar</button>
+                    </a>
                     <a href="{{ route('admin.employee.create') }}">
-                        <button class="btn btn-success me-5">{{ __('general.button_add_new_data') }}</button></a>
+                        <button class="btn btn-success me-5">Pendaftaran Anggota</button>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -14,11 +17,12 @@
                                 <tr>
                                     <th></th>
                                     <th>#</th>
-                                    <th>First name</th>
-                                    <th>Last name</th>
-                                    <th>NIK</th>
-                                    <th>NIP</th>
-                                    <th>Salary</th>
+                                    <th>{{ __('employee.first_name') }}</th>
+                                    <th>{{ __('employee.last_name') }}</th>
+                                    <th>{{ __('employee.nik') }}</th>
+                                    <th>{{ __('employee.nip') }}</th>
+                                    <th>{{ __('employee.salary') }}</th>
+                                    <th>{{ __('employee.position_id') }}</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

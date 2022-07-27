@@ -14,7 +14,23 @@ class Product extends Model
       'name', 'slug', 'sku', 'upc', 'description', 'unit_measurement', 'cover', 'brand_id'
     ];
 
-    public function Categories(){
+    public function categories(){
       return $this->belongsToMany(Category::class, 'category_has_product','product_id','category_id');
+    }
+
+    public function suppliers(){
+      return $this->belongsToMany(Supplier::class, 'supplier_has_product','product_id','supplier_id');
+    }
+
+    public function brand(){
+      return $this->belongsTo(Brand::class);
+    }
+
+    public function price(){
+      return $this->hasMany(Price::class);
+    }
+
+    public function stock(){
+      return $this->hasMany(Stock::class);
     }
 }

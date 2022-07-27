@@ -1,5 +1,6 @@
 <x-admin-layout>
     @include('nasabah.shared.form_error')
+    <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
     <div class="row">
         <div class="col-lg-12">
             @if (isset($employee))
@@ -70,9 +71,21 @@
                         </div>
                     </div>
                     <div class="row mb-4">
+                        {!! Form::label('phone', __('employee.phone'), ['class' => 'col-md-3 form-label']) !!}
+                        <div class="col-md-9">
+                            {!! Form::text('phone', null, [
+                                'class' =>
+                                    'form-control' .
+                                    ($errors->has('phone') ? ' is-invalid' : '') .
+                                    (!$errors->has('phone') && old('phone') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('employee.phone'),
+                            ]) !!}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
                         {!! Form::label('gender', __('employee.gender'), ['class' => 'col-md-3 form-label required']) !!}
                         <div class="col-md-9">
-                            {!! Form::select('gender', ['Laki-Laki', 'Perempuan'], null, [
+                            {!! Form::select('gender', \App\Enums\ConstantEnum::GENDER, null, [
                                 'required' => 'required',
                                 'class' =>
                                     'form-control form-select' .
@@ -91,6 +104,43 @@
                                     ($errors->has('position_id') ? ' is-invalid' : '') .
                                     (!$errors->has('position_id') && old('position_id') ? ' is-valid' : ''),
                                 'placeholder' => 'Input ' . __('employee.position_id'),
+                            ]) !!}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        {!! Form::label('bank', __('employee.bank'), ['class' => 'col-md-3 form-label required']) !!}
+                        <div class="col-md-9">
+                            {!! Form::select('bank', \App\Enums\ConstantEnum::BANK, null, [
+                                'class' =>
+                                    'form-control form-select' .
+                                    ($errors->has('bank') ? ' is-invalid' : '') .
+                                    (!$errors->has('bank') && old('bank') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('employee.bank'),
+                            ]) !!}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        {!! Form::label('rekening', __('employee.rekening'), ['class' => 'col-md-3 form-label required']) !!}
+                        <div class="col-md-9">
+                            {!! Form::number('rekening', null, [
+                                'required' => 'required',
+                                'class' =>
+                                    'form-control' .
+                                    ($errors->has('rekening') ? ' is-invalid' : '') .
+                                    (!$errors->has('rekening') && old('rekening') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('employee.rekening'),
+                            ]) !!}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        {!! Form::label('department_id', __('employee.department_id'), ['class' => 'col-md-3 form-label']) !!}
+                        <div class="col-md-9">
+                            {!! Form::select('department_id', $departmentList, null, [
+                                'class' =>
+                                    'form-control form-select' .
+                                    ($errors->has('department_id') ? ' is-invalid' : '') .
+                                    (!$errors->has('department_id') && old('department_id') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('employee.department_id'),
                             ]) !!}
                         </div>
                     </div>
@@ -139,37 +189,37 @@
                         </div>
                     </div>
                     <div class="row mb-4">
-                        {!! Form::label('address1', __('employee.address1'), ['class' => 'col-md-3 form-label']) !!}
+                        {!! Form::label('address_1', __('employee.address_1'), ['class' => 'col-md-3 form-label']) !!}
                         <div class="col-md-9">
                             <div class="input-group">
                                 <div class="input-group-text">
                                     <i class="icon icon-map"></i>
                                 </div>
-                                {!! Form::textarea('address1', null, [
+                                {!! Form::textarea('address_1', null, [
                                     'rows' => 4,
                                     'class' =>
                                         'form-control' .
-                                        ($errors->has('address1') ? ' is-invalid' : '') .
-                                        (!$errors->has('address1') && old('address1') ? ' is-valid' : ''),
-                                    'placeholder' => 'Input ' . __('employee.address1'),
+                                        ($errors->has('address_1') ? ' is-invalid' : '') .
+                                        (!$errors->has('address_1') && old('address_1') ? ' is-valid' : ''),
+                                    'placeholder' => 'Input ' . __('employee.address_1'),
                                 ]) !!}
                             </div>
                         </div>
                     </div>
                     <div class="row mb-4">
-                        {!! Form::label('address2', __('employee.address2'), ['class' => 'col-md-3 form-label']) !!}
+                        {!! Form::label('address_2', __('employee.address_2'), ['class' => 'col-md-3 form-label']) !!}
                         <div class="col-md-9">
                             <div class="input-group">
                                 <div class="input-group-text">
                                     <i class="icon icon-map"></i>
                                 </div>
-                                {!! Form::textarea('address2', null, [
+                                {!! Form::textarea('address_2', null, [
                                     'rows' => 4,
                                     'class' =>
                                         'form-control' .
-                                        ($errors->has('address2') ? ' is-invalid' : '') .
-                                        (!$errors->has('address2') && old('address2') ? ' is-valid' : ''),
-                                    'placeholder' => 'Input ' . __('employee.address2'),
+                                        ($errors->has('address_2') ? ' is-invalid' : '') .
+                                        (!$errors->has('address_2') && old('address_2') ? ' is-valid' : ''),
+                                    'placeholder' => 'Input ' . __('employee.address_2'),
                                 ]) !!}
                             </div>
                         </div>

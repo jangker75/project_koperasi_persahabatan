@@ -11,6 +11,6 @@ class Price extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'product_id', 'cost', 'price', 'margin', 'is_active'
+      'product_id', 'cost', 'revenue', 'margin', 'profit', 'is_active'
     ];
 }

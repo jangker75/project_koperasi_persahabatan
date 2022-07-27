@@ -28,7 +28,7 @@ function listSideMenu()
             'text' => 'Produk',
             'submenus' => [
                 [
-                    'link' => '#',
+                    'link' => url('/admin/product'),
                     'text' => 'Kelola Data Produk',
                 ],
                 [
@@ -42,6 +42,10 @@ function listSideMenu()
                 [
                     'link' => '#',
                     'text' => 'Kelola Data Pemasok',
+                ],
+                [
+                    'link' => url('/admin/category'),
+                    'text' => 'Kelola Data Kategori Produk',
                 ]
             ]
         ],
@@ -71,8 +75,12 @@ function listSideMenu()
         [
             'link' => route('admin.employee.index'),
             'icon' => 'fe fe-users',
-            'text' => 'Data Karyawan',
-
+            'text' => 'Data Anggota',
+        ],
+        [
+            'link' => route('admin.ex-employee.index'),
+            'icon' => 'fe fe-users',
+            'text' => 'Data Anggota Keluar',
         ],
         [
             'isseparator' => true,
@@ -89,7 +97,7 @@ function listSideMenu()
             'text' => "MASTER DATA"
         ],
         [
-            'link' => "#",
+            'link' => url('admin/master-data-status'),
             'icon' => 'fe fe-layers',
             'text' => 'Master Data Status',
         ]

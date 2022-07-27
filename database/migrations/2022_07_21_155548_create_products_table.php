@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('unit_measurement');
             $table->longText('description');
             $table->string('cover');
-            $table->integer('brand_id');
+            $table->integer('brand_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

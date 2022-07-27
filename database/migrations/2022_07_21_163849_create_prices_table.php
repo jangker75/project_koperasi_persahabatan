@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->integer('product_id');
             $table->integer('cost');
-            $table->integer('price');
-            $table->integer('margin');
+            $table->integer('revenue');
+            $table->float('margin');
+            $table->integer('profit');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
