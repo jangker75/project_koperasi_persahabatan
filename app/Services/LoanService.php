@@ -23,7 +23,7 @@ class LoanService
             'profit_company_amount' => $profitCompany,
             'profit_employee_amount' => $profitEmployee,
         ]);
-        (new CompanyService())->addCreditBalance(getCompanyId()->balance->id, $profitCompany, 'loan_balance');
+        (new CompanyService())->addCreditBalance($profitCompany, 'loan_balance');
         (new EmployeeService())->addCreditBalance($loan->employee->savings->id, $profitEmployee, 'activity_savings_balance');
     }
 }

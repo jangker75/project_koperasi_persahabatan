@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\CompanyBalanceController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Umum\EmployeeController;
 use App\Http\Controllers\Umum\ExEmployeeController;
 use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
+use App\Models\CompanyBalance;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,9 +34,7 @@ Route::group([
     'as' => 'admin.',
     'prefix' => 'admin'
 ], function () {
-    Route::get('dashboard', function () {
-        return view('admin.pages.dashboard.index');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('pinjaman', function () {
         return view('admin.pages.dashboard.index');
     })->name('pinjaman');
@@ -44,11 +45,14 @@ Route::group([
     Route::resource('employee', EmployeeController::class);
     Route::get('employee-out', [EmployeeController::class, 'employeeOut'])->name('employee.out');
     Route::post('employee-store', [EmployeeController::class, 'employeeOutStore'])->name('employee.out.store');
+    Route::post('check-status-loan-employee', [EmployeeController::class, 'checkStatusLoanEmployee'])->name('check.status.loan.employee');
     Route::resource('ex-employee', ExEmployeeController::class);
     Route::resource('loan-submission', LoanSubmissionController::class);
     Route::get('loan-submission-action-approve/{loan}/{status}', [LoanSubmissionController::class, 'actionSubmissionLoan'])->name('loan-submission.action.approval');
     Route::resource('loan-list', LoanListController::class);
     Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
+    Route::resource('company-balance', CompanyBalanceController::class);
+    Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
 
     // Datatables Route
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
