@@ -124,12 +124,16 @@ class LoanSubmissionController extends BaseAdminController
     {
         $query = Loan::query()
         ->with('approvalstatus')
-        ->select('loans.*');
+        ->select('loans.*')
+        ->where('loan_approval_status_id', 3);
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
             ->editColumn('total_loan_amount', function($row){
                 return format_uang($row->total_loan_amount);
+            })
+            ->addColumn('full_name', function($row){
+                return $row->employee->full_name;
             })
             ->addColumn('status', function($row){
                 $class = ($row->loan_approval_status_id == 3) ? 'btn-warning' : (($row->loan_approval_status_id == 4) ? 'btn-success' : 'btn-danger');
@@ -162,13 +166,17 @@ class LoanSubmissionController extends BaseAdminController
                 $btn = $btn . '</div>';
                 return $btn;
             })
-            ->rawColumns(['actions', 'status'])
+            ->rawColumns(['actions', 'status', 'full_name'])
             ->make(true);
     }
 
     public function actionSubmissionLoan(Loan $loan, $status)
     {
-        $loan->update(['loan_approval_status_id' => $status]);
+        $loan->update([
+            'loan_approval_status_id' => $status,
+            'response_date' => now(),
+            'response_user' => auth()->user()->employee->full_name
+        ]);
         if($status == 4) {
             $loan->loanhistory()->create([
                 'transaction_type' => 'credit',
@@ -180,7 +188,7 @@ class LoanSubmissionController extends BaseAdminController
                 'profit_company_amount' => 0,
                 'profit_employee_amount' => 0,
             ]);
-            (new CompanyService())->addCreditBalance(getCompanyId()->balance->id, $loan->admin_fee, 'loan_balance', __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]));
+            (new CompanyService())->addCreditBalance($loan->admin_fee, 'loan_balance', __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]));
         };
 
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_edit_data_success'));

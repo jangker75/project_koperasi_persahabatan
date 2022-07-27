@@ -13,23 +13,24 @@ function listSideMenu()
 
         ],
         [
+            'link' => route('admin.company-balance.index'),
+            'icon' => 'fe fe-home',
+            'text' => 'Saldo Koperasi',
+
+        ],
+        [
             'isseparator' => true,
             'text' => "USiPa"
         ],
         [
-            'multimenu' => true,
+            'link' => route('admin.loan-submission.index'),
             'icon' => 'fe fe-home',
-            'text' => 'Menu Pinjaman',
-            'submenus' => [
-                [
-                    'link' => route('admin.loan-submission.index'),
-                    'text' => 'Pengajuan Pinjaman',
-                ],
-                [
-                    'link' => route('admin.loan-list.index'),
-                    'text' => 'Data Pinjaman',
-                ]
-            ]
+            'text' => 'Pengajuan Pinjaman',
+        ],
+        [
+            'link' => route('admin.loan-list.index'),
+            'icon' => 'fe fe-home',
+            'text' => 'Pinjaman Berjalan',
         ],
         [
             'isseparator' => true,

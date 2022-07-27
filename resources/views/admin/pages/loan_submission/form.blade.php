@@ -1,6 +1,12 @@
 <x-admin-layout>
     @include('nasabah.shared.form_error')
     <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
+    <div class="alert alert-danger" role="alert" id="status-loan-employee">
+        Danger alert—At vero eos et accusamus praesentium!
+    </div>
+    <div class="alert alert-danger" role="alert" id="status-age-employee">
+        Danger alert—At vero eos et accusamus praesentium!
+    </div>
     <div class="row">
         <div class="col-lg-12">
             @if (isset($loan))
@@ -25,6 +31,7 @@
                         <div class="col-md-9">
                             {!! Form::select('employee_id', $employeeList, null, [
                                 'required' => 'required',
+                                'id' => 'employee_id',
                                 'class' =>
                                     'form-control form-select select2' .
                                     ($errors->has('employee_id') ? ' is-invalid' : '') .

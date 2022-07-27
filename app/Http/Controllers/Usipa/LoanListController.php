@@ -100,7 +100,8 @@ class LoanListController extends BaseAdminController
         $keyword = request('keyword');
         $query = Loan::query()
         ->with('approvalstatus', 'employee')
-        ->select('loans.*');
+        ->select('loans.*')
+        ->where('loan_approval_status_id', '!=', 3);
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)

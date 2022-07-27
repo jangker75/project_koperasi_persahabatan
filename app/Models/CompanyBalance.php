@@ -13,5 +13,8 @@ class CompanyBalance extends Model
         'company_id', 'loan_balance', 'store_balance',
         'other_balance', 'total_balance',
     ];
-    
+    public function balancehistory()
+    {
+        return $this->hasMany(CompanyBalanceHistory::class, 'balance_id');
+    }
 }

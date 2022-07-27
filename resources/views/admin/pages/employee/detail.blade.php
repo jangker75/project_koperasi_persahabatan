@@ -75,6 +75,11 @@
                             <td>{{ format_hari_tanggal($employee->birthday) }}</td>
                         </tr>
                         <tr>
+                            <td>{{ __('employee.age') }}</td>
+                            <td>{{ $employee->age }} Tahun</td>
+                        </tr>
+
+                        <tr>
                             <td>{{ __('employee.status_employee_id') }}</td>
                             <td>{{ $employee->statusEmployee->name }}</td>
                         </tr>

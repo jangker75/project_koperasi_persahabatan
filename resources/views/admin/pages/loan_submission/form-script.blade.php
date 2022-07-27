@@ -34,6 +34,33 @@
         let amount = totalAmount - $('#admin_fee').val()
         $('#received_amount').val(formatMoney(amount))
     }
-
+    $('#status-loan-employee, #status-age-employee').hide();
+    $('#employee_id').on('change', function(){
+        $('#status-loan-employee, #status-age-employee').hide();
+        $.ajax({
+            type: "post",
+            url: "{{ route('admin.check.status.loan.employee') }}",
+            data: {
+                employee_id: $(this).val(),
+                _token: "{{ csrf_token() }}",
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                if (response.status_loan != undefined) {
+                    let result = ''
+                    result += response.status_loan + '<br><ul class="list-group">'
+                    response.transaction_number.forEach((item)=> {
+                        result += '<li class="listunorder bg-transparent border-0 fw-bold">' + item + '</li>'
+                    })
+                    result += '</ul>'
+                    $('#status-loan-employee').html(result).show();
+                }
+                if(response.status_age != undefined){
+                    $('#status-age-employee').text(response.status_age).show();
+                }
+            }
+        });
+    })
     
 </script>
