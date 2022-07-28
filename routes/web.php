@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Master\MasterDataStatusController;
+use App\Http\Controllers\Toko\BrandController;
 use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
+use App\Http\Controllers\Toko\SupplierController;
 use App\Http\Controllers\Umum\EmployeeController;
 use App\Models\Product;
 use App\Http\Controllers\Umum\ExEmployeeController;
@@ -58,6 +60,8 @@ Route::group([
     Route::resource('product', ProductController::class);
     Route::resource('category', CategoryController::class);
     Route::resource('store', StoreController::class);
+    Route::resource('brand', BrandController::class);
+    Route::resource('supplier', SupplierController::class);
     //toko-online
 
     

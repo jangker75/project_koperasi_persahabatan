@@ -65,6 +65,7 @@
 
                     }
                     tds.pop()
+                    console.log(data);
                     data = {
                         'id': tds[0],
                         '_method': 'put',

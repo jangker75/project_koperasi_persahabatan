@@ -25,28 +25,58 @@ function listSideMenu()
         [
             'multimenu' => true,
             'icon' => 'fe fe-shopping-cart',
-            'text' => 'Produk',
+            'text' => 'Kelola Data Toko',
             'submenus' => [
                 [
                     'link' => url('/admin/product'),
                     'text' => 'Kelola Data Produk',
                 ],
                 [
-                    'link' => '#',
-                    'text' => 'Kelola Data Stock',
-                ],
-                [
                     'link' => url('/admin/category'),
                     'text' => 'Kelola Data Kategori Produk',
                 ],
                 [
-                    'link' => '#',
+                    'link' => url('/admin/brand'),
                     'text' => 'Kelola Data Brand',
                 ],
                 [
-                    'link' => '#',
+                    'link' => url('/admin/supplier'),
                     'text' => 'Kelola Data Pemasok',
                 ]
+            ]
+        ],
+        [
+            'multimenu' => true,
+            'icon' => 'fe fe-database',
+            'text' => 'Pengadaan',
+            'submenus' => [
+                [
+                    'link' => '#',
+                    'text' => 'Management Stok Barang',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Transfer Stok',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Audit Opname',
+                ],
+            ]
+        ],
+        [
+            'multimenu' => true,
+            'icon' => 'fa fa-money',
+            'text' => 'Paylater',
+            'submenus' => [
+                [
+                    'link' => '#',
+                    'text' => 'Pengajuan Paylater',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Kelola Data Paylater',
+                ],
             ]
         ],
         [
