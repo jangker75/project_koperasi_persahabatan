@@ -20,6 +20,78 @@ function listSideMenu()
         ],
         [
             'isseparator' => true,
+            'text' => "Kelola Toko"
+        ],
+        [
+            'link' => "#",
+            'icon' => 'fe fe-dollar-sign',
+            'text' => 'Data Penjualan',
+
+        ],
+        [
+            'multimenu' => true,
+            'icon' => 'fe fe-shopping-cart',
+            'text' => 'Kelola Data Toko',
+            'submenus' => [
+                [
+                    'link' => url('/admin/product'),
+                    'text' => 'Kelola Data Produk',
+                ],
+                [
+                    'link' => url('/admin/category'),
+                    'text' => 'Kelola Data Kategori Produk',
+                ],
+                [
+                    'link' => url('/admin/brand'),
+                    'text' => 'Kelola Data Brand',
+                ],
+                [
+                    'link' => url('/admin/supplier'),
+                    'text' => 'Kelola Data Pemasok',
+                ]
+            ]
+        ],
+        [
+            'multimenu' => true,
+            'icon' => 'fe fe-database',
+            'text' => 'Pengadaan',
+            'submenus' => [
+                [
+                    'link' => '#',
+                    'text' => 'Management Stok Barang',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Transfer Stok',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Audit Opname',
+                ],
+            ]
+        ],
+        [
+            'multimenu' => true,
+            'icon' => 'fa fa-money',
+            'text' => 'Paylater',
+            'submenus' => [
+                [
+                    'link' => '#',
+                    'text' => 'Pengajuan Paylater',
+                ],
+                [
+                    'link' => '#',
+                    'text' => 'Kelola Data Paylater',
+                ],
+            ]
+        ],
+        [
+            'link' => url("admin/store"),
+            'icon' => 'fe fe-map-pin',
+            'text' => 'Data Toko',
+        ],
+        [
+            'isseparator' => true,
             'text' => "USiPa"
         ],
         [
@@ -48,6 +120,15 @@ function listSideMenu()
         ],
         [
             'isseparator' => true,
+            'text' => "MASTER DATA"
+        ],
+        [
+            'link' => url('admin/master-data-status'),
+            'icon' => 'fe fe-layers',
+            'text' => 'Master Data Status',
+        ],
+        [
+            'isseparator' => true,
             'text' => "Setting Application"
         ],
         [
@@ -55,6 +136,6 @@ function listSideMenu()
             'icon' => 'mdi mdi-wrench',
             'text' => 'Switcher',
 
-        ],
+        ]
     ];
 }

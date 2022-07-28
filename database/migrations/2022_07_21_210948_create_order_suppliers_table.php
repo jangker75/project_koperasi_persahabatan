@@ -15,7 +15,15 @@ return new class extends Migration
     {
         Schema::create('order_suppliers', function (Blueprint $table) {
             $table->id();
+            $table->string('order_supplier_code');
+            $table->integer('supplier_id');
+            $table->integer('to_store_id');
+            $table->integer('status_id');
+            $table->integer('req_empl_id');
+            $table->datetime('order_date');
+            $table->datetime('received_date');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

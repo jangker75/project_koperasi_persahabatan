@@ -17,7 +17,11 @@ class SupplierFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => 'Toko ' . $this->faker->name, 
+            'contact_name' => $this->faker->name,
+            'contact_address' => $this->faker->address(), 
+            'contact_phone' => $this->faker->phoneNumber(), 
+            'contact_link' => '--'
         ];
     }
 }

@@ -1,10 +1,16 @@
 <?php
 
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Master\MasterDataStatusController;
+use App\Http\Controllers\Toko\BrandController;
+use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\CompanyBalanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Toko\ProductController;
+use App\Http\Controllers\Toko\StoreController;
+use App\Http\Controllers\Toko\SupplierController;
 use App\Http\Controllers\Umum\EmployeeController;
+use App\Models\Product;
 use App\Http\Controllers\Umum\ExEmployeeController;
 use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
@@ -22,13 +28,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// customer
 Route::get('/', function () {
-    return redirect('/admin');
+  // return redirect('/admin');
+  $data['product'] = Product::get();
+  return view('nasabah.pages.home', $data);
 });
+// customer
+
+// admin
+
+
+
 Route::get('/admin', function () {
     return redirect(route('admin.dashboard'));
 });
-Route::resource('product', ProductController::class);
 Route::group([
     'middleware' => ['web', 'auth'],
     'as' => 'admin.',
@@ -42,6 +56,16 @@ Route::group([
         return view('admin.pages.switcher.index');
     })->name('switcher');
 
+    //toko-online
+    Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
+    Route::resource('product', ProductController::class);
+    Route::resource('category', CategoryController::class);
+    Route::resource('store', StoreController::class);
+    Route::resource('brand', BrandController::class);
+    Route::resource('supplier', SupplierController::class);
+    //toko-online
+
+    
     Route::resource('employee', EmployeeController::class);
     Route::get('employee-out', [EmployeeController::class, 'employeeOut'])->name('employee.out');
     Route::post('employee-store', [EmployeeController::class, 'employeeOutStore'])->name('employee.out.store');
