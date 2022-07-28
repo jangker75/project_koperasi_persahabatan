@@ -7,6 +7,7 @@ return [
     'nik' => "NIK (Nomor Induk Koperasi)",
     'nip' => "NIP",
     'birthday' => "Tanggal Lahir",
+    'age' => "Umur",
     'gender' => "Jenis Kelamin",
     'address_1' => "Alamat 1",
     'address_2' => "Alamat 2",

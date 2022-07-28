@@ -7,6 +7,7 @@ use App\Http\Controllers\BaseAdminController;
 use App\Http\Requests\EmployeeRequest;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\Loan;
 use App\Models\MasterDataStatus;
 use App\Models\Position;
 use App\Models\SavingHistory;
@@ -201,5 +202,23 @@ class EmployeeController extends BaseAdminController
             'type' => __("savings_employee.{$saving_type}"),
             'data' => $history,
         ]);
+    }
+
+    public function checkStatusLoanEmployee(Request $request)
+    {
+        $data = [
+            'status' => 'success',
+        ];
+        $loan = Loan::where('employee_id', request('employee_id'))
+        ->where('is_lunas', 0)->get();
+        $employee = Employee::find(request('employee_id'));
+        if (count($loan) != 0) {
+            $data['status_loan'] = 'Karyawan ini ada pinjaman yang belum lunas';
+            $data['transaction_number'] = $loan->pluck('transaction_number');
+        }
+        if($employee->age >= 45){
+            $data['status_age'] = "Umur karyawan ini akan pensiun (".$employee->age." Tahun)";
+        }
+        return response()->json($data);
     }
 }

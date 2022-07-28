@@ -33,6 +33,7 @@ return new class extends Migration
             $table->date('first_payment_date');
             $table->text('notes')->nullable();
             $table->integer('loan_approval_status_id');
+            $table->integer('is_lunas')->default(0);
             $table->timestamp('response_date')->nullable();
             $table->string('response_user', 100)->nullable();
             $table->string('created_by', 100)->nullable();

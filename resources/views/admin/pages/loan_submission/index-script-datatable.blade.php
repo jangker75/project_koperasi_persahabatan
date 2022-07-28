@@ -24,6 +24,7 @@
             { data: "id", name: "id", visible: false},
             { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
             { data: "transaction_number", name: "transaction_number" },
+            { data: "full_name", name: "full_name" },
             { data: "total_loan_amount", name: "total_loan_amount" },
             { data: "status", name: "approvalstatus.name" },
             { data: "actions", name: "actions" },
