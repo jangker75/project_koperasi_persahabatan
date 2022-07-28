@@ -2,21 +2,67 @@
     <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
     <div class="row">
         <div class="col-md-6 col-lg-3">
-            <x-employee.employee-balance-card-component :text="__('savings_employee.principal_savings_balance')" :value="$employee->savings->principal_savings_balance" type_balance="principal_savings_balance"/>
+            <x-employee.employee-balance-card-component :text="__('savings_employee.principal_savings_balance')" :value="$employee->savings->principal_savings_balance"
+                type_balance="principal_savings_balance" />
         </div>
         <div class="col-md-6 col-lg-3">
-            <x-employee.employee-balance-card-component :text="__('savings_employee.mandatory_savings_balance')" :value="$employee->savings->mandatory_savings_balance" type_balance="mandatory_savings_balance"/>
+            <x-employee.employee-balance-card-component :text="__('savings_employee.mandatory_savings_balance')" :value="$employee->savings->mandatory_savings_balance"
+                type_balance="mandatory_savings_balance" />
         </div>
         <div class="col-md-6 col-lg-3">
-            <x-employee.employee-balance-card-component :text="__('savings_employee.activity_savings_balance')" :value="$employee->savings->activity_savings_balance" type_balance="activity_savings_balance"/>
+            <x-employee.employee-balance-card-component :text="__('savings_employee.activity_savings_balance')" :value="$employee->savings->activity_savings_balance"
+                type_balance="activity_savings_balance" />
         </div>
         <div class="col-md-6 col-lg-3">
-            <x-employee.employee-balance-card-component :text="__('savings_employee.voluntary_savings_balance')" :value="$employee->savings->voluntary_savings_balance" type_balance="voluntary_savings_balance"/>
+            <x-employee.employee-balance-card-component :text="__('savings_employee.voluntary_savings_balance')" :value="$employee->savings->voluntary_savings_balance"
+                type_balance="voluntary_savings_balance" />
         </div>
     </div>
     <div class="card">
         <div class="card-header">
-            <h4>Employee Information</h4>
+            <h4>Riwayat Pinjaman</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <td class="fw-bold">{{ __('loan.transaction_number') }}</td>
+                            <td class="fw-bold">{{ __('loan.total_loan_amount') }}</td>
+                            <td class="fw-bold">{{ __('loan.remaining_amount') }}</td>
+                            <td class="fw-bold">Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if ($employee->loan->count() > 0)
+                            @foreach ($employee->loan as $loan)
+                                <tr>
+                                    <td>{{ $loan->transaction_number }}</td>
+                                    <td>{{ format_uang($loan->total_loan_amount) }}</td>
+                                    <td>{{ format_uang($loan->remaining_amount) }}</td>
+                                    <td>
+                                        {{-- <button data-bs-toggle="modal" data-loan-id="{{ $loan->id }}"
+                                            data-loan-number="{{ $loan->transaction_number }}"
+                                        data-bs-target="#modalHistoryLoan" class="btn btn-primary btn-sm loan-history-modal">Lihat Detail</button> --}}
+                                        <button data-bs-toggle="modal" value="{{ route('admin.loan-list.show',[$loan->id]) }}"
+                                            data-loan-number="{{ $loan->transaction_number }}"
+                                        data-bs-target="#modalHistoryLoan" class="btn btn-primary btn-sm loan-history-modal">Lihat Detail</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td class="text-center fw-bold" colspan="4">No data</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>Informasi Nasabah</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -102,25 +148,29 @@
     </div>
     <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
     @include('admin.pages.employee.history_balance_modal')
+    @include('admin.pages.employee.history_loan_modal')
     @slot('script')
         <script>
-            $(document).ready(function(){
-                //Show modal table history
-                $('.balance-card').on('click', function(e){
+            $(document).ready(function() {
+                //Show modal balance history
+                $('.balance-card').on('click', function(e) {
                     let type = $(this).data('type-balance')
                     $('#table-history-balance-modal tbody tr').remove()
                     let tRow = ''
                     $.ajax({
                         type: "get",
-                        url: "{{ url('admin/employee-savings-history').'/'."$employee->id".'/' }}"+ type,
+                        url: "{{ url('admin/employee-savings-history') . '/' . "$employee->id" . '/' }}" +
+                            type,
                         dataType: "json",
-                        success: function (response) {
+                        success: function(response) {
                             $('#history-modal-title').text(response.type)
                             response.data.forEach(item => {
                                 tRow += "<tr><td>" +
                                     item.transaction_date + "</td><td>" +
-                                    (item.transaction_type == 'credit' ? item.amount : "") + "</td><td>" +
-                                    (item.transaction_type == 'debit' ? item.amount : "") + "</td><td>" +
+                                    (item.transaction_type == 'credit' ? item.amount : "") +
+                                    "</td><td>" +
+                                    (item.transaction_type == 'debit' ? item.amount : "") +
+                                    "</td><td>" +
                                     item.balance_after + "</td></tr>"
                             })
                         }
@@ -128,6 +178,13 @@
                         $('#table-history-balance-modal tbody').append(tRow)
                     });
                 })
+
+                //Show modal loan history
+                $('.loan-history-modal').click(function(){
+                    $('#loanmodalcontent').load($(this).attr('value'))
+                    $('#modalTitle').text($(this).data('loan-number'))
+                })
+                
             })
         </script>
     @endslot

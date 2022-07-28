@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector;
 use Yajra\DataTables\DataTables;
 
 class LoanListController extends BaseAdminController
@@ -54,13 +55,18 @@ class LoanListController extends BaseAdminController
      * @param  \App\Models\Loan  $loan
      * @return \Illuminate\Http\Response
      */
-    public function show(Loan $loan_list)
+    public function show(Loan $loan_list, Request $request)
     {
+        if ($request->ajax()) {
+            $data['loan'] = $loan_list;
+            return view('admin.pages.loan_list.detail_card_loan', $data);
+        }
         $data = $this->data;
         $data['titlePage'] = 'Detail Data';
         $data['loan'] = $loan_list;
         return view('admin.pages.loan_list.detail', $data);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -101,12 +107,15 @@ class LoanListController extends BaseAdminController
         $query = Loan::query()
         ->with('approvalstatus', 'employee')
         ->select('loans.*')
-        ->where('loan_approval_status_id', '!=', 3);
+        ->where('loan_approval_status_id', '!=', 50);
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
             ->editColumn('total_loan_amount', function($row){
                 return format_uang($row->total_loan_amount);
+            })
+            ->editColumn('remaining_amount', function($row){
+                return format_uang($row->remaining_amount);
             })
             ->addColumn('full_name', function($row){
                 return $row->employee->full_name;
@@ -118,7 +127,7 @@ class LoanListController extends BaseAdminController
                 });
             })
             ->addColumn('status', function($row){
-                $class = ($row->loan_approval_status_id == 3) ? 'btn-warning' : (($row->loan_approval_status_id == 4) ? 'btn-success' : 'btn-danger');
+                $class = ($row->loan_approval_status_id == 50) ? 'btn-warning' : (($row->loan_approval_status_id == 51) ? 'btn-success' : 'btn-danger');
                 $btn = '<a disabled class="btn '.$class.' btn-pill text-white fw-600 btn-sm">'.$row->approvalstatus->name.'</a>';
                 return $btn;
             })

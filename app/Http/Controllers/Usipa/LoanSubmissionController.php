@@ -68,7 +68,7 @@ class LoanSubmissionController extends BaseAdminController
         $data['transaction_number'] = (new CodeService())->generateCode('KOP');
         $data['remaining_amount'] = $input->total_loan_amount;
         $data['created_by'] = auth()->user()->employee->full_name;
-        $data['loan_approval_status_id'] = 3;
+        $data['loan_approval_status_id'] = 50;
         $input->received_amount = str_replace(',','',$input->received_amount);
         $loan = Loan::create($input->merge($data)->all());
         
@@ -125,7 +125,7 @@ class LoanSubmissionController extends BaseAdminController
         $query = Loan::query()
         ->with('approvalstatus')
         ->select('loans.*')
-        ->where('loan_approval_status_id', 3);
+        ->where('loan_approval_status_id', 50);
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
@@ -136,20 +136,20 @@ class LoanSubmissionController extends BaseAdminController
                 return $row->employee->full_name;
             })
             ->addColumn('status', function($row){
-                $class = ($row->loan_approval_status_id == 3) ? 'btn-warning' : (($row->loan_approval_status_id == 4) ? 'btn-success' : 'btn-danger');
-                $btn = '<a disabled class="btn '.$class.' btn-pill text-white fw-600 btn-sm">'.$row->approvalstatus->name.'</a>';
+                $class = ($row->loan_approval_status_id == 50) ? 'bg-warning' : (($row->loan_approval_status_id == 51) ? 'bg-success' : 'bg-danger');
+                $btn = '<span class="badge '.$class.' rounded-pill text-white fw-bold p-2 px-3">'.$row->approvalstatus->name.'</span>';
                 return $btn;
             })
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-group btn-list d-flex justify-content-center">';
-                if($row->loan_approval_status_id == 3){
+                if($row->loan_approval_status_id == 50){
                     $btn = $btn . '<div class="dropdown">
                         <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown">
                                 Action
                             </button>
                         <div class="dropdown-menu" style="">
-                            <a class="dropdown-item action-button" href="'. route('admin.loan-submission.action.approval', ['status' => 4, 'loan' => $row->id]) .'">Approve</a>
-                            <a class="dropdown-item action-button" href="'. route('admin.loan-submission.action.approval', ['status' => 5, 'loan' => $row->id]) .'">Reject</a>
+                            <a class="dropdown-item action-button" href="'. route('admin.loan-submission.action.approval', ['status' => 51, 'loan' => $row->id]) .'">Approve</a>
+                            <a class="dropdown-item action-button" href="'. route('admin.loan-submission.action.approval', ['status' => 52, 'loan' => $row->id]) .'">Reject</a>
                         </div>
                     </div>';
                 }
@@ -177,7 +177,7 @@ class LoanSubmissionController extends BaseAdminController
             'response_date' => now(),
             'response_user' => auth()->user()->employee->full_name
         ]);
-        if($status == 4) {
+        if($status == 51) {
             $loan->loanhistory()->create([
                 'transaction_type' => 'credit',
                 'transaction_date' => now(),

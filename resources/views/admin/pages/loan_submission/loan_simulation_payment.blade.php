@@ -29,14 +29,14 @@
     <div class="row col-md-3">
         <label>Percent Ratio Koperasi</label>
         <div class="input-group">
-            <input name="profit_company_ratio" class="form-control" type="number" value="50">
+            <input name="profit_company_ratio" class="form-control" inputmode="numeric">
             <label class="input-group-text">%</label>
         </div>
     </div>
     <div class="row col-md-3">
         <label>Percent Ratio Nasabah</label>
         <div class="input-group">
-            <input name="profit_employee_ratio" class="form-control" type="number" value="50">
+            <input readonly name="profit_employee_ratio" class="form-control" type="number">
             <label class="input-group-text">%</label>
         </div>
     </div>
