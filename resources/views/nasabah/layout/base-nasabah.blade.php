@@ -45,75 +45,8 @@
     <div class="page">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-md-4 offset-md-4 border border-dark p-0">
-                    <!-- Navbar -->
-                    <nav class="navbar navbar-nasabah border border-dark p-2">
-                        <div class="w-100 d-flex justify-content-between align-items-center">
-                            <div class="logo">
-                                <a href="" class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/logo/logo3.png') }}" alt="" height="48">
-                                </a>
-                            </div>
-                            <div class="col-6 d-flex justify-content-end">
-                                <div class="dropdown">
-                                    <a class="btn text-light" role="button" id="dropdownCart" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <i class="fe fe-shopping-cart"></i>
-                                    </a>
-
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownCart">
-                                        <li><span class="dropdown-item">List Shopping Cart</span></li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        <li>
-                                            <div class="dropdown-item">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="p-4 bg-secondary rounded"></div>
-                                                    <div class="text ms-3">
-                                                        <span>Product 1</span><br>
-                                                        <small class="text-danger">Rp 9000</small>
-                                                    </div>
-                                                    <div class="text ms-3">
-                                                        <small>qty : <strong>4</strong></small>
-                                                    </div>
-                                                    <div class="text ms-3">
-                                                        <i class="fe fe-x"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                                <button class="btn text-light" type="button" data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount"><i class="fe fe-user"></i></button>
-
-                                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAccount"
-                                    aria-labelledby="offcanvasAccountLabel">
-                                    <div class="offcanvas-header">
-                                        <h5 id="offcanvasAccountLabel" class="text-dark">Koperasi Karya Husada</h5>
-                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="offcanvas-body">
-                                        ...
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <div class="p-2 w-100 mt-2">
-                            <div class="input-group w-100">
-                                <span class="input-group-text" id="basic-addon1">
-                                    <i class="fe fe-search"></i>
-                                </span>
-                                <input type="text" class="form-control" placeholder="Cari.." aria-label="Username"
-                                    aria-describedby="basic-addon1">
-                            </div>
-                        </div>
-                    </nav>
-                    <!-- Navbar -->
+                <div class="col-12 col-md-4 offset-md-4 p-0">
+                    @include('nasabah.layout.navbar')
                 </div>
                 <div class="col-12 col-md-4 offset-md-4 bg-light">
                     <div class="row">
@@ -124,6 +57,42 @@
         </div>
     </div>
 
+    @yield('footer')
+
+    
+
+    {{-- <div class="position-fixed w-100 bottom-0 left-0 p-2" style="z-index: 6;">
+      <div class="bg-primary w-100 px-2 shadow p-0" style="border-radius: 8px;">
+        <div class="container py-1">
+          <div class="row">
+            <div class="col-3 d-flex justify-content-center">
+              <a href="#" class="btn d-flex flex-column align-items-center">
+                <i class="fe fe-home text-light" style="font-size: 20px;"></i>
+                <small class="small text-light">Beranda</small>
+              </a>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+              <a href="#" class="btn d-flex flex-column align-items-center">
+                <i class="fe fe-shopping-cart text-light" style="font-size: 20px;"></i>
+                <small class="small text-light">Produk</small>
+              </a>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+              <a href="#" class="btn d-flex flex-column align-items-center">
+                <i class="fe fe-credit-card text-light" style="font-size: 20px;"></i>
+                <small class="small text-light">Pinjaman</small>
+              </a>
+            </div>
+            <div class="col-3 d-flex justify-content-center">
+              <a href="#" class="btn d-flex flex-column align-items-center">
+                <i class="fe fe-user text-light" style="font-size: 20px;"></i>
+                <small class="small text-light">Profile</small>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> --}}
 
 
     {{-- SCRIPT --}}
