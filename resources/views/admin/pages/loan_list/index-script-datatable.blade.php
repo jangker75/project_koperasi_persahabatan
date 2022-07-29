@@ -29,6 +29,7 @@
             { data: "transaction_number", name: "transaction_number" },
             { data: "full_name", name: "full_name" },
             { data: "total_loan_amount", name: "total_loan_amount" },
+            { data: "remaining_amount", name: "remaining_amount" },
             { data: "actions", name: "actions" },
         ],
         language: {

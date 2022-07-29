@@ -1,4 +1,19 @@
 <script>
+    $(document).ready(function(){
+        $("[name='profit_company_ratio']").val(50)
+        $("[name='profit_employee_ratio']").val(50)
+    })
+    $("[name='profit_company_ratio']").on('keyup',function(){
+        if ($(this).val() > 100) {
+            $(this).val(100)
+        }
+        if ($(this).val() < 0) {
+            $(this).val(0)
+        }
+
+        $("[name='profit_employee_ratio']").val(100 - $(this).val())
+    })
+
     $('#btn-simulate-loan').click(function() {
         addToTable()
     })
@@ -25,7 +40,7 @@
         let totalInterest = 0
         let totalIncome = 0
         let currentInterest = 0
-
+        
         //iteration for input data simulation to table
         for (let index = 0; index <= totalPayMonth; index++) {
             //skip first month for total loan

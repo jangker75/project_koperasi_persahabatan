@@ -17,7 +17,7 @@ return [
     'first_payment_date' => 'Tanggal Mulai Bayar',
     'notes' => 'Catatan',
     'loan_approval_status_id' => 'Status approval pinjaman',
-    'response_date' => 'Tanggal Respon',
-    'response_user' => 'Direspon oleh',
+    'response_date' => 'Tanggal Cek',
+    'response_user' => 'Di Cek oleh',
     'admin_fee' => 'Admin Fee',
 ];

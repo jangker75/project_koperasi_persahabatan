@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\CompanyBalanceHistory;
+use App\Models\Loan;
+use App\Models\LoanHistory;
 use Illuminate\Support\Str;
 
 class CompanyBalanceController extends BaseAdminController
@@ -17,6 +19,11 @@ class CompanyBalanceController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Saldo Koperasi';
         $data['company'] = Company::with('balance', 'balance.balancehistory')->find(1);
+        $data['loanWaiting'] = Loan::waitingApproval()->count();
+        $data['loanApproved'] = Loan::approved()->count();
+        $data['loanRejected'] = Loan::rejected()->count();
+        $data['loan'] = Loan::with('loanhistory')->approved()->get();
+        $data['loanPaid'] = LoanHistory::where('transaction_type', 'debit')->get();
         return view('admin.pages.company_balance.index', $data);
     }
     public function getCompanyBalanceHistory($balance_type)

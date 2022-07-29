@@ -19,7 +19,8 @@ class CompanyService {
             'description' => $description,
         ]);
         $companyBalance->update([
-            "{$balance_type}" => $savedHistory->balance_after
+            "{$balance_type}" => $savedHistory->balance_after,
+            "total_balance" => $savedHistory->balance_after,
         ]);
     }
     public function addCreditBalance($value, $balance_type, $description = '')
@@ -36,7 +37,8 @@ class CompanyService {
             'description' => $description,
         ]);
         $companyBalance->update([
-            "{$balance_type}" => $savedHistory->balance_after
+            "{$balance_type}" => $savedHistory->balance_after,
+            "total_balance" => $savedHistory->balance_after,
         ]);
     }
 }

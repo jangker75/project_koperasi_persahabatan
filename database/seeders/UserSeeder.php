@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
             $user->assignRole(checkPositionRole($employee->position->position_code));
         });
 
-        User::factory(20)->create()->each(function ($user) {
+        User::factory(500)->create()->each(function ($user) {
             // Seed the relation with one employee
             $savings = Savings::factory()->make();
             $employee = Employee::factory()->make();

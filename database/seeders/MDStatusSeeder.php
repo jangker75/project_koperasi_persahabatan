@@ -57,14 +57,17 @@ class MDStatusSeeder extends Seeder
         ];
         $statusLoan = [
             [
+                'id' => 50,
                 'name' => 'Waiting',
                 'type' => 'status_loan_approval',
             ],
             [
+                'id' => 51,
                 'name' => 'Approved',
                 'type' => 'status_loan_approval',
             ],
             [
+                'id' => 52,
                 'name' => 'Rejected',
                 'type' => 'status_loan_approval',
             ],

@@ -12,6 +12,7 @@
                                     <th>{{ __('loan.transaction_number') }}</th>
                                     <th>{{ __('employee.name') }}</th>
                                     <th>{{ __('loan.total_loan_amount') }}</th>
+                                    <th>{{ __('loan.remaining_amount') }}</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

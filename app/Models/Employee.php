@@ -35,6 +35,10 @@ class Employee extends Model
     public function statusEmployee(){
       return $this->belongsTo(MasterDataStatus::class, 'status_employee_id');
     }
+    public function loan()
+    {
+      return $this->hasMany(Loan::class, 'employee_id');
+    }
     public function savings()
     {
       return $this->hasOne(Savings::class, 'employee_id', 'id');

@@ -38,4 +38,16 @@ class Loan extends Model
     {
         return $this->hasOne(InterestSchemeType::class, 'id', 'interest_scheme_type_id');
     }
+    public function scopeWaitingApproval($query)
+    {
+        return $query->where('loan_approval_status_id', 50);
+    }
+    public function scopeApproved($query)
+    {
+        return $query->where('loan_approval_status_id', 51);
+    }
+    public function scopeRejected($query)
+    {
+        return $query->where('loan_approval_status_id', 52);
+    }
 }
