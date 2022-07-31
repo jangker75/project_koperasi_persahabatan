@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        $product = Product::factory(1000)->create();
+        $product = Product::factory(25)->create();
 
         foreach ($product as $i => $pro) {
           $pr = rand(1,100) . "000";
