@@ -38,16 +38,41 @@ class Loan extends Model
     {
         return $this->hasOne(InterestSchemeType::class, 'id', 'interest_scheme_type_id');
     }
+
+    public function getPaymentTenorAttribute()
+    {
+        $tenor = $this->total_loan_amount / $this->total_pay_month;
+        return $tenor;
+    }
+
+    public function getActualInterestAmountAttribute()
+    {
+        $interest_amount = ($this->interest_amount_type == 'percentage') 
+        ? $this->interest_amount / 100 * (
+            ($this->interest_scheme_type_id == 1) 
+            ? $this->total_loan_amount  
+            : $this->remaining_amount 
+            )
+        : $this->interest_amount;
+        return $interest_amount;
+    }
+
     public function scopeWaitingApproval($query)
     {
-        return $query->where('loan_approval_status_id', 50);
+        return $query->whereHas('approvalstatus', function($q){
+            $q->statusLoanApproval()->where('name', 'Waiting');
+        });
     }
     public function scopeApproved($query)
     {
-        return $query->where('loan_approval_status_id', 51);
+        return $query->whereHas('approvalstatus', function($q){
+            $q->statusLoanApproval()->where('name', 'Approved');
+        });
     }
     public function scopeRejected($query)
     {
-        return $query->where('loan_approval_status_id', 52);
+        return $query->whereHas('approvalstatus', function($q){
+            $q->statusLoanApproval()->where('name', 'Rejected');
+        });
     }
 }

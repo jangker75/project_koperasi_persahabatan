@@ -2,6 +2,16 @@
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card">
+                <div class="card-header row">
+                    <div>
+                        <span>Filter status</span>
+                    </div>
+                    <div class="btn-group">
+                        <a type="button" data-status="All" class="btn btn-primary fw-bold text-wrap filter-btn">Semua Pinjaman</a>
+                        <a type="button" data-status="Approved" class="btn btn-success text-white fw-bold text-wrap filter-btn">Pinjaman Approved</a>
+                        <a type="button" data-status="Rejected" class="btn btn-warning fw-bold text-wrap filter-btn">Pinjaman Rejected</a>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered text-nowrap border-bottom" id="datatable">
@@ -10,9 +20,12 @@
                                     <th></th>
                                     <th>#</th>
                                     <th>{{ __('loan.transaction_number') }}</th>
+                                    <th>{{ __('loan.loan_date') }}</th>
                                     <th>{{ __('employee.name') }}</th>
                                     <th>{{ __('loan.total_loan_amount') }}</th>
                                     <th>{{ __('loan.remaining_amount') }}</th>
+                                    <th>Status Approve</th>
+                                    <th>Status Lunas</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

@@ -8,6 +8,7 @@ return [
     'transaction_number' => 'Nomor Kontrak',
     'loan_date' => 'Tanggal Pinjaman',
     'interest_amount' => 'Bunga',
+    'status' => 'Status Approved',
     'interest_amount_type' => 'Satuan Bunga',
     'interest_scheme_type_id' => 'Skema perhitungan Bunga',
     'profit_company_ratio' => 'Keuntungan Koperasi (%)',
@@ -20,4 +21,6 @@ return [
     'response_date' => 'Tanggal Cek',
     'response_user' => 'Di Cek oleh',
     'admin_fee' => 'Admin Fee',
+
+    'notes_monthly_payment' => 'Pembayaran bulanan untuk bulan :month :year, nomor kontrak : :transaction_number'
 ];

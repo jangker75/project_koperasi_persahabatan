@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Usipa;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
+use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector;
 use Yajra\DataTables\DataTables;
@@ -101,18 +102,46 @@ class LoanListController extends BaseAdminController
     {
         //
     }
+
+    public function fullPayment(Loan $loan)
+    {
+        $data = $this->data;
+        $data['titlePage'] = 'Form Pelunasan';
+        $data['loan'] = $loan;
+        return view('admin.pages.loan_list.full_payment_form', $data);
+    }
+    public function fullPaymentStore()
+    {
+        (new LoanService())->fullPayment(loanId: request('loan_id'), description: request('description'));
+        return redirect()->route('admin.loan-list.index')->with('success', 'Edit Lunas berhasil');
+    }
+    public function somePaymentStore()
+    {
+        (new LoanService())->somePayment(loanId: request('loan_id'), value: request('amount'), description: request('description'));
+        return redirect()->route('admin.loan-list.index')->with('success', 'Revisi berhasil');
+    }
     public function getIndexDatatables()
     {
         $keyword = request('keyword');
+        $status = request('status');
         $query = Loan::query()
         ->with('approvalstatus', 'employee')
         ->select('loans.*')
-        ->where('loan_approval_status_id', '!=', 50);
+        // ->where('is_lunas', 0)
+        ->when($status != '' && $status != 'All', function($row) use($status){
+            $row->whereHas('approvalstatus', function($query) use($status){
+                $query->statusLoanApproval()->where('name', $status);
+            });
+        })
+        ;
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
             ->editColumn('total_loan_amount', function($row){
                 return format_uang($row->total_loan_amount);
+            })
+            ->editColumn('loan_date', function($row){
+                return format_hari_tanggal($row->loan_date);
             })
             ->editColumn('remaining_amount', function($row){
                 return format_uang($row->remaining_amount);
@@ -127,18 +156,26 @@ class LoanListController extends BaseAdminController
                 });
             })
             ->addColumn('status', function($row){
-                $class = ($row->loan_approval_status_id == 50) ? 'btn-warning' : (($row->loan_approval_status_id == 51) ? 'btn-success' : 'btn-danger');
-                $btn = '<a disabled class="btn '.$class.' btn-pill text-white fw-600 btn-sm">'.$row->approvalstatus->name.'</a>';
+                $class = ($row->approvalstatus->name == 'Waiting') ? 'bg-warning' : (($row->approvalstatus->name == 'Approved') ? 'bg-success' : 'bg-danger');
+                $btn = '<span class="badge '.$class.' rounded-pill text-white fw-bold p-2 px-3">'.$row->approvalstatus->name.'</span>';
+                return $btn;
+            })
+            ->addColumn('status_lunas', function($row){
+                $class = ($row->is_lunas) ? 'bg-success' : 'bg-warning';
+                $text = ($row->is_lunas) ? 'Lunas' : 'Belum Lunas';
+                $btn = '<span class="badge '.$class.' rounded-pill text-white fw-bold p-2 px-3">'.$text.'</span>';
                 return $btn;
             })
             ->addColumn('actions', function($row){
                 $btn = '<div class="d-flex justify-content-center btn-group btn-list">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning" href="'. route("admin.loan-list.show", [$row]) .'" type="button">View</a>';
-                $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.loan-list.edit", [$row]) .'" type="button">Edit</a>';
+                if(!$row->is_lunas && $row->approvalstatus->name == 'Approved'){
+                    $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.loan.fullpayment", [$row]) .'" type="button">Pelunasan/Revisi</a>';
+                }
                 $btn = $btn . '</div>';
                 return $btn;
             })
-            ->rawColumns(['actions', 'status', 'full_name'])
+            ->rawColumns(['actions', 'status', 'full_name', 'status_lunas'])
             ->make(true);
     }
 }

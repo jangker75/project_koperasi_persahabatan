@@ -30,6 +30,7 @@
                             <td class="fw-bold">{{ __('loan.transaction_number') }}</td>
                             <td class="fw-bold">{{ __('loan.total_loan_amount') }}</td>
                             <td class="fw-bold">{{ __('loan.remaining_amount') }}</td>
+                            <td class="fw-bold">{{ __('loan.status') }}</td>
                             <td class="fw-bold">Action</td>
                         </tr>
                     </thead>
@@ -40,6 +41,12 @@
                                     <td>{{ $loan->transaction_number }}</td>
                                     <td>{{ format_uang($loan->total_loan_amount) }}</td>
                                     <td>{{ format_uang($loan->remaining_amount) }}</td>
+                                    <td>
+                                        @php
+                                            $class = ($loan->approvalstatus->name == 'Waiting') ? 'bg-warning' : (($loan->approvalstatus->name == 'Approved') ? 'bg-success' : 'bg-danger');
+                                        @endphp
+                                        <span class="badge {{ $class }} rounded-pill text-white fw-bold p-2 px-3">{{ $loan->approvalstatus->name }}</span>
+                                    </td>
                                     <td>
                                         {{-- <button data-bs-toggle="modal" data-loan-id="{{ $loan->id }}"
                                             data-loan-number="{{ $loan->transaction_number }}"

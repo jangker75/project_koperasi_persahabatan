@@ -1,4 +1,13 @@
 <div class="card">
+    <div class="card-header">
+        <div class="row d-flex">
+            @php
+                $class = ($loan->is_lunas) ? 'bg-success' : 'bg-warning';
+                $text = ($loan->is_lunas) ? 'Lunas' : 'Belum Lunas';
+            @endphp
+            <span class="badge {{ $class }} text-white fw-bold p-2 px-3 fs-24">{{ $text }}</span>
+        </div>
+    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-striped">
@@ -65,6 +74,20 @@
                         <td>{{ __('loan.total_pay_month') }}</td>
                         <td>{{ $loan->total_pay_month }} Bulan, Per {{ $loan->pay_per_x_month }} Bulan </td>
                     </tr>
+                    <tr>
+                        <td>Pembayaran pokok</td>
+                        <td>{{ format_uang($loan->payment_tenor) }}/Bulan</td>
+                    </tr>
+                    @if (!$loan->is_lunas)
+                    <tr>
+                        <td>Bunga bulan ini</td>
+                        <td>{{ format_uang($loan->actual_interest_amount) }}</td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td>{{ __('loan.notes') }}</td>
+                        <td>{{  $loan->notes }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -77,11 +100,13 @@
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Tanggal</th>
-                                <th>Credit</th>
-                                <th>Debit</th>
-                                <th>Bunga</th>
-                                <th>Sisa Tagihan</th>
+                                <th class="fw-bold">Tanggal</th>
+                                <th class="fw-bold">Credit</th>
+                                <th class="fw-bold">Debit</th>
+                                <th class="fw-bold">Bunga</th>
+                                <th class="fw-bold">Total</th>
+                                <th class="fw-bold">Sisa Tagihan</th>
+                                <th class="fw-bold">Catatan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -96,7 +121,9 @@
                                     <td>{{ format_uang($history->total_payment) }}</td>
                                 @endif
                                 <td>{{ format_uang($history->interest_amount) }}</td>
+                                <td>{{ format_uang($history->interest_amount + $history->total_payment) }}</td>
                                 <td>{{ format_uang($history->loan_amount_after) }}</td>
+                                <td>{{ $history->description }}</td>
                             </tr>
                             @endforeach
                         </tbody>

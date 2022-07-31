@@ -11,7 +11,7 @@ class SavingHistory extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'saving_id', 'saving_type', 'transaction_type','amount',
-        'balance_before', 'balance_after', 'transaction_date',
+        'balance_before', 'balance_after', 'transaction_date','description'
     ];
     protected $hidden = [
         'deleted_at', 'created_at', 'updated_at'
