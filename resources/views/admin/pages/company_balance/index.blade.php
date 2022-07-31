@@ -103,6 +103,17 @@
                         <p class="fw-bold fs-20"> {{ format_uang($loan->sum('total_loan_amount') - $loanPaid->sum('total_payment')) }} </p>
                     </div>
                 </div>
+                <div class="d-flex align-items-center mb-4 mt-3">
+                    <div class="avatar avatar-md bg-secondary-transparent text-danger bradius me-3">
+                        <i class="fe fe-dollar-sign"></i>
+                    </div>
+                    <div class="">
+                        <h6 class="mb-1 fw-semibold">Profit Bunga</h6>
+                    </div>
+                    <div class=" ms-auto my-auto">
+                        <p class="fw-bold fs-20"> {{ format_uang($loanPaid->sum('profit_company_amount')) }} </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

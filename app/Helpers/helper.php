@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ApplicationSetting;
 use App\Models\Company;
 
 if (!function_exists('format_hari_tanggal')) {
@@ -143,3 +144,11 @@ if(!function_exists('checkPositionRole')){
         return $role;
     }
 }
+
+if (!function_exists('getAppSettingContent')) {
+    function getAppSettingContent($nameSetting)
+       {
+           $data = ApplicationSetting::where('name' , $nameSetting)->first();
+           return $data->content;
+       }
+   }

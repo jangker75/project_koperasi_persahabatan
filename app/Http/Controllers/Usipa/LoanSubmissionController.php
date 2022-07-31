@@ -70,7 +70,7 @@ class LoanSubmissionController extends BaseAdminController
         $data['created_by'] = auth()->user()->employee->full_name;
         $data['loan_approval_status_id'] = 50;
         $input->received_amount = str_replace(',','',$input->received_amount);
-        $loan = Loan::create($input->merge($data)->all());
+        Loan::create($input->merge($data)->all());
         
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_add_new_data_success'));
     }
@@ -125,7 +125,9 @@ class LoanSubmissionController extends BaseAdminController
         $query = Loan::query()
         ->with('approvalstatus')
         ->select('loans.*')
-        ->where('loan_approval_status_id', 50);
+        ->waitingApproval();
+        // ->where('loan_approval_status_id', 50)
+        ;
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
@@ -136,13 +138,13 @@ class LoanSubmissionController extends BaseAdminController
                 return $row->employee->full_name;
             })
             ->addColumn('status', function($row){
-                $class = ($row->loan_approval_status_id == 50) ? 'bg-warning' : (($row->loan_approval_status_id == 51) ? 'bg-success' : 'bg-danger');
+                $class = ($row->approvalstatus->name == 'Waiting') ? 'bg-warning' : (($row->approvalstatus->name == 'Approved') ? 'bg-success' : 'bg-danger');
                 $btn = '<span class="badge '.$class.' rounded-pill text-white fw-bold p-2 px-3">'.$row->approvalstatus->name.'</span>';
                 return $btn;
             })
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-group btn-list d-flex justify-content-center">';
-                if($row->loan_approval_status_id == 50){
+                if($row->approvalstatus->name == 'Waiting'){
                     $btn = $btn . '<div class="dropdown">
                         <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown">
                                 Action
@@ -178,6 +180,7 @@ class LoanSubmissionController extends BaseAdminController
             'response_user' => auth()->user()->employee->full_name
         ]);
         if($status == 51) {
+            $notesLoanHistory = 'Pinjaman Awal';
             $loan->loanhistory()->create([
                 'transaction_type' => 'credit',
                 'transaction_date' => now(),
@@ -187,8 +190,10 @@ class LoanSubmissionController extends BaseAdminController
                 'loan_amount_after' => $loan->total_loan_amount,
                 'profit_company_amount' => 0,
                 'profit_employee_amount' => 0,
+                'description' => $notesLoanHistory,
             ]);
-            (new CompanyService())->addCreditBalance($loan->admin_fee, 'loan_balance', __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]));
+            $notesCompanyBalance = __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]);
+            (new CompanyService())->addCreditBalance($loan->admin_fee, 'loan_balance', $notesCompanyBalance);
         };
 
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_edit_data_success'));

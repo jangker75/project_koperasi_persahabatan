@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationSettingController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Master\MasterDataStatusController;
 use App\Http\Controllers\Toko\BrandController;
@@ -49,9 +50,6 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('pinjaman', function () {
-        return view('admin.pages.dashboard.index');
-    })->name('pinjaman');
     Route::get('switcher', function () {
         return view('admin.pages.switcher.index');
     })->name('switcher');
@@ -74,9 +72,16 @@ Route::group([
     Route::resource('loan-submission', LoanSubmissionController::class);
     Route::get('loan-submission-action-approve/{loan}/{status}', [LoanSubmissionController::class, 'actionSubmissionLoan'])->name('loan-submission.action.approval');
     Route::resource('loan-list', LoanListController::class);
+    Route::get('loan-full-payment/{loan}', [LoanListController::class, 'fullPayment'])->name('loan.fullpayment');
+    Route::post('loan-full-payment-store', [LoanListController::class, 'fullPaymentStore'])->name('loan.fullpayment.store');
+    Route::post('loan-some-payment-store', [LoanListController::class, 'somePaymentStore'])->name('loan.somepayment.store');
     Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
+
+    // App Setting
+    Route::get('app-setting', [ApplicationSettingController::class, 'index'])->name('app-setting.index');
+    Route::post('app-setting', [ApplicationSettingController::class, 'update'])->name('app-setting.update');
 
     // Datatables Route
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');

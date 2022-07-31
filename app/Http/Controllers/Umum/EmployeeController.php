@@ -210,6 +210,7 @@ class EmployeeController extends BaseAdminController
             'status' => 'success',
         ];
         $loan = Loan::where('employee_id', request('employee_id'))
+        ->approved()
         ->where('is_lunas', 0)->get();
         $employee = Employee::find(request('employee_id'));
         if (count($loan) != 0) {
