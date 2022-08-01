@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,6 +56,12 @@ class Loan extends Model
             )
         : $this->interest_amount;
         return $interest_amount;
+    }
+
+    public function getLastPeriodAttribute()
+    {
+        $a = Carbon::parse($this->first_payment_date)->addMonth($this->total_pay_month * $this->pay_per_x_month)->format('Y-m-d');
+        return $a;
     }
 
     public function scopeWaitingApproval($query)

@@ -79,6 +79,9 @@ Route::group([
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
 
+    // Download PDF
+    Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
+
     // App Setting
     Route::get('app-setting', [ApplicationSettingController::class, 'index'])->name('app-setting.index');
     Route::post('app-setting', [ApplicationSettingController::class, 'update'])->name('app-setting.update');

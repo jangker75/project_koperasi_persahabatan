@@ -28,6 +28,7 @@ class EmployeeFactory extends Factory
             'first_name' => fake()->firstName(), 
             'last_name' => fake()->lastName(),
             'birthday' => fake()->date(), 
+            'birthplace' => 'Jakarta',
             'address_1' => fake()->address(), 
             'address_2' => '',
             'nik' => fake()->creditCardNumber(), 

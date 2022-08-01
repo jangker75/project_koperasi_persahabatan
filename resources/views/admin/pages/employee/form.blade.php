@@ -171,6 +171,19 @@
                         </div>
                     </div>
                     <div class="row mb-4">
+                        {!! Form::label('birthplace', __('employee.birthplace'), ['class' => 'col-md-3 form-label required']) !!}
+                        <div class="col-md-9">
+                            {!! Form::text('birthplace', null, [
+                                'required' => 'required',
+                                'class' =>
+                                    'form-control' .
+                                    ($errors->has('birthplace') ? ' is-invalid' : '') .
+                                    (!$errors->has('birthplace') && old('birthplace') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('employee.birthplace'),
+                            ]) !!}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
                         {!! Form::label('birthday', __('employee.birthday'), ['class' => 'col-md-3 form-label required']) !!}
                         <div class="col-md-9">
                             <div class="input-group">

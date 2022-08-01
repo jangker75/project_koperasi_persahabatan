@@ -7,6 +7,7 @@ return [
     'nik' => "NIK (Nomor Induk Koperasi)",
     'nip' => "NIP",
     'birthday' => "Tanggal Lahir",
+    'birthplace' => "Tempat Lahir",
     'age' => "Umur",
     'gender' => "Jenis Kelamin",
     'address_1' => "Alamat 1",
@@ -20,7 +21,7 @@ return [
     'resign_notes' => "Notes",
     'resign_reason' => "Alasan Keluar",
     'position_id' => "Posisi",
-    'department_id' => "Departemen",
+    'department_id' => "Pangkat/Golongan",
     'status_employee_id' => "Status Karyawan",
     
 ];

@@ -124,6 +124,10 @@
                             <td>{{ $employee->statusEmployee->name }}</td>
                         </tr>
                         <tr>
+                            <td>{{ __('employee.birthplace') }}</td>
+                            <td>{{ $employee->birthplace }}</td>
+                        </tr>
+                        <tr>
                             <td>{{ __('employee.birthday') }}</td>
                             <td>{{ format_hari_tanggal($employee->birthday) }}</td>
                         </tr>

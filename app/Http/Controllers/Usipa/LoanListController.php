@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Usipa;
 
 use App\Http\Controllers\BaseAdminController;
-use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Services\LoanService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector;
 use Yajra\DataTables\DataTables;
 
 class LoanListController extends BaseAdminController
@@ -120,6 +119,43 @@ class LoanListController extends BaseAdminController
         (new LoanService())->somePayment(loanId: request('loan_id'), value: request('amount'), description: request('description'));
         return redirect()->route('admin.loan-list.index')->with('success', 'Revisi berhasil');
     }
+    public function downloadKontrakPeminjamanPDF(Loan $loan_id)
+    {
+        $data['loan'] = $loan_id;
+        switch ($loan_id->contract_type_id) {
+            case 1: //if contract pinjaman uang
+                $pdf = Pdf::loadView('admin.export.PDF.permohonan_pinjaman_uang', $data);
+                break;
+            case 2: //if contract pinjaman barang
+                $pdf = Pdf::loadView('admin.export.PDF.permohonan_kredit_barang', $data);
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        // Instantiate canvas instance 
+        $canvas = $pdf->getCanvas(); 
+        
+        // Get height and width of page 
+        $w = $canvas->get_width(); 
+        $h = $canvas->get_height(); 
+        
+        // Specify watermark image 
+        $imageURL = asset('assets/images/logo/logo-koperasi-grayscale.png'); 
+        $imgWidth = $imgHeight = 430; 
+        
+        // Set image opacity 
+        $canvas->set_opacity(.2); 
+        
+        // Specify horizontal and vertical position 
+        $x = (($w-$imgWidth)/2); 
+        $y = (($h-$imgHeight)/2); 
+        
+        // Add an image to the pdf 
+        $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
+        return $pdf->stream('pdf.pdf');
+    }
     public function getIndexDatatables()
     {
         $keyword = request('keyword');
@@ -171,6 +207,7 @@ class LoanListController extends BaseAdminController
                 $btn = $btn . '<a class="btn btn-sm btn-warning" href="'. route("admin.loan-list.show", [$row]) .'" type="button">View</a>';
                 if(!$row->is_lunas && $row->approvalstatus->name == 'Approved'){
                     $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.loan.fullpayment", [$row]) .'" type="button">Pelunasan/Revisi</a>';
+                    $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.kontrak.peminjaman", [$row->id]) .'" type="button">Download Kontrak</a>';
                 }
                 $btn = $btn . '</div>';
                 return $btn;

@@ -114,7 +114,7 @@ class LoanService
             ->where('transaction_type','debit')->count()) + 1;
 
             $notes = __('loan.notes_monthly_payment', [
-                'month' => now()->subMonth()->format('M'),
+                'month' => now()->subMonth()->format('MMMM'),
                 'year' => now()->locale('id')->format('Y'),
                 'transaction_number' => $loan->transaction_number. " Cicilan ke-${payNumber}",
             ]);
