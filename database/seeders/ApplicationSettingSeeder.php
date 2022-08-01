@@ -47,7 +47,7 @@ class ApplicationSettingSeeder extends Seeder
             [
                 'name' => 'address',
                 'label' => 'Address Company',
-                'content' => '',
+                'content' => 'Jl. Persahabatan Raya, Jakarta Timur Telepon 4703315, 4891708 Pes. 110',
                 'description' => 'Address Company',
                 'type' => 'textarea',
             ],

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('nik');
             $table->string('nip')->nullable();
             $table->date('birthday');
+            $table->string('birthplace', 100);
             $table->string('gender', 50);
             $table->string('address_1')->nullable();
             $table->string('address_2')->nullable();

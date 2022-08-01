@@ -34,6 +34,7 @@ class EmployeeRequest extends FormRequest
             "status_employee_id" => 'required',
             "salary" => 'required',
             "birthday" => 'required',
+            "birthplace" => 'required',
             "address_1" => '',
             "address_2" => '',
             "phone" => '',
