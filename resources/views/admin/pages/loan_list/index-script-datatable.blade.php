@@ -1,5 +1,5 @@
 <script>
-    
+    let status = 'Approved'
     $('#datatable thead tr').clone(true).appendTo( '#datatable thead' );
     // Setup - add a text input to each header cell
     $('#datatable thead tr:eq(1) th').each( function (i) {
@@ -20,6 +20,7 @@
         ajax: {
             url: "{{ route('admin.loan-list.index.datatables') }}",
             data: function(d){
+                    d.status = status
                     d.keyword = $('.dataTables_filter input').val()
                 }
         },
@@ -27,8 +28,12 @@
             { data: "id", name: "id", visible: false},
             { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
             { data: "transaction_number", name: "transaction_number" },
+            { data: "loan_date", name: "loan_date" },
             { data: "full_name", name: "full_name" },
             { data: "total_loan_amount", name: "total_loan_amount" },
+            { data: "remaining_amount", name: "remaining_amount" },
+            { data: "status", name: "status" },
+            { data: "status_lunas", name: "is_lunas" },
             { data: "actions", name: "actions" },
         ],
         language: {
@@ -44,5 +49,13 @@
             .column($(this).data('index') )
             .search( this.value )
             .draw();
-    } );
+    });
+
+    //Handle filter clicked
+    $('.filter-btn').click(function(e){
+        status = $(this).data('status')
+        table.draw()
+        console.log('status', status);
+    })
+
 </script>

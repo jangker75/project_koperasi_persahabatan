@@ -135,7 +135,11 @@ function listSideMenu()
             'link' => url('admin/switcher'),
             'icon' => 'mdi mdi-wrench',
             'text' => 'Switcher',
-
-        ]
+        ],
+        [
+            'link' => url('admin/app-setting'),
+            'icon' => 'mdi mdi-wrench',
+            'text' => 'Application Setting',
+        ],
     ];
 }

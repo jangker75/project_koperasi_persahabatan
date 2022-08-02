@@ -73,7 +73,7 @@ class EmployeeController extends BaseAdminController
         ])->all());
         $savings = Savings::factory()->make();
         $employee->savings()->save($savings);
-        (new EmployeeService())->addCreditBalance($employee->savings->id, 25000,ConstantEnum::SAVINGS_BALANCE_TYPE['POKOK']);
+        (new EmployeeService())->addCreditBalance($employee->savings->id, 25000, ConstantEnum::SAVINGS_BALANCE_TYPE['POKOK']);
         $role = checkPositionRole($employee->position->position_code);
         $user->assignRole($role);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_add_new_data_success'));
@@ -210,6 +210,7 @@ class EmployeeController extends BaseAdminController
             'status' => 'success',
         ];
         $loan = Loan::where('employee_id', request('employee_id'))
+        ->approved()
         ->where('is_lunas', 0)->get();
         $employee = Employee::find(request('employee_id'));
         if (count($loan) != 0) {

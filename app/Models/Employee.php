@@ -17,7 +17,7 @@ class Employee extends Model
       'nik', 'nip', 'gender', 'bank', 'rekening', 'phone',
       'registered_date', 'resign_date','department_id',
       'position_id', 'status_employee_id','salary',
-      'resign_reason', 'resign_notes'
+      'resign_reason', 'resign_notes','birthplace'
     ];
 
     public function user(){
@@ -34,6 +34,10 @@ class Employee extends Model
 
     public function statusEmployee(){
       return $this->belongsTo(MasterDataStatus::class, 'status_employee_id');
+    }
+    public function loan()
+    {
+      return $this->hasMany(Loan::class, 'employee_id');
     }
     public function savings()
     {

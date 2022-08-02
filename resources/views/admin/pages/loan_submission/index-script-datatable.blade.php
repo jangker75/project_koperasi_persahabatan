@@ -55,7 +55,7 @@
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
-                confirmButtonText: "Yes, delete it!",
+                confirmButtonText: "Yes",
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true,
                 },

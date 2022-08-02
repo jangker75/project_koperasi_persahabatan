@@ -68,14 +68,6 @@
             </div>
         </div>
     </div>
-    <x-slot name="scriptVendor">
-        <script src="../assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
-        <script src="../assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
-        <script src="../assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
-        <script src="../assets/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
-        <script src="../assets/plugins/datatable/dataTables.responsive.min.js"></script>
-        <script src="../assets/plugins/datatable/responsive.bootstrap5.min.js"></script>
-    </x-slot>
     @slot('script')
     <script>
         $(document).ready(function () {
