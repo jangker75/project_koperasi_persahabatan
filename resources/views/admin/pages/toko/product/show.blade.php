@@ -6,16 +6,16 @@
                     <span class="card-title">Table untuk {{ $titlePage }}</span>
                     <div class="mt-4 mt-md-0">
                         <a href="{{ route('admin.product.edit', $product->id) }}">
-                            <button class="btn btn-warning me-3" data-toggle="tooltip"
-                            data-placement="top" title="Edit"><i class="fe fe-edit"></i></button>
+                            <button class="btn btn-warning me-3" data-toggle="tooltip" data-placement="top"
+                                title="Edit"><i class="fe fe-edit"></i></button>
                         </a>
                         <a href="#">
-                            <button class="btn btn-info me-3" data-toggle="tooltip"
-                            data-placement="top" title="Kelola Stock Produk"><i class="fe fe-clipboard"></i></button>
+                            <button class="btn btn-info me-3" data-toggle="tooltip" data-placement="top"
+                                title="Kelola Stock Produk"><i class="fe fe-clipboard"></i></button>
                         </a>
                         <a href="#">
-                            <button class="btn btn-success me-3" data-toggle="tooltip"
-                            data-placement="top" title="Kelola Harga Produk"><i class="fe fe-dollar-sign"></i></button>
+                            <button class="btn btn-success me-3" data-toggle="tooltip" data-placement="top"
+                                title="Kelola Harga Produk"><i class="fe fe-dollar-sign"></i></button>
                         </a>
                         <form action="{{ route('admin.product.destroy', $product->id) }}" class="d-inline"
                             method="post">
@@ -104,18 +104,144 @@
                                     <th>{{ __('price.profit') }}</th>
                                     <th>{{ __('price.margin') }}</th>
                                     <th>Tanggal Update</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($product->price as $price)
-                                <tr>
-                                    <td>{{ format_uang($price->cost)  }}</td>
-                                    <td>{{ format_uang($price->revenue)  }}</td>
-                                    <td>{{ format_uang($price->profit)  }}</td>
-                                    <td>{{ $price->margin }}%</td>
-                                    <td>{{ $price->updated_at }}</td>
+                              <tr>
+                                <td>{{ format_uang($price->cost)  }}</td>
+                                <td>{{ format_uang($price->revenue)  }}</td>
+                                <td>{{ format_uang($price->profit)  }}</td>
+                                <td>{{ $price->margin }}%</td>
+                                <td>{{ $price->updated_at }}</td>
+                                <td>
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#modalRevisi">
+                                            Revisi Harga Saat ini
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modalRevisi" tabindex="-1"
+                                            aria-labelledby="modalRevisiLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="modalRevisiLabel">Formulir revisi harga</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{ route('admin.price.update', $price->id) }}"
+                                                            method="post">
+                                                            @csrf @method('put')
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">Rp</span>
+                                                                    <input type="text" class="form-control format-uang cost"
+                                                                        placeholder="Harga Modal" name="cost" id="cost1" value="{{ format_uang_no_prefix($price->cost)  }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">Rp</span>
+                                                                    <input type="text" class="form-control format-uang revenue"
+                                                                        placeholder="Harga Jual" name="revenue"
+                                                                        id="revenue1" value="{{ format_uang_no_prefix($price->revenue)  }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">Rp</span>
+                                                                    <input type="text" class="form-control profit"
+                                                                        placeholder="Keuntungan" name="profit" readonly
+                                                                        id="profitPrice1" value="{{ format_uang_no_prefix($price->profit)  }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">%</span>
+                                                                    <input type="text" class="form-control margin"
+                                                                        placeholder="Margin" name="margin" readonly
+                                                                        id="margin1" value="{{ $price->margin }}">
+                                                                </div>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-warning">Revisi
+                                                                Harga</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                            data-bs-target="#modalNewPrice">
+                                            Update Harga Terbaru
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modalNewPrice" tabindex="-1"
+                                            aria-labelledby="modalNewPriceLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="modalNewPriceLabel">Formulir Harga Terbaru</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{ route('admin.price.store', ['product_id' => $product->id]) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">Rp</span>
+                                                                    <input type="text" class="form-control format-uang cost"
+                                                                        placeholder="Harga Modal" name="cost" id="cost2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">Rp</span>
+                                                                    <input type="text" class="form-control format-uang revenue"
+                                                                        placeholder="Harga Jual" name="revenue"
+                                                                        id="revenue2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">Rp</span>
+                                                                    <input type="text" class="form-control profit"
+                                                                        placeholder="Keuntungan" name="profit" readonly
+                                                                        id="profitPrice2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">%</span>
+                                                                    <input type="text" class="form-control margin"
+                                                                        placeholder="Margin" name="margin" readonly
+                                                                        id="margin2">
+                                                                </div>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-warning">Revisi
+                                                                Harga</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -138,7 +264,7 @@
                             <tbody>
                                 @foreach ($product->stock as $stock)
                                 <tr>
-                                    <td>--</td>
+                                    <td>{{ $stock->store->name }}</td>
                                     <td>{{ $stock->qty }}</td>
                                     <td>{{ $stock->updated_at }}</td>
                                 </tr>
@@ -150,10 +276,36 @@
             </div>
         </div>
     </div>
-    
+
     @slot('script')
     <script>
-        
+        $(document).ready(function () {
+            //calculate margin & profit
+            $('#revenue1').keyup(function () {
+                let cost = $('#cost1').val();
+                cost = parseInt(cost.replace('.', ''))
+                let revenue = $('#revenue1').val()
+                revenue = parseInt(revenue.replace('.', ''));
+
+                let profit = revenue - cost;
+                let margin = profit * 100 / revenue;
+
+                $('#margin1').val(margin)
+                $('#profitPrice1').val(formatRupiah(String(profit)))
+            })
+            $('#revenue2').keyup(function () {
+                let cost = $('#cost2').val();
+                cost = parseInt(cost.replace('.', ''))
+                let revenue = $('#revenue2').val()
+                revenue = parseInt(revenue.replace('.', ''));
+
+                let profit = revenue - cost;
+                let margin = profit * 100 / revenue;
+
+                $('#margin2').val(margin)
+                $('#profitPrice2').val(formatRupiah(String(profit)))
+            })
+        })
 
     </script>
     @endslot
