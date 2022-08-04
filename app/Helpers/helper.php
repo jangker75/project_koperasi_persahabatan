@@ -212,3 +212,9 @@ if(!function_exists('terbilang')){
             return $terbilang;
      }
 }
+
+if(!function_exists('convertNumberToStringExcel')) {
+    function convertNumberToStringExcel($number){
+        return '="' . $number . '"';
+    }
+}

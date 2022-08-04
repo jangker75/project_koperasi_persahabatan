@@ -7,7 +7,10 @@
             </a>
         </div>
         <div class="col-6 d-flex justify-content-end">
-            
+            <form action="{{ route('admin.logout') }}" method="post">
+            @csrf
+            <button class="btn btn-outline-light text-light" type="submit">Logout</button>
+            </form>
             <button class="btn btn-outline-light text-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAccount"
                 aria-controls="offcanvasAccount"><i class="fa fa-shopping-basket"></i></button>
 

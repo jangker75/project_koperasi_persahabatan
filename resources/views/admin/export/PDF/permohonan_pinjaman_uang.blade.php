@@ -20,6 +20,10 @@
             left: 0%;
         }
 
+        .page_break {
+            page-break-before: always;
+        }
+
         .logo-rs {
             position: absolute;
             top: 0%;
@@ -37,14 +41,17 @@
         table .label-separator {
             width: 3%
         }
-        table.table-kewajiban > tbody > tr > td{
+
+        table.table-kewajiban>tbody>tr>td {
             font-size: 0.8em;
         }
+
         .row:after {
             content: "";
             display: table;
             clear: both;
         }
+
         .persetujuan-title {
             text-align: center;
         }
@@ -54,18 +61,22 @@
             text-align: center;
             margin-bottom: 0px;
         }
+
         .persetujuan-nip {
             margin: 0px;
             padding-left: 30px;
         }
-        .syaratketentuan-item > li{
+
+        .syaratketentuan-item>li {
             font-size: 0.8em;
         }
+
         .footer {
             width: 100%;
             position: absolute;
             bottom: 0%;
         }
+
         footer {
             position: fixed;
             bottom: -60px;
@@ -187,7 +198,7 @@
             <tr>
                 <td class="label-info">Alamat Rumah</td>
                 <td class="label-separator">:</td>
-                <td>{{ $loan->employee->address }}</td>
+                <td>{{ $loan->employee->address_1 }}</td>
             </tr>
             <tr>
                 <td class="label-info">No. Rek. Bank</td>
@@ -198,7 +209,8 @@
     </section>
     <section class="kontrak-content">
         <p style="margin-bottom: 0px; margin-top: 6px; text-align: justify; text-justify: inter-word;">
-            Mengajukan permohonan pinjaman uang sebesar <b>{{ format_uang($loan->total_loan_amount) }} ({{ terbilang($loan->total_loan_amount) }})</b><br>
+            Mengajukan permohonan pinjaman uang sebesar <b>{{ format_uang($loan->total_loan_amount) }}
+                ({{ terbilang($loan->total_loan_amount) }} Rupiah)</b><br>
             Pengembalian pinjaman ini sanggup saya angsur selama 5 (lima), 10 (sepuluh), 20 (dua puluh), 30 (tiga puluh)
             bulan, dengan biaya administrasi dan simpanan khusus masing-masing 1% perbulan, mulai dari bulan
             <strong>{{ format_tanggal_tahun($loan->first_payment_date) }} s/d
@@ -225,7 +237,8 @@
             </div>
             <div style="float: left; width: 33.33%">
                 <p class="persetujuan-title">Catatan Bendaharawan Gaji<br>Nomor daftar gaji :<br>Gaji per bulan :</p>
-                <p class="persetujuan-separator" style="margin-top: 41px !important;">(.....................................)</p>
+                <p class="persetujuan-separator" style="margin-top: 41px !important;">
+                    (.....................................)</p>
                 <p class="persetujuan-nip">NIP. </p>
             </div>
             <div style="float: left; width: 33.33%">
@@ -248,10 +261,13 @@
     </section>
     <section class="footer">
         <div>
-            <p style="text-align: center; margin-bottom: 0px; font-size: 0.8em;">{{ getAppSettingContent('address') }}</p>
+            <p style="text-align: center; margin-bottom: 0px; font-size: 0.8em;">{{ getAppSettingContent('address') }}
+            </p>
         </div>
     </section>
     <footer></footer>
+    <div class="page_break"></div>
+    @include('admin.export.PDF.surat_pernyataan')
 </body>
 
 </html>

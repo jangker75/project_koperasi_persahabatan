@@ -154,7 +154,7 @@ class LoanListController extends BaseAdminController
         
         // Add an image to the pdf 
         $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
-        return $pdf->stream('pdf.pdf');
+        return $pdf->stream('kontrak.pdf');
     }
     public function getIndexDatatables()
     {
