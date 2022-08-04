@@ -13,6 +13,9 @@
         /* * {
             outline: 1px solid red;
         } */
+        .page_break {
+            page-break-before: always;
+        }
 
         .logo-koperasi {
             position: absolute;
@@ -164,7 +167,7 @@
             <tr>
                 <td class="label-info">Harga</td>
                 <td class="label-separator">:</td>
-                <td>{{ format_uang($loan->total_loan_amount) }} ({{ terbilang($loan->total_loan_amount) }})</td>
+                <td>{{ format_uang($loan->total_loan_amount) }} ({{ terbilang($loan->total_loan_amount) }} Rupiah)</td>
             </tr>
             <tr>
                 <td class="label-info">Barang diambil di</td>
@@ -212,6 +215,8 @@
         </div>
     </section>
     <footer></footer>
+    <div class="page_break"></div>
+    @include('admin.export.PDF.surat_pernyataan')
 </body>
 
 </html>

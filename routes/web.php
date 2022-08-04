@@ -16,6 +16,7 @@ use App\Http\Controllers\Umum\ExEmployeeController;
 use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
 use App\Models\CompanyBalance;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,23 +30,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// customer
-Route::get('/', function () {
-  // return redirect('/admin');
-  $data['product'] = Product::get();
-  return view('nasabah.pages.home', $data);
-});
-// customer
-
-// admin
-
-
-
 Route::get('/admin', function () {
-    return redirect(route('admin.dashboard'));
+    return redirect()->route('admin.dashboard');
 });
+
 Route::group([
-    'middleware' => ['web', 'auth'],
+    'middleware' => ['auth'],
+    'as' => 'nasabah.',
+], function () {
+    // customer
+    Route::get('/', function () {
+        // return redirect('/admin');
+        $data['product'] = Product::get();
+        return view('nasabah.pages.home', $data);
+    })->name('home');
+    //Logout custom
+});
+Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
+
+Route::group([
+    'middleware' => ['auth', 'admin'],
     'as' => 'admin.',
     'prefix' => 'admin'
 ], function () {
@@ -53,7 +57,6 @@ Route::group([
     Route::get('switcher', function () {
         return view('admin.pages.switcher.index');
     })->name('switcher');
-
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
     Route::resource('product', ProductController::class);
@@ -63,12 +66,15 @@ Route::group([
     Route::resource('supplier', SupplierController::class);
     //toko-online
 
-    
+    // Divisi Umum
     Route::resource('employee', EmployeeController::class);
     Route::get('employee-out', [EmployeeController::class, 'employeeOut'])->name('employee.out');
     Route::post('employee-store', [EmployeeController::class, 'employeeOutStore'])->name('employee.out.store');
     Route::post('check-status-loan-employee', [EmployeeController::class, 'checkStatusLoanEmployee'])->name('check.status.loan.employee');
     Route::resource('ex-employee', ExEmployeeController::class);
+    // Divisi Umum
+
+    // Usipa
     Route::resource('loan-submission', LoanSubmissionController::class);
     Route::get('loan-submission-action-approve/{loan}/{status}', [LoanSubmissionController::class, 'actionSubmissionLoan'])->name('loan-submission.action.approval');
     Route::resource('loan-list', LoanListController::class);
@@ -78,9 +84,13 @@ Route::group([
     Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
+    // Usipa
 
     // Download PDF
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
+
+    // Download Data
+    Route::get('download-export-data-nasabah/{type}', [EmployeeController::class, 'exportData'])->name('download.data-nasabah');
 
     // App Setting
     Route::get('app-setting', [ApplicationSettingController::class, 'index'])->name('app-setting.index');
@@ -91,14 +101,12 @@ Route::group([
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
     Route::get('datatables-loan-submission-index', [LoanSubmissionController::class, 'getIndexDatatables'])->name('loan-submission.index.datatables');
     Route::get('datatables-loan-list-index', [LoanListController::class, 'getIndexDatatables'])->name('loan-list.index.datatables');
-        
 
     //Logout custom
-    Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
+    // Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
 });
 
-
 //Redirect all wild domain
-Route::get('{any}', function () {
-    return redirect(route('admin.dashboard'));
-})->where('any', '.*');
+// Route::get('{any}', function () {
+//     return redirect(route('admin.dashboard'));
+// })->where('any', '.*');

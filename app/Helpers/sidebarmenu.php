@@ -4,7 +4,7 @@ function listSideMenu()
     return [
         [
             'isseparator' => true,
-            'text' => "MAIN"
+            'text' => "MAIN",
         ],
         [
             'link' => url('admin/dashboard'),
@@ -140,6 +140,10 @@ function listSideMenu()
             'link' => url('admin/app-setting'),
             'icon' => 'mdi mdi-wrench',
             'text' => 'Application Setting',
+        ],
+        [
+            'isseparator' => true,
+            'text' => "Laporan"
         ],
     ];
 }

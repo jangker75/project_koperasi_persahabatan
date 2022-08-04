@@ -68,10 +68,11 @@ class UserSeeder extends Seeder
             // Seed the relation with one employee
             $savings = Savings::factory()->make();
             $employee = Employee::factory()->make();
+            $employee->position_id = 6;
             $user->employee()->save($employee);
             $savings->employee_id = $user->employee->id;
             $savings->save();
-            $user->assignRole(checkPositionRole($employee->position->position_code));
+            $user->assignRole('nasabah');
         });
     }
 }
