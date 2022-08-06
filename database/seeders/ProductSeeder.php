@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\Store;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,6 +19,7 @@ class ProductSeeder extends Seeder
     public function run()
     {
         $product = Product::factory(25)->create();
+        $stores = Store::get();
 
         foreach ($product as $i => $pro) {
           $pr = rand(1,100) . "000";
@@ -30,11 +32,13 @@ class ProductSeeder extends Seeder
             'profit' => ($pr + ($mar * $pr / 100)) - $pr
           ]);
 
-          Stock::create([
-            'product_id' => $pro->id, 
-            'store_id' => 1, 
-            'qty' => rand(5,50)
-          ]);
+          foreach ($stores as $i => $store) {
+            Stock::create([
+              'product_id' => $pro->id, 
+              'store_id' => $store->id, 
+              'qty' => rand(5,50)
+            ]);
+          }
         }
     }
 }

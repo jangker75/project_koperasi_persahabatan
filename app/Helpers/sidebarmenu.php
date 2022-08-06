@@ -62,10 +62,6 @@ function listSideMenu()
                 ],
                 [
                     'link' => '#',
-                    'text' => 'Transfer Stok',
-                ],
-                [
-                    'link' => '#',
                     'text' => 'Audit Opname',
                 ],
             ]

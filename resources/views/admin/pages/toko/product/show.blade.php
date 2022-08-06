@@ -7,22 +7,14 @@
                     <div class="mt-4 mt-md-0">
                         <a href="{{ route('admin.product.edit', $product->id) }}">
                             <button class="btn btn-warning me-3" data-toggle="tooltip" data-placement="top"
-                                title="Edit"><i class="fe fe-edit"></i></button>
-                        </a>
-                        <a href="#">
-                            <button class="btn btn-info me-3" data-toggle="tooltip" data-placement="top"
-                                title="Kelola Stock Produk"><i class="fe fe-clipboard"></i></button>
-                        </a>
-                        <a href="#">
-                            <button class="btn btn-success me-3" data-toggle="tooltip" data-placement="top"
-                                title="Kelola Harga Produk"><i class="fe fe-dollar-sign"></i></button>
+                                title="Edit">Edit Data <i class="fe fe-edit"></i></button>
                         </a>
                         <form action="{{ route('admin.product.destroy', $product->id) }}" class="d-inline"
                             method="post">
                             @csrf @method('delete')
                         </form>
                         <button type="submit" class="btn btn-danger delete-button me-1" data-toggle="tooltip"
-                            data-placement="top" title="Hapus Produk"><i class="fe fe-trash-2"></i></button>
+                            data-placement="top" title="Hapus Produk">Hapus Product <i class="fe fe-trash-2"></i></button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -91,8 +83,14 @@
                 </div>
             </div>
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">History Harga</div>
+                <div class="card-header d-block d-md-flex justify-content-between">
+                    <div class="card-title">Harga Produk</div>
+                    <div class="mt-4 mt-md-0">
+                        <a href="{{ route('admin.prices.from.product', $product->id) }}">
+                            <button class="btn btn-warning me-3" data-toggle="tooltip" data-placement="top"
+                                title="Edit">LIhat History Harga</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -108,16 +106,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td>{{ format_uang($price->cost)  }}</td>
-                                <td>{{ format_uang($price->revenue)  }}</td>
-                                <td>{{ format_uang($price->profit)  }}</td>
-                                <td>{{ $price->margin }}%</td>
-                                <td>{{ $price->updated_at }}</td>
-                                <td>
+                                <tr>
+                                    <td>{{ format_uang($price->cost)  }}</td>
+                                    <td>{{ format_uang($price->revenue)  }}</td>
+                                    <td>{{ format_uang($price->profit)  }}</td>
+                                    <td>{{ $price->margin }}%</td>
+                                    <td>{{ $price->updated_at }}</td>
+                                    <td>
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#modalRevisi">
+                                            data-bs-target="#modalRevisi">
                                             Revisi Harga Saat ini
                                         </button>
 
@@ -127,7 +125,8 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="modalRevisiLabel">Formulir revisi harga</h5>
+                                                        <h5 class="modal-title" id="modalRevisiLabel">Formulir revisi
+                                                            harga</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
@@ -139,17 +138,21 @@
                                                                 <div class="input-group">
                                                                     <span class="input-group-text"
                                                                         id="basic-addon1">Rp</span>
-                                                                    <input type="text" class="form-control format-uang cost"
-                                                                        placeholder="Harga Modal" name="cost" id="cost1" value="{{ format_uang_no_prefix($price->cost)  }}">
+                                                                    <input type="text"
+                                                                        class="form-control format-uang cost"
+                                                                        placeholder="Harga Modal" name="cost" id="cost1"
+                                                                        value="{{ format_uang_no_prefix($price->cost)  }}">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text"
                                                                         id="basic-addon1">Rp</span>
-                                                                    <input type="text" class="form-control format-uang revenue"
+                                                                    <input type="text"
+                                                                        class="form-control format-uang revenue"
                                                                         placeholder="Harga Jual" name="revenue"
-                                                                        id="revenue1" value="{{ format_uang_no_prefix($price->revenue)  }}">
+                                                                        id="revenue1"
+                                                                        value="{{ format_uang_no_prefix($price->revenue)  }}">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -158,7 +161,8 @@
                                                                         id="basic-addon1">Rp</span>
                                                                     <input type="text" class="form-control profit"
                                                                         placeholder="Keuntungan" name="profit" readonly
-                                                                        id="profitPrice1" value="{{ format_uang_no_prefix($price->profit)  }}">
+                                                                        id="profitPrice1"
+                                                                        value="{{ format_uang_no_prefix($price->profit)  }}">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -190,27 +194,32 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="modalNewPriceLabel">Formulir Harga Terbaru</h5>
+                                                        <h5 class="modal-title" id="modalNewPriceLabel">Formulir Harga
+                                                            Terbaru</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form action="{{ route('admin.price.store', ['product_id' => $product->id]) }}"
+                                                        <form
+                                                            action="{{ route('admin.price.store', ['product_id' => $product->id]) }}"
                                                             method="post">
                                                             @csrf
                                                             <div class="form-group">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text"
                                                                         id="basic-addon1">Rp</span>
-                                                                    <input type="text" class="form-control format-uang cost"
-                                                                        placeholder="Harga Modal" name="cost" id="cost2">
+                                                                    <input type="text"
+                                                                        class="form-control format-uang cost"
+                                                                        placeholder="Harga Modal" name="cost"
+                                                                        id="cost2">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="input-group">
                                                                     <span class="input-group-text"
                                                                         id="basic-addon1">Rp</span>
-                                                                    <input type="text" class="form-control format-uang revenue"
+                                                                    <input type="text"
+                                                                        class="form-control format-uang revenue"
                                                                         placeholder="Harga Jual" name="revenue"
                                                                         id="revenue2">
                                                                 </div>

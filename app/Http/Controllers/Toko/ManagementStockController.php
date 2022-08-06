@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers\Toko;
 
+use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
-use App\Models\Price;
 use App\Models\Product;
+use App\Models\Store;
+use App\Models\TransferStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class PriceController extends Controller
+class ManagementStockController extends BaseAdminController
 {
+
+    public function __construct()
+    {
+        $this->data['isadd'] = false;
+        $this->data['currentIndex'] = route('admin.product.index');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +25,26 @@ class PriceController extends Controller
      */
     public function index()
     {
-        //
+        $query = "SELECT 
+            products.id, 
+            products.name,
+            products.sku,
+            (SELECT JSON_ARRAYAGG(stores.name)  FROM stores) AS store_name,
+            (SELECT JSON_ARRAYAGG(stocks.qty) FROM stocks WHERE stocks.product_id = products.id AND stocks.store_id IN (
+              SELECT id FROM stores
+            ) ORDER BY id LIMIT 1) AS qty
+          FROM products 
+          LEFT JOIN stocks ON stocks.product_id = products.id
+          LEFT JOIN stores ON stores.id = stocks.store_id
+        ";
+        $data['stocks'] = collect(DB::select(DB::raw($query)))->toArray(); 
+
+        $data['stores'] = Store::get();
+        $data['transfer_stocks'] = TransferStock::get();
+        $data['titlePage'] = "Manament Stock Product";
+        $data['statuses'] = collect(DB::select(DB::raw("SELECT name, description FROM master_data_statuses WHERE master_data_statuses.`type` LIKE '%transfer_stocks%'")))->toArray();
+
+        return view('admin.pages.toko.stock.index', $data);
     }
 
     /**
@@ -37,16 +65,7 @@ class PriceController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::find($request->get('product_id'));
-        Price::find($product->price[count($product->price)-1]->id)->update(['is_active' => false]);
-        $input['product_id'] = $request->get('product_id');
-        $input['cost'] = str($request->get('cost'))->replace('.','');
-        $input['revenue'] = str($request->get('revenue'))->replace('.','');
-        $input['profit'] = str($request->get('profit'))->replace('.','');
-        $input['margin'] = $request->get('margin');
-        Price::create($input);
-
-        return redirect()->back();
+        //
     }
 
     /**
@@ -80,13 +99,7 @@ class PriceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $input['cost'] = str($request->get('cost'))->replace('.','');
-        $input['revenue'] = str($request->get('revenue'))->replace('.','');
-        $input['profit'] = str($request->get('profit'))->replace('.','');
-        $input['margin'] = $request->get('margin');
-        Price::find($id)->update($input);
-
-        return redirect()->back();
+        //
     }
 
     /**
@@ -98,13 +111,5 @@ class PriceController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function pricesProduct($productId){
-      $data['prices'] = Price::where('product_id', $productId)->get();
-      $product = Product::select('id', 'name')->where('id', $productId)->first();
-      $data['titlePage'] = 'History Produk '. $product->name;
-
-      return view('admin.pages.toko.product.prices', $data);
     }
 }

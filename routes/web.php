@@ -8,6 +8,7 @@ use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\CompanyBalanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Nasabah\PagesController;
+use App\Http\Controllers\Toko\ManagementStockController;
 use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
@@ -59,6 +60,9 @@ Route::group([
     Route::resource('brand', BrandController::class);
     Route::resource('supplier', SupplierController::class);
     Route::resource('price', PriceController::class);
+    Route::resource('management-stock', PriceController::class);
+    Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
+    Route::resource('management-stock', ManagementStockController::class);
     //toko-online
 
     
