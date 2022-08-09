@@ -30,7 +30,10 @@ class UserSeeder extends Seeder
         User::factory(1)->create()->each(function ($user) {
             // Seed the relation with one employee
             $savings = Savings::factory()->make();
-            $employee = Employee::factory()->make(['nik' => '12345678']);
+            $employee = Employee::factory()->make([
+                'nik' => '12345678',
+                'position_id' => 6,
+            ]);
             $user->employee()->save($employee);
             $savings->employee_id = $user->employee->id;
             $savings->save();
@@ -39,7 +42,10 @@ class UserSeeder extends Seeder
         User::factory(1)->create()->each(function ($user) {
             // Seed the relation with one employee
             $savings = Savings::factory()->make();
-            $employee = Employee::factory()->make(['nik' => '123123123']);
+            $employee = Employee::factory()->make([
+                'nik' => '123123123',
+                'position_id' => 2,
+            ]);
             $user->employee()->save($employee);
             $savings->employee_id = $user->employee->id;
             $savings->save();
@@ -48,7 +54,10 @@ class UserSeeder extends Seeder
         User::factory(1)->create()->each(function ($user) {
             // Seed the relation with one employee
             $savings = Savings::factory()->make();
-            $employee = Employee::factory()->make(['nik' => '321321321']);
+            $employee = Employee::factory()->make([
+                'nik' => '321321321',
+                'position_id' => 3,
+            ]);
             $user->employee()->save($employee);
             $savings->employee_id = $user->employee->id;
             $savings->save();
@@ -57,7 +66,10 @@ class UserSeeder extends Seeder
         User::factory(1)->create()->each(function ($user) {
             // Seed the relation with one employee
             $savings = Savings::factory()->make();
-            $employee = Employee::factory()->make(['nik' => '100231232']);
+            $employee = Employee::factory()->make([
+                'nik' => '100231232',
+                'position_id' => 4
+        ]);
             $user->employee()->save($employee);
             $savings->employee_id = $user->employee->id;
             $savings->save();
@@ -68,7 +80,7 @@ class UserSeeder extends Seeder
             // Seed the relation with one employee
             $savings = Savings::factory()->make();
             $employee = Employee::factory()->make();
-            $employee->position_id = 6;
+            $employee->position_id = 7;
             $user->employee()->save($employee);
             $savings->employee_id = $user->employee->id;
             $savings->save();

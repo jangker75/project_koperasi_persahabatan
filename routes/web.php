@@ -59,11 +59,11 @@ Route::group([
     })->name('switcher');
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
-    Route::resource('product', ProductController::class);
-    Route::resource('category', CategoryController::class);
-    Route::resource('store', StoreController::class);
-    Route::resource('brand', BrandController::class);
-    Route::resource('supplier', SupplierController::class);
+    Route::resource('toko/product', ProductController::class);
+    Route::resource('toko/category', CategoryController::class);
+    Route::resource('toko/store', StoreController::class);
+    Route::resource('toko/brand', BrandController::class);
+    Route::resource('toko/supplier', SupplierController::class);
     //toko-online
 
     // Divisi Umum
@@ -88,6 +88,7 @@ Route::group([
 
     // Download PDF
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
+    Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
 
     // Download Data
     Route::get('download-export-data-nasabah/{type}', [EmployeeController::class, 'exportData'])->name('download.data-nasabah');

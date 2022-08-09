@@ -12,6 +12,7 @@ class CompanyBalanceController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['currentIndex'] = route('admin.company-balance.index');
     }
     public function index()

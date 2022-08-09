@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Document</title>
+    <title>{{ isset($title) ? $title : 'Report' }}</title>
     <style>
         table,
         th,
@@ -30,7 +30,7 @@
     <table style="width: 100%">
         <thead>
             <tr>
-                <td>No</td>
+                <td style="padding: 5px">No</td>
                 @foreach ($headers as $header)
                     <td style="padding: 5px"><b>{{ $header }}</b></td>
                 @endforeach
@@ -39,7 +39,7 @@
         <tbody>
             @foreach ($datas as $data)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td style="padding: 5px">{{ $loop->iteration }}</td>
                     @foreach ($data as $item)
                         <td style="padding: 5px">{{ $item }}</td>
                     @endforeach
@@ -47,12 +47,6 @@
             @endforeach
         </tbody>
     </table>
-    <script type="text/php">
-        if ( isset($pdf) ) {
-            $font = $fontMetrics->getFont("helvetica", "bold");
-            $pdf->page_text(72, 18, "Header: {PAGE_NUM} of {PAGE_COUNT}", $font, 6, array(0,0,0));
-        }
-    </script>
 </body>
 
 </html>

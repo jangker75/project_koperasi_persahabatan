@@ -12,6 +12,7 @@ class CategoryController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.category.index');
         $this->data['link'] = url('api/category');
