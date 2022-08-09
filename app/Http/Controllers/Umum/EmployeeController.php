@@ -15,6 +15,7 @@ use App\Models\SavingHistory;
 use App\Models\Savings;
 use App\Models\User;
 use App\Services\EmployeeService;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,12 @@ class EmployeeController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
+        // $this->middleware('permission:read employee', ['only' => ['index','show']]);
+        // $this->middleware('permission:create employee', ['only' => ['create','store']]);
+        // $this->middleware('permission:edit employee', ['only' => ['edit','update']]);
+        // $this->middleware('permission:delete employee', ['only' => ['destroy']]);
+        // Debugbar::info(request()->url());
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.employee.index');
     }
@@ -38,6 +45,7 @@ class EmployeeController extends BaseAdminController
      */
     public function index()
     {
+        // auth()->user()->can('view');
         $data = $this->data;
         $data['titlePage'] = 'Data Anggota';
         return view('admin.pages.employee.index', $data);
@@ -259,7 +267,7 @@ class EmployeeController extends BaseAdminController
             $pdf->output();
             $dom_pdf = $pdf->getDomPDF();
             $canvas = $dom_pdf->getCanvas(); 
-            $canvas->page_text(500, 18, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 11, [0, 0, 0]);
+            $canvas->page_text(500, 18, "Hal {PAGE_NUM} dari {PAGE_COUNT}", null, 11, [0, 0, 0]);
             return $pdf->stream('data_nasabah.pdf');
         }
         elseif ($type == 'xls') {
