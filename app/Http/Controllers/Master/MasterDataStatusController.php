@@ -11,6 +11,7 @@ class MasterDataStatusController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.master-status.index');
         $this->data['link'] = url('api/master-data-status');

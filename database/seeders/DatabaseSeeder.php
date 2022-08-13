@@ -17,10 +17,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
+        $this->call(CmsMenuSeeder::class);
         $this->call(ApplicationSettingSeeder::class);
         $this->call(CompanySeeder::class);
         $this->call(CompanyBalanceSeeder::class);
-        $this->call(RoleSeeder::class);
+        $this->call(RoleAndPermissionSeeder::class);
         $this->call(InterestSchemeTypeSeeder::class);
         $this->call(ContractTypeSeeder::class);
         $this->call(PositionSeeder::class);

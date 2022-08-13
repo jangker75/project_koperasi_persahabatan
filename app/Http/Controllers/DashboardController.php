@@ -8,7 +8,7 @@ class DashboardController extends BaseAdminController
 {
     public function __construct()
     {
-        $this->data['currentIndex'] = route('admin.company-balance.index');
+        $this->data['currentIndex'] = route('admin.dashboard');
     }
     public function index()
     {

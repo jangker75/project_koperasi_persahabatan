@@ -13,6 +13,7 @@ class LoanListController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.loan-list.index');
     }
@@ -131,7 +132,7 @@ class LoanListController extends BaseAdminController
                 break;
             
             default:
-                # code...
+                $pdf = Pdf::loadView('admin.export.PDF.permohonan_kredit_barang', $data);
                 break;
         }
         // Instantiate canvas instance 
@@ -154,7 +155,25 @@ class LoanListController extends BaseAdminController
         
         // Add an image to the pdf 
         $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
-        return $pdf->stream('pdf.pdf');
+        return $pdf->stream('kontrak.pdf');
+    }
+
+    public function downloadLoanReport()
+    {
+        $data = [];
+        $loans = Loan::with('employee')->get();
+        $loans->map(function($item) use(&$data){
+            $data[$item->loan_date][] = $item;
+        });
+        // dd(collect($data['2022-08-04'])->sum('remaining_amount'));
+        $data['loans'] = $data;
+        $data['title'] = 'Data Nasabah';
+        $pdf = Pdf::loadView('admin.export.Excel.loan_report', $data)->setPaper('a4', 'landscape');
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->getCanvas(); 
+        $canvas->page_text(750, 18, "Hal {PAGE_NUM} dari {PAGE_COUNT}", null, 11, [0, 0, 0]);
+        return $pdf->stream($data['title'].'.pdf');
     }
     public function getIndexDatatables()
     {

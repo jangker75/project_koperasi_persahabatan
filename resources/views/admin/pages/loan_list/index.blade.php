@@ -4,6 +4,13 @@
             <div class="card">
                 <div class="card-header row">
                     <div>
+                        <span>Download report</span>
+                    </div>
+                    <div>
+                        <a type="button" target="_blank" class="btn btn-primary fw-bold text-wrap" href="{{ route('admin.download.loan.report') }}">
+                        Download Report</a>
+                    </div>
+                    <div>
                         <span>Filter status</span>
                     </div>
                     <div class="btn-group">

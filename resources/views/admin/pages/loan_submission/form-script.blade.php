@@ -3,6 +3,7 @@
     let total_loan_amount = 1000000
     $('#admin_fee_percentage').val(admin_fee_percentage)
     $('#total_loan_amount').val(total_loan_amount)
+    //Datepicker
     $('.fc-datepicker').bootstrapdatepicker({
         todayHighlight: true,
         toggleActive: true,
@@ -34,7 +35,10 @@
         let amount = totalAmount - $('#admin_fee').val()
         $('#received_amount').val(formatMoney(amount))
     }
+    //Notification for status age employee and loan ongoing
     $('#status-loan-employee, #status-age-employee').hide();
+    
+    //Ajax for checking status employee
     $('#employee_id').on('change', function(){
         $('#status-loan-employee, #status-age-employee').hide();
         $.ajax({
@@ -63,4 +67,13 @@
         });
     })
     
+    //Checking if scheme interest = value then perhitungan bunga only can menurun
+    $('#interest_amount_type').change(function(){
+        if ($(this).val() == 'value') {
+            
+            $('#interest_scheme').val(1).change().attr('disabled', true)
+        }else{
+            $('#interest_scheme').attr('disabled', false)
+        }
+    })
 </script>

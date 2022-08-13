@@ -170,6 +170,9 @@ if (!function_exists('checkPositionRole')) {
             case 'MGR':
                 $role = 'manager';
                 break;
+            case 'UMM':
+                $role = 'umum';
+                break;
             default:
                 $role = 'superadmin';
                 break;
@@ -218,4 +221,10 @@ if(!function_exists('terbilang')){
          }
             return $terbilang;
      }
+}
+
+if(!function_exists('convertNumberToStringExcel')) {
+    function convertNumberToStringExcel($number){
+        return '="' . $number . '"';
+    }
 }

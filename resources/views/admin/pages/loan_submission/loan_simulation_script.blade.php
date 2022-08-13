@@ -43,11 +43,15 @@
         
         //iteration for input data simulation to table
         for (let index = 0; index <= totalPayMonth; index++) {
-            //skip first month for total loan
             if (index != 0) {
                 currentTotalLoanAmount -= totalPrincipalAmount
             }
-
+            //if last month still have pay under 50 rupiah, then payment will be deducted in last month
+            if((currentTotalLoanAmount - totalPrincipalAmount) <= 50){
+                totalPrincipalAmount = currentTotalLoanAmount
+            }
+            console.log('currentTotalLoanAmount',currentTotalLoanAmount);
+            console.log('totalPrincipalAmount',totalPrincipalAmount);
             //calculate current interest based on percentage/value and scheme menurun/flat
             if (interestType == 'percentage') {
                 if (interestScheme == 'Menurun') {
@@ -58,11 +62,11 @@
             } else {
                 currentInterest = totalInterestAmount
             }
-
+            
             if (index == totalPayMonth) {
                currentInterest = totalPrincipalAmount = 0
             }
-
+            
             //calculate for row total
             totalInterest += currentInterest
             totalIncome = (totalIncome + currentInterest + totalPrincipalAmount)
@@ -72,6 +76,7 @@
             trRow += "<td>" + (index + 1) + "</td>"
             trRow += "<td>" + addMonths(index * payPerXMonth, new Date(firstPaymentDate)) + "</td>"
             trRow += "<td>" + formatMoney(currentTotalLoanAmount) + "</td>"
+            // console.log('totalPrincipalAmount',totalPrincipalAmount);
             trRow += "<td>" + formatMoney(totalPrincipalAmount) + "</td>"
             trRow += "<td>" + formatMoney(currentInterest) + "</td>"
             trRow += "<td>" + formatMoney(currentInterest + totalPrincipalAmount) + "</td>"

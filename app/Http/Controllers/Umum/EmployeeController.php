@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Umum;
 
 use App\Enums\ConstantEnum;
+use App\Exports\BasicReportExport;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Requests\EmployeeRequest;
 use App\Models\Department;
@@ -14,17 +15,26 @@ use App\Models\SavingHistory;
 use App\Models\Savings;
 use App\Models\User;
 use App\Services\EmployeeService;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class EmployeeController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
+        // $this->middleware('permission:read employee', ['only' => ['index','show']]);
+        // $this->middleware('permission:create employee', ['only' => ['create','store']]);
+        // $this->middleware('permission:edit employee', ['only' => ['edit','update']]);
+        // $this->middleware('permission:delete employee', ['only' => ['destroy']]);
+        // Debugbar::info(request()->url());
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.employee.index');
     }
@@ -35,6 +45,7 @@ class EmployeeController extends BaseAdminController
      */
     public function index()
     {
+        // auth()->user()->can('view');
         $data = $this->data;
         $data['titlePage'] = 'Data Anggota';
         return view('admin.pages.employee.index', $data);
@@ -106,9 +117,9 @@ class EmployeeController extends BaseAdminController
         $data['departmentList'] = Department::pluck('name', 'id');
         $data['statusEmployeeList'] = MasterDataStatus::statusEmployee()->pluck('name', 'id');
         $data['employee'] = $employee;
-        
-        
-        return view('admin.pages.employee.form', $data);   
+
+
+        return view('admin.pages.employee.form', $data);
     }
 
     /**
@@ -141,19 +152,19 @@ class EmployeeController extends BaseAdminController
     public function getIndexDatatables()
     {
         $query = Employee::query()
-        ->with('position')
-        ->select('employees.*')
-        ->active();
+            ->with('position')
+            ->select('employees.*')
+            ->active();
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
-            ->editColumn('salary', function($row){
+            ->editColumn('salary', function ($row) {
                 return format_uang($row->salary);
             })
-            ->addColumn('actions', function($row){
+            ->addColumn('actions', function ($row) {
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
-                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.employee.show", [$row]) .'" type="button">View</a>';
-                $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.employee.edit", [$row]) .'" type="button">Edit</a>';
+                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="' . route("admin.employee.show", [$row]) . '" type="button">View</a>';
+                $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="' . route("admin.employee.edit", [$row]) . '" type="button">Edit</a>';
                 $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
                             <i class="fa fa-trash"></i>
                         </a>
@@ -172,8 +183,8 @@ class EmployeeController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Form Anggota Keluar';
         $data['employeeList'] = Employee::active()
-        ->select(DB::raw('concat(first_name, " ", last_name," (", nik, ")") as name'), 'id')
-        ->pluck('name', 'id');
+            ->select(DB::raw('concat(first_name, " ", last_name," (", nik, ")") as name'), 'id')
+            ->pluck('name', 'id');
         return view('admin.pages.employee.form_resign', $data);
     }
     public function employeeOutStore(Request $request)
@@ -191,7 +202,7 @@ class EmployeeController extends BaseAdminController
     public function getEmployeeSavingsHistory(Employee $employee_id, $saving_type)
     {
         $history = SavingHistory::where('saving_id', $employee_id->savings->id)->{Str::camel($saving_type)}()->get();
-        $history->map(function($data){
+        $history->map(function ($data) {
             $data->balance_after = format_uang($data->balance_after);
             $data->amount = format_uang($data->amount);
             $data->transaction_date = format_hari_tanggal_jam($data->transaction_date);
@@ -210,16 +221,58 @@ class EmployeeController extends BaseAdminController
             'status' => 'success',
         ];
         $loan = Loan::where('employee_id', request('employee_id'))
-        ->approved()
-        ->where('is_lunas', 0)->get();
+            ->approved()
+            ->where('is_lunas', 0)->get();
         $employee = Employee::find(request('employee_id'));
         if (count($loan) != 0) {
             $data['status_loan'] = 'Karyawan ini ada pinjaman yang belum lunas';
             $data['transaction_number'] = $loan->pluck('transaction_number');
         }
-        if($employee->age >= 45){
-            $data['status_age'] = "Umur karyawan ini akan pensiun (".$employee->age." Tahun)";
+        if ($employee->age >= 45) {
+            $data['status_age'] = "Umur karyawan ini akan pensiun (" . $employee->age . " Tahun)";
         }
         return response()->json($data);
+    }
+
+    public function exportData($type)
+    {
+        //Header for export file
+        $data['title'] = 'Data Nasabah';
+        $data['headers'] = ['Nama', 'NIK', 'Status Karyawan', 'Bank', 'Rekening'];
+        $employee = Employee::query()
+            ->with(['statusEmployee' => function($query){
+                $query->select('id', 'name');
+            }])    
+            ->select(
+                DB::raw('concat(first_name, " ", last_name) as fullname'),
+                'nik','status_employee_id', 'bank', 'rekening'
+            )
+            ->get();
+        
+        //Reformat field
+        $employee->map(function ($item) use ($type) {
+            if ($type == 'xls') {
+                $item['nik'] = convertNumberToStringExcel($item->nik);
+                $item['rekening'] = convertNumberToStringExcel($item->rekening);
+            }
+            $item['status_employee_id'] = $item->statusEmployee->name;
+            $item['bank'] = ConstantEnum::BANK[$item->bank];
+            unset($item->statusEmployee);
+            return $item;
+        });
+        $data['datas'] = $employee->toArray();
+
+        if ($type == 'pdf') {
+            $pdf = Pdf::loadView('admin.export.Excel.basic_report', $data);
+            $pdf->output();
+            $dom_pdf = $pdf->getDomPDF();
+            $canvas = $dom_pdf->getCanvas(); 
+            $canvas->page_text(500, 18, "Hal {PAGE_NUM} dari {PAGE_COUNT}", null, 11, [0, 0, 0]);
+            return $pdf->stream('data_nasabah.pdf');
+        }
+        elseif ($type == 'xls') {
+            return (new BasicReportExport(datas: $data['datas'], headers: $data['headers'], title: $data['title']))
+                ->download('data_nasabah.xlsx');
+        }
     }
 }
