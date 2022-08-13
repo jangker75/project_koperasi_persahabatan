@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Models\TransferStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ManagementStockController extends BaseAdminController
@@ -54,7 +55,9 @@ class ManagementStockController extends BaseAdminController
      */
     public function create()
     {
-        //
+        $data['titlePage'] = "Buat Transfer Stock Product";
+        $data['stores'] = Store::get();
+        return view('admin.pages.toko.stock.create', $data);
     }
 
     /**
@@ -65,7 +68,32 @@ class ManagementStockController extends BaseAdminController
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+        $transfer = TransferStock::create([
+          'from_store_id' => $request->originStore, 
+          'to_store_id' => $request->destinationStore,
+          'req_empl_id' => Auth::user()->employee->id
+        ]);
+        try {
+          foreach ($request->product as $kPro => $product) {
+
+            $product = Product::where('name', $product)->first();
+            
+            if($request->unit[$kPro] == 'pcs'){
+              $totalQty = $request->quantity[$kPro];
+            }else if($request->unit[$kPro] == 'pack'){
+              $totalQty = 6 * $request->quantity[$kPro];
+            }else if($request->unit[$kPro] == 'box'){
+              $totalQty = 24 * $request->quantity[$kPro];
+            }
+            // dd($totalQty);
+
+            
+
+          }
+        } catch (\Throwable $th) {
+          //throw $th;
+        }
     }
 
     /**

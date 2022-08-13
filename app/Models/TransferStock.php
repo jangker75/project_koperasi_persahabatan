@@ -12,7 +12,7 @@ class TransferStock extends Model
 
     protected $fillable = [
       'transfer_stock_code', 'from_store_id', 'to_store_id',
-      'status_id', 'req_empl_id', 'send_empl_id', 'req_date'
+      'status_id', 'req_empl_id', 'send_empl_id', 'req_date','note'
     ];
 
     public function Product(){

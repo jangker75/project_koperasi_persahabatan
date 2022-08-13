@@ -4,6 +4,7 @@ use App\Http\Controllers\Master\API\MasterDataStatusController;
 use App\Http\Controllers\Share\JqueryEditableController;
 use App\Http\Controllers\Toko\API\BrandController;
 use App\Http\Controllers\Toko\API\CategoryController;
+use App\Http\Controllers\Toko\API\ProductController;
 use App\Http\Controllers\Toko\API\StoreController;
 use App\Http\Controllers\Toko\API\SupplierController;
 use Illuminate\Http\Request;
@@ -32,3 +33,4 @@ Route::resource('brand', BrandController::class);
 Route::resource('supplier', SupplierController::class);
 // Render Jquery DataTable Editable
 Route::post('jquery-data-editable', [JqueryEditableController::class, 'renderTable']);
+Route::post('search-product', [ProductController::class, "searchProduct"])->name('search-product');
