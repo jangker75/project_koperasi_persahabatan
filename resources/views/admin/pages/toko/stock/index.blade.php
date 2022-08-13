@@ -54,7 +54,7 @@
                 <div class="card-header">
                     <div class="card-title">Data Transfer Stock</div>
                     <div class="card-options">
-                        <a href="{{ route('admin.management-stock.create') }}" class="btn btn-danger btn-sm">Buat Transfer Stock +</a>
+                        <a href="{{ route('admin.management-stock.create') }}" class="btn btn-primary btn-sm">Buat Transfer Stock +</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -87,7 +87,7 @@
                                             <a href="#" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
                                                 data-placement="top" title="Ubah Status Data Transfer Stock">Ubah Status<i
                                                     class="fe fe-edit"></i></a>
-                                            <a href="#" class="btn btn-warning btn-sm me-1" data-toggle="tooltip"
+                                            <a href="{{ route('admin.management-stock.edit', $trStock->id) }}" class="btn btn-warning btn-sm me-1" data-toggle="tooltip"
                                                 data-placement="top" title="Edit Data Transfer Stock">Edit Data <i
                                                     class="fe fe-edit"></i></a>
                                             <form action="#"

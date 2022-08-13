@@ -1,8 +1,14 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
 
     <div class="row row-sm">
+      @if (isset($transferStock))
+      <form action="{{ route('admin.management-stock.update', $transferStock->id) }}" method="post">
+        @csrf        
+        @method('put')
+      @else
         <form action="{{ route('admin.management-stock.store') }}" method="post">
-        @csrf
+        @csrf        
+      @endif
         <div class="col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-header">
@@ -15,7 +21,13 @@
                                     <select name="originStore" class="form-control form-select select2"
                                         data-bs-placeholder="Masukan Sumber Toko" id="originStore">
                                         @foreach ($stores as $store)
-                                        <option value="{{ $store->id }}">{{ $store->name }}</option>
+                                        <option value="{{ $store->id }}"
+                                          @if (isset($transferStock))
+                                            @if ($transferStock->from_store_id == $store->id)
+                                              selected
+                                            @endif
+                                          @endif
+                                          >{{ $store->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -24,7 +36,13 @@
                                     <select name="destinationStore" class="form-control form-select select2"
                                         data-bs-placeholder="Masukan Tujuan Toko">
                                         @foreach ($stores as $store)
-                                        <option value="{{ $store->id }}">{{ $store->name }}</option>
+                                        <option value="{{ $store->id }}"
+                                          @if (isset($transferStock))
+                                            @if ($transferStock->to_store_id == $store->id)
+                                              selected
+                                            @endif
+                                          @endif
+                                          >{{ $store->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -44,31 +62,63 @@
                                     <th>Action</th>
                                 </thead>
                                 <tbody id="bodyTable">
-                                    <tr class="rowList">
-                                        <td>
-                                            <input type="text" class="product-list form-control" name="product[]"
-                                                id="product" placeholder="Input Nama Produk" utocomplete="off">
-                                            <div class="card card-search-product">
-                                                <ul class="list-group list-group-flush data-list-product"
-                                                    id="dataListProduct">
-                                                    <li class="list-group-item product-show">test</li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><input type="number" class="quantity-list form-control" name="quantity[]"
-                                                id="quantity" placeholder="Input Jumlah Produk"></td>
-                                        <td>
-                                          <select name="unit[]" class="form-control form-select" >
-                                              <option value="pcs">pcs</option>
-                                              <option value="pack">pack (6 pcs)</option>
-                                              <option value="box">Kardus</option>
-                                          </select>
-                                        </td>
-                                        <td>
-                                            <span class="btn btn-danger deleteRows">&times;</span>
-                                            <span class="btn btn-primary addRows">&plus;</span>
-                                        </td>
-                                    </tr>
+                                  @if (isset($transferStock))
+                                  @foreach ($transferStock->DetailItem as $item)
+                                  <tr class="rowList">
+                                      <td>
+                                          <input type="text" class="product-list form-control" name="product[]"
+                                              id="product" placeholder="Input Nama Produk" autocomplete="off" value="{{ $item->product->name }}">
+                                          <div class="card card-search-product">
+                                              <ul class="list-group list-group-flush data-list-product"
+                                                  id="dataListProduct">
+                                                  <li class="list-group-item product-show">test</li>
+                                              </ul>
+                                          </div>
+                                      </td>
+                                      <td><input type="number" class="quantity-list form-control" name="quantity[]"
+                                              id="quantity" placeholder="Input Jumlah Produk" value="request_qty"></td>
+                                      <td>
+                                        <select name="unit[]" class="form-control form-select" >
+                                            <option value="pcs">pcs</option>
+                                            <option value="pack">pack (6 pcs)</option>
+                                            <option value="box">Kardus</option>
+                                        </select>
+                                      </td>
+                                      <td>
+                                          <span class="btn btn-danger deleteRows">&times;</span>
+                                          <span class="btn btn-primary addRows">&plus;</span>
+                                      </td>
+                                  </tr>
+                                  @endforeach
+
+                                  @else
+                                  
+                                  <tr class="rowList">
+                                      <td>
+                                          <input type="text" class="product-list form-control" name="product[]"
+                                              id="product" placeholder="Input Nama Produk" autocomplete="off">
+                                          <div class="card card-search-product">
+                                              <ul class="list-group list-group-flush data-list-product"
+                                                  id="dataListProduct">
+                                                  <li class="list-group-item product-show">test</li>
+                                              </ul>
+                                          </div>
+                                      </td>
+                                      <td><input type="number" class="quantity-list form-control" name="quantity[]"
+                                              id="quantity" placeholder="Input Jumlah Produk"></td>
+                                      <td>
+                                        <select name="unit[]" class="form-control form-select" >
+                                            <option value="pcs">pcs</option>
+                                            <option value="pack">pack (6 pcs)</option>
+                                            <option value="box">Kardus</option>
+                                        </select>
+                                      </td>
+                                      <td>
+                                          <span class="btn btn-danger deleteRows">&times;</span>
+                                          <span class="btn btn-primary addRows">&plus;</span>
+                                      </td>
+                                  </tr>
+                                  @endif
                                 </tbody>
                             </table>
                         </div>

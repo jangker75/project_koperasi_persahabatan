@@ -63,9 +63,9 @@ Route::group([
     Route::get('switcher', function () {
         return view('admin.pages.switcher.index');
     })->name('switcher');
+
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
-
     Route::group([
       'prefix' => 'toko'
     ], function(){

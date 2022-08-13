@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
+use App\Models\DetailTransferStock;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\TransferStock;
+use Carbon\Carbon;
+use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -68,11 +71,12 @@ class ManagementStockController extends BaseAdminController
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $transfer = TransferStock::create([
           'from_store_id' => $request->originStore, 
           'to_store_id' => $request->destinationStore,
-          'req_empl_id' => Auth::user()->employee->id
+          'req_empl_id' => Auth::user()->employee->id,
+          'req_date' => Carbon::now()
         ]);
         try {
           foreach ($request->product as $kPro => $product) {
@@ -88,11 +92,16 @@ class ManagementStockController extends BaseAdminController
             }
             // dd($totalQty);
 
-            
-
+            DetailTransferStock::create([
+              'transfer_stock_id' => $transfer->id,
+              'product_id' => $product->id,
+              'request_qty' => $totalQty
+            ]);
           }
-        } catch (\Throwable $th) {
-          //throw $th;
+
+          return redirect()->route('admin.management-stock.index');
+        } catch (QueryException $e) {
+          return redirect()->back()->with("error", $e->errorInfo[2]);
         }
     }
 
@@ -104,7 +113,8 @@ class ManagementStockController extends BaseAdminController
      */
     public function show($id)
     {
-        //
+        $data['titlePage'] = "Buat Transfer Stock Product";
+        return view('admin.pages.toko.stock.create', $data);
     }
 
     /**
@@ -115,7 +125,10 @@ class ManagementStockController extends BaseAdminController
      */
     public function edit($id)
     {
-        //
+      $data['transferStock'] = TransferStock::find($id);
+      $data['titlePage'] = "Edit Transfer Stock " .  $data['transferStock']->transfer_stock_code;
+      $data['stores'] = Store::get();
+      return view('admin.pages.toko.stock.create', $data);
     }
 
     /**
