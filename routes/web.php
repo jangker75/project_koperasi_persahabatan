@@ -7,6 +7,7 @@ use App\Http\Controllers\Toko\BrandController;
 use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\CompanyBalanceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Umum\ExEmployeeController;
 use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
 use App\Models\CompanyBalance;
+use App\Services\DynamicImageService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -54,9 +56,9 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('switcher', function () {
-        return view('admin.pages.switcher.index');
-    })->name('switcher');
+    
+    
+
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
     Route::resource('toko/product', ProductController::class);
@@ -81,6 +83,8 @@ Route::group([
     Route::get('loan-full-payment/{loan}', [LoanListController::class, 'fullPayment'])->name('loan.fullpayment');
     Route::post('loan-full-payment-store', [LoanListController::class, 'fullPaymentStore'])->name('loan.fullpayment.store');
     Route::post('loan-some-payment-store', [LoanListController::class, 'somePaymentStore'])->name('loan.somepayment.store');
+    Route::post('loan-upload-attachment',[LoanListController::class, 'uploadAttachment'])->name('loan.upload.attachment');
+    Route::post('loan-destroy-attachment',[LoanListController::class, 'destroyAttachment'])->name('loan.destroy.attachment');
     Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
@@ -96,6 +100,11 @@ Route::group([
     // App Setting
     Route::get('app-setting', [ApplicationSettingController::class, 'index'])->name('app-setting.index');
     Route::post('app-setting', [ApplicationSettingController::class, 'update'])->name('app-setting.update');
+    Route::get('switcher', function () {
+        return view('admin.pages.switcher.index');
+    })->name('switcher');
+    Route::resource('role-management', RoleManagementController::class);
+    // End App Setting
 
     // Datatables Route
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
@@ -105,7 +114,12 @@ Route::group([
 
     //Logout custom
     // Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
+
 });
+
+//Images routes non spatie
+Route::get('image/{filename?}', [DynamicImageService::class, 'showImage'])->where('filename', '.*')
+        ->name('showimage')->middleware('auth'); //show image
 
 //Redirect all wild domain
 // Route::get('{any}', function () {
