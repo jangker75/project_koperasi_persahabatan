@@ -82,9 +82,12 @@ class LoanSubmissionController extends BaseAdminController
      * @param  \App\Models\Loan  $loan
      * @return \Illuminate\Http\Response
      */
-    public function show(Loan $loan)
+    public function show(Loan $loan_submission)
     {
-        //
+        $data = $this->data;
+        $data['titlePage'] = 'Detail Data';
+        $data['loan'] = $loan_submission;
+        return view('admin.pages.loan_submission.detail', $data);
     }
 
     /**

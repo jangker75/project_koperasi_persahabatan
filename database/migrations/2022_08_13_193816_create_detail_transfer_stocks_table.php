@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_suppliers', function (Blueprint $table) {
+        Schema::create('detail_transfer_stocks', function (Blueprint $table) {
             $table->id();
-            $table->string('order_supplier_code');
-            $table->integer('supplier_id');
-            $table->integer('to_store_id');
-            $table->integer('status_id');
-            $table->integer('req_empl_id');
-            $table->datetime('order_date');
-            $table->datetime('received_date')->nullable();
-            $table->longText('note')->nullable();
+            $table->integer('transfer_stock_id');
+            $table->integer('product_id');
+            $table->integer('request_qty')->default(0);
+            $table->integer('available_qty')->default(0);
+            $table->integer('receive_qty')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -35,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_suppliers');
+        Schema::dropIfExists('detail_transfer_stocks');
     }
 };

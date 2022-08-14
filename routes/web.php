@@ -8,6 +8,10 @@ use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\CompanyBalanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleManagementController;
+use App\Http\Controllers\Nasabah\PagesController;
+use App\Http\Controllers\Toko\ManagementStockController;
+use App\Http\Controllers\Toko\OrderSupplierController;
+use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
@@ -16,9 +20,7 @@ use App\Models\Product;
 use App\Http\Controllers\Umum\ExEmployeeController;
 use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
-use App\Models\CompanyBalance;
 use App\Services\DynamicImageService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +33,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/admin', function () {
     return redirect()->route('admin.dashboard');
@@ -46,6 +49,8 @@ Route::group([
         $data['product'] = Product::get();
         return view('nasabah.pages.home', $data);
     })->name('home');
+    Route::get('/product', [PagesController::class, 'product'])->name('nasabah.product.index');
+    Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('nasabah.product.show');
     //Logout custom
 });
 Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
@@ -61,11 +66,24 @@ Route::group([
 
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
-    Route::resource('toko/product', ProductController::class);
-    Route::resource('toko/category', CategoryController::class);
-    Route::resource('toko/store', StoreController::class);
-    Route::resource('toko/brand', BrandController::class);
-    Route::resource('toko/supplier', SupplierController::class);
+    Route::group([
+      'prefix' => 'toko'
+    ], function(){
+      Route::resource('product', ProductController::class);
+      Route::resource('category', CategoryController::class);
+      Route::resource('store', StoreController::class);
+      Route::resource('brand', BrandController::class);
+      Route::resource('supplier', SupplierController::class);
+      Route::resource('management-price', PriceController::class);
+      Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
+      Route::resource('management-stock', ManagementStockController::class);
+      Route::resource('order-supplier', OrderSupplierController::class);
+
+      // transfer-stock
+      Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
+      // transfer-stock
+    });
+
     //toko-online
 
     // Divisi Umum
@@ -107,6 +125,7 @@ Route::group([
     // End App Setting
 
     // Datatables Route
+    Route::get('datatables-product', [ProductController::class, 'getIndexDatatables'])->name('product.index.datatables');
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
     Route::get('datatables-loan-submission-index', [LoanSubmissionController::class, 'getIndexDatatables'])->name('loan-submission.index.datatables');

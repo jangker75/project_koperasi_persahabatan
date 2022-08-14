@@ -3,13 +3,17 @@
 namespace App\Providers;
 
 use App\Models\Brand;
+use App\Models\OrderSupplier;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\Supplier;
+use App\Models\TransferStock;
 use App\Observers\BrandObserver;
+use App\Observers\OrderSupplierObserver;
 use App\Observers\ProductObserver;
 use App\Observers\StoreObserver;
 use App\Observers\SupplierObserver;
+use App\Observers\TransferStockObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -39,6 +43,8 @@ class EventServiceProvider extends ServiceProvider
         Brand::observe(BrandObserver::class);
         Supplier::observe(SupplierObserver::class);
         Store::observe(StoreObserver::class);
+        TransferStock::observe((TransferStockObserver::class));
+        OrderSupplier::observe(OrderSupplierObserver::class);
     }
 
     /**

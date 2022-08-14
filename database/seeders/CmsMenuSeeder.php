@@ -43,6 +43,7 @@ class CmsMenuSeeder extends Seeder
                 'url' => 'admin/toko', 
                 'icon' => 'fe fe-shopping-cart', 
         ]);
+
         // Sub Menu kelola toko
         $dataToko->subMenus()->create([
                 'name' => 'Kelola Data Product',
@@ -60,21 +61,30 @@ class CmsMenuSeeder extends Seeder
                 'name' => 'Kelola Data Pemasok',
                 'url' => 'admin/toko/supplier', 
         ]);
+        $dataToko->subMenus()->create([
+                'name' => 'Data Toko',
+                'url' => 'admin/toko/store', 
+        ]);
+        // CmsMenu::create([
+        //         'name' => 'Data Toko',
+        //         'url' => 'admin/store', 
+        //         'icon' => 'fe fe-map-pin', 
+        // ]);
         //END Sub Menu kelola toko
 
         $dataPengadaan = CmsMenu::create([
-                'name' => 'Pengadaan',
+                'name' => 'Stok Barang',
                 'url' => 'admin/pengadaan', 
                 'icon' => 'fe fe-database', 
         ]);
         // Sub Menu Pengadaan
         $dataPengadaan->subMenus()->create([
                 'name' => 'Manajemen Stok barang',
-                'url' => 'admin/pengadaan/stok-barang', 
+                'url' => 'admin/toko/management-stock', 
         ]);
         $dataPengadaan->subMenus()->create([
-                'name' => 'Transfer Stok',
-                'url' => 'admin/pengadaan/transfer-stok', 
+                'name' => 'Order Supplier',
+                'url' => 'admin/toko/order-supplier', 
         ]);
         $dataPengadaan->subMenus()->create([
                 'name' => 'Audit Opname',
@@ -98,11 +108,7 @@ class CmsMenuSeeder extends Seeder
         ]);
         //END Sub Menu Paylater
 
-        CmsMenu::create([
-                'name' => 'Data Toko',
-                'url' => 'admin/master-data-toko', 
-                'icon' => 'fe fe-map-pin', 
-        ]);
+        
 
         // Usipa
         CmsMenu::create([
@@ -162,6 +168,12 @@ class CmsMenuSeeder extends Seeder
                 'url' => 'admin/app-setting', 
                 'icon' => 'mdi mdi-wrench', 
         ]);
+        CmsMenu::create([
+                'name' => 'Role Management',
+                'url' => 'admin/role-management', 
+                'icon' => 'mdi mdi-wrench', 
+        ]);
+
 
     }
 }

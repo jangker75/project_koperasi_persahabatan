@@ -10,7 +10,7 @@ class BrandController extends BaseAdminController
 {
     public function __construct()
     {
-      parent::__construct();
+        parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.brand.index');
         $this->data['link'] = url('api/brand');

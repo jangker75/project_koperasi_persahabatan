@@ -17,15 +17,20 @@
                     </tr>
                     <tr>
                         <td>{{ __('employee.name') }}</td>
-                        <td>{{ __($loan->employee->full_name) }}</td>
+                        <td>
+                            <a target="_blank" href="{{ route('admin.employee.show', $loan->employee->id) }}">
+                                {{ $loan->employee->full_name }}
+                            </a>
+                            
+                        </td>
                     </tr>
                     <tr>
                         <td>{{ __('employee.nik') }}</td>
-                        <td>{{ __($loan->employee->nik) }}</td>
+                        <td>{{ ($loan->employee->nik) }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('employee.phone') }}</td>
-                        <td>{{ __($loan->employee->phone) }}</td>
+                        <td>{{ ($loan->employee->phone) }}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold fs-5" colspan="2">Informasi Pinjaman</td>
