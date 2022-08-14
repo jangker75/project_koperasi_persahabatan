@@ -18,6 +18,7 @@ class OrderSupplierController extends Controller
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.product.index');
     }

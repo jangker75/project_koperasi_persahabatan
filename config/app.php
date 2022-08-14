@@ -201,6 +201,7 @@ return [
         App\Providers\AdminSideMenuProvider::class,
         App\Providers\NavigationProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*

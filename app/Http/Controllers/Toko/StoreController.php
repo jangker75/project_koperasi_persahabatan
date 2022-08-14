@@ -12,6 +12,7 @@ class StoreController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.store.index');
         $this->data['link'] = url('api/store');

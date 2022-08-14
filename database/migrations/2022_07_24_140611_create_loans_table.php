@@ -32,6 +32,7 @@ return new class extends Migration
             $table->integer('pay_per_x_month')->default(1);
             $table->date('first_payment_date');
             $table->text('notes')->nullable();
+            $table->string('attachment', 250)->nullable();
             $table->integer('loan_approval_status_id');
             $table->integer('is_lunas')->default(0);
             $table->timestamp('response_date')->nullable();

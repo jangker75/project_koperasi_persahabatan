@@ -17,7 +17,8 @@ class Loan extends Model
         'interest_scheme_type_id', 'profit_company_ratio',
         'profit_employee_ratio', 'total_pay_month', 'pay_per_x_month',
         'first_payment_date', 'notes', 'loan_approval_status_id','is_lunas',
-        'response_date', 'response_user', 'admin_fee', 'created_by'
+        'response_date', 'response_user', 'admin_fee', 'created_by',
+        'attachment'
     ];
     public function employee()
     {
