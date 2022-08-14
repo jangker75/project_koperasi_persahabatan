@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\Toko;
 
-use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
-use App\Models\DetailTransferStock;
+use App\Models\DetailOrderSupplier;
+use App\Models\OrderSupplier;
 use App\Models\Product;
 use App\Models\Store;
-use App\Models\TransferStock;
+use App\Models\Supplier;
 use Carbon\Carbon;
 use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class ManagementStockController extends BaseAdminController
+class OrderSupplierController extends Controller
 {
-
     public function __construct()
     {
         $this->data['isadd'] = false;
@@ -29,26 +28,11 @@ class ManagementStockController extends BaseAdminController
      */
     public function index()
     {
-        $query = "SELECT 
-            products.id, 
-            products.name,
-            products.sku,
-            (SELECT JSON_ARRAYAGG(stores.name)  FROM stores) AS store_name,
-            (SELECT JSON_ARRAYAGG(stocks.qty) FROM stocks WHERE stocks.product_id = products.id AND stocks.store_id IN (
-              SELECT id FROM stores
-            ) ORDER BY id LIMIT 1) AS qty
-          FROM products 
-          LEFT JOIN stocks ON stocks.product_id = products.id
-          LEFT JOIN stores ON stores.id = stocks.store_id
-        ";
-        $data['stocks'] = collect(DB::select(DB::raw($query)))->toArray(); 
+        $data['orderSupplier'] = OrderSupplier::latest()->get();
+        $data['titlePage'] = "Manament Order Supplier";
+        $data['statuses'] = collect(DB::select(DB::raw("SELECT name, description FROM master_data_statuses WHERE master_data_statuses.`type` LIKE '%order_suppliers%'")))->toArray();
 
-        $data['stores'] = Store::get();
-        $data['transfer_stocks'] = TransferStock::get();
-        $data['titlePage'] = "Manament Stock Product";
-        $data['statuses'] = collect(DB::select(DB::raw("SELECT name, description FROM master_data_statuses WHERE master_data_statuses.`type` LIKE '%transfer_stocks%'")))->toArray();
-
-        return view('admin.pages.toko.stock.index', $data);
+        return view('admin.pages.toko.order-supplier.index', $data);
     }
 
     /**
@@ -58,9 +42,10 @@ class ManagementStockController extends BaseAdminController
      */
     public function create()
     {
-        $data['titlePage'] = "Buat Transfer Stock Product";
+        $data['titlePage'] = "Buat Pesanan ke Supplier";
         $data['stores'] = Store::get();
-        return view('admin.pages.toko.stock.create', $data);
+        $data['suppliers'] = Supplier::get();
+        return view('admin.pages.toko.order-supplier.create', $data);
     }
 
     /**
@@ -71,11 +56,12 @@ class ManagementStockController extends BaseAdminController
      */
     public function store(Request $request)
     {
-        $transfer = TransferStock::create([
-          'from_store_id' => $request->originStore, 
+        $transfer = OrderSupplier::create([
+          'supplier_id' => $request->supplierId, 
           'to_store_id' => $request->destinationStore,
-          'req_empl_id' => Auth::user()->employee->id,
-          'req_date' => Carbon::now()
+          'req_empl_id' => Auth::user()->employee->id, 
+          'order_date' => Carbon::now(), 
+          'note' => $request->note ? $request->note : ""
         ]);
         try {
           foreach ($request->product as $kPro => $product) {
@@ -90,14 +76,14 @@ class ManagementStockController extends BaseAdminController
               $totalQty = 24 * $request->quantity[$kPro];
             }
 
-            DetailTransferStock::create([
-              'transfer_stock_id' => $transfer->id,
+            DetailOrderSupplier::create([
+              'order_supplier_id' => $transfer->id,
               'product_id' => $product->id,
               'request_qty' => $totalQty
             ]);
           }
 
-          return redirect()->route('admin.management-stock.index');
+          return redirect()->route('admin.order-supplier.index');
         } catch (QueryException $e) {
           return redirect()->back()->with("error", $e->errorInfo[2]);
         }
@@ -111,9 +97,9 @@ class ManagementStockController extends BaseAdminController
      */
     public function show($id)
     {
-        $data['transferStock'] = TransferStock::find($id);
-        $data['titlePage'] = "Detail Transfer Stock " .  $data['transferStock']->transfer_stock_code;
-        return view('admin.pages.toko.stock.show', $data);
+        $data['orderSupplier'] = OrderSupplier::find($id);
+        $data['titlePage'] = "Detail Order Supplier " .  $data['orderSupplier']->order_supplier_code;
+        return view('admin.pages.toko.order-supplier.show', $data);
     }
 
     /**
@@ -124,10 +110,11 @@ class ManagementStockController extends BaseAdminController
      */
     public function edit($id)
     {
-      $data['transferStock'] = TransferStock::find($id);
-      $data['titlePage'] = "Edit Transfer Stock " .  $data['transferStock']->transfer_stock_code;
+      $data['orderSupplier'] = OrderSupplier::find($id);
+      $data['titlePage'] = "Edit Order Supplier " .  $data['orderSupplier']->order_supplier_code;
       $data['stores'] = Store::get();
-      return view('admin.pages.toko.stock.create', $data);
+      $data['suppliers'] = Supplier::get();
+      return view('admin.pages.toko.order-supplier.create', $data);
     }
 
     /**
@@ -141,14 +128,14 @@ class ManagementStockController extends BaseAdminController
     {
       
       try {
-          $transfer = TransferStock::find($id);
-          $transfer->update([
-            'from_store_id' => $request->originStore, 
+          $orderSupplier = OrderSupplier::find($id);
+          $orderSupplier->update([
+            'supplier_id' => $request->originStore, 
             'to_store_id' => $request->destinationStore,
             'req_empl_id' => Auth::user()->employee->id,
             'req_date' => Carbon::now()
           ]);
-          $transfer = TransferStock::find($id);
+          $orderSupplier = OrderSupplier::find($id);
 
           $ids = [];
 
@@ -164,19 +151,19 @@ class ManagementStockController extends BaseAdminController
               $totalQty = 24 * $request->quantity[$kPro];
             }
 
-            foreach ($transfer->detailItem as $key => $item) {
+            foreach ($orderSupplier->detailItem as $key => $item) {
               if($item->product_id == $product->id){
-                $detail = DetailTransferStock::find($item->id)->update([
+                $detail = DetailOrderSupplier::find($item->id)->update([
                   'request_qty' => $totalQty
                 ]);
-                $detail = DetailTransferStock::find($item->id);
+                $detail = DetailOrderSupplier::find($item->id);
                 array_push($ids, $detail->id);
               }else{
-                $check = DetailTransferStock::where('transfer_stock_id', $transfer->id)
+                $check = DetailOrderSupplier::where('order_supplier_id', $orderSupplier->id)
                                           ->where('product_id', $product->id)->first();
                 if(!$check){
-                  $detail = DetailTransferStock::create([
-                    'transfer_stock_id' => $transfer->id,
+                  $detail = DetailOrderSupplier::create([
+                    'order_supplier_id' => $orderSupplier->id,
                     'product_id' => $product->id,
                     'request_qty' => $totalQty
                   ]);
@@ -186,9 +173,9 @@ class ManagementStockController extends BaseAdminController
             }
           }
           // dd($ids);
-          DetailTransferStock::whereNotIn('id', $ids)->delete();
+          OrderSupplier::whereNotIn('id', $ids)->delete();
 
-          return redirect()->route('admin.management-stock.index');
+          return redirect()->route('admin.order-supplier.index');
         } catch (QueryException $e) {
           dd($e);
           return redirect()->back()->with("error", $e->errorInfo[2]);
@@ -203,17 +190,17 @@ class ManagementStockController extends BaseAdminController
      */
     public function destroy($id)
     {
-        $transfer = TransferStock::find($id);
+        $orderSupplier = OrderSupplier::find($id);
 
-        DetailTransferStock::where('transfer_stock_id', $transfer->id)->delete();
-        $transfer->delete();
+        DetailOrderSupplier::where('transfer_stock_id', $orderSupplier->id)->delete();
+        $orderSupplier->delete();
 
         return redirect()->back();
     }
 
 
     public function confirmTicket($id){
-      $transfer = TransferStock::find($id);
+      $transfer = OrderSupplier::find($id);
 
       $transfer->update([
         'status_id' => 4

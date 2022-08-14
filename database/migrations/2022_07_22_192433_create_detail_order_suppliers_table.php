@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->integer('order_supplier_id');
             $table->integer('product_id');
-            $table->integer('send_qty');
-            $table->integer('receive_qty');
-            $table->integer('reject_qty');
+            $table->integer('request_qty');
+            $table->integer('receive_qty')->nullable();
+            $table->integer('available_qty')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

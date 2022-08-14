@@ -15,7 +15,7 @@ class TransferStock extends Model
       'status_id', 'req_empl_id', 'send_empl_id', 'req_date','note'
     ];
 
-    public function DetailItem(){
+    public function detailItem(){
       return $this->hasMany(DetailTransferStock::class, "transfer_stock_id", "id");
     }
 

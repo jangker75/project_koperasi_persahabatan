@@ -9,6 +9,7 @@ use App\Http\Controllers\CompanyBalanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Nasabah\PagesController;
 use App\Http\Controllers\Toko\ManagementStockController;
+use App\Http\Controllers\Toko\OrderSupplierController;
 use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
@@ -77,6 +78,11 @@ Route::group([
       Route::resource('management-price', PriceController::class);
       Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
       Route::resource('management-stock', ManagementStockController::class);
+      Route::resource('order-supplier', OrderSupplierController::class);
+
+      // transfer-stock
+      Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
+      // transfer-stock
     });
 
     //toko-online

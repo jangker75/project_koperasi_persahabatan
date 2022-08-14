@@ -1,12 +1,12 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
 
     <div class="row row-sm">
-      @if (isset($transferStock))
-      <form action="{{ route('admin.management-stock.update', $transferStock->id) }}" method="post">
+      @if (isset($orderSupplier))
+      <form action="{{ route('admin.order-supplier.update', $orderSupplier->id) }}" method="post">
         @csrf        
         @method('put')
       @else
-        <form action="{{ route('admin.management-stock.store') }}" method="post">
+        <form action="{{ route('admin.order-supplier.store') }}" method="post">
         @csrf        
       @endif
         <div class="col-lg-12 col-xl-12">
@@ -15,30 +15,30 @@
                     <div class="w-100 row">
                         <div class="col-md-6">
                             <div class="w-100  p-3">
-                                <h4 class="h4 fw-bold">Formulir untuk Transfer Stock</h4>
+                                <h4 class="h4 fw-bold">Formulir untuk buat pesanan ke supplier</h4>
                                 <div class="form-group">
-                                    <label for="originStore">Origin Store</label>
-                                    <select name="originStore" class="form-control form-select select2"
-                                        data-bs-placeholder="Masukan Sumber Toko" id="originStore">
-                                        @foreach ($stores as $store)
-                                        <option value="{{ $store->id }}"
-                                          @if (isset($transferStock))
-                                            @if ($transferStock->from_store_id == $store->id)
+                                    <label for="supplierId">Dari Supplier</label>
+                                    <select name="supplierId" class="form-control form-select select2"
+                                        data-bs-placeholder="Masukan Sumber Toko" id="supplierId">
+                                        @foreach ($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}"
+                                          @if (isset($orderSupplier))
+                                            @if ($orderSupplier->supplier_id == $supplier->id)
                                               selected
                                             @endif
                                           @endif
-                                          >{{ $store->name }}</option>
+                                          >{{ $supplier->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="destinationnStore">Destination Store</label>
+                                    <label for="destinationnStore">Tujuan Toko</label>
                                     <select name="destinationStore" class="form-control form-select select2"
                                         data-bs-placeholder="Masukan Tujuan Toko">
                                         @foreach ($stores as $store)
                                         <option value="{{ $store->id }}"
-                                          @if (isset($transferStock))
-                                            @if ($transferStock->to_store_id == $store->id)
+                                          @if (isset($orderSupplier))
+                                            @if ($orderSupplier->to_store_id == $store->id)
                                               selected
                                             @endif
                                           @endif
@@ -62,8 +62,8 @@
                                     <th>Action</th>
                                 </thead>
                                 <tbody id="bodyTable">
-                                  @if (isset($transferStock))
-                                  @foreach ($transferStock->detailItem as $item)
+                                  @if (isset($orderSupplier))
+                                  @foreach ($orderSupplier->detailItem as $item)
                                   <tr class="rowList">
                                       <td>
                                           <input type="text" class="product-list form-control" name="product[]"

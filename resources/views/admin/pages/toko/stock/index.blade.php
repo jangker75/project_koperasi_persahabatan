@@ -60,7 +60,7 @@
                 <div class="card-body">
                     <div class="w-100">
                         <div class="table-responsive">
-                            <table class="table w-100" id="datatable2">
+                            <table class="table w-100 " id="datatable2">
                                 <thead class="table-success fw-bold text-uppercase">
                                     <th>No</th>
                                     <th>Kode</th>
@@ -84,13 +84,11 @@
                                         <td>{{ isset($trStock->sender) ? $trStock->sender->getFullNameAttribute() : "Belum ada";}}</td>
                                         <td><span class="badge bg-danger p-2">{{ $trStock->status->name }}</span></td>
                                         <td>
-                                            <a href="#" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
-                                                data-placement="top" title="Ubah Status Data Transfer Stock">Ubah Status<i
+                                            
+                                            <a href="{{ route('admin.management-stock.show', $trStock->id) }}" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
+                                                data-placement="top" title="Edit Data Transfer Stock">Detail Transfer Stock <i
                                                     class="fe fe-edit"></i></a>
-                                            <a href="{{ route('admin.management-stock.edit', $trStock->id) }}" class="btn btn-warning btn-sm me-1" data-toggle="tooltip"
-                                                data-placement="top" title="Edit Data Transfer Stock">Edit Data <i
-                                                    class="fe fe-edit"></i></a>
-                                            <form action="#"
+                                            <form action="{{ route('admin.management-stock.destroy', $trStock->id) }}"
                                                 class="d-inline" method="post">
                                                 @csrf @method('delete')
                                             </form>

@@ -11,8 +11,15 @@ class DetailOrderSupplier extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'order_supplier_id', 'product_id', 'send_qty',
-      'receive_qty', 'reject_qty'
+      'order_supplier_id', 'product_id', 'request_qty', 'available_qty', 'receive_qty'
     ];
+
+    public function orderSupplier(){
+      return $this->belongsTo(OrderSupplier::class, 'order_supplier_id');
+    }
+
+    public function product(){
+      return $this->belongsTo(Product::class, "product_id");
+    }
     
 }

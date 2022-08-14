@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('req_empl_id');
             $table->integer('send_empl_id')->nullable();
             $table->datetime('req_date');
+            $table->longtext('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

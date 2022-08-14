@@ -21,7 +21,8 @@ return new class extends Migration
             $table->integer('status_id');
             $table->integer('req_empl_id');
             $table->datetime('order_date');
-            $table->datetime('received_date');
+            $table->datetime('received_date')->nullable();
+            $table->longText('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
