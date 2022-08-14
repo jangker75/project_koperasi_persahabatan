@@ -36,7 +36,7 @@
                 @foreach ($product as $prod)
                 <div class="col-6 px-2">
                     <div class="card shadow">
-                        <img src="{{ asset('assets/images/media/12.jpg') }}" class="card-img-top" alt="">
+                        <img src="{{ asset('storage/'.$prod->cover) }}" class="card-img-top" alt="">
                         <div class="card-body p-3">
                             <div class="w-100 p-0 mb-2" style="height: 40px;">
                               <div class="fw-bold">{{ Str::limit($prod->name, 25, '...') }}</div>
@@ -44,7 +44,7 @@
                             <span class="fw-bold text-danger">{{ format_uang($prod->price[count($prod->price) - 1]->revenue) }}</span> <br>
                             <small class="small text-success">Ready on Stock</small> 
                             <div class="d-flex w-100 mt-4">
-                              <button class="btn btn-primary btn-sm me-2">Lihat Detail</button>
+                              <a href="{{ route('nasabah.product.show', $prod->slug) }}" class="btn btn-primary btn-sm me-2">Lihat Detail</a>
                               <button class="btn btn-outline-primary btn-sm"><i class="fa fa-shopping-basket"></i></button>
                             </div>
                         </div>

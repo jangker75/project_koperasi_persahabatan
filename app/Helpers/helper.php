@@ -123,6 +123,13 @@ if (!function_exists('format_uang')) {
         return 'Rp. ' . $hasil;
     }
 }
+if (!function_exists('format_uang_no_prefix')) {
+    function format_uang_no_prefix($angka)
+    {
+        $hasil =  number_format($angka, 0, ',', '.');
+        return $hasil;
+    }
+}
 
 if (!function_exists('format_tanggal')) {
     function format_tanggal($date)

@@ -45,37 +45,37 @@ class MDStatusSeeder extends Seeder
                 'id' => 3,
                 'name' => 'Open',
                 'description' => 'Tiket ini baru saja dibuat',
-                'type' => 'order_supplier,transfer_stock',
+                'type' => 'orders,order_suppliers,transfer_stocks',
             ],
             [
                 'id' => 4,
                 'name' => 'waiting',
                 'description' => 'Tiket ini sedang menunggu untuk di process',
-                'type' => 'order_supplier,transfer_stock',
+                'type' => 'orders,order_suppliers,transfer_stocks',
             ],
             [
                 'id' => 5,
                 'name' => 'process',
                 'description' => 'Tiket ini sedang dikerjakan',
-                'type' => 'order_supplier,transfer_stock',
+                'type' => 'orders,order_suppliers,transfer_stocks',
             ],
             [
                 'id' => 6,
                 'name' => 'success',
                 'description' => 'Tiket ini berhasil dan sudah selesai dikerjakan',
-                'type' => 'order_supplier,transfer_stock',
+                'type' => 'orders,order_suppliers,transfer_stocks',
             ],
             [
                 'id' => 7,
                 'name' => 'failed',
                 'description' => 'Tiket ini gagal dikerjakan, dan dibatalkan',
-                'type' => 'order_supplier,transfer_stock',
+                'type' => 'orders,order_suppliers,transfer_stocks',
             ],
             [
                 'id' => 8,
                 'name' => 'reject',
                 'description' => 'Tiket ini dibatalkan',
-                'type' => 'order_supplier,transfer_stock',
+                'type' => 'orders,order_suppliers,transfer_stocks',
             ],
         ];
         $statusLoan = [

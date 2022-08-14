@@ -1,6 +1,6 @@
 <!-- Navbar -->
 <nav class="navbar navbar-nasabah p-2">
-    <div class="w-100 d-flex justify-content-between align-items-center">
+    <div class="w-100 d-flex justify-content-between align-items-center mb-3">
         <div class="logo">
             <a href="" class="d-flex align-items-center">
                 <img src="{{ asset('assets/images/logo/logo3.png') }}" alt="" height="48">
@@ -46,12 +46,15 @@
 
         </div>
     </div>
+    @if (Request::segment(1) == null || Request::segment(1) == 'product')
+      
     <div class="p-2 w-100 mt-2">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username"
+            <input type="text" class="form-control" placeholder="Cari Produk.." aria-label="Cari Produk.."
                 aria-describedby="basic-addon2">
             <span class="input-group-text" id="basic-addon2"><i class="fe fe-search"></i></span>
         </div>
     </div>
+    @endif
 </nav>
 <!-- Navbar -->

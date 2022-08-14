@@ -70,11 +70,11 @@ class CmsMenuSeeder extends Seeder
         // Sub Menu Pengadaan
         $dataPengadaan->subMenus()->create([
                 'name' => 'Manajemen Stok barang',
-                'url' => 'admin/pengadaan/stok-barang', 
+                'url' => 'admin/toko/management-stock', 
         ]);
         $dataPengadaan->subMenus()->create([
-                'name' => 'Transfer Stok',
-                'url' => 'admin/pengadaan/transfer-stok', 
+                'name' => 'Order Supplier',
+                'url' => 'admin/toko/order-supplier', 
         ]);
         $dataPengadaan->subMenus()->create([
                 'name' => 'Audit Opname',

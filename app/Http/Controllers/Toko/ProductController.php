@@ -30,8 +30,8 @@ class ProductController extends BaseAdminController
     public function index()
     {
       $data = $this->data;
-      $data['products'] = Product::latest()->get();
       $data['titlePage'] = 'Kelola Data Produk';
+      $data['products'] = Product::latest()->get();
       
       return view('admin.pages.toko.product.index', $data);
     }
@@ -130,6 +130,7 @@ class ProductController extends BaseAdminController
     {
         $data = $this->data;
         $data['product'] = Product::find($id);
+        $data['price'] = $data['product']->price[count($data['product']->price)-1];
         $data['titlePage'] = 'Detail Produk ' . $data['product']->name;
         return view('admin.pages.toko.product.show', $data);
     }
@@ -206,5 +207,36 @@ class ProductController extends BaseAdminController
         $product->delete();
 
         return redirect()->route('admin.product.index');
+    }
+
+    public function getIndexDatatables()
+    {
+        $query = Product::query()
+        ->with('price')
+        ->get();
+
+        dd($query);
+        // $datatable = new DataTables();
+        // return $datatable->eloquent($query)
+        //   ->addIndexColumn(true)
+        //   ->editColumn('salary', function($row){
+        //       return format_uang($row->salary);
+        //   })
+        //   ->addColumn('actions', function($row){
+        //       $btn = '<div class="btn-list align-center d-flex justify-content-center">';
+        //       $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.employee.show", [$row]) .'" type="button">View</a>';
+        //       $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.employee.edit", [$row]) .'" type="button">Edit</a>';
+        //       $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
+        //                   <i class="fa fa-trash"></i>
+        //               </a>
+        //               <form method="POST" action="' . route('admin.employee.destroy', [$row]) . '">
+        //                   <input name="_method" type="hidden" value="delete">
+        //                   <input name="_token" type="hidden" value="' . Session::token() . '">
+        //               </form>';
+        //       $btn = $btn . '</div>';
+        //       return $btn;
+        //   })
+        //   ->rawColumns(['actions'])
+        //   ->make(true);
     }
 }
