@@ -11,6 +11,6 @@ class OrderDetail extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'order_id','product_id', 'qty', 'subtotal'
+      'order_id','product_name', 'product_sku', 'qty', 'subtotal'
     ];
 }

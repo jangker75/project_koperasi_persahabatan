@@ -49,8 +49,8 @@ Route::group([
         $data['product'] = Product::get();
         return view('nasabah.pages.home', $data);
     })->name('home');
-    Route::get('/product', [PagesController::class, 'product'])->name('nasabah.product.index');
-    Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('nasabah.product.show');
+    Route::get('/product', [PagesController::class, 'product'])->name('product.index');
+    Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('product.show');
     //Logout custom
 });
 Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
@@ -71,6 +71,7 @@ Route::group([
       'prefix' => 'toko'
     ], function(){
       Route::resource('product', ProductController::class);
+      Route::resource('price', PriceController::class);
       Route::resource('category', CategoryController::class);
       Route::resource('store', StoreController::class);
       Route::resource('brand', BrandController::class);
@@ -79,6 +80,7 @@ Route::group([
       Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
       Route::resource('management-stock', ManagementStockController::class);
       Route::resource('order-supplier', OrderSupplierController::class);
+      Route::resource('order', OrderControlller::class);
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);

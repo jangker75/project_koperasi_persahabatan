@@ -4,10 +4,10 @@
         <div class="col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Data Order Supplier</div>
-                    <div class="card-options">
-                        <a href="{{ route('admin.order-supplier.create') }}" class="btn btn-primary btn-sm">Buat Order Supplier +</a>
-                    </div>
+                    <div class="card-title">Data Order</div>
+                    {{-- <div class="card-options">
+                        <a href="{{ route('admin.order.create') }}" class="btn btn-primary btn-sm">Buat Order +</a>
+                    </div> --}}
                 </div>
                 <div class="card-body">
                     <div class="w-100">
@@ -15,10 +15,10 @@
                             <table class="table w-100 " id="datatable2">
                                 <thead class="table-success fw-bold text-uppercase">
                                     <th>No</th>
-                                    <th>Kode</th>p
-                                    <th>Dari Supplier</th>
-                                    <th>Tujuan Toko</th>
+                                    <th>Order Kode</th>p
                                     <th>Tanggal</th>
+                                    <th>Tujuan Toko</th>
+                                    <th>Pegawai</th>
                                     <th>Requester</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -31,13 +31,13 @@
                                         <td>{{ $order->supplier->name }}</td>
                                         <td>{{ $order->toStore->name }}</td>
                                         <td>{{ $order->order_date }}</td>
-                                        <td>{{ $order->requester->getFullNameAttribute() }}</td>
+                                        <td>{{ $order->req_empl_id }}</td>
                                         <td>
                                             
-                                            <a href="{{ route('admin.order-supplier.show', $order->id) }}" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
+                                            <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
                                                 data-placement="top" title="Edit Data Transfer Stock">Detail Transfer Stock <i
                                                     class="fe fe-edit"></i></a>
-                                            <form action="{{ route('admin.order-supplier.destroy', $order->id) }}"
+                                            <form action="{{ route('admin.order.destroy', $order->id) }}"
                                                 class="d-inline" method="post">
                                                 @csrf @method('delete')
                                             </form>
