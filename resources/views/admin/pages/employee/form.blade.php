@@ -202,6 +202,14 @@
                         </div>
                     </div>
                     <div class="row mb-4">
+                        {!! Form::label('profile_image', __('employee.profile_image'), ['class' => 'col-md-3 form-label required']) !!}
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                {!! Form::file('profile_image', ['accept' => 'image/*', 'class'=> 'form-control','name'=>'profile_image']) !!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
                         {!! Form::label('address_1', __('employee.address_1'), ['class' => 'col-md-3 form-label']) !!}
                         <div class="col-md-9">
                             <div class="input-group">

@@ -13,9 +13,10 @@
         </div>
     </div>
     <div class="col-md-7">
-            {!! Form::number('interest_amount', 2, [
+            {!! Form::text('interest_amount', 2, [
                 'required' => 'required',
                 'id' => 'interest_amount',
+                'inputmode'=> 'numeric',
                 'class' =>
                     'form-control' .
                     ($errors->has('interest_amount') ? ' is-invalid' : '') .
@@ -36,7 +37,7 @@
     <div class="row col-md-3">
         <label>Percent Ratio Nasabah</label>
         <div class="input-group">
-            <input readonly name="profit_employee_ratio" class="form-control" type="number">
+            <input readonly name="profit_employee_ratio" class="form-control" inputmode="numeric">
             <label class="input-group-text">%</label>
         </div>
     </div>

@@ -92,6 +92,7 @@ Route::group([
     Route::post('employee-store', [EmployeeController::class, 'employeeOutStore'])->name('employee.out.store');
     Route::post('check-status-loan-employee', [EmployeeController::class, 'checkStatusLoanEmployee'])->name('check.status.loan.employee');
     Route::resource('ex-employee', ExEmployeeController::class);
+    Route::get('employee-download-card/{employee}', [EmployeeController::class, 'downloadEmployeeCard'])->name('employee.download.card');
     // Divisi Umum
 
     // Usipa

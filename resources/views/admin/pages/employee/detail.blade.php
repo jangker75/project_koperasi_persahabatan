@@ -43,17 +43,20 @@
                                     <td>{{ format_uang($loan->remaining_amount) }}</td>
                                     <td>
                                         @php
-                                            $class = ($loan->approvalstatus->name == 'Waiting') ? 'bg-warning' : (($loan->approvalstatus->name == 'Approved') ? 'bg-success' : 'bg-danger');
+                                            $class = $loan->approvalstatus->name == 'Waiting' ? 'bg-warning' : ($loan->approvalstatus->name == 'Approved' ? 'bg-success' : 'bg-danger');
                                         @endphp
-                                        <span class="badge {{ $class }} rounded-pill text-white fw-bold p-2 px-3">{{ $loan->approvalstatus->name }}</span>
+                                        <span
+                                            class="badge {{ $class }} rounded-pill text-white fw-bold p-2 px-3">{{ $loan->approvalstatus->name }}</span>
                                     </td>
                                     <td>
                                         {{-- <button data-bs-toggle="modal" data-loan-id="{{ $loan->id }}"
                                             data-loan-number="{{ $loan->transaction_number }}"
                                         data-bs-target="#modalHistoryLoan" class="btn btn-primary btn-sm loan-history-modal">Lihat Detail</button> --}}
-                                        <button data-bs-toggle="modal" value="{{ route('admin.loan-list.show',[$loan->id]) }}"
+                                        <button data-bs-toggle="modal"
+                                            value="{{ route('admin.loan-list.show', [$loan->id]) }}"
                                             data-loan-number="{{ $loan->transaction_number }}"
-                                        data-bs-target="#modalHistoryLoan" class="btn btn-primary btn-sm loan-history-modal">Lihat Detail</button>
+                                            data-bs-target="#modalHistoryLoan"
+                                            class="btn btn-primary btn-sm loan-history-modal">Lihat Detail</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -135,6 +138,15 @@
                             <td>{{ __('employee.age') }}</td>
                             <td>{{ $employee->age }} Tahun</td>
                         </tr>
+                        <tr>
+                            <td>{{ __('employee.profile_image') }}</td>
+                            <td>
+                                <a data-lightbox='roadtrip' href='{{ route('showimage', [$employee->user->profile_image]) }}'>
+                                    <img style='max-width:160px' title="Image For Foto"
+                                        src='{{ route('showimage', [$employee->user->profile_image]) }}' />
+                                </a>
+                            </td>
+                        </tr>
 
                         <tr>
                             <td>{{ __('employee.status_employee_id') }}</td>
@@ -191,11 +203,11 @@
                 })
 
                 //Show modal loan history
-                $('.loan-history-modal').click(function(){
+                $('.loan-history-modal').click(function() {
                     $('#loanmodalcontent').load($(this).attr('value'))
                     $('#modalTitle').text($(this).data('loan-number'))
                 })
-                
+
             })
         </script>
     @endslot

@@ -23,5 +23,5 @@ return [
     'position_id' => "Posisi",
     'department_id' => "Pangkat/Golongan",
     'status_employee_id' => "Status Karyawan",
-    
+    'profile_image' => 'Foto Profil',
 ];

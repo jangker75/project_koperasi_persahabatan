@@ -100,7 +100,7 @@
         <img src="{{ asset('assets/images/logo/logo3.png') }}" width="100px" height="100px" alt="">
     </div>
     <div class="logo-rs">
-        <img src="{{ asset('assets/images/logo/logo4.png') }}" width="100px" height="100px" alt="">
+        <img src="{{ asset('assets/images/logo/logo.png') }}" width="100px" height="100px" alt="">
     </div>
     <section class="kop-surat">
         <div>

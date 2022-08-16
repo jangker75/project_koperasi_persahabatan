@@ -40,6 +40,7 @@ class EmployeeRequest extends FormRequest
             "phone" => '',
             "rekening" => 'required',
             "bank" => 'required',
+            "profile_image" => 'image',
         ];
     }
 }

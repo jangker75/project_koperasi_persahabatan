@@ -94,9 +94,10 @@
                         <div class="col-md-9">
                             <div class="input-group">
                             <label class="input-group-text">Rp.</label>
-                            {!! Form::number('total_loan_amount', null, [
+                            {!! Form::text('total_loan_amount', null, [
                                 'id' => 'total_loan_amount',
                                 'required' => 'required',
+                                'inputmode'=> 'numeric',
                                 'class' =>
                                     'form-control' .
                                     ($errors->has('total_loan_amount') ? ' is-invalid' : '') .
@@ -117,9 +118,10 @@
                         <div class="col-md-7">
                             <div class="input-group">
                                 <label class="input-group-text">Rp.</label>
-                            {!! Form::number('admin_fee', null, [
+                            {!! Form::text('admin_fee', null, [
                                 'required' => 'required',
                                 'id' => 'admin_fee',
+                                'inputmode'=> 'numeric',
                                 'class' =>
                                     'form-control' .
                                     ($errors->has('admin_fee') ? ' is-invalid' : '') .

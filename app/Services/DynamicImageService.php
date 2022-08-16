@@ -39,8 +39,6 @@ class DynamicImageService
             $image->storeAs($name . '/' . $module . '/', $imageName, ['disk' => 'public']);
             $size = $image->getSize();
             $extension = $image->getClientOriginalExtension();
-
-            
             return [
                 'status' => 'success',
                 'path' => $path,

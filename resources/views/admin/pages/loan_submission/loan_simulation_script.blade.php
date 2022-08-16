@@ -28,7 +28,7 @@
         $('#table-simulation tbody').empty()
         //get data for initial value
         let firstPaymentDate = $('#first_payment_date').val()
-        let totalLoanAmount = $('#total_loan_amount').val()
+        let totalLoanAmount = parseInt($('#total_loan_amount').val().replace('.',''))
         let interestType = $('#interest_amount_type').find(':selected').val()
         let interestScheme = $('#interest_scheme').find(':selected').text()
         let totalPayMonth = $('#total_pay_month').val()

@@ -160,7 +160,7 @@ class LoanListController extends BaseAdminController
     }
     public function uploadAttachment(Request $request)
     {
-        $path = (new DynamicImageService())->uploadImage($request->file('attachment'), 'loan_attachment');
+        $path = (new DynamicImageService())->uploadImage($request->file('attachment'), config('constant.LOAN_ATTACHMENT_PATH'));
         $loan = Loan::find(request('id'));
         $loan->update([
             'attachment' => $path,

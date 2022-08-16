@@ -14,6 +14,7 @@ use App\Models\Position;
 use App\Models\SavingHistory;
 use App\Models\Savings;
 use App\Models\User;
+use App\Services\DynamicImageService;
 use App\Services\EmployeeService;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -75,10 +76,18 @@ class EmployeeController extends BaseAdminController
     public function store(EmployeeRequest $request)
     {
         $input = $request->safe();
-        $user = User::create([
+        $imageService = (new DynamicImageService());
+        
+        //SAVE User table
+        $user = User::make([
             'password' => Hash::make('123456'),
-            'profile_image' => 'default-image.jpg',
         ]);
+        if ($request->hasFile('profile_image')) {
+           $user->profile_image = $imageService->uploadImage($request->file('profile_image'), config('constant.USER_IMAGE_PATH'));
+        }
+        $user->save();
+
+        //SAVE Employee Table
         $employee = $user->employee()->create($input->merge([
             'registered_date' => now()
         ])->all());
@@ -133,6 +142,13 @@ class EmployeeController extends BaseAdminController
     {
         $input = $request->safe();
         $employee->update($input->all());
+        $imageService = (new DynamicImageService());
+        //Save Image if there is update
+        if ($request->hasFile('profile_image')) {
+            $imageService->delete($employee->user->profile_image);
+            $data['profile_image'] = $imageService->uploadImage($request->file('profile_image'), config('constant.USER_IMAGE_PATH'));
+            $employee->user->update($data);
+         }
         $role = checkPositionRole($employee->position->position_code);
         $employee->user->syncRoles($role);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_edit_data_success'));
@@ -172,6 +188,7 @@ class EmployeeController extends BaseAdminController
                             <input name="_method" type="hidden" value="delete">
                             <input name="_token" type="hidden" value="' . Session::token() . '">
                         </form>';
+                        $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="' . route("admin.employee.download.card", ['employee' => $row->id]) . '" type="button">Download Card</a>';
                 $btn = $btn . '</div>';
                 return $btn;
             })
@@ -274,5 +291,17 @@ class EmployeeController extends BaseAdminController
             return (new BasicReportExport(datas: $data['datas'], headers: $data['headers'], title: $data['title']))
                 ->download('data_nasabah.xlsx');
         }
+    }
+
+    public function downloadEmployeeCard(Employee $employee)
+    {
+        // dd($employee);
+        $data['employee'] = $employee;
+        $scale = 2;
+        $customPaper = array(0,0,242.6457 * $scale, 153.01417 * $scale);
+        $pdf = Pdf::loadView('admin.export.PDF.kartu_anggota', $data)
+        ->setPaper($customPaper);
+        
+        return $pdf->stream("kartu_anggota_".$employee->name.".pdf");
     }
 }
