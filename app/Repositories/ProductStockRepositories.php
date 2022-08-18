@@ -33,4 +33,22 @@ class ProductStockRepositories{
 
     return $data;
   }
+
+  public static function findProductBySku($sku){
+    $sql = "
+      SELECT
+        products.id AS id,
+        products.name AS title,
+        products.sku AS sku,
+        products.cover,
+        (SELECT prices.revenue FROM prices WHERE prices.product_id = products.id ORDER BY prices.id DESC LIMIT 1) AS price
+      FROM 
+        products
+      WHERE
+        products.sku = " . $sku . "
+    ";
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
 }

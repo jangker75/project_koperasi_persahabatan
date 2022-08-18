@@ -27,6 +27,18 @@ class CmsMenuSeeder extends Seeder
                 'icon' => 'fe fe-home', 
         ]);
 
+        // POS
+        CmsMenu::create([
+                'isseparator' => true,
+                'name' => 'Point of Sale',
+        ]);
+        CmsMenu::create([
+                'name' => 'Checkout Order',
+                'url' => 'admin/pos/checkout', 
+                'icon' => 'fe fe-dollar-sign', 
+        ]);
+        
+
         // Kelola Toko Menu
         CmsMenu::create([
                 'isseparator' => true,

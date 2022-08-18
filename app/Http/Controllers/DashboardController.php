@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class DashboardController extends BaseAdminController
@@ -15,5 +16,11 @@ class DashboardController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Dashboard';
         return view('admin.pages.dashboard.index', $data);
+    }
+
+    public function posCheckout(){
+      $data['titlePage'] = 'Checkout Order';
+
+      return view('admin.pos.checkout', $data);
     }
 }

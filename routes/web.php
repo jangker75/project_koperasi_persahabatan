@@ -65,13 +65,18 @@ Route::group([
         return view('admin.pages.switcher.index');
     })->name('switcher');
 
+
+    // POS
+    
+    Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);
+
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
     Route::group([
       'prefix' => 'toko'
     ], function(){
       Route::resource('product', ProductController::class);
-      Route::resource('price', PriceController::class);
+    Route::resource('price', PriceController::class);
       Route::resource('category', CategoryController::class);
       Route::resource('store', StoreController::class);
       Route::resource('brand', BrandController::class);
