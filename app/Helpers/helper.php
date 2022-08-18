@@ -2,6 +2,8 @@
 
 use App\Models\ApplicationSetting;
 use App\Models\Company;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('format_hari_tanggal')) {
     function format_hari_tanggal($waktu)
@@ -140,11 +142,15 @@ if (!function_exists('format_tanggal')) {
     }
 }
 if (!function_exists('getUserRole')) {
-    function getUserRole()
+    function getUserRole($userId = null)
     {
-        if (auth()->check()) {
+        if($userId != null){
+            $user = User::find($userId);
+            $role = $user->getRoleNames()[0];
+            return $role;
+        }
+        else if(auth()->check()){
             $role = auth()->user()->getRoleNames()[0];
-            // $role = auth()->user()->role;
             return $role;
         }
         return null;

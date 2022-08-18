@@ -1,6 +1,6 @@
 <script>
     let admin_fee_percentage = 0.5
-    let total_loan_amount = 1000000
+    let total_loan_amount = 0
     $('#admin_fee_percentage').val(admin_fee_percentage)
     $('#total_loan_amount').val(total_loan_amount)
     //Datepicker
@@ -25,13 +25,16 @@
 
     function calculateAdminFee() {
         let percent = $('#admin_fee_percentage').val()
-        let totalAmount = $('#total_loan_amount').val()
+        let a = $('#total_loan_amount').val()
+        a = parseInt(a.replace('.',''))
+        console.log(a);
+        let totalAmount = a
         let amount = totalAmount * percent / 100
         $('#admin_fee').val(amount)
     }
 
     function calculateReceivedAmount() {
-        let totalAmount = $('#total_loan_amount').val()
+        let totalAmount = parseInt($('#total_loan_amount').val().replace('.',''))
         let amount = totalAmount - $('#admin_fee').val()
         $('#received_amount').val(formatMoney(amount))
     }

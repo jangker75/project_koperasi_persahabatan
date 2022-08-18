@@ -7,7 +7,7 @@
                     alt="logo">
                 <img height="50px" src="{{ asset('assets/images/logo/logo.png') }}"
                     class="header-brand-img toggle-logo" alt="logo">
-                <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}"
+                <img height="50px" src="{{ asset('assets/images/logo/logo.png') }}"
                     class="header-brand-img light-logo" alt="logo">
                 <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}"
                     class="header-brand-img light-logo1" alt="logo">

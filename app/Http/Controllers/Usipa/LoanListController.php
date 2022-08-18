@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Usipa;
 
 use App\Http\Controllers\BaseAdminController;
 use App\Models\Loan;
+use App\Services\DynamicImageService;
 use App\Services\LoanService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -156,6 +157,24 @@ class LoanListController extends BaseAdminController
         // Add an image to the pdf 
         $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
         return $pdf->stream('kontrak.pdf');
+    }
+    public function uploadAttachment(Request $request)
+    {
+        $path = (new DynamicImageService())->uploadImage($request->file('attachment'), config('constant.LOAN_ATTACHMENT_PATH'));
+        $loan = Loan::find(request('id'));
+        $loan->update([
+            'attachment' => $path,
+        ]);
+        return redirect()->back()->with('success', 'Upload Attachment berhasil');
+    }
+    public function destroyAttachment()
+    {
+        $loan = Loan::find(request('id'));
+        (new DynamicImageService())->delete($loan->attachment);
+        $loan->update([
+            'attachment' => null,
+        ]);
+        return redirect()->back()->with('success', 'Delete Attachment berhasil');
     }
 
     public function downloadLoanReport()

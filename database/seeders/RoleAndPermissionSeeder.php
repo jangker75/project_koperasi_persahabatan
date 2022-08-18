@@ -16,24 +16,27 @@ class RoleAndPermissionSeeder extends Seeder
      */
     public function run()
     {
+        $permissionList = ['read', 'create', 'update', 'delete'];
         //Seeder separator
         $separator = CmsMenu::where('isseparator', 1)->get('name');
         foreach ($separator as $item) {
             $name = str_replace(' ', '_', strtolower($item->name));
-            Permission::create([
-                'name' => 'read '.$name
-            ]);
+            foreach ($permissionList as $permission) {
+                Permission::create([
+                    'name' => $permission . ' ' . $name
+                ]);
+            }
         }
 
         //seeder permission every menu
         $cms = CmsMenu::whereNotNull('url')->get('url');
-        $permissionList = ['read', 'create','update','delete'];
+
         foreach ($cms as $pathUrl) {
-            $url = explode('/',$pathUrl->url);
+            $url = explode('/', $pathUrl->url);
             foreach ($permissionList as $permission) {
-                    Permission::create([
-                        'name' => $permission.' '.$url[count($url) - 1]
-                    ]);
+                Permission::create([
+                    'name' => $permission . ' ' . $url[count($url) - 1]
+                ]);
             }
         }
 
