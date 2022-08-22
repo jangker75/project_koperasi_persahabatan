@@ -57,7 +57,10 @@
                                 </tr>
                                 <tr>
                                     <td class="text-start">Additional Discount</td>
-                                    <td class="text-end"><span class="fw-bold text-success">- Rp 0</span></td>
+                                    {{-- <td class="text-end"><span class="fw-bold text-success">- Rp 0</span></td> --}}
+                                    <td class="text-end">
+                                        <input type="text" name="discount" id="discount" placeholder="0" class="form-control">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="text-start fs-18">Total Bill</td>
@@ -67,8 +70,26 @@
                         </table>
                     </div>
                 </div>
-                <ul class="list-group list-group-flush" id="elementPaylater">
+                <ul class="list-group list-group-flush">
                     <li class="list-group-item">
+                        <div class="form-group">
+                            <label for="">Pilih Metode Pembayaran</label><br>
+                            <select class="form-select w-100" aria-label="Default select example" name="payment_method"
+                                id="paymentMethod" value="1">
+                                @foreach ($paymentMethod as $payment)
+                                <option value="{{ $payment->id }}">{{ $payment->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </li>
+                    <li class="list-group-item" id="paymentCode">
+                        <div class="form-group">
+                            <label for="">Masukan Kode Pembayaran</label><br>
+                            <input type="text" name="payment_code" id="paymentCodeInput" class="form-control"
+                                placeholder="81723......">
+                        </div>
+                    </li>
+                    <li class="list-group-item" id="elementPaylater">
                         <div class="form-group">
                             <label for="">Pilih Karyawan paylater</label><br>
                             <select class="form-select select2 w-100" aria-label="Default select example" id="mySelect2"
@@ -78,10 +99,6 @@
                     </li>
                 </ul>
                 <div class="card-footer">
-                    <label class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" name="paylater" id="buttonPaylater">
-                        <span class="custom-control-label">Paylater</span>
-                    </label>
                     <div class="btn-list">
                         <div class="btn btn-success float-sm-end" id="buttonCheckout">Check out<i
                                 class="fa fa-arrow-right ms-1"></i></div>
@@ -92,30 +109,64 @@
     </div>
 
     <x-slot name="style">
-      <style>
-        
-        .select2-results__options{
-          offset: hidden;
-        }
-        .select2-container{
-          width: 100% !important;
-        }
-      </style>
+        <style>
+            .select2-results__options {
+                offset: hidden;
+            }
+
+            .select2-container {
+                width: 100% !important;
+            }
+
+        </style>
     </x-slot>
 
     <x-slot name="script">
         <script>
-          let productInCart = [];
-          let subtotal = 0;
-          let discount = 0;
-          let total = 0;
+            let productInCart = [];
+            let paymentCode = "";
+            let subtotal = 0;
+            let discount = 0;
+            let total = 0;
+            let orderBy = "pos";
             $(document).ready(function () {
 
                 $('#elementPaylater').hide()
+                $('#paymentCode').hide()
 
                 $('#buttonPaylater').click(function () {
                     $('#elementPaylater').toggle()
                 })
+                $('#paymentMethod').change(function () {
+                    if ($(this).val() == 4) {
+                        $('#elementPaylater').show()
+                        $('#paymentCode').hide()
+                    } else if ($(this).val() == 2 || $(this).val() == 3) {
+                        $('#elementPaylater').hide()
+                        $('#paymentCode').show()
+                    } else {
+                        $('#elementPaylater').hide()
+                        $('#paymentCode').hide()
+                    }
+                })
+
+                $("#discount").keyup(function () {
+                  if(subtotal - $(this).val() > -1){
+                      discount = $(this).val()
+                      total = subtotal - discount
+                      $("#total").html("Rp " + total)
+                  }else{
+                    swal({
+                        title: "Gagal",
+                        text: "Discount yang dimasukan tidak boleh melampaui harga",
+                        type: "error"
+                    });
+                  }
+                })
+                $("body").on("keyup", "#paymentCodeInput", function () {
+                    paymentCode = $(this).val()
+                })
+
                 $('#mySelect2').select2({
                     placeholder: "Masukan NIK / Nama Staff",
                     minimumInputLength: 5,
@@ -141,7 +192,6 @@
                         //     return JSON.stringify(query);
                         // },
                         processResults: function (data) {
-                            // console.log(data)
                             let newArray = data.employee.map(({
                                 nik: id,
                                 fullname: text
@@ -176,9 +226,6 @@
                             type: "GET",
                             url: "{{ url('/api/product-by-sku') }}/" + value,
                             cache: "false",
-                            data: {
-                                'sku': value,
-                            },
                             datatype: "html",
                             success: function (response) {
                                 let toPush = {
@@ -246,7 +293,9 @@
                     const checker = productInCart.find(element => {
                         if (element.sku === skuNumber) {
                             if ($(this).hasClass('counter-minus')) {
-                                element.qty -= 1;
+                                if(element.qty > 1){
+                                  element.qty -= 1;
+                                }
                             } else if ($(this).hasClass('counter-plus')) {
                                 element.qty += 1;
                             }
@@ -264,16 +313,60 @@
                 })
             })
 
-            $('#buttonCheckout').click(function(){
-              let checkoutValue = {
-                item: productInCart,
-                discount: discount
-              }
-              console.log($('#buttonPaylater').is(':checked'));
-              if($('#buttonPaylater').is(':checked')){
-                checkoutValue.paylater = $("#mySelect2").val()
-              }
-              console.log(checkoutValue);
+            $('#buttonCheckout').click(function () {
+                if(productInCart.length < 1){
+                  swal({
+                      title: "Gagal",
+                      text: "Belum ada produk yang ditambahkan",
+                      type: "error"
+                  });
+                }
+                let checkoutValue = {
+                    item: productInCart,
+                    discount: discount,
+                    orderBy: orderBy,
+                    paymentMethodId: $('#paymentMethod').val(),
+                    employeeOndutyId: "{{ auth()->user()->employee->id }}"
+                }
+                if ($('#paymentMethod').val() == 4) {
+                    checkoutValue.paylater = $("#mySelect2").val()
+                } else if ($('#paymentMethod').val() == 2 || $('#paymentMethod').val() == 3) {
+                    checkoutValue.paymentCode = paymentCode
+                }
+
+                $.ajax({
+                    type: "POST",
+                    processData: false,
+                    contentType: 'application/json',
+                    cache: false,
+                    url: "{{ url('/api/order') }}",
+                    data: JSON.stringify(checkoutValue),
+                    dataType: "json",
+                    enctype: 'multipart/form-data',
+                    success: function (response) {
+                        if (response.status) {
+                            swal({
+                                title: "Sukses",
+                                text: response.message,
+                                type: "success"
+                            });
+                        }
+                        if (response.print == true) {
+                            window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order
+                                .order_code, '_blank');
+                        }
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000)
+                    },
+                    error: function (response) {
+                        swal({
+                            title: "Gagal",
+                            text: response.message,
+                            type: "error"
+                        });
+                    }
+                });
             });
 
             function renderElementCart(items) {

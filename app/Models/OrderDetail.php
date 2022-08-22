@@ -11,6 +11,10 @@ class OrderDetail extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'order_id','product_name', 'product_sku', 'qty', 'subtotal'
+      'order_id','product_name', 'price', 'qty', 'subtotal'
     ];
+
+    public function Order(){
+      return $this->belongsTo(Order::class, 'order_id');
+    }
 }

@@ -51,7 +51,7 @@ class MDStatusSeeder extends Seeder
                 'id' => 4,
                 'name' => 'waiting',
                 'description' => 'Tiket ini sedang menunggu untuk di process',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders,order_suppliers,transfer_stocks,paylater',
             ],
             [
                 'id' => 5,
@@ -63,7 +63,7 @@ class MDStatusSeeder extends Seeder
                 'id' => 6,
                 'name' => 'success',
                 'description' => 'Tiket ini berhasil dan sudah selesai dikerjakan',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders,order_suppliers,transfer_stocks,paylater',
             ],
             [
                 'id' => 7,
@@ -76,6 +76,12 @@ class MDStatusSeeder extends Seeder
                 'name' => 'reject',
                 'description' => 'Tiket ini dibatalkan',
                 'type' => 'orders,order_suppliers,transfer_stocks',
+            ],
+            [
+                'id' => 9,
+                'name' => 'approved',
+                'description' => 'Tiket ini telah disetujui',
+                'type' => 'orders,order_suppliers,transfer_stocks,paylater',
             ],
         ];
         $statusLoan = [

@@ -12,6 +12,7 @@ use App\Http\Controllers\Nasabah\PagesController;
 use App\Http\Controllers\Toko\ManagementStockController;
 use App\Http\Controllers\Toko\OrderSupplierController;
 use App\Http\Controllers\Toko\PriceController;
+use App\Http\Controllers\toko\PrintReceiptController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
@@ -119,6 +120,7 @@ Route::group([
     // Download PDF
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
+    Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
 
     // Download Data
     Route::get('download-export-data-nasabah/{type}', [EmployeeController::class, 'exportData'])->name('download.data-nasabah');

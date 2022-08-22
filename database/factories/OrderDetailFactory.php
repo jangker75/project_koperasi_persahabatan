@@ -16,8 +16,14 @@ class OrderDetailFactory extends Factory
      */
     public function definition()
     {
+        $price = rand(1000,10000);
+        $qty = rand(1,10);
         return [
-            //
+            'order_id' => rand(1,10),
+            'product_name' => $this->faker->colorName(),
+            'price' => $price,
+            'qty' => $qty,
+            'subtotal' => $price*$qty
         ];
     }
 }

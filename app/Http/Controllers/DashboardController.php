@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 
 class DashboardController extends BaseAdminController
@@ -21,7 +22,7 @@ class DashboardController extends BaseAdminController
 
     public function posCheckout(){
       $data['titlePage'] = 'Checkout Order';
-
+      $data['paymentMethod'] = PaymentMethod::get();
       return view('admin.pos.checkout', $data);
     }
 }

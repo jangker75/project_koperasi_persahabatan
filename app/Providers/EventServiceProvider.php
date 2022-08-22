@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Models\Brand;
+use App\Models\Order;
 use App\Models\OrderSupplier;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\Supplier;
 use App\Models\TransferStock;
 use App\Observers\BrandObserver;
+use App\Observers\OrderObserver;
 use App\Observers\OrderSupplierObserver;
 use App\Observers\ProductObserver;
 use App\Observers\StoreObserver;
@@ -45,6 +47,7 @@ class EventServiceProvider extends ServiceProvider
         Store::observe(StoreObserver::class);
         TransferStock::observe((TransferStockObserver::class));
         OrderSupplier::observe(OrderSupplierObserver::class);
+        Order::observe(OrderObserver::class);
     }
 
     /**

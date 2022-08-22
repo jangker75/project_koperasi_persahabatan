@@ -30,6 +30,11 @@ class ProductController extends Controller
     public function searchProductBySKU($sku){
       try {
         $product = ProductStockRepositories::findProductBySku($sku);
+
+        if(!$product){
+          $data['message'] = "Failed Search Product";
+          return response()->json($data, 500);
+        }
         $data['message'] = "Success Search Product";
         $data['product'] = $product[0];
 
