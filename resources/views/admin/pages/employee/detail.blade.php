@@ -173,42 +173,6 @@
     @include('admin.pages.employee.history_balance_modal')
     @include('admin.pages.employee.history_loan_modal')
     @slot('script')
-        <script>
-            $(document).ready(function() {
-                //Show modal balance history
-                $('.balance-card').on('click', function(e) {
-                    let type = $(this).data('type-balance')
-                    $('#table-history-balance-modal tbody tr').remove()
-                    let tRow = ''
-                    $.ajax({
-                        type: "get",
-                        url: "{{ url('admin/employee-savings-history') . '/' . "$employee->id" . '/' }}" +
-                            type,
-                        dataType: "json",
-                        success: function(response) {
-                            $('#history-modal-title').text(response.type)
-                            response.data.forEach(item => {
-                                tRow += "<tr><td>" +
-                                    item.transaction_date + "</td><td>" +
-                                    (item.transaction_type == 'credit' ? item.amount : "") +
-                                    "</td><td>" +
-                                    (item.transaction_type == 'debit' ? item.amount : "") +
-                                    "</td><td>" +
-                                    item.balance_after + "</td></tr>"
-                            })
-                        }
-                    }).then(() => {
-                        $('#table-history-balance-modal tbody').append(tRow)
-                    });
-                })
-
-                //Show modal loan history
-                $('.loan-history-modal').click(function() {
-                    $('#loanmodalcontent').load($(this).attr('value'))
-                    $('#modalTitle').text($(this).data('loan-number'))
-                })
-
-            })
-        </script>
+        @include('admin.pages.employee.history_balance_modal_script')
     @endslot
 </x-admin-layout>

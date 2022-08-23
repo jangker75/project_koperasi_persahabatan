@@ -7,8 +7,11 @@ use App\Http\Controllers\Toko\BrandController;
 use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\CompanyBalanceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Nasabah\LoanNasabahController;
+use App\Http\Controllers\Nasabah\LoanSubmissionNasabahController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\Nasabah\PagesController;
+use App\Http\Controllers\Nasabah\ProfileController;
 use App\Http\Controllers\Toko\ManagementStockController;
 use App\Http\Controllers\Toko\OrderSupplierController;
 use App\Http\Controllers\Toko\PriceController;
@@ -49,10 +52,19 @@ Route::group([
         $data['product'] = Product::get();
         return view('nasabah.pages.home', $data);
     })->name('home');
-    Route::get('/product', [PagesController::class, 'product'])->name('nasabah.product.index');
-    Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('nasabah.product.show');
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/product', [PagesController::class, 'product'])->name('product.index');
+    Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('product.show');
     //Logout custom
+
+    Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
+    Route::get('loan-submission', [LoanSubmissionNasabahController::class, 'index'])->name('loan-submission.index');
+    Route::post('loan-submission', [LoanSubmissionNasabahController::class, 'store'])->name('loan-submission.store');
+
+    Route::get('loan-list-nasabah', [LoanNasabahController::class, 'index'])->name('loan.index');
+    Route::get('loan-list-nasabah/{loan}', [LoanNasabahController::class, 'show'])->name('loan.show');
 });
+
 Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
 
 Route::group([
@@ -104,7 +116,7 @@ Route::group([
     Route::post('loan-some-payment-store', [LoanListController::class, 'somePaymentStore'])->name('loan.somepayment.store');
     Route::post('loan-upload-attachment',[LoanListController::class, 'uploadAttachment'])->name('loan.upload.attachment');
     Route::post('loan-destroy-attachment',[LoanListController::class, 'destroyAttachment'])->name('loan.destroy.attachment');
-    Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
+    
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
     // Usipa
