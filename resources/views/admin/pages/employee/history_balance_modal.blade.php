@@ -16,6 +16,7 @@
                                 <th>Credit</th>
                                 <th>Debit</th>
                                 <th>Saldo Akhir</th>
+                                <th>Keterangan</th>
                             </tr>
                         </thead>
                         <tbody></tbody>

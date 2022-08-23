@@ -68,7 +68,7 @@ class LoanSubmissionController extends BaseAdminController
         $input = $request->safe();
         $data['transaction_number'] = (new CodeService())->generateCode('KOP');
         $data['remaining_amount'] = $input->total_loan_amount;
-        $data['created_by'] = auth()->user()->employee->full_name;
+        $data['created_by'] = auth()->user()->employee->id;
         $data['loan_approval_status_id'] = 50;
         $input->received_amount = str_replace(',','',$input->received_amount);
         Loan::create($input->merge($data)->all());
@@ -127,7 +127,7 @@ class LoanSubmissionController extends BaseAdminController
     public function getIndexDatatables()
     {
         $query = Loan::query()
-        ->with('approvalstatus')
+        ->with('approvalstatus','user.employee')
         ->select('loans.*')
         ->waitingApproval();
         // ->where('loan_approval_status_id', 50)

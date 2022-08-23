@@ -6,7 +6,7 @@
 <link href="{{ asset('assets/css/dark-style.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/css/transparent-style.css') }}" rel="stylesheet">
 <link href="{{ asset('assets/css/skin-modes.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('css/app2.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('css/app2.css') }}"> --}}
 @vite(['resources/sass/app-admin.scss', 'resources/js/app.js'])
 
 <!--- FONT-ICONS CSS -->

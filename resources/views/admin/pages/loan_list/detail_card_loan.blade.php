@@ -36,6 +36,15 @@
                         <td class="fw-bold fs-5" colspan="2">Informasi Pinjaman</td>
                     </tr>
                     <tr>
+                        <td>Di request oleh</td>
+                        <td>{{ $loan->user->employee->full_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal request</td>
+                        <td>{{ format_hari_tanggal_jam($loan->created_at) }}</td>
+                    </tr>
+                    @if (!($loan->approvalstatus->name == 'Waiting'))
+                    <tr>
                         <td>{{ __('loan.response_user') }}</td>
                         <td>{{ $loan->response_user }}</td>
                     </tr>
@@ -43,6 +52,7 @@
                         <td>{{ __('loan.response_date') }}</td>
                         <td>{{ format_hari_tanggal_jam($loan->response_date) }}</td>
                     </tr>
+                    @endif
                     <tr>
                         <td>{{ __('loan.transaction_number') }}</td>
                         <td>{{ $loan->transaction_number }}</td>

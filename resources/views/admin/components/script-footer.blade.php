@@ -30,6 +30,7 @@
 <script src="{{ asset('assets/plugins/p-scroll/perfect-scrollbar.js') }}"></script>
 <script src="{{ asset('assets/plugins/p-scroll/pscroll.js') }}"></script>
 <script src="{{ asset('assets/plugins/p-scroll/pscroll-1.js') }}"></script>
+<script src="{{ asset('assets/plugins/p-scroll/pscroll-2.js') }}"></script>
 
 <!-- INTERNAL SELECT2 JS -->
 <script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>

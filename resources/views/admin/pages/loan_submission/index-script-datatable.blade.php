@@ -27,6 +27,7 @@
             { data: "full_name", name: "full_name" },
             { data: "total_loan_amount", name: "total_loan_amount" },
             { data: "status", name: "approvalstatus.name" },
+            { data: "user.employee.first_name", name: "user.employee.first_name" },
             { data: "actions", name: "actions" },
         ],
         language: {
