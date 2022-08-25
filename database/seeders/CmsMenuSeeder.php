@@ -121,7 +121,7 @@ class CmsMenuSeeder extends Seeder
                 'icon' => 'fe fe-home', 
         ]);
         CmsMenu::create([
-                'name' => 'Pengajuan Pinjaman',
+                'name' => 'Pinjaman Berjalan',
                 'url' => 'admin/loan-list', 
                 'icon' => 'fe fe-home', 
         ]);
@@ -140,6 +140,11 @@ class CmsMenuSeeder extends Seeder
                 'name' => 'Data Anggota Keluar',
                 'url' => 'admin/ex-employee', 
                 'icon' => 'fe fe-users', 
+        ]);
+        CmsMenu::create([
+                'name' => 'Catat Kas Keluar/Masuk',
+                'url' => 'admin/cash-in-out', 
+                'icon' => 'fa fa-money', 
         ]);
 
         // Divisi Umum

@@ -1,5 +1,10 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
     {{-- PROFIT SECTION --}}
+    <div class="row my-4">
+        <a href="{{ route('admin.company-balance.create') }}">
+            <button class="btn btn-primary">Transfer Saldo</button>
+        </a>
+    </div>
     <div class="row">
         <div class="col-md-6 col-lg-3">
             <x-employee.employee-balance-card-component :text="__('balance_company.loan_balance')" :value="$company->balance->loan_balance" type_balance="loan_balance"/>

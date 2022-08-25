@@ -196,7 +196,7 @@ class LoanListController extends BaseAdminController
     }
     public function getIndexDatatables()
     {
-        $keyword = request('columns[4][search][value]');
+        $keyword = request('keyword');
         $status = request('status');
         $query = Loan::query()
         ->with('approvalstatus', 'employee')

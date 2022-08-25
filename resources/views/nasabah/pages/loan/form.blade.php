@@ -74,6 +74,7 @@
                         {!! Form::text('total_loan_amount', null, [
                             'id' => 'total_loan_amount',
                             'required' => 'required',
+                            'placeholder' => 'Jumlah pinjaman',
                             'inputmode'=> 'numeric',
                             'class' =>
                                 'form-control' .

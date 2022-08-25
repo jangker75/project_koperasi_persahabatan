@@ -18,6 +18,7 @@ use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
+use App\Http\Controllers\Umum\CashTransactionController;
 use App\Http\Controllers\Umum\EmployeeController;
 use App\Models\Product;
 use App\Http\Controllers\Umum\ExEmployeeController;
@@ -105,6 +106,7 @@ Route::group([
     Route::post('check-status-loan-employee', [EmployeeController::class, 'checkStatusLoanEmployee'])->name('check.status.loan.employee');
     Route::resource('ex-employee', ExEmployeeController::class);
     Route::get('employee-download-card/{employee}', [EmployeeController::class, 'downloadEmployeeCard'])->name('employee.download.card');
+    Route::resource('cash-in-out', CashTransactionController::class);
     // Divisi Umum
 
     // Usipa
@@ -143,6 +145,7 @@ Route::group([
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
     Route::get('datatables-loan-submission-index', [LoanSubmissionController::class, 'getIndexDatatables'])->name('loan-submission.index.datatables');
     Route::get('datatables-loan-list-index', [LoanListController::class, 'getIndexDatatables'])->name('loan-list.index.datatables');
+    Route::get('datatables-cash-in-out-index', [CashTransactionController::class, 'getIndexDatatables'])->name('cash-in-out.index.datatables');
 
     //Logout custom
     // Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
