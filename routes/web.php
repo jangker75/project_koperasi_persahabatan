@@ -7,8 +7,11 @@ use App\Http\Controllers\Toko\BrandController;
 use App\Http\Controllers\Toko\CategoryController;
 use App\Http\Controllers\CompanyBalanceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Nasabah\LoanNasabahController;
+use App\Http\Controllers\Nasabah\LoanSubmissionNasabahController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\Nasabah\PagesController;
+use App\Http\Controllers\Nasabah\ProfileController;
 use App\Http\Controllers\Toko\ManagementStockController;
 use App\Http\Controllers\Toko\OrderSupplierController;
 use App\Http\Controllers\Toko\PriceController;
@@ -16,6 +19,7 @@ use App\Http\Controllers\toko\PrintReceiptController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
+use App\Http\Controllers\Umum\CashTransactionController;
 use App\Http\Controllers\Umum\EmployeeController;
 use App\Models\Product;
 use App\Http\Controllers\Umum\ExEmployeeController;
@@ -45,15 +49,21 @@ Route::group([
     'as' => 'nasabah.',
 ], function () {
     // customer
-    // Route::get('/', function () {
-    //     $data['product'] = Product::get();
-    //     return view('nasabah.pages.home', $data);
-    // })->name('home');
     Route::get('/', [PagesController::class, 'home'])->name('home');
     Route::get('/product', [PagesController::class, 'product'])->name('product.index');
     Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('product.show');
     //Logout custom
+
+    Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
+    Route::get('loan-submission', [LoanSubmissionNasabahController::class, 'index'])->name('loan-submission.index');
+    Route::post('loan-submission', [LoanSubmissionNasabahController::class, 'store'])->name('loan-submission.store');
+
+    Route::get('loan-list-nasabah', [LoanNasabahController::class, 'index'])->name('loan.index');
+    Route::get('loan-list-nasabah/{loan}', [LoanNasabahController::class, 'show'])->name('loan.show');
+
+    Route::get('profile', [PagesController::class, "profile"])->name('profile');
 });
+
 Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
 
 Route::group([
@@ -101,6 +111,7 @@ Route::group([
     Route::post('check-status-loan-employee', [EmployeeController::class, 'checkStatusLoanEmployee'])->name('check.status.loan.employee');
     Route::resource('ex-employee', ExEmployeeController::class);
     Route::get('employee-download-card/{employee}', [EmployeeController::class, 'downloadEmployeeCard'])->name('employee.download.card');
+    Route::resource('cash-in-out', CashTransactionController::class);
     // Divisi Umum
 
     // Usipa
@@ -112,7 +123,7 @@ Route::group([
     Route::post('loan-some-payment-store', [LoanListController::class, 'somePaymentStore'])->name('loan.somepayment.store');
     Route::post('loan-upload-attachment',[LoanListController::class, 'uploadAttachment'])->name('loan.upload.attachment');
     Route::post('loan-destroy-attachment',[LoanListController::class, 'destroyAttachment'])->name('loan.destroy.attachment');
-    Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
+    
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
     // Usipa
@@ -140,6 +151,7 @@ Route::group([
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
     Route::get('datatables-loan-submission-index', [LoanSubmissionController::class, 'getIndexDatatables'])->name('loan-submission.index.datatables');
     Route::get('datatables-loan-list-index', [LoanListController::class, 'getIndexDatatables'])->name('loan-list.index.datatables');
+    Route::get('datatables-cash-in-out-index', [CashTransactionController::class, 'getIndexDatatables'])->name('cash-in-out.index.datatables');
 
     //Logout custom
     // Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');

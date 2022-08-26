@@ -3,7 +3,7 @@
         <div class="container py-1">
             <div class="row">
                 <div class="col-3 d-flex justify-content-center">
-                    <a href="#" class="btn d-flex flex-column align-items-center">
+                    <a href="{{ route('nasabah.home') }}" class="btn d-flex flex-column align-items-center">
                         <i class="fe fe-home text-light" style="font-size: 20px;"></i>
                         <small class="small text-light">Beranda</small>
                     </a>
@@ -15,13 +15,13 @@
                     </a>
                 </div>
                 <div class="col-3 d-flex justify-content-center">
-                    <a href="#" class="btn d-flex flex-column align-items-center">
+                    <a href="{{ route('nasabah.loan.index') }}" class="btn d-flex flex-column align-items-center">
                         <i class="fe fe-credit-card text-light" style="font-size: 20px;"></i>
                         <small class="small text-light">Pinjaman</small>
                     </a>
                 </div>
                 <div class="col-3 d-flex justify-content-center">
-                    <a href="#" class="btn d-flex flex-column align-items-center">
+                    <a href="{{ route('nasabah.profile') }}" class="btn d-flex flex-column align-items-center">
                         <i class="fe fe-user text-light" style="font-size: 20px;"></i>
                         <small class="small text-light">Profile</small>
                     </a>

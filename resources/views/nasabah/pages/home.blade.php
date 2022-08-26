@@ -1,24 +1,39 @@
 @extends('nasabah.layout.base-nasabah')
 
 @section('content')
+{{-- <section class="col-12 mt-3 min-vh-100">
+    
+</section> --}}
 <section class="col-12 mt-3">
     <img src="" alt="" class="w-100 border rounded p-0 mb-2" height="120">
     <div class="d-flex justify-content-between">
         <small>...</small>
         <small>lihat semua promo</small>
     </div>
-</section>
-<section class="col-12 mt-3">
     <div class="row p-2">
         <div class="col-6 mb-3">
-            <div class="card shadow p-3 bg-info text-white">
-                <strong class="fw-bold text-uppercase">Pinjaman</strong>
-            </div>
+            <a href="{{ route('nasabah.loan-submission.index') }}" style="text-decoration: none;color: inherit;">
+                <div class="card shadow py-5">
+                    <div class="card-body text-center">
+                        <div class="counter-icon bg-primary-gradient box-shadow-secondary num-counter mx-auto">
+                            <i class="fa fa-usd" style="height: 27px; width: 27px"></i>
+                        </div>
+                        <h5>Pengajuan Pinjaman</h5>
+                    </div>
+                </div>
+            </a>
         </div>
         <div class="col-6 mb-3">
-            <div class="card shadow p-3 bg-info text-white">
-                <strong class="fw-bold text-uppercase">Saldo Nasabah</strong>
+            <a href="#" style="text-decoration: none;color: inherit;">
+            <div class="card shadow py-5">
+                <div class="card-body text-center">
+                    <div class="counter-icon bg-warning-gradient box-shadow-secondary num-counter mx-auto">
+                        <i class="fa fa-usd" style="height: 27px; width: 27px"></i>
+                    </div>
+                    <h5>Pesan Toko Online</h5>
+                </div>
             </div>
+            </a>
         </div>
     </div>
 </section>
@@ -50,6 +65,8 @@
 <section class="col-12 my-3">
     <img src="" alt="" class="w-100 border rounded" height="120">
 </section>
+
+
 @endsection
 
 @section('footer')

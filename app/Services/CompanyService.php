@@ -39,7 +39,16 @@ class CompanyService {
         ]);
         $companyBalance->update([
             "{$balance_type}" => $savedHistory->balance_after,
-            "total_balance" => $savedHistory->balance_after,
+            // "total_balance" => $savedHistory->balance_after,
         ]);
+        $this->calculateTotalBalance();
+        
+    }
+    protected function calculateTotalBalance(){
+        $companyBalance = CompanyBalance::findOrFail(1);   
+        $total = $companyBalance->loan_balance + $companyBalance->store_balance + $companyBalance->other_balance ;
+            $companyBalance->update([
+                'total_balance' => $total
+            ]);
     }
 }

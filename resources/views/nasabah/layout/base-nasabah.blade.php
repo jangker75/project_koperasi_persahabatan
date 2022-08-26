@@ -36,6 +36,7 @@
 
     </style>
     {{ isset($style) ? $style : '' }}
+    @stack('style')
 </head>
 
 <body>
@@ -64,8 +65,12 @@
     @include('admin.shared.toast-script')
     @include('admin.shared.script_delete_index')
 
+
     @yield('scriptVendor')
     @yield('script')
+    {{ isset($scriptVendor) ? $scriptVendor : '' }}
+    {{ isset($script) ? $script : '' }}
+    @stack('script')
     {{-- SCRIPT --}}
 </body>
 

@@ -18,6 +18,7 @@
                                     <th>{{ __('employee.name') }}</th>
                                     <th>{{ __('loan.total_loan_amount') }}</th>
                                     <th>{{ __('loan.loan_approval_status_id') }}</th>
+                                    <th>{{ __('loan.created_by') }}</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

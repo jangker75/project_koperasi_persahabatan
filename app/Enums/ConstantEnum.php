@@ -22,6 +22,11 @@ class ConstantEnum
         'debit' => 'Debit',
         'credit' => 'Credit',
     ];
+    const BALANCE_COMPANY = [
+        'loan_balance' => 'Saldo Pinjaman',
+        'store_balance' => 'Saldo Toko',
+        'other_balance' => "Saldo Utama Koperasi",
+    ];
     const SAVINGS_BALANCE_TYPE = [
         'POKOK' => 'principal_savings_balance',
         'WAJIB' => 'mandatory_savings_balance',

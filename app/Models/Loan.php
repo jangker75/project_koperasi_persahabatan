@@ -20,6 +20,10 @@ class Loan extends Model
         'response_date', 'response_user', 'admin_fee', 'created_by',
         'attachment'
     ];
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id','created_by');
+    }
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');
