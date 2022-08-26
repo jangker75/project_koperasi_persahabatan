@@ -19,7 +19,8 @@ class StoreSeeder extends Seeder
           [
             'name' => 'Warehouse',
             'location' => 'Lt. 2',
-            'manager_id' => 1
+            'manager_id' => 1,
+            'is_warehouse' => true
           ],
           [
             'name' => 'Toko Lantai 1',

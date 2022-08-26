@@ -27,9 +27,13 @@ class ProductController extends Controller
       }
     }
 
-    public function searchProductBySKU($sku){
+    public function searchProductBySKU(Request $request){
       try {
-        $product = ProductStockRepositories::findProductBySku($sku);
+        if(!$request->storeId){
+          $request->storeId = null;
+        }
+
+        $product = ProductStockRepositories::findProductBySku($request->sku, $request->storeId);
 
         if(!$product){
           $data['message'] = "Failed Search Product";
@@ -45,5 +49,18 @@ class ProductController extends Controller
 
         return response()->json($data, 500);
       }
+    }
+
+    public function getProductOnStockPaginate(Request $request){
+      try {
+        $data['message'] = "success get data";
+        $data['products'] = ProductStockRepositories::getDataonStockbyStore($request->storeId, $request->page);
+      } catch (\Throwable $th) {
+        $data['message'] = "failed get data";
+        $data['error'] = $th;
+      }
+      
+      return response()->json($data,200);
+      
     }
 }

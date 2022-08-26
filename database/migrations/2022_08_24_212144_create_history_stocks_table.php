@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('stores', function (Blueprint $table) {
+        Schema::create('history_stocks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('store_code');
-            $table->string('location');
-            $table->string('image')->default('default-image.jpg');
-            $table->integer('manager_id');
-            $table->boolean('is_warehouse')->default(0);
+            $table->string("title");
+            $table->integer("product_id");
+            $table->integer("qty");
+            $table->enum("type", ["induction", "deduction", "move"]);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stores');
+        Schema::dropIfExists('history_stocks');
     }
 };

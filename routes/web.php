@@ -45,11 +45,11 @@ Route::group([
     'as' => 'nasabah.',
 ], function () {
     // customer
-    Route::get('/', function () {
-        // return redirect('/admin');
-        $data['product'] = Product::get();
-        return view('nasabah.pages.home', $data);
-    })->name('home');
+    // Route::get('/', function () {
+    //     $data['product'] = Product::get();
+    //     return view('nasabah.pages.home', $data);
+    // })->name('home');
+    Route::get('/', [PagesController::class, 'home'])->name('home');
     Route::get('/product', [PagesController::class, 'product'])->name('product.index');
     Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('product.show');
     //Logout custom

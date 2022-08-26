@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Nasabah;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
     public function home(){
-      $data['product'] = Product::latest()->limit(20)->get();
+      // $data['product'] = Product::latest()->limit(20)->get();
       $data['categories'] = Category::get();
+      $data['stores'] = Store::where('is_warehouse', false)->get();
 
       return view('nasabah.pages.home', $data);
     }

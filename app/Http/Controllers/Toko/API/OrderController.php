@@ -5,20 +5,24 @@ namespace App\Http\Controllers\Toko\API;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Stock;
 use App\Models\Transaction;
 use App\Repositories\EmployeeRepository;
 use App\Repositories\ProductStockRepositories;
+use App\Services\HistoryStockService;
 use App\Services\OrderService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
     public function store(Request $request){
       try {
+        DB::beginTransaction();
         $calculateService = new OrderService();
         $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
 
@@ -28,6 +32,7 @@ class OrderController extends Controller
           $status = 4;
         }
 
+        // order
         $order = Order::create([
           'subtotal' => $subTotalAll,
           'discount' => $request->discount,
@@ -36,8 +41,12 @@ class OrderController extends Controller
           'employee_onduty_id' => $request->employeeOndutyId
         ]);
 
+        // order detail
         foreach ($request->item as $key => $product) {
-          $productInfo = ProductStockRepositories::findProductBySku($product['sku']);
+          $productInfo = ProductStockRepositories::findProductBySku($product['sku'], $request->storeId);
+          if(!$productInfo || $productInfo[0]->stock < $product['qty']){
+            throw new ModelNotFoundException('Data Produk tidak ditemukan atau stock yg tidak mencukupi');
+          }
           $orderDetail = OrderDetail::create([
             'order_id' => $order->id,
             'product_name' => $productInfo[0]->title,
@@ -45,8 +54,28 @@ class OrderController extends Controller
             'qty' => $product['qty'],
             'subtotal' => $productInfo[0]->price*$product['qty']
           ]);
+
+          // update stock
+          $stockNow = Stock::select("qty")
+                            ->where("store_id", $request->storeId)
+                            ->where("product_id", $productInfo[0]->id)
+                            ->first();
+          $stock = Stock::where("store_id", $request->storeId)
+                      ->where("product_id", $productInfo[0]->id)
+                      ->update([
+                        "qty" => $stockNow->qty - $orderDetail->qty
+                      ]);
+
+          // update history stock
+          $history = new HistoryStockService();
+          $history->update("order",[
+            "productId" => $productInfo[0]->id,
+            "qty" => $orderDetail->qty,
+            "orderCode" => $order->order_code
+          ]);
         }
 
+        // table transaction
         $inputTransaksi = [
           'order_id' => $order->id,
           'amount' => $order->total,
@@ -58,10 +87,10 @@ class OrderController extends Controller
           $inputTransaksi['payment_code'] = $request->paymentCode; 
         }elseif ($request->paymentMethodId == 4) {
           $employee = EmployeeRepository::findEmployeeByNameOrNik($request->paylater);
-          
           if (!$employee) {
               throw new ModelNotFoundException('Data nasabah tidak ditemukan');
           }
+
           $inputTransaksi['payment_method_id'] = $request->paymentMethodId;
           $inputTransaksi['is_paylater'] = true;
           $inputTransaksi['status_paylater_id'] = $status;
@@ -71,6 +100,8 @@ class OrderController extends Controller
 
         $transaction = Transaction::create($inputTransaksi);
 
+        
+        // saldo
         if($request->paymentMethodId == 1){
           // action menambah Saldo disini
         }
@@ -81,14 +112,16 @@ class OrderController extends Controller
           $response['print'] = false;
         }else{
           $response['message'] = "Transaksi berhasil";
-          $response['status'] = "success";
           $response['print'] = true;
+          $response['status'] = "success";
         }
 
         $response['order'] = Order::with('status', 'detail')->find($order->id);
 
+        DB::commit();
         return response()->json($response, 200);
       } catch (Exception $e) {
+        DB::rollBack();
         $response['message'] = $e->getMessage();
         $response['status'] = "failed";
         return response()->json($response, 500);

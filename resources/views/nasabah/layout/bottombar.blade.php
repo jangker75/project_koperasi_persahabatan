@@ -9,7 +9,7 @@
                     </a>
                 </div>
                 <div class="col-3 d-flex justify-content-center">
-                    <a href="#" class="btn d-flex flex-column align-items-center">
+                    <a href="{{ route("nasabah.product.index") }}" class="btn d-flex flex-column align-items-center">
                         <i class="fe fe-shopping-cart text-light" style="font-size: 20px;"></i>
                         <small class="small text-light">Produk</small>
                     </a>

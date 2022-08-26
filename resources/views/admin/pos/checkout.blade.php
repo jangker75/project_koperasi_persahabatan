@@ -36,8 +36,21 @@
         <div class="col-12 col-md-5 p-4">
             <div class="card">
                 <div class="card-body p-3">
+                    <div class="form-group">
+                        <label for="">Pilih Cabang</label><br>
+                        <select class="form-select w-100" aria-label="Default select example" name="store_id"
+                            id="storeId">
+                            @foreach ($stores as $store)
+                            <option value="{{ $store->id }}">{{ $store->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body p-3">
                     <input type="text" name="scanbarcode" autofocus id="scanBarcode"
-                        class="form-control form-control-lg border border-primary" placeholder="Masukan Kode SKU">
+                        class="form-control form-control-lg border border-primary" placeholder="Masukan Kode SKU atau nama Produk">
                     <div id="scanBarcodeHelp" class="form-text">Scan Barcode atau Ketik Kode SKU Barang untuk menambah
                         barang atau menambah quantity.</div>
                 </div>
@@ -59,7 +72,8 @@
                                     <td class="text-start">Additional Discount</td>
                                     {{-- <td class="text-end"><span class="fw-bold text-success">- Rp 0</span></td> --}}
                                     <td class="text-end">
-                                        <input type="text" name="discount" id="discount" placeholder="0" class="form-control">
+                                        <input type="text" name="discount" id="discount" placeholder="0"
+                                            class="form-control">
                                     </td>
                                 </tr>
                                 <tr>
@@ -80,6 +94,13 @@
                                 <option value="{{ $payment->id }}">{{ $payment->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </li>
+                    <li class="list-group-item" id="cash">
+                        <div class="form-group">
+                            <label for="">Masukan Jumlah Uang Cash</label><br>
+                            <input type="text" name="cash" id="cashInput" class="form-control format-uang"
+                                placeholder="Rp 50.000">
                         </div>
                     </li>
                     <li class="list-group-item" id="paymentCode">
@@ -130,6 +151,12 @@
             let total = 0;
             let orderBy = "pos";
             $(document).ready(function () {
+                
+                $("#storeId").val("{{ $stores[0]->id }}");
+                $("#storeId").change(function(){
+                  productInCart = [];
+                  renderElementCart(productInCart)
+                })
 
                 $('#elementPaylater').hide()
                 $('#paymentCode').hide()
@@ -151,17 +178,17 @@
                 })
 
                 $("#discount").keyup(function () {
-                  if(subtotal - $(this).val() > -1){
-                      discount = $(this).val()
-                      total = subtotal - discount
-                      $("#total").html("Rp " + total)
-                  }else{
-                    swal({
-                        title: "Gagal",
-                        text: "Discount yang dimasukan tidak boleh melampaui harga",
-                        type: "error"
-                    });
-                  }
+                    if (subtotal - $(this).val() > -1) {
+                        discount = $(this).val()
+                        total = subtotal - discount
+                        $("#total").html("Rp " + total)
+                    } else {
+                        swal({
+                            title: "Gagal",
+                            text: "Discount yang dimasukan tidak boleh melampaui harga",
+                            type: "error"
+                        });
+                    }
                 })
                 $("body").on("keyup", "#paymentCodeInput", function () {
                     paymentCode = $(this).val()
@@ -224,7 +251,8 @@
                     if (checker == undefined) {
                         $.ajax({
                             type: "GET",
-                            url: "{{ url('/api/product-by-sku') }}/" + value,
+                            url: "{{ url('/api/product-by-sku') }}?sku=" + value + "&storeId=" +
+                                $("#storeId").val(),
                             cache: "false",
                             datatype: "html",
                             success: function (response) {
@@ -234,8 +262,10 @@
                                     price: response.product.price,
                                     qty: 1,
                                     subtotal: response.product.price,
+                                    stock: response.product.stock,
                                     cover: "{{ asset('storage') }}/" + response.product
                                         .cover
+
                                 }
                                 productInCart.push(toPush)
                                 renderElementCart(productInCart)
@@ -246,7 +276,7 @@
                             error: function (xhr, status, error) {
                                 swal({
                                     title: "Gagal",
-                                    text: "Produk tidak ditemukan",
+                                    text: "Produk tidak ditemukan atau stock sedang kosong",
                                     type: "error"
                                 });
                             }
@@ -293,11 +323,13 @@
                     const checker = productInCart.find(element => {
                         if (element.sku === skuNumber) {
                             if ($(this).hasClass('counter-minus')) {
-                                if(element.qty > 1){
-                                  element.qty -= 1;
+                                if (element.qty > 1) {
+                                    element.qty -= 1;
                                 }
                             } else if ($(this).hasClass('counter-plus')) {
-                                element.qty += 1;
+                                if (element.qty + 1 <= element.stock) {
+                                    element.qty += 1;
+                                }
                             }
                             element.subtotal = element.price * element.qty
 
@@ -314,16 +346,17 @@
             })
 
             $('#buttonCheckout').click(function () {
-                if(productInCart.length < 1){
-                  swal({
-                      title: "Gagal",
-                      text: "Belum ada produk yang ditambahkan",
-                      type: "error"
-                  });
+                if (productInCart.length < 1) {
+                    swal({
+                        title: "Gagal",
+                        text: "Belum ada produk yang ditambahkan",
+                        type: "error"
+                    });
                 }
                 let checkoutValue = {
                     item: productInCart,
                     discount: discount,
+                    storeId: $("#storeId").val(),
                     orderBy: orderBy,
                     paymentMethodId: $('#paymentMethod').val(),
                     employeeOndutyId: "{{ auth()->user()->employee->id }}"
@@ -352,8 +385,8 @@
                             });
                         }
                         if (response.print == true) {
-                            window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order
-                                .order_code, '_blank');
+                            let cash = $("#cash").val();
+                            window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order.order_code + "?cash="+cash, '_blank');
                         }
                         setTimeout(function () {
                             location.reload();
@@ -393,6 +426,7 @@
                                   <i class="fa fa-plus text-muted"></i>
                               </button>
                           </div>
+                          <small class="small text-danger">stock : ` + product.stock + `</small>
                       </td>
                       <td>` + product.subtotal + `</td>
                       <td>

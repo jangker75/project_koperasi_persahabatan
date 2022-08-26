@@ -36,6 +36,8 @@ Route::resource('supplier', SupplierController::class);
 Route::resource('order', OrderController::class);
 // Render Jquery DataTable Editable
 Route::post('jquery-data-editable', [JqueryEditableController::class, 'renderTable']);
-Route::post('search-product', [ProductController::class, "searchProduct"])->name('search-product');
-Route::get('product-by-sku/{sku}', [ProductController::class, "searchProductBySKU"]);
 Route::post('search-employee', [EmployeeController::class, 'findEmployee']);
+// product
+Route::get('paginate-product-in-stock-from-store', [ProductController::class, "getProductOnStockPaginate"]);
+Route::post('search-product', [ProductController::class, "searchProduct"])->name('search-product');
+Route::get('product-by-sku', [ProductController::class, "searchProductBySKU"]);
