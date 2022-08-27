@@ -51,7 +51,7 @@ Route::group([
     // customer
     Route::get('/', [PagesController::class, 'home'])->name('home');
     Route::get('/product', [PagesController::class, 'product'])->name('product.index');
-    Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('product.show');
+    Route::get('/product/{sku}', [PagesController::class, 'productDetail'])->name('product.show');
     //Logout custom
 
     Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');

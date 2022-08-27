@@ -53,13 +53,17 @@ class ProductController extends Controller
 
     public function getProductOnStockPaginate(Request $request){
       try {
+        if($request->categoryId){
+          $data['products'] = ProductStockRepositories::getDataonStockbyStore($request->storeId, $request->page, $request->categoryId);
+        }else{
+          $data['products'] = ProductStockRepositories::getDataonStockbyStore($request->storeId, $request->page);
+        }
         $data['message'] = "success get data";
-        $data['products'] = ProductStockRepositories::getDataonStockbyStore($request->storeId, $request->page);
       } catch (\Throwable $th) {
         $data['message'] = "failed get data";
         $data['error'] = $th;
       }
-      
+
       return response()->json($data,200);
       
     }

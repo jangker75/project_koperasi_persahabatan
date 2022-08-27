@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_code');
+            $table->longText('note')->nullable();
             $table->dateTime('order_date')->default(Carbon::now());
             $table->integer('subtotal')->default(0);
             $table->integer('discount')->default(0);

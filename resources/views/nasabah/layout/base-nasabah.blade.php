@@ -64,7 +64,7 @@
     @include('admin.components.script-footer')
     @include('admin.shared.toast-script')
     @include('admin.shared.script_delete_index')
-
+    @include('nasabah.shared.script-navbar')
 
     @yield('scriptVendor')
     @yield('script')

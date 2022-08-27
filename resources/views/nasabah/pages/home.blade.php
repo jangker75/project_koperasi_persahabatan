@@ -24,7 +24,7 @@
             </a>
         </div>
         <div class="col-6 mb-3">
-            <a href="#" style="text-decoration: none;color: inherit;">
+            <a href="{{ route('nasabah.product.index') }}" style="text-decoration: none;color: inherit;">
             <div class="card shadow py-5">
                 <div class="card-body text-center">
                     <div class="counter-icon bg-warning-gradient box-shadow-secondary num-counter mx-auto">
@@ -74,6 +74,7 @@
 @endsection
 
 @section('script')
+
 <script>
     $(document).ready(function () {
         let productInCart = [];
@@ -82,18 +83,29 @@
         let total = 0;
         let products = [];
 
-        $("#storeId").val("{{ $stores[0]->id }}")
+        
+        if(sessionStorage.getItem("storeId") !== null){
+          $("#storeId").val(sessionStorage.getItem("storeId"))
+        }else{
+          $("#storeId").val("{{ $stores[0]->id }}")
+        }
+
+        sessionStorage.setItem('storeId', $("#storeId").val())
         callRender()
 
         $("#storeId").change(function(){
           productInCart = [];
           refreshCart(productInCart)
-          setTimeout(refreshCuantityCart, 1000);
+          sessionStorage.removeItem('storeId');
+          sessionStorage.setItem('storeId', $(this).val())
+          setTimeout(refreshQuantityCart, 1000);
           callRender()
         })
 
 
-        
+        if(sessionStorage.getItem('cart') !== null){
+          productInCart = JSON.parse(sessionStorage.getItem("cart"))
+        }
 
         function countSubtotal(item) {
             let sum = 0;
@@ -108,6 +120,11 @@
                 sessionStorage.removeItem('cart');
                 sessionStorage.setItem('cart', JSON.stringify(item))
             }, 500);
+            setTimeout(function () {
+                sessionStorage.removeItem('total');
+                sessionStorage.setItem('total', total)
+            }, 500);
+            
         }
 
         $("body").on("click", ".btn-add-to-cart",function () {
@@ -158,7 +175,7 @@
             }
 
             refreshCart(productInCart)
-            setTimeout(refreshCuantityCart, 1000);
+            setTimeout(refreshQuantityCart, 1000);
         })
 
         function renderElementProduct(item) {
@@ -173,13 +190,12 @@
                           <div class="w-100 p-0 mb-2" style="height: 40px;">
                               <div class="fw-bold">` + truncateString(element.title, 20) + `</div>
                           </div>
-                          <span
-                              class="fw-bold text-danger">Rp ` + formatRupiah(String(element.price))  + `</span>
-                          <br>
+                          <div
+                              class="fw-bold text-danger">Rp ` + formatRupiah(String(element.price))  + `</div>
                           <small class="small text-success">Ready on Stock</small>
                           <div class="d-flex w-100 mt-4">
-                              <a href="` + "{{ url('/product') }}/" + element.id + `"
-                                  class="btn btn-primary btn-sm me-2">Lihat Detail</a>
+                              <a href="` + "{{ url('/product') }}/" + element.sku + `"
+                                  class="btn btn-primary btn-sm me-2 flex-fill">Lihat Detail</a>
                               <button class="btn btn-outline-primary btn-sm btn-add-to-cart"
                                   data-sku="` + element.sku + `"><i class="fa fa-shopping-basket"></i></button>
                           </div>

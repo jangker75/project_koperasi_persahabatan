@@ -55,6 +55,11 @@
                     <div class="expanel-heading">
                         {{ $ongoingLoan == null ? '' : $ongoingLoan->transaction_number }}
                     </div>
+                    @if ($ongoingLoan == null)
+                    <div class="expanel-body">
+                      <span>Belum Ada Data</span>
+                    </div>
+                    @else
                     <div class="expanel-body">
                         <button data-bs-toggle="modal" value="{{ route('nasabah.loan.show', [$ongoingLoan->id]) }}"
                             data-loan-number="{{ $ongoingLoan->transaction_number }}" data-bs-target="#modalHistoryLoan"
@@ -106,6 +111,7 @@
                             </tbody>
                         </table>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
