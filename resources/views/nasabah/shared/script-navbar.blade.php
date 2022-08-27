@@ -1,27 +1,68 @@
 <script>
-    let cart;
+    let cart = [];
     let count = 0;
-
-    let total = sessionStorage.getItem('total')
-
+    let total = 0;
+    
     if (sessionStorage.getItem('cart') !== null) {
         cart = JSON.parse(sessionStorage.getItem("cart"))
+
         cart.forEach(element => {
             count += element.qty
         });
+        $("#totalItem").html(count)
+
+        total = sessionStorage.getItem('total')
     } else {
         cart = [];
     }
 
-    $("#totalPriceCart").html("Checkout " + formatRupiah(total, "Rp"))
+    // -------------------------------------------------------------------------------------------------------------------
 
-    refreshQuantityCart()
+    refreshCart(cart)
 
-    function refreshQuantityCart() {
-        $("#totalItem").html(count)
+    function refreshCart() {
+
+      setTimeout(function(){
+        // set count again
+        let recount = 0;
+        cart.forEach(element => {
+            recount += element.qty
+        });
+        count = recount;
+        $("#totalItem").html(recount)
+
+        // set total price
+        total = countSubtotal(cart)
+
+        // rerender element
+        refreshElementCart(cart)
+      }, 500)
+
+        setTimeout(function () {
+            sessionStorage.removeItem('cart');
+            sessionStorage.setItem('cart', JSON.stringify(cart))
+        }, 500);
+        setTimeout(function () {
+            sessionStorage.removeItem('total');
+            sessionStorage.setItem('total', total)
+        }, 500);
+
+    }
+
+    function countSubtotal(item) {
+        let sum = 0;
+
+        for (let index = 0; index < item.length; index++) {
+            sum += item[index].subtotal;
+        }
+
+        return sum;
+    }
+
+    function refreshElementCart(items) {
         $("#ulCartList").html("")
 
-        cart.forEach(element => {
+        items.forEach(element => {
             $("#ulCartList").append(`
               <li class="border-bottom py-3 w-100">
                   <div class="w-100 d-flex align-items-center justify-content-between">
@@ -48,7 +89,11 @@
               </li>
             `);
         });
+
+        $("#totalPriceCart").html("Checkout " + formatRupiah(String(total), "Rp"))
     }
+
+    // -------------------------------------------------------------------------------------------------------------------
 
     $('body').on('click', '.counter-navbar', function () {
 
@@ -74,10 +119,7 @@
             return false;
         });
 
-        subtotal = countSubtotal(cart);
-        total = subtotal;
         refreshCart(cart)
-        $("#totalPriceCart").html("Checkout " + formatRupiah(String(total), "Rp"))
     })
 
     $('body').on('click', '.delete-from-cart', function () {
@@ -93,11 +135,7 @@
         // remove object
         cart.splice(removeIndex, 1);
 
-        subtotal = countSubtotal(cart);
-        total = subtotal;
         refreshCart(cart)
-        refreshQuantityCart()
-        $("#totalPriceCart").html("Checkout " + formatRupiah(String(total), "Rp"))
     });
 
     function formatRupiah(angka, prefix) {
@@ -115,35 +153,6 @@
 
         rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-    }
-
-    function countSubtotal(item) {
-        let sum = 0;
-
-        for (let index = 0; index < item.length; index++) {
-            sum += item[index].subtotal;
-        }
-
-        $('#subtotalAll').html("Rp " + sum)
-        return sum;
-    }
-
-    function refreshCart(item) {
-        let recount = 0;
-        cart.forEach(element => {
-            recount += element.qty
-        });
-        $("#totalItem").html(recount)
-
-        setTimeout(function () {
-            sessionStorage.removeItem('cart');
-            sessionStorage.setItem('cart', JSON.stringify(item))
-        }, 500);
-        setTimeout(function () {
-            sessionStorage.removeItem('total');
-            sessionStorage.setItem('total', total)
-        }, 500);
-
     }
 
 </script>

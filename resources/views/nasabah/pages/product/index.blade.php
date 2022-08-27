@@ -1,14 +1,7 @@
 @extends('nasabah.layout.base-nasabah')
 
 @section('content')
-{{-- <section class="col-12 p-4" style="background-color: rgb(200, 217, 231);">
-    <div class="breadcrumb-style2">
-        <ol class="breadcrumb1 m-0 p-0 px-2">
-            <li class="breadcrumb-item1"><a href="{{ route('nasabah.home') }}">Home</a></li>
-<li class="breadcrumb-item1 active">Produk</li>
-</ol>
-</div>
-</section> --}}
+
 <section class="py-2">
     <select class="form-select" name="store_id" id="storeId">
         @foreach ($stores as $store)
@@ -27,7 +20,7 @@
                     <div class="btn-group mt-2 mb-2">
                         <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            <span id="buttonCategory">Semua Kategori</span> 
+                            <span id="buttonCategory">Semua Kategori</span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" style="height:50vh; overflow: scroll;">
@@ -68,64 +61,135 @@
 @section('script')
 <script>
     $(document).ready(function () {
-        let productInCart = [];
-        let subtotal = 0;
-        let discount = 0;
-        let total = 0;
+      // variable cart and some function espscially refreshCart() has declared in "script-navbar.blade.php"
         let products = [];
         let categoryId = 0;
         let pages = 1;
 
-        $("#pageNumber").html(pages);
-        if(sessionStorage.getItem("storeId") !== null){
-          $("#storeId").val(sessionStorage.getItem("storeId"))
-        }else{
-          $("#storeId").val("{{ $stores[0]->id }}")
+        // store
+        if (sessionStorage.getItem("storeId") !== null) {
+            $("#storeId").val(sessionStorage.getItem("storeId"))
+        } else {
+            $("#storeId").val("{{ $stores[0]->id }}")
         }
         sessionStorage.setItem('storeId', $("#storeId").val())
-        callRender()
-        
-
         $("#storeId").change(function () {
-            productInCart = [];
-            refreshCart(productInCart)
+            cart = [];
+            refreshCart()
             sessionStorage.removeItem('storeId');
             sessionStorage.setItem('storeId', $(this).val())
-            setTimeout(refreshQuantityCart, 1000);
             callRender()
         })
+
+        // pagination
+        $("#pageNumber").html(pages);
         
-        $('.category').click(function(){
-          let id  = $(this).data('id')
-          $('#buttonCategory').html($(this).html())
-          categoryId = id;
-          callRender()
-          console.log(id)
-        })
-
-        $(".page-control").click(function(){
-          let action = $(this).data('action');
-          if(action == "previous"){
-            if(pages > 1){
-              pages--;
+        $(".page-control").click(function () {
+            let action = $(this).data('action');
+            if (action == "previous") {
+                if (pages > 1) {
+                    pages--;
+                }
+            } else {
+                pages++;
             }
-          }else{
-            pages++;
-          }
 
-          $("#pageNumber").html(pages);
-          callRender();
+            $("#pageNumber").html(pages);
+            callRender();
         })
 
-        if (sessionStorage.getItem('cart') !== null) {
-            productInCart = JSON.parse(sessionStorage.getItem("cart"))
+
+        // category
+        $('.category').click(function () {
+            let id = $(this).data('id')
+            $('#buttonCategory').html($(this).html())
+            categoryId = id;
+            callRender()
+        })
+
+        // rendering html
+        callRender()
+        function renderElementProduct(item) {
+            $("#products").html()
+            let elementHtml = '';
+            item.forEach(element => {
+                elementHtml = elementHtml + `
+                <div class="col-6 px-2">
+                    <div class="card shadow border">
+                        <img src="` + "{{ asset('storage') }}/" + element.cover + `" class="card-img-top" alt="">
+                        <div class="card-body p-1">
+                            <div class="w-100 p-0" style="height: 40px;">
+                                <div class="fw-bold">` + truncateString(element.title, 20) + `</div>
+                            </div>
+                            <div class="fw-bold text-danger mt-3">Rp 
+                                ` + formatRupiah(String(element.price)) + `</div>
+                            <small class="small text-success">Ready on Stock : ` + element.stock + `</small>
+                            <div class="d-flex w-100 mt-4">
+                                <a href="` + "{{ url('product') }}/" + element.sku + `"
+                                    class="btn btn-primary btn-sm me-2 flex-fill">Lihat Detail</a>
+                                <button class="btn btn-outline-primary btn-sm btn-add-to-cart" data-sku="` + element
+                    .sku + `"><i
+                                        class="fa fa-shopping-basket"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+              `;
+            });
+            $("#products").html(elementHtml)
         }
 
+        function callRender() {
+            let url = "{{ url('/api/paginate-product-in-stock-from-store') }}?storeId=" + $("#storeId").val() +
+                "&page=" + pages
 
+            if (categoryId !== 0) {
+                url = url + "&categoryId=" + categoryId;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                cache: "false",
+                datatype: "html",
+                success: function (response) {
+                    products = response.products
+                    if (products.length > 0) {
+                        renderElementProduct(products)
+                    } else {
+                        swal({
+                            title: "Gagal",
+                            text: "Halaman Sudah berakhir",
+                            type: "error"
+                        });
+                        pages--;
+                        $("#pageNumber").html(pages);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    swal({
+                        title: "Gagal",
+                        text: "Produk tidak ditemukan",
+                        type: "error"
+                    });
+                }
+            });
+        }
+
+        function truncateString(str, num) {
+            if (str.length > num) {
+                return str.slice(0, num) + "...";
+            } else {
+                return str;
+            }
+        }
+
+        // add-to-cart
         $("body").on("click", ".btn-add-to-cart", function () {
             let value = $(this).data("sku")
 
-            const checker = productInCart.find(element => {
+            const checker = cart.find(element => {
                 if (element.sku == value) {
                     element.qty += 1;
                     element.subtotal = element.price * element.qty
@@ -150,10 +214,7 @@
                             cover: "{{ asset('storage') }}/" + response.product.cover
                         }
 
-                        subtotal = countSubtotal(productInCart);
-                        total = subtotal - discount;
-                        productInCart.push(toPush);
-
+                        cart.push(toPush);
 
                     },
                     error: function (xhr, status, error) {
@@ -164,128 +225,10 @@
                         });
                     }
                 });
-            } else {
-                subtotal = countSubtotal(productInCart);
-                total = subtotal - discount;
-            }
+            } 
 
-            refreshCart(productInCart)
-            setTimeout(refreshQuantityCart, 1000);
-
-            console.log(total)
+            refreshCart()
         })
-
-
-        function countSubtotal(item) {
-            let sum = 0;
-            for (let index = 0; index < item.length; index++) {
-                sum += item[index].subtotal;
-            }
-            return sum;
-        }
-
-        function refreshCart(item) {
-            setTimeout(function () {
-                sessionStorage.removeItem('cart');
-                sessionStorage.setItem('cart', JSON.stringify(item))
-            }, 500);
-            setTimeout(function () {
-                sessionStorage.removeItem('total');
-                sessionStorage.setItem('total', total)
-            }, 500);
-        }
-
-        function renderElementProduct(item) {
-            $("#products").html()
-            let elementHtml = '';
-            item.forEach(element => {
-                elementHtml = elementHtml + `
-                <div class="col-6 px-2">
-                    <div class="card shadow border">
-                        <img src="` + "{{ asset('storage') }}/" + element.cover + `" class="card-img-top" alt="">
-                        <div class="card-body p-1">
-                            <div class="w-100 p-0" style="height: 40px;">
-                                <div class="fw-bold">` + truncateString(element.title, 20) + `</div>
-                            </div>
-                            <div class="fw-bold text-danger mt-3">Rp 
-                                ` + formatRupiah(String(element.price)) + `</div>
-                            <small class="small text-success">Ready on Stock : `+element.stock+`</small>
-                            <div class="d-flex w-100 mt-4">
-                                <a href="` + "{{ url('product') }}/" + element.sku + `"
-                                    class="btn btn-primary btn-sm me-2 flex-fill">Lihat Detail</a>
-                                <button class="btn btn-outline-primary btn-sm btn-add-to-cart" data-sku="` + element
-                    .sku + `"><i
-                                        class="fa fa-shopping-basket"></i></button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-              `;
-            });
-            $("#products").html(elementHtml)
-        }
-
-        function callRender() {
-          let url = "{{ url('/api/paginate-product-in-stock-from-store') }}?storeId=" + $("#storeId").val() + "&page=" + pages
-          
-          if(categoryId !== 0){
-            url = url + "&categoryId=" + categoryId;
-          }
-
-          $.ajax({
-              type: "GET",
-              url: url,
-              cache: "false",
-              datatype: "html",
-              success: function (response) {
-                  products = response.products
-                  if(products.length > 0){
-                    renderElementProduct(products)
-                  }else{
-                    swal({
-                        title: "Gagal",
-                        text: "Halaman Sudah berakhir",
-                        type: "error"
-                    });
-                    pages--;
-                    $("#pageNumber").html(pages);
-                  }
-              },
-              error: function (xhr, status, error) {
-                  swal({
-                      title: "Gagal",
-                      text: "Produk tidak ditemukan",
-                      type: "error"
-                  });
-              }
-          });
-        }
-
-        function truncateString(str, num) {
-            if (str.length > num) {
-                return str.slice(0, num) + "...";
-            } else {
-                return str;
-            }
-        }
-
-        function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-        }
     })
 
 </script>

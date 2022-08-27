@@ -13,7 +13,6 @@
         <ol class="breadcrumb1 m-0 p-0 px-2">
             <li class="breadcrumb-item1"><a href="{{ route('nasabah.home') }}">Home</a></li>
             <li class="breadcrumb-item1"><a href="{{ route('nasabah.product.index') }}">Product</a></li>
-            <li class="breadcrumb-item1 active">#{{ $product->sku }}</li>
         </ol>
     </div>
 </section>
@@ -22,51 +21,7 @@
         <div class="col-12 py-4">
             <div class="card">
                 <div class="card-body" id="bodyCard">
-                    {{-- <img src="{{ asset('storage/'. $product->cover) }}" alt="" class="w-100 mb-4 img-thumbnail">
-                    <h1 class="h3 fw-bold">{{ $product->name }}</h1>
-                    <h1 class="h3 fw-bold text-danger">
-                        {{ format_uang($product->price[count($product->price) - 1]->revenue) }}
-                    </h1>
-                    <div class="mb-4">
-                        <span class="h4 fw-bold">Deskripsi</span><br>
-                        {!! $product->description !!}
-                    </div>
-                    <div class="mb-4">
-                        <div class="table-responsive">
-                            <div class="h4 fw-bold">Informasi Produk</div>
-                            <table class="table table-striped table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td class="fw-bold">{{ __('product.name') }}</td>
-                                        <td>{{ $product->name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">{{ __('product.sku') }}</td>
-                                        <td>{{ $product->sku }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">{{ __('product.unit_measurement') }}</td>
-                                        <td>{{ $product->unit_measurement }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">{{ __('product.price') }}</td>
-                                        <td>{{ format_uang($product->price[count($product->price) - 1]->revenue) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">{{ __('product.brand') }}</td>
-                                        <td>
-                                            @if (isset($product->brand->name))
-                                            {{ $product->brand->name }}
-                                            @else
-                                            --
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div> --}}
+
                 </div>
             </div>
 
@@ -85,10 +40,7 @@
 @section('script')
 <script>
     $(document).ready(function () {
-        let productInCart = [];
-        let subtotal = 0;
-        let discount = 0;
-        let total = 0;
+        // variable cart and some function espscially refreshCart() has declared in "script-navbar.blade.php"
         let products = [];
         let productSku = "{{ request()->segment(count(request()->segments())) }}"
 
@@ -97,40 +49,15 @@
         } else {
             $("#storeId").val("{{ $stores[0]->id }}")
         }
-
         sessionStorage.setItem('storeId', $("#storeId").val())
-
         $("#storeId").change(function () {
-            productInCart = [];
-            refreshCart(productInCart)
+            cart = [];
+            refreshCart()
             sessionStorage.removeItem('storeId');
             sessionStorage.setItem('storeId', $(this).val())
-            setTimeout(refreshQuantityCart, 1000);
             callRender()
         })
-        
-        if (sessionStorage.getItem('cart') !== null) {
-            productInCart = JSON.parse(sessionStorage.getItem("cart"))
-        }
 
-        function countSubtotal(item) {
-            let sum = 0;
-            for (let index = 0; index < item.length; index++) {
-                sum += item[index].subtotal;
-            }
-            return sum;
-        }
-
-        function refreshCart(item) {
-            setTimeout(function () {
-                sessionStorage.removeItem('cart');
-                sessionStorage.setItem('cart', JSON.stringify(item))
-            }, 500);
-            setTimeout(function () {
-                sessionStorage.removeItem('total');
-                sessionStorage.setItem('total', total)
-            }, 500);
-        }
 
         // render html
         callRender();
@@ -144,7 +71,6 @@
                 cache: "false",
                 datatype: "html",
                 success: function (response) {
-                    console.log(response)
                     product = response.product
                     renderElementProduct(product)
                 },
@@ -227,29 +153,10 @@
             }
         })
 
-        function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-        }
-
         // button add to cart
         $("#addToCart").click(function () {
-            console.log(productInCart)
             quantityToAdd = $('.qty').val()
-            console.log(quantityToAdd)
-            const checker = productInCart.find(element => {
+            const checker = cart.find(element => {
                 if (element.sku == productSku) {
                     element.qty = parseInt(element.qty) + parseInt(quantityToAdd);
                     element.subtotal = parseInt(element.price) * parseInt(element.qty)
@@ -263,25 +170,20 @@
                     title: product.title,
                     sku: product.sku,
                     price: product.price,
-                    qty: 1,
+                    qty: parseInt(quantityToAdd),
                     subtotal: product.price,
                     cover: "{{ asset('storage') }}/" + product.cover
                 }
 
-                subtotal = countSubtotal(productInCart);
-                total = subtotal - discount;
-                productInCart.push(toPush);
+                cart.push(toPush);
             }
 
-            refreshCart(productInCart)
-            setTimeout(refreshQuantityCart, 1000);
+            refreshCart()
             swal({
                 title: "Success",
                 text: "Produk berhasil ditambahkan",
                 type: "success"
             });
-            window.location = "{{ url('/product') }}"
-            console.log(checker)
         })
     })
 

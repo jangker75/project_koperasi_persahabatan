@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko\API;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\PaymentMethod;
 use App\Models\Stock;
 use App\Models\Transaction;
 use App\Repositories\EmployeeRepository;
@@ -26,10 +27,11 @@ class OrderController extends Controller
         $calculateService = new OrderService();
         $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
 
-        if($request->paymentMethodId == 1){
-          $status = 6; 
-        }else{
+        $paymentMethod = PaymentMethod::find($request->paymentMethodId);
+        if(str($paymentMethod->name)->slug == "paylater"){
           $status = 4;
+        }else{
+          $status = 6; 
         }
 
         // order
@@ -80,22 +82,21 @@ class OrderController extends Controller
           'order_id' => $order->id,
           'amount' => $order->total,
           'status_transaction_id' => $status,
+          'payment_method_id' => $request->paymentMethodId
         ];
 
-        if($request->paymentMethodId == 2 || $request->paymentMethodId == 3){
-          $inputTransaksi['payment_method_id'] = $request->paymentMethodId;
-          $inputTransaksi['payment_code'] = $request->paymentCode; 
-        }elseif ($request->paymentMethodId == 4) {
+        if(str($paymentMethod->name)->slug == "paylater"){
           $employee = EmployeeRepository::findEmployeeByNameOrNik($request->paylater);
           if (!$employee) {
               throw new ModelNotFoundException('Data nasabah tidak ditemukan');
           }
 
-          $inputTransaksi['payment_method_id'] = $request->paymentMethodId;
           $inputTransaksi['is_paylater'] = true;
           $inputTransaksi['status_paylater_id'] = $status;
           $inputTransaksi['requester_employee_id'] = $employee[0]->id;
           $inputTransaksi['request_date'] = Carbon::now();
+        }elseif (str($paymentMethod->name)->slug !== "paylater" && str($paymentMethod->name)->slug !== "cash") {
+          $inputTransaksi['payment_code'] = $request->paymentCode;
         }
 
         $transaction = Transaction::create($inputTransaksi);

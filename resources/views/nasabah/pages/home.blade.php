@@ -25,14 +25,14 @@
         </div>
         <div class="col-6 mb-3">
             <a href="{{ route('nasabah.product.index') }}" style="text-decoration: none;color: inherit;">
-            <div class="card shadow py-5">
-                <div class="card-body text-center">
-                    <div class="counter-icon bg-warning-gradient box-shadow-secondary num-counter mx-auto">
-                        <i class="fa fa-usd" style="height: 27px; width: 27px"></i>
+                <div class="card shadow py-5">
+                    <div class="card-body text-center">
+                        <div class="counter-icon bg-warning-gradient box-shadow-secondary num-counter mx-auto">
+                            <i class="fa fa-usd" style="height: 27px; width: 27px"></i>
+                        </div>
+                        <h5>Pesan Toko Online</h5>
                     </div>
-                    <h5>Pesan Toko Online</h5>
                 </div>
-            </div>
             </a>
         </div>
     </div>
@@ -77,60 +77,98 @@
 
 <script>
     $(document).ready(function () {
-        let productInCart = [];
-        let subtotal = 0;
-        let discount = 0;
-        let total = 0;
+        // variable cart and some function espscially refreshCart() has declared in "script-navbar.blade.php"
         let products = [];
 
-        
-        if(sessionStorage.getItem("storeId") !== null){
-          $("#storeId").val(sessionStorage.getItem("storeId"))
-        }else{
-          $("#storeId").val("{{ $stores[0]->id }}")
+        // storeId
+        if (sessionStorage.getItem("storeId") !== null) {
+            $("#storeId").val(sessionStorage.getItem("storeId"))
+        } else {
+            $("#storeId").val("{{ $stores[0]->id }}")
         }
-
         sessionStorage.setItem('storeId', $("#storeId").val())
-        callRender()
 
-        $("#storeId").change(function(){
-          productInCart = [];
-          refreshCart(productInCart)
-          sessionStorage.removeItem('storeId');
-          sessionStorage.setItem('storeId', $(this).val())
-          setTimeout(refreshQuantityCart, 1000);
-          callRender()
+        // change store
+        $("#storeId").change(function () {
+            // empty the cart
+            cart = [];
+            refreshCart()
+            sessionStorage.removeItem('storeId');
+            sessionStorage.setItem('storeId', $(this).val())
+            callRender()
         })
 
+        // -------------------------------------------------------------------------------------------------------------------
 
-        if(sessionStorage.getItem('cart') !== null){
-          productInCart = JSON.parse(sessionStorage.getItem("cart"))
+        // rendering Page
+        callRender()
+
+        function callRender() {
+            $.ajax({
+                type: "GET",
+                url: "{{ url('/api/paginate-product-in-stock-from-store') }}?storeId=" + $("#storeId")
+                    .val(),
+                cache: "false",
+                datatype: "html",
+                success: function (response) {
+                    products = response.products
+
+                    renderElementProduct(products)
+                },
+                error: function (xhr, status, error) {
+                    swal({
+                        title: "Gagal",
+                        text: "Produk tidak ditemukan",
+                        type: "error"
+                    });
+                }
+            });
         }
 
-        function countSubtotal(item) {
-            let sum = 0;
-            for (let index = 0; index < item.length; index++) {
-                sum += item[index].subtotal;
+        function renderElementProduct(item) {
+            $("#products").html()
+            let elementHtml = '';
+            item.forEach(element => {
+                elementHtml = elementHtml + `
+              <div class="col-6 px-2">
+                <div class="card shadow">
+                    <img src="` + "{{ asset('storage') }}/" + element.cover + `" class="card-img-top" alt="">
+                    <div class="card-body p-3">
+                        <div class="w-100 p-0 mb-2" style="height: 40px;">
+                            <div class="fw-bold">` + truncateString(element.title, 20) + `</div>
+                        </div>
+                        <div
+                            class="fw-bold text-danger">Rp ` + formatRupiah(String(element.price)) + `</div>
+                        <small class="small text-success">Ready on Stock</small>
+                        <div class="d-flex w-100 mt-4">
+                            <a href="` + "{{ url('/product') }}/" + element.sku + `"
+                                class="btn btn-primary btn-sm me-2 flex-fill">Lihat Detail</a>
+                            <button class="btn btn-outline-primary btn-sm btn-add-to-cart"
+                                data-sku="` + element.sku + `"><i class="fa fa-shopping-basket"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+            });
+            $("#products").html(elementHtml);
+        }
+
+        function truncateString(str, num) {
+            if (str.length > num) {
+                return str.slice(0, num) + "...";
+            } else {
+                return str;
             }
-            return sum;
         }
 
-        function refreshCart(item) {
-            setTimeout(function () {
-                sessionStorage.removeItem('cart');
-                sessionStorage.setItem('cart', JSON.stringify(item))
-            }, 500);
-            setTimeout(function () {
-                sessionStorage.removeItem('total');
-                sessionStorage.setItem('total', total)
-            }, 500);
-            
-        }
+        // -------------------------------------------------------------------------------------------------------------------
 
-        $("body").on("click", ".btn-add-to-cart",function () {
+        // add to cart
+        $("body").on("click", ".btn-add-to-cart", function () {
             let value = $(this).data("sku")
 
-            const checker = productInCart.find(element => {
+            const checker = cart.find(element => {
                 if (element.sku == value) {
                     element.qty += 1;
                     element.subtotal = element.price * element.qty
@@ -146,20 +184,15 @@
                     cache: "false",
                     datatype: "html",
                     success: function (response) {
-                        let toPush = {
-                            title: response.product.title,
-                            sku: response.product.sku,
-                            price: response.product.price,
-                            qty: 1,
-                            subtotal: response.product.price,
-                            cover: "{{ asset('storage') }}/" + response.product.cover
-                        }
-
-                        subtotal = countSubtotal(productInCart);
-                        total = subtotal - discount;
-                        productInCart.push(toPush);
-
-
+                      let toPush = {
+                          title: response.product.title,
+                          sku: response.product.sku,
+                          price: response.product.price,
+                          qty: 1,
+                          subtotal: response.product.price,
+                          cover: "{{ asset('storage') }}/" + response.product.cover
+                      }
+                      cart.push(toPush);
                     },
                     error: function (xhr, status, error) {
                         swal({
@@ -169,89 +202,10 @@
                         });
                     }
                 });
-            } else {
-                subtotal = countSubtotal(productInCart);
-                total = subtotal - discount;
             }
 
-            refreshCart(productInCart)
-            setTimeout(refreshQuantityCart, 1000);
+            refreshCart();
         })
-
-        function renderElementProduct(item) {
-            $("#products").html()
-            let elementHtml = '';
-            item.forEach(element => {
-                elementHtml = elementHtml + `
-                <div class="col-6 px-2">
-                  <div class="card shadow">
-                      <img src="` + "{{ asset('storage') }}/" + element.cover + `" class="card-img-top" alt="">
-                      <div class="card-body p-3">
-                          <div class="w-100 p-0 mb-2" style="height: 40px;">
-                              <div class="fw-bold">` + truncateString(element.title, 20) + `</div>
-                          </div>
-                          <div
-                              class="fw-bold text-danger">Rp ` + formatRupiah(String(element.price))  + `</div>
-                          <small class="small text-success">Ready on Stock</small>
-                          <div class="d-flex w-100 mt-4">
-                              <a href="` + "{{ url('/product') }}/" + element.sku + `"
-                                  class="btn btn-primary btn-sm me-2 flex-fill">Lihat Detail</a>
-                              <button class="btn btn-outline-primary btn-sm btn-add-to-cart"
-                                  data-sku="` + element.sku + `"><i class="fa fa-shopping-basket"></i></button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              `;
-            });
-            $("#products").html(elementHtml)
-        }
-
-        function callRender(){
-          $.ajax({
-              type: "GET",
-              url: "{{ url('/api/paginate-product-in-stock-from-store') }}?storeId=" + $("#storeId").val(),
-              cache: "false",
-              datatype: "html",
-              success: function (response) {
-                  products = response.products
-
-                  renderElementProduct(products)
-              },
-              error: function (xhr, status, error) {
-                  swal({
-                      title: "Gagal",
-                      text: "Produk tidak ditemukan",
-                      type: "error"
-                  });
-              }
-          });
-        }
-
-        function truncateString(str, num) {
-            if (str.length > num) {
-                return str.slice(0, num) + "...";
-            } else {
-                return str;
-            }
-        }
-
-        function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-        }
     })
 
 </script>
