@@ -28,7 +28,7 @@
                     </ul>
                 </div>
                 <div class="offcanvas-footer p-4">
-                    <div class="w-100 btn btn-warning fw-bold h5 py-3" id="totalPriceCart"></div>
+                    <a href="{{ route('nasabah.product.checkout') }}" class="w-100 btn btn-warning fw-bold h5 py-3" id="totalPriceCart"></a>
                 </div>
             </div>
 

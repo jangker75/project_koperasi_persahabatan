@@ -52,6 +52,7 @@ Route::group([
     Route::get('/', [PagesController::class, 'home'])->name('home');
     Route::get('/product', [PagesController::class, 'product'])->name('product.index');
     Route::get('/product/{sku}', [PagesController::class, 'productDetail'])->name('product.show');
+    Route::get('/checkout', [PagesController::class, 'checkout'])->name('product.checkout');
     //Logout custom
 
     Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
@@ -62,6 +63,8 @@ Route::group([
     Route::get('loan-list-nasabah/{loan}', [LoanNasabahController::class, 'show'])->name('loan.show');
 
     Route::get('profile', [PagesController::class, "profile"])->name('profile');
+    Route::get('riwayat-paylater', [PagesController::class, "paylaterHistory"])->name('history-paylater');
+    Route::get('detail-paylater/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
 });
 
 Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
@@ -79,6 +82,8 @@ Route::group([
     // POS
     
     Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);
+    Route::get('pos/paylater', [DashboardController::class, 'paylater'])->name('paylater.index');
+    Route::get('pos/paylater/{orderCode}', [DashboardController::class, 'detailPaylater'])->name('paylater.detail');
 
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');

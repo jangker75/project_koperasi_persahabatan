@@ -46,9 +46,11 @@
     <div>
         <div class="container">
             <div class="row">
+                @if (Request::segment(1) == "product" || Request::segment(1) == null)
                 <div class="col-12 col-md-4 offset-md-4 p-0">
                     @include('nasabah.layout.navbar')
                 </div>
+                @endif
                 <div class="col-12 col-md-4 offset-md-4 bg-light">
                     <div class="row">
                         @yield('content')

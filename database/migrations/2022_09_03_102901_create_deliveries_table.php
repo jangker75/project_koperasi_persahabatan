@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,12 +14,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('master_data_statuses', function (Blueprint $table) {
+        Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('type');
-            $table->string('color_button')->nullable();
+            $table->integer('order_id');
+            $table->integer('other_fee');
+            $table->dateTime('in_progress_detetime')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('delivery_detetime')->nullable();
+            $table->dateTime('delivered_detetime')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('master_data_statuses');
+        Schema::dropIfExists('deliveries');
     }
 };

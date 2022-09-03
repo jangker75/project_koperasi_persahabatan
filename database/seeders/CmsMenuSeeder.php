@@ -37,6 +37,11 @@ class CmsMenuSeeder extends Seeder
                 'url' => 'admin/pos/checkout', 
                 'icon' => 'fe fe-dollar-sign', 
         ]);
+        CmsMenu::create([
+                'name' => 'Tagihan Paylater',
+                'url' => 'admin/pos/paylater', 
+                'icon' => 'fa fa-money', 
+        ]);
         
 
         // Kelola Toko Menu
@@ -104,20 +109,20 @@ class CmsMenuSeeder extends Seeder
         ]);
         //END Sub Menu Pengadaan
 
-        $dataPaylater = CmsMenu::create([
-                'name' => 'Paylater',
-                'url' => 'admin/paylater', 
-                'icon' => 'fa fa-money', 
-        ]);
-        // Sub Menu Paylater
-        $dataPaylater->subMenus()->create([
-                'name' => 'Pengajuan Paylater',
-                'url' => 'admin/paylater/pengajuan-paylater', 
-        ]);
-        $dataPaylater->subMenus()->create([
-                'name' => 'Kelola Data Paylater',
-                'url' => 'admin/paylater/kelola-data-paylater', 
-        ]);
+        // $dataPaylater = CmsMenu::create([
+        //         'name' => 'Paylater',
+        //         'url' => 'admin/paylater', 
+        //         'icon' => 'fa fa-money', 
+        // ]);
+        // // Sub Menu Paylater
+        // $dataPaylater->subMenus()->create([
+        //         'name' => 'Pengajuan Paylater',
+        //         'url' => 'admin/paylater/pengajuan-paylater', 
+        // ]);
+        // $dataPaylater->subMenus()->create([
+        //         'name' => 'Kelola Data Paylater',
+        //         'url' => 'admin/paylater/kelola-data-paylater', 
+        // ]);
         //END Sub Menu Paylater
 
         

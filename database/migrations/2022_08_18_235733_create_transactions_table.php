@@ -29,7 +29,10 @@ return new class extends Migration
             $table->integer("approval_employee_id")->nullable();
             $table->datetime("request_date")->nullable();
             $table->datetime("approve_date")->nullable();
+            $table->boolean("is_delivery")->nullable();
+            $table->integer("delivery_fee")->nullable();
             $table->string("evidance")->nullable();
+            $table->boolean("is_paid")->default(true);
             $table->timestamps();
         });
     }

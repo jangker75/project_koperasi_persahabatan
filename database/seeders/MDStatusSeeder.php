@@ -46,42 +46,49 @@ class MDStatusSeeder extends Seeder
                 'name' => 'Open',
                 'description' => 'Tiket ini baru saja dibuat',
                 'type' => 'orders,order_suppliers,transfer_stocks',
+                'color_button' => 'btn-info'
             ],
             [
                 'id' => 4,
                 'name' => 'waiting',
                 'description' => 'Tiket ini sedang menunggu untuk di process',
                 'type' => 'orders,order_suppliers,transfer_stocks,paylater',
+                'color_button' => 'btn-warning'
             ],
             [
                 'id' => 5,
                 'name' => 'process',
                 'description' => 'Tiket ini sedang dikerjakan',
                 'type' => 'orders,order_suppliers,transfer_stocks',
+                'color_button' => 'btn-warning'
             ],
             [
                 'id' => 6,
                 'name' => 'success',
                 'description' => 'Tiket ini berhasil dan sudah selesai dikerjakan',
                 'type' => 'orders,order_suppliers,transfer_stocks,paylater',
+                'color_button' => 'btn-success'
             ],
             [
                 'id' => 7,
                 'name' => 'failed',
                 'description' => 'Tiket ini gagal dikerjakan, dan dibatalkan',
                 'type' => 'orders,order_suppliers,transfer_stocks',
+                'color_button' => 'btn-danger'
             ],
             [
                 'id' => 8,
                 'name' => 'reject',
                 'description' => 'Tiket ini dibatalkan',
                 'type' => 'orders,order_suppliers,transfer_stocks',
+                'color_button' => 'btn-danger'
             ],
             [
                 'id' => 9,
                 'name' => 'approved',
                 'description' => 'Tiket ini telah disetujui',
                 'type' => 'orders,order_suppliers,transfer_stocks,paylater',
+                'color_button' => 'btn-success'
             ],
         ];
         $statusLoan = [

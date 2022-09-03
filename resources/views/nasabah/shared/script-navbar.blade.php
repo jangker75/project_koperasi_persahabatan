@@ -53,7 +53,7 @@
         let sum = 0;
 
         for (let index = 0; index < item.length; index++) {
-            sum += item[index].subtotal;
+            sum += item[index].subtotal ;
         }
 
         return sum;
@@ -154,5 +154,9 @@
         rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
     }
+
+    // -------------------------------------------------------------------------------------------------------------------
+
+
 
 </script>

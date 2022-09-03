@@ -171,7 +171,7 @@
                     sku: product.sku,
                     price: product.price,
                     qty: parseInt(quantityToAdd),
-                    subtotal: product.price,
+                    subtotal: product.price * parseInt(quantityToAdd),
                     cover: "{{ asset('storage') }}/" + product.cover
                 }
 

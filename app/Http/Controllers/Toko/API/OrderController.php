@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Toko\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\ApplicationSetting;
+use App\Models\Delivery;
+use App\Models\Employee;
+use App\Models\MasterDataStatus;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\PaymentMethod;
 use App\Models\Stock;
 use App\Models\Transaction;
 use App\Repositories\EmployeeRepository;
+use App\Repositories\PaylaterRepository;
 use App\Repositories\ProductStockRepositories;
+use App\Services\CompanyService;
 use App\Services\HistoryStockService;
 use App\Services\OrderService;
 use Carbon\Carbon;
@@ -27,12 +33,8 @@ class OrderController extends Controller
         $calculateService = new OrderService();
         $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
 
-        $paymentMethod = PaymentMethod::find($request->paymentMethodId);
-        if(str($paymentMethod->name)->slug == "paylater"){
-          $status = 4;
-        }else{
-          $status = 6; 
-        }
+        $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
+        $status = 6;
 
         // order
         $order = Order::create([
@@ -82,40 +84,43 @@ class OrderController extends Controller
           'order_id' => $order->id,
           'amount' => $order->total,
           'status_transaction_id' => $status,
-          'payment_method_id' => $request->paymentMethodId
+          'payment_method_id' => $paymentMethod->id
         ];
 
         if(str($paymentMethod->name)->slug == "paylater"){
           $employee = EmployeeRepository::findEmployeeByNameOrNik($request->paylater);
+
           if (!$employee) {
               throw new ModelNotFoundException('Data nasabah tidak ditemukan');
           }
 
+          $statusPaylate = MasterDataStatus::where('name', 'approve')->first();
+
+          $inputTransaksi['is_paid'] = false;
+          $inputTransaksi['approval_employee_id'] = $request->employeeOndutyId;
           $inputTransaksi['is_paylater'] = true;
-          $inputTransaksi['status_paylater_id'] = $status;
+          $inputTransaksi['status_paylater_id'] = $statusPaylate->id;
           $inputTransaksi['requester_employee_id'] = $employee[0]->id;
           $inputTransaksi['request_date'] = Carbon::now();
-        }elseif (str($paymentMethod->name)->slug !== "paylater" && str($paymentMethod->name)->slug !== "cash") {
+        }elseif ($paymentMethod->name !== "paylater" && str($paymentMethod->name)->slug !== "cash") {
           $inputTransaksi['payment_code'] = $request->paymentCode;
         }
 
         $transaction = Transaction::create($inputTransaksi);
-
         
         // saldo
-        if($request->paymentMethodId == 1){
-          // action menambah Saldo disini
+        if(str($paymentMethod->name)->slug !== "paylater"){
+          (new CompanyService())->addCreditBalance($transaction->amount, 'store_balance', $paymentMethod->name);
         }
 
-        if($request->paymentMethodId == 4){
+        if($paymentMethod->name == 'paylater'){
           $response['message'] = "Paylater Berhasil dibuat untuk Nasabah Atas nama " . $transaction->requester->getFullNameAttribute() . ", Proses Paylater masuk untuk di setujui terlebih dahulu";
-          $response['status'] = "success";
           $response['print'] = false;
         }else{
           $response['message'] = "Transaksi berhasil";
           $response['print'] = true;
-          $response['status'] = "success";
         }
+        $response['status'] = "success";
 
         $response['order'] = Order::with('status', 'detail')->find($order->id);
 
@@ -128,5 +133,157 @@ class OrderController extends Controller
         return response()->json($response, 500);
       }
       
+    }
+
+    public function orderNasabah(Request $request){
+      $calculateService = new OrderService();
+      $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
+
+      
+      try {
+        DB::beginTransaction();
+
+        if($request->paylater){
+          $check = PaylaterRepository::checkPaylaterFromEmployeeId($request->requesterId);
+    
+          if($check){
+            throw new ModelNotFoundException('Nasabah sedang mengajukan paylater, harap selesaikan terlebih dahulu');
+          }
+        }
+
+        $status = 4;
+
+        $inputOrder = [
+          'subtotal' => $subTotalAll,
+          'total' => $subTotalAll - 0,
+          'status_id' => $status
+        ];
+
+        if($request->delivery){
+          $inputOrder['note'] = $request->note;
+          $deliveryFee = ApplicationSetting::where('name', 'delivery_fee')->first();
+          $inputOrder['total'] = $inputOrder['total'] + (int) $deliveryFee->content;
+        }
+
+        // order
+        $order = Order::create($inputOrder);
+
+        // order detail
+        foreach ($request->item as $key => $product) {
+          $productInfo = ProductStockRepositories::findProductBySku($product['sku'], $request->storeId);
+          if(!$productInfo || $productInfo[0]->stock < $product['qty']){
+            throw new ModelNotFoundException('Data Produk tidak ditemukan atau stock yg tidak mencukupi');
+          }
+          $orderDetail = OrderDetail::create([
+            'order_id' => $order->id,
+            'product_name' => $productInfo[0]->title,
+            'price' => $productInfo[0]->price,
+            'qty' => $product['qty'],
+            'subtotal' => $productInfo[0]->price*$product['qty']
+          ]);
+        }
+
+        $inputTransaksi = [
+            'order_id' => $order->id,
+            'amount' => $order->total,
+            'status_transaction_id' => $status,
+            'payment_method_id' => 1,
+            'is_paid' => false
+          ];
+
+        if($request->paylater){
+          // table transaction
+          $paymentMethod = PaymentMethod::where('name', 'paylater')->first();
+
+          $employee = Employee::find($request->requesterId);
+          if (!$employee) {
+              throw new ModelNotFoundException('Data nasabah tidak ditemukan');
+          }
+
+          $inputTransaksi['payment_method_id'] = $paymentMethod->id;
+          $inputTransaksi['is_paylater'] = true;
+          $inputTransaksi['status_paylater_id'] =  $status;
+          $inputTransaksi['requester_employee_id'] = $employee->id;
+          $inputTransaksi['request_date'] = Carbon::now();
+        }
+
+        if($request->delivery){
+          $inputTransaksi['is_delivery'] = true;
+          $inputTransaksi['delivery_fee'] = (int) $deliveryFee->content;
+
+          Delivery::create([
+            'order_id' => $order->id,
+            'other_fee' => (int) $deliveryFee->content
+          ]);
+        }
+
+        Transaction::create($inputTransaksi);
+
+        $response['message'] = "berikan Kode Order ini Admin\nKODE : ". $order->order_code;
+        $response['order'] = Order::with('status', 'detail')->find($order->id);
+
+        DB::commit();
+        return response()->json($response, 200);
+      } catch (Exception $e) {
+
+        DB::rollBack();
+        $response['message'] = $e->getMessage();
+        $response['status'] = "failed";
+        return response()->json($response, 500);
+      }
+    }
+
+    public function rejectPaylater($orderCode){
+      try {
+        DB::beginTransaction();
+        
+        $order = Order::where('order_code', $orderCode)->first();
+        $status = MasterDataStatus::where('name', 'failed')->first();
+        $statusPaylate = MasterDataStatus::where('name', 'reject')->first();
+
+        $order->status = $status->id();
+        $order->save();
+
+        $transaction = $order->transaction;
+        $transaction->status_transaction_id = $status->id;
+        $transaction->status_paylater_id = $statusPaylate->id;
+        $transaction->save();
+
+        DB::commit();
+        // return response()->json($response, 200);
+      } catch (Exception $e) {
+        DB::rollBack();
+        $response['message'] = $e->getMessage();
+        $response['status'] = "failed";
+        // return response()->json($response, 500);
+      }
+      $order = Order::where('order_code', $orderCode)->first();
+    }
+
+    public function approvePaylater($orderCode){
+      try {
+        DB::beginTransaction();
+        
+        $order = Order::where('order_code', $orderCode)->first();
+        $status = MasterDataStatus::where('name', 'success')->first();
+        $statusPaylate = MasterDataStatus::where('name', 'approve')->first();
+
+        $order->status = $status->id();
+        $order->save();
+
+        $transaction = $order->transaction;
+        $transaction->status_transaction_id = $status->id;
+        $transaction->status_paylater_id = $statusPaylate->id;
+        $transaction->save();
+
+        DB::commit();
+        // return response()->json($response, 200);
+      } catch (Exception $e) {
+        DB::rollBack();
+        $response['message'] = $e->getMessage();
+        $response['status'] = "failed";
+        // return response()->json($response, 500);
+      }
+      $order = Order::where('order_code', $orderCode)->first();
     }
 }

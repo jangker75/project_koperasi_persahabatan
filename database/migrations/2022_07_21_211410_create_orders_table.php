@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('discount')->default(0);
             $table->integer('total')->default(0);
             $table->integer('status_id');
-            $table->integer('employee_onduty_id');
+            $table->integer('employee_onduty_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

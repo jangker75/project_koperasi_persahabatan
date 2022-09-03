@@ -91,7 +91,7 @@
                             <select class="form-select w-100" aria-label="Default select example" name="payment_method"
                                 id="paymentMethod" value="1">
                                 @foreach ($paymentMethod as $payment)
-                                <option value="{{ $payment->id }}">{{ $payment->name }}</option>
+                                <option value="{{ $payment->name }}">{{ $payment->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -165,15 +165,18 @@
                     $('#elementPaylater').toggle()
                 })
                 $('#paymentMethod').change(function () {
-                    if ($(this).val() == 4) {
+                    if ($(this).val() == 'paylater') {
                         $('#elementPaylater').show()
                         $('#paymentCode').hide()
-                    } else if ($(this).val() == 2 || $(this).val() == 3) {
-                        $('#elementPaylater').hide()
-                        $('#paymentCode').show()
+                        $('#cash').hide()
+                    } else if ($(this).val() == 'cash') {
+                      $('#elementPaylater').hide()
+                      $('#paymentCode').hide()
+                      $('#cash').show()
                     } else {
-                        $('#elementPaylater').hide()
-                        $('#paymentCode').hide()
+                      $('#elementPaylater').hide()
+                      $('#paymentCode').show()
+                      $('#cash').hide()
                     }
                 })
 
@@ -358,14 +361,16 @@
                     discount: discount,
                     storeId: $("#storeId").val(),
                     orderBy: orderBy,
-                    paymentMethodId: $('#paymentMethod').val(),
+                    paymentMethod: $('#paymentMethod').val(),
                     employeeOndutyId: "{{ auth()->user()->employee->id }}"
                 }
-                if ($('#paymentMethod').val() == 4) {
+                if ($('#paymentMethod').val() == 'paylater') {
                     checkoutValue.paylater = $("#mySelect2").val()
-                } else if ($('#paymentMethod').val() == 2 || $('#paymentMethod').val() == 3) {
+                } else if ($('#paymentMethod').val() !== 'cash' && $('#paymentMethod').val() !== 'paylater') {
                     checkoutValue.paymentCode = paymentCode
                 }
+
+                // console.log(checkoutValue)
 
                 $.ajax({
                     type: "POST",
@@ -386,13 +391,14 @@
                         }
                         if (response.print == true) {
                             let cash = $("#cash").val();
-                            window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order.order_code + "?cash="+cash, '_blank');
+                            // window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order.order_code + "?cash="+cash, '_blank');
                         }
                         setTimeout(function () {
                             location.reload();
                         }, 1000)
                     },
                     error: function (response) {
+                      console.log(response)
                         swal({
                             title: "Gagal",
                             text: response.message,

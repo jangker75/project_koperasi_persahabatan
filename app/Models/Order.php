@@ -13,7 +13,7 @@ class Order extends Model
     protected $fillable = [
       'order_code', 'order_date', 'discount',
       'subtotal', 'total', 'employee_onduty_id',
-      'status_id'
+      'status_id','note'
     ];
 
     public function detail(){
@@ -25,5 +25,9 @@ class Order extends Model
     }
     public function employeeOnduty(){
       return $this->belongsTo(Employee::class, 'employee_onduty_id');
+    }
+
+    public function transaction(){
+      return $this->hasOne(Transaction::class, "order_id", "id");
     }
 }
