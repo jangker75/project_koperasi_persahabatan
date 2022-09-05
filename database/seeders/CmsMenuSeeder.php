@@ -38,8 +38,8 @@ class CmsMenuSeeder extends Seeder
                 'icon' => 'fe fe-dollar-sign', 
         ]);
         CmsMenu::create([
-                'name' => 'Tagihan Paylater',
-                'url' => 'admin/pos/paylater', 
+                'name' => 'Permintaan Order',
+                'url' => 'admin/pos/request-order', 
                 'icon' => 'fa fa-money', 
         ]);
         

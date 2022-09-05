@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('total')->default(0);
             $table->integer('status_id');
             $table->integer('employee_onduty_id')->nullable();
+            $table->integer('store_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

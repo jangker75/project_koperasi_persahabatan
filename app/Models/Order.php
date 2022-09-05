@@ -13,7 +13,7 @@ class Order extends Model
     protected $fillable = [
       'order_code', 'order_date', 'discount',
       'subtotal', 'total', 'employee_onduty_id',
-      'status_id','note'
+      'status_id','note','store_id'
     ];
 
     public function detail(){

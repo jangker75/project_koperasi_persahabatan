@@ -67,24 +67,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 py-4">
+                      <div class="border d-flex justify-content-between align-items-center">
+                        <a href="{{ route('nasabah.history-paylater') }}">Riwayat Paylater</a>
+                        <i class="fa fa-angle-right    "></i>
+                      </div>
+                      <div class="border d-flex justify-content-between align-items-center">
+                        <a href="{{ route('nasabah.history-paylater') }}">Riwayat Order</a>
+                        <i class="fa fa-angle-right    "></i>
+                      </div>
+                      <div class="border d-flex justify-content-between align-items-center">
+                        <span>Total Tagihan</span>
+                        <span>{{ format_uang($totalBill) }}</span>
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<section class="col-12">
-    <div class="row border">
-        <div class="col-12">
-            <div class="card">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a href="{{ route('nasabah.history-paylater') }}">Riwayat Paylater</a></li>
-                    <li class="list-group-item">A second item</li>
-                    <li class="list-group-item">A third item</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 @endsection
 

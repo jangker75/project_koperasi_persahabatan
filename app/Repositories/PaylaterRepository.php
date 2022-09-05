@@ -38,12 +38,13 @@ class PaylaterRepository{
         transactions.id AS transactionId,
         transactions.amount AS amount,
         transactions.request_date AS requestDate,
-        master_data_statuses.name AS status	
+        master_data_statuses.name AS status,
+        master_data_statuses.color_button as statusColor	
       FROM employees
       LEFT JOIN transactions ON transactions.requester_employee_id = employees.id
       LEFT JOIN orders ON transactions.order_id = orders.id
       LEFT JOIN master_data_statuses ON transactions.status_paylater_id = master_data_statuses.id
-      WHERE employees.id = ".$staffId."
+      WHERE employees.id = ".$staffId." AND transactions.is_paylater = 1
       ORDER BY transactions.id DESC
     ";
 

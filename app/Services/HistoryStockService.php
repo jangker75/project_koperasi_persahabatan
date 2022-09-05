@@ -19,7 +19,9 @@ class HistoryStockService{
     }else if($mode == "opname"){
       $title = "Stock berkurang dari stock opname kode : " . $params['opnameCode'];
       $type = "deduction";
-
+    }else if($mode == "rejection"){
+      $title = "Penambahan Stock karna pembatalan Order : " . $params['orderCode'] . " dengan jumlah ". $params['qty'];
+      $type = 'induction';
     }
 
     HistoryStock::create([

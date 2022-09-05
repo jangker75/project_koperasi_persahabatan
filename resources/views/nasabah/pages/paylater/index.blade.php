@@ -26,7 +26,7 @@
                         <div class="h4 fw-bold m-0 pb-2">{{ format_uang($paylate->amount) }}</div>
                         <div class="d-flex">
                             <div>{{ $paylate->requestDate }}</div>
-                            <div class="ms-4 btn btn-sm bg-warning text-white fw-bold">{{ $paylate->status }}</div>
+                            <div class="ms-4 btn btn-sm {{ $paylate->statusColor }} text-white fw-bold">{{ $paylate->status }}</div>
                         </div>
                     </div>
                     <div class="button-field">

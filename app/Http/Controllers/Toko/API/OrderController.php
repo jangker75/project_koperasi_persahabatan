@@ -10,6 +10,7 @@ use App\Models\MasterDataStatus;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\PaymentMethod;
+use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Transaction;
 use App\Repositories\EmployeeRepository;
@@ -34,15 +35,17 @@ class OrderController extends Controller
         $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
 
         $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
+        $tax = ApplicationSetting::where('name', 'tax')->first();
         $status = 6;
 
         // order
         $order = Order::create([
           'subtotal' => $subTotalAll,
           'discount' => $request->discount,
-          'total' => $subTotalAll - $request->discount,
+          'total' => $subTotalAll - $request->discount + (int) $tax->content,
           'status_id' => $status,
-          'employee_onduty_id' => $request->employeeOndutyId
+          'employee_onduty_id' => $request->employeeOndutyId,
+          'store_id' => $request->storeId
         ]);
 
         // order detail
@@ -94,13 +97,14 @@ class OrderController extends Controller
               throw new ModelNotFoundException('Data nasabah tidak ditemukan');
           }
 
-          $statusPaylate = MasterDataStatus::where('name', 'approve')->first();
+          $statusPaylate = MasterDataStatus::where('name', 'approved')->first();
 
           $inputTransaksi['is_paid'] = false;
           $inputTransaksi['approval_employee_id'] = $request->employeeOndutyId;
           $inputTransaksi['is_paylater'] = true;
           $inputTransaksi['status_paylater_id'] = $statusPaylate->id;
           $inputTransaksi['requester_employee_id'] = $employee[0]->id;
+          $inputTransaksi['approval_employee_id'] = $employee[0]->id;
           $inputTransaksi['request_date'] = Carbon::now();
         }elseif ($paymentMethod->name !== "paylater" && str($paymentMethod->name)->slug !== "cash") {
           $inputTransaksi['payment_code'] = $request->paymentCode;
@@ -138,7 +142,7 @@ class OrderController extends Controller
     public function orderNasabah(Request $request){
       $calculateService = new OrderService();
       $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
-
+      $tax = ApplicationSetting::where('name', 'tax')->first();
       
       try {
         DB::beginTransaction();
@@ -155,8 +159,9 @@ class OrderController extends Controller
 
         $inputOrder = [
           'subtotal' => $subTotalAll,
-          'total' => $subTotalAll - 0,
-          'status_id' => $status
+          'total' => $subTotalAll - 0 + (int) $tax->content,
+          'status_id' => $status,
+          'store_id' => $request->storeId
         ];
 
         if($request->delivery){
@@ -181,14 +186,38 @@ class OrderController extends Controller
             'qty' => $product['qty'],
             'subtotal' => $productInfo[0]->price*$product['qty']
           ]);
+
+          // update stock
+          $stockNow = Stock::select("qty")
+                            ->where("store_id", $request->storeId)
+                            ->where("product_id", $productInfo[0]->id)
+                            ->first();
+          $stock = Stock::where("store_id", $request->storeId)
+                      ->where("product_id", $productInfo[0]->id)
+                      ->update([
+                        "qty" => $stockNow->qty - $orderDetail->qty
+                      ]);
+
+          // update history stock
+          $history = new HistoryStockService();
+          $history->update("order",[
+            "productId" => $productInfo[0]->id,
+            "qty" => $orderDetail->qty,
+            "orderCode" => $order->order_code
+          ]);
         }
 
+        $employee = Employee::find($request->requesterId);
+        if (!$employee) {
+            throw new ModelNotFoundException('Data nasabah tidak ditemukan');
+        }
         $inputTransaksi = [
             'order_id' => $order->id,
             'amount' => $order->total,
             'status_transaction_id' => $status,
             'payment_method_id' => 1,
-            'is_paid' => false
+            'is_paid' => false,
+            'requester_employee_id' => $employee->id
           ];
 
         if($request->paylater){
@@ -203,7 +232,6 @@ class OrderController extends Controller
           $inputTransaksi['payment_method_id'] = $paymentMethod->id;
           $inputTransaksi['is_paylater'] = true;
           $inputTransaksi['status_paylater_id'] =  $status;
-          $inputTransaksi['requester_employee_id'] = $employee->id;
           $inputTransaksi['request_date'] = Carbon::now();
         }
 
@@ -233,57 +261,101 @@ class OrderController extends Controller
       }
     }
 
-    public function rejectPaylater($orderCode){
+    public function rejectPaylater(Request $request){
       try {
         DB::beginTransaction();
         
-        $order = Order::where('order_code', $orderCode)->first();
+        $order = Order::where('order_code', $request->orderCode)->first();
         $status = MasterDataStatus::where('name', 'failed')->first();
         $statusPaylate = MasterDataStatus::where('name', 'reject')->first();
 
         $order->status = $status->id();
+        $order->employee_onduty_id = $request->employeeOndutyId;
         $order->save();
+
+        foreach ($order->detail as $key => $detail) {
+          $product = Product::where('name', $detail->product_name)->first();
+          // update stocks
+          $stockNow = Stock::select("qty")
+                            ->where("store_id", $order->storeId)
+                            ->where("product_id", $product->id)
+                            ->first();
+          $stock = Stock::where("store_id", $order->storeId)
+                      ->where("product_id", $product->id)
+                      ->update([
+                        "qty" => $stockNow->qty + $detail->qty
+                      ]);
+
+          // update history stocks
+          $history = new HistoryStockService();
+          $history->update("rejection",[
+            "productId" => $product->id,
+            "qty" => $detail->qty,
+            "orderCode" => $order->order_code
+          ]);
+        }
 
         $transaction = $order->transaction;
         $transaction->status_transaction_id = $status->id;
         $transaction->status_paylater_id = $statusPaylate->id;
+        $transaction->approval_employee_id = $request->employeeOndutyId;
+        $transaction->approve_date = Carbon::now();
+
         $transaction->save();
 
         DB::commit();
-        // return response()->json($response, 200);
+        $response['message'] = "Success Tolak Transaksi ini";
+        $response['status'] = "success";
+        return response()->json($response, 200);
       } catch (Exception $e) {
         DB::rollBack();
         $response['message'] = $e->getMessage();
         $response['status'] = "failed";
-        // return response()->json($response, 500);
+        return response()->json($response, 500);
       }
-      $order = Order::where('order_code', $orderCode)->first();
     }
 
-    public function approvePaylater($orderCode){
+    public function checkoutOrder(Request $request){
       try {
         DB::beginTransaction();
         
-        $order = Order::where('order_code', $orderCode)->first();
+        $order = Order::where('order_code', $request->orderCode)->first();
         $status = MasterDataStatus::where('name', 'success')->first();
-        $statusPaylate = MasterDataStatus::where('name', 'approve')->first();
+        $statusPaylate = MasterDataStatus::where('name', 'approved')->first();
 
+        // status order
         $order->status = $status->id();
+        $order->employee_onduty_id = $request->employeeOndutyId;
         $order->save();
 
+        // status order
         $transaction = $order->transaction;
         $transaction->status_transaction_id = $status->id;
         $transaction->status_paylater_id = $statusPaylate->id;
+        $transaction->approval_employee_id = $request->employeeOndutyId;
+        $transaction->approve_date = Carbon::now();
+
+        if($request->paymentMethod){
+          $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
+
+          $transaction->payment_method_id = $paymentMethod->id;
+          $transaction->payment_code = $request->paymentCode;
+        }
+
+        if($transaction->is_paylater == 0 || $transaction->is_paylater == null){
+          $transaction->is_paid = true;
+        }
         $transaction->save();
 
         DB::commit();
-        // return response()->json($response, 200);
+        $response['message'] = "Success Setujui Transaksi ini";
+        $response['status'] = "success";
+        return response()->json($response, 200);
       } catch (Exception $e) {
         DB::rollBack();
         $response['message'] = $e->getMessage();
         $response['status'] = "failed";
-        // return response()->json($response, 500);
+        return response()->json($response, 500);
       }
-      $order = Order::where('order_code', $orderCode)->first();
     }
 }

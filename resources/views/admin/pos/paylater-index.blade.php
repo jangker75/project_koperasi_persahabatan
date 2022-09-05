@@ -17,26 +17,53 @@
                                         <th>Pemohon</th>
                                         <th>Tanggal Pengajuan</th>
                                         <th>Total</th>
+                                        <th>Paylater</th>
+                                        <th>Delivery</th>
+                                        <th>Lunas</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($paylater as $i => $paylate)
+                                    @foreach ($orders as $i => $order)
                                     <tr>
                                         <td>{{ $i+1 }}</td>
-                                        <td>{{ $paylate->orderCode }}</td>
-                                        <td>{{ $paylate->requesterName }}</td>
-                                        <td>{{ $paylate->requestDate }}</td>
-                                        <td>{{ $paylate->amount }}</td>
-                                        <td><span class="badge {{ $paylate->statusColor }}">{{ $paylate->status }}</span></td>
+                                        <td>{{ $order->orderCode }}</td>
+                                        <td>{{ $order->requesterName }}</td>
+                                        <td>{{ $order->requestDate }}</td>
+                                        <td>{{ format_uang($order->total) }}</td>
                                         <td>
-                                            @if ($paylate->status !== "success")
-                                            <button class="btn btn-sm btn-success" data-id="">Setujui</button>
-                                            <button class="btn btn-sm btn-danger" data-id="">Tolak</button>
-                                            @endif
-                                            <a href="{{ route('admin.paylater.detail', $paylate->orderCode) }}" class="btn btn-sm btn-info">Lihat Detail</a>
+                                          @if ($order->isPaylater == 1)
+                                            <div class="btn btn-sm btn-info">Yes</div>
+                                          @else
+                                            <div class="btn btn-sm btn-warning">No</div>
+                                          @endif
                                         </td>
+                                        <td>
+                                          @if ($order->isDelivery == 1)
+                                            <div class="btn btn-sm btn-info">Yes</div>
+                                          @else
+                                            <div class="btn btn-sm btn-warning">No</div>
+                                          @endif
+                                        </td>
+                                        <td>
+                                          @if ($order->isPaid == 1)
+                                            <div class="btn btn-sm btn-success">Lunas</div>
+                                          @else
+                                            <div class="btn btn-sm btn-danger">Belum Lunas</div>
+                                          @endif
+                                        </td>
+                                        <td>
+                                          <div class="btn btn-sm {{ $order->statusOrderColorButton }}">{{ $order->statusOrderName }}</div>
+                                        </td>
+                                        <td>
+                                          @if ($order->statusOrderName !== "success")
+                                            <a href="" class="btn btn-sm btn-danger reject-order">Tolak Order</a>                                            
+                                            <a href="" class="btn btn-sm btn-success approve-order">Terima Order</a>                                            
+                                          @endif
+                                          <a href="{{ route('admin.request-order.detail', $order->orderCode) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
+                                        </td>
+
                                     </tr>
                                     @endforeach
                                 </tbody>

@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\Store;
+use App\Models\Transaction;
 use App\Repositories\PaylaterRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,8 +43,11 @@ class PagesController extends Controller
     }
 
     public function profile(){
-      $employee = Auth::user()->employee;
-      return view("nasabah.pages.profile.index", compact('employee'));
+      $data['employee'] = Auth::user()->employee;
+      $data['totalBill'] = Transaction::where('requester_employee_id', $data['employee']->id)
+                    ->where('is_paid', 0)
+                    ->sum('amount');
+      return view("nasabah.pages.profile.index", $data);
     }
 
     public function paylaterHistory(){

@@ -82,8 +82,8 @@ Route::group([
     // POS
     
     Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);
-    Route::get('pos/paylater', [DashboardController::class, 'paylater'])->name('paylater.index');
-    Route::get('pos/paylater/{orderCode}', [DashboardController::class, 'detailPaylater'])->name('paylater.detail');
+    Route::get('pos/request-order', [DashboardController::class, 'requestOrder'])->name('request-order.index');
+    Route::get('pos/request-order/{orderCode}', [DashboardController::class, 'detailRequestOrder'])->name('request-order.detail');
 
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
