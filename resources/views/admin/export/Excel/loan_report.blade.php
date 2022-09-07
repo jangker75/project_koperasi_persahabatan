@@ -22,7 +22,7 @@
 
 <body>
     <div class="logo-koperasi">
-        <img src="{{ asset('assets/images/logo/logo4.png') }}" width="100px" height="100px" alt="">
+        <img src="{{ asset('assets/images/logo/logo3.png') }}" width="100px" height="100px" alt="">
         <p style="margin-top: 0px">Koperasi Karya Husada</p>
     </div>
     <p style="text-align: center; font-size: 28px; margin-bottom: 70px;">Rekap Pelunasan Pinjaman karyawan</p>
