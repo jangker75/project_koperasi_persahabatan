@@ -87,9 +87,9 @@
                                             <div class="wrap-input100 validate-input input-group" id="Password-toggle">
                                                 <div
                                                     class="input-group-text bg-white text-muted">
-                                                    <i class="zmdi zmdi-eye text-muted" aria-hidden="true"></i>
+                                                    <i class="fa fa-eye text-muted toggle-password" aria-hidden="true" toggle="#password-field"></i>
                                                 </div>
-                                                <input class="input100 border-start-0 form-control ms-0" type="password"
+                                                <input id="password-field" class="input100 border-start-0 form-control ms-0" type="password"
                                                     name="password" placeholder="Password">
                                             </div>
                                             <div class="container-login100-form-btn">
@@ -112,7 +112,17 @@
     </div>
     <!-- BACKGROUND-IMAGE CLOSED -->
     @include('admin.components.script-footer')
-
+    <script>
+        $(".toggle-password").click(function() {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+    </script>
 </body>
 
 </html>
