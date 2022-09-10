@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-6 mb-4">
                     <div class="text-sm mb-2">Tanggal Persetujuan</div>
-                    <div>{{ $order->transaction->approval_date }}</div>
+                    <div>{{ $order->transaction->approve_date }}</div>
                 </div>
                 @if ($order->transaction->is_delivery == 1)
                 <div class="col-12 mb-4">

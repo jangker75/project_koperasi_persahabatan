@@ -191,7 +191,6 @@
             storeId: storeId
         };
 
-        // console.log(prepareData);
 
         if (listCart.length < 1) {
             swal({
@@ -201,37 +200,89 @@
             });
         }
 
-        $.ajax({
-            type: "POST",
-            processData: false,
-            contentType: 'application/json',
-            cache: false,
-            url: "{{ url('api/order-nasabah') }}",
-            data: JSON.stringify(prepareData),
-            dataType: "json",
-            enctype: 'multipart/form-data',
-            success: function (response) {
-                swal({
-                    title: "Sukses",
-                    text: response.message,
-                    type: "success"
-                });
-                
-                sessionStorage.removeItem('cart')
-                sessionStorage.removeItem('total')
-                setTimeout(function () {
-                    window.location.replace("{{ url('/') }}")
-                }, 2500)
-            },
-            error: function (response) {
-              console.log(response)
-                swal({
-                    title: "Gagal",
-                    text: response.responseJSON.message,
-                    type: "error"
-                });
+        if(paylater){
+          swal({
+            title: "Anda yakin?",
+            text: "Order anda akan dimasukan ke dalam paylater",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, lanjutkan order',
+            cancelButtonText: "Tidak, batalkan order",
+            closeOnConfirm: false,
+            closeOnCancel: false
+          }, function(isConfirm) {
+            if (isConfirm) {
+              $.ajax({
+                  type: "POST",
+                  processData: false,
+                  contentType: 'application/json',
+                  cache: false,
+                  url: "{{ url('api/order-nasabah') }}",
+                  data: JSON.stringify(prepareData),
+                  dataType: "json",
+                  enctype: 'multipart/form-data',
+                  success: function (response) {
+                      swal({
+                          title: "Sukses",
+                          text: response.message,
+                          type: "success"
+                      });
+                      
+                      sessionStorage.removeItem('cart')
+                      sessionStorage.removeItem('total')
+                      setTimeout(function () {
+                          window.location.replace("{{ url('/') }}")
+                      }, 2500)
+                  },
+                  error: function (response) {
+                    console.log(response)
+                      swal({
+                          title: "Gagal",
+                          text: response.responseJSON.message,
+                          type: "error"
+                      });
+                  }
+              });
+            } else {
+              swal("Cancelled", "Order dibatalkan", "error");
+              return false;
             }
-        });
+          })
+        }else{
+          $.ajax({
+              type: "POST",
+              processData: false,
+              contentType: 'application/json',
+              cache: false,
+              url: "{{ url('api/order-nasabah') }}",
+              data: JSON.stringify(prepareData),
+              dataType: "json",
+              enctype: 'multipart/form-data',
+              success: function (response) {
+                  swal({
+                      title: "Sukses",
+                      text: response.message,
+                      type: "success"
+                  });
+                  
+                  sessionStorage.removeItem('cart')
+                  sessionStorage.removeItem('total')
+                  setTimeout(function () {
+                      window.location.replace("{{ url('/') }}")
+                  }, 2500)
+              },
+              error: function (response) {
+                console.log(response)
+                  swal({
+                      title: "Gagal",
+                      text: response.responseJSON.message,
+                      type: "error"
+                  });
+              }
+          });
+        }
+
 
         
 

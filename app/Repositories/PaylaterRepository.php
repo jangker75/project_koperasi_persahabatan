@@ -39,7 +39,8 @@ class PaylaterRepository{
         transactions.amount AS amount,
         transactions.request_date AS requestDate,
         master_data_statuses.name AS status,
-        master_data_statuses.color_button as statusColor	
+        master_data_statuses.color_button as statusColor,
+        transactions.is_paid as isPaid
       FROM employees
       LEFT JOIN transactions ON transactions.requester_employee_id = employees.id
       LEFT JOIN orders ON transactions.order_id = orders.id
@@ -76,6 +77,38 @@ class PaylaterRepository{
       LIMIT 100
     ";
 
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
+
+  public static function calculateEmployeePaylater(){
+    $sql = "
+        SELECT 
+          employees.id,
+          CONCAT(employees.first_name, ' ', employees.last_name) AS employeeFullName,
+          employees.nik,
+          departments.name AS departmentName,
+          positions.name AS positionName,
+          master_data_statuses.name AS statusName,
+          COUNT(transactions.requester_employee_id) AS countTransaction,
+          SUM(transactions.amount) AS totalAmount
+        FROM employees
+          LEFT JOIN 
+          (
+            SELECT 
+            *
+            FROM transactions
+            WHERE transactions.is_paylater = 1
+          ) AS transactions
+          ON employees.id = transactions.requester_employee_id
+          LEFT JOIN departments ON employees.department_id = departments.id
+          LEFT JOIN positions ON employees.position_id = positions.id
+          LEFT JOIN master_data_statuses ON employees.status_employee_id = master_data_statuses.id
+        GROUP BY 
+          employees.id,
+          transactions.requester_employee_id
+    ";
     $data = DB::select(DB::raw($sql));
 
     return $data;

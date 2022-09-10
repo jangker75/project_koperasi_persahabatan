@@ -9,14 +9,17 @@ use App\Models\PaymentMethod;
 use App\Models\Store;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaylaterRepository;
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['currentIndex'] = route('admin.dashboard');
     }
     public function index()
@@ -47,5 +50,27 @@ class DashboardController extends BaseAdminController
       $data['tax'] = ApplicationSetting::where('name', 'tax')->first();
       $data['paymentMethod'] = PaymentMethod::where('name', '!=', 'paylater')->get();
       return view('admin.pos.paylater-detail', $data);
+    }
+
+    public function printReceipt($orderCode, Request $request){
+      // $data['cash'] = $request->cash;
+      $data['order'] = Order::where('order_code', $orderCode)->first();
+      $records = DB::table('transactions')->select(DB::raw('*'))
+                  ->whereRaw('Date(transaction_date) = CURDATE()')->get();
+      $data['countBill'] = count($records);
+
+      $pdf = Pdf::loadView('admin.export.PDF.receipt-order', $data)
+      ->setPaper(array( 0 , 0 , 138 , 138 ));
+      $pdf->render();
+
+      $page_count = $pdf->get_canvas()->get_page_number();
+      unset($pdf);
+
+      $pdf = Pdf::setOption(['isJavascriptEnabled' => true, 'defaultFont' => 'sans-serif', 'dpi' => 96])
+                ->loadView('admin.export.PDF.receipt-order', $data)
+                ->setPaper( array( 0 , 0 , 138 , 138 * $page_count + 20 ));
+      
+      return $pdf->stream("kartu_anggota.pdf");    
+      
     }
 }

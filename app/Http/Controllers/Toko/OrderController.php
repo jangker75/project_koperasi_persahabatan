@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
+use App\Models\ApplicationSetting;
+use App\Models\MasterDataStatus;
 use App\Models\Order;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -22,18 +26,22 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $data['order'] = Order::latest()->get();
+        $waiting = MasterDataStatus::where('name', 'waiting')->first();
+        $data['orders'] = Order::where('status_id', '!=', $waiting->id)->latest()->get();
         $data['titlePage'] = "List Order";
         $data['statuses'] = collect(DB::select(DB::raw("SELECT name, description FROM master_data_statuses WHERE master_data_statuses.`type` LIKE '%orders%'")))->toArray();
-
+        
         return view('admin.pages.toko.order.index', $data);
     }
 
-    public function show($id){
+    public function show($orderCode){
       $data = $this->data;
-      $data['order'] = Order::find($id);
+      $data['order'] = Order::where('order_code', $orderCode)->first();
       $data['titlePage'] = "Detail Order ". $data['order']->order_code;
+      $data['employee'] = Auth::user()->employee;
+      $data['tax'] = ApplicationSetting::where('name', 'tax')->first();
+      $data['paymentMethod'] = PaymentMethod::where('name', '!=', 'paylater')->get();
 
-      return view('admin.pages.toko.order.index', $data);
+      return view('admin.pages.toko.order.show', $data);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Toko\PaylaterController;
 use App\Http\Controllers\ApplicationSettingController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Master\MasterDataStatusController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\Nasabah\PagesController;
 use App\Http\Controllers\Nasabah\ProfileController;
 use App\Http\Controllers\Toko\ManagementStockController;
+use App\Http\Controllers\Toko\OrderController;
 use App\Http\Controllers\Toko\OrderSupplierController;
 use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\toko\PrintReceiptController;
@@ -84,6 +86,12 @@ Route::group([
     Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);
     Route::get('pos/request-order', [DashboardController::class, 'requestOrder'])->name('request-order.index');
     Route::get('pos/request-order/{orderCode}', [DashboardController::class, 'detailRequestOrder'])->name('request-order.detail');
+    Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printReceipt'])->name('print-receipt');
+    Route::get('pos/history-order', [OrderController::class, 'index'])->name('order.index');
+    Route::get('pos/history-order/{orderCode}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('pos/history-paylater', [PaylaterController::class, 'index'])->name('paylater.index');
+    Route::get('pos/history-paylater/{staffId}', [PaylaterController::class, 'show'])->name('paylater.show');
+
 
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
@@ -100,7 +108,6 @@ Route::group([
       Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
       Route::resource('management-stock', ManagementStockController::class);
       Route::resource('order-supplier', OrderSupplierController::class);
-      Route::resource('order', OrderControlller::class);
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);

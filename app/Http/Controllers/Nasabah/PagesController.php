@@ -45,14 +45,20 @@ class PagesController extends Controller
     public function profile(){
       $data['employee'] = Auth::user()->employee;
       $data['totalBill'] = Transaction::where('requester_employee_id', $data['employee']->id)
-                    ->where('is_paid', 0)
-                    ->sum('amount');
+                              ->where('is_paid', 0)
+                              ->where('status_transaction_id', 4)
+                              ->sum('amount');
+      $data['totalPaylater'] = Transaction::where('requester_employee_id', $data['employee']->id)
+                              ->where('is_paid', 0)
+                              ->where('is_paylater', 1)
+                              ->sum('amount');
       return view("nasabah.pages.profile.index", $data);
     }
 
     public function paylaterHistory(){
       $data['employee'] = Auth::user()->employee;
       $data['paylater'] = PaylaterRepository::getDataPaylaterFromStaffId(Auth::user()->employee->id);
+      // dd($data);
       return view("nasabah.pages.paylater.index", $data);
     }
 

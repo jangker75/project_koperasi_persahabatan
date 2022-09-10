@@ -42,6 +42,16 @@ class CmsMenuSeeder extends Seeder
                 'url' => 'admin/pos/request-order', 
                 'icon' => 'fa fa-money', 
         ]);
+        CmsMenu::create([
+                'name' => 'History Order',
+                'url' => 'admin/pos/history-order', 
+                'icon' => 'fa fa-shopping-cart', 
+        ]);
+        CmsMenu::create([
+                'name' => 'History Paylater',
+                'url' => 'admin/pos/history-paylater', 
+                'icon' => 'fa fa-credit-card', 
+        ]);
         
 
         // Kelola Toko Menu

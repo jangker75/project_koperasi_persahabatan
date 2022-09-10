@@ -14,7 +14,7 @@ class Transaction extends Model
       'status_transaction_id', 'status_paylater_id', 'transaction_date',
       'type', 'payment_method_id',  'payment_code', 'requester_employee_id',
       'is_delivery', 'delivery_fee', 'is_paid', 'approval_employee_id', 
-      'request_date', 'approve_date', 'evidance'
+      'request_date', 'approve_date', 'evidance', 'cash', 'change'
     ];
     
     public function requester(){
@@ -23,5 +23,9 @@ class Transaction extends Model
 
     public function statusPaylater(){
       return $this->belongsTo(MasterDataStatus::class, "status_paylater_id");
+    }
+
+    public function statusTransaction(){
+      return $this->belongsTo(MasterDataStatus::class, 'status_transaction_id');
     }
 }

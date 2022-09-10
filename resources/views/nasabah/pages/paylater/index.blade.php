@@ -15,7 +15,7 @@
             <div class="card-title">Riwayat Paylater <strong class="fw-bold">{{ $employee->full_name }}</strong></div>
         </div>
         <div class="card-body p-2">
-            @if ($paylater[0]->order_code == null)
+            @if ($paylater == null)
               <div class="w-100 border text-center h4" style="background-color: #dbdbdb;">Belum ada riwayat paylater</div>
             @else
               @foreach ($paylater as $paylate)

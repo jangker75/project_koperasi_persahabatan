@@ -28,6 +28,7 @@
         body {
             background-color: #ddd;
         }
+        
 
         .navbar-nasabah {
             background-color: #343584;
@@ -45,7 +46,7 @@
     <!-- PAGE -->
     <div>
         <div class="container">
-            <div class="row">
+            <div class="row" style="min-height: 100vh;">
                 @if (Request::segment(1) == "product" || Request::segment(1) == null)
                 <div class="col-12 col-md-4 offset-md-4 p-0">
                     @include('nasabah.layout.navbar')

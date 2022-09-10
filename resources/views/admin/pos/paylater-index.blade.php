@@ -5,6 +5,9 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title fw-bold">{{ str("list Paylater")->title() }}</h3>
+                    <div class="card-options">
+                      <a href="{{ route('admin.request-order.index') }}" class="btn btn-primary">Refresh <i class="fa fa-refresh    "></i></a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="w-100">
@@ -57,13 +60,11 @@
                                           <div class="btn btn-sm {{ $order->statusOrderColorButton }}">{{ $order->statusOrderName }}</div>
                                         </td>
                                         <td>
-                                          @if ($order->statusOrderName !== "success")
-                                            <a href="" class="btn btn-sm btn-danger reject-order">Tolak Order</a>                                            
-                                            <a href="" class="btn btn-sm btn-success approve-order">Terima Order</a>                                            
-                                          @endif
                                           <a href="{{ route('admin.request-order.detail', $order->orderCode) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
+                                          @if ($order->statusOrderName == "success")
+                                            <a href="{{ route('admin.print-receipt', $order->orderCode) }}" target="_blank" data-code="{{ $order->orderCode }}" class="btn btn-sm btn-info reject-order print-order"><i class="fa fa-print"></i></a>                                           
+                                          @endif
                                         </td>
-
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -82,96 +83,6 @@
     <script>
         $(document).ready(function () {
             $("#datatable").DataTable();
-
-            $("#showModal").click(function () {
-                $("#storeForm")[0].reset();
-                $("#displayImage").hide();
-            })
-
-            $('.btn-detail').click(function () {
-                let id = $(this).attr('id');
-
-                $("#method").val('put')
-                $("#id").val(id)
-
-                $.ajax({
-                    type: "GET",
-                    url: "{{ url('api/supplier') }}/" + id,
-                    dataType: "json",
-                    success: function (response) {
-                        console.log(response)
-                        $("input[name='name']").val(response.data.name)
-                        $("input[name='contact_name']").val(response.data.contact_name)
-                        $("input[name='contact_address']").val(response.data.contact_address)
-                        $("input[name='contact_phone']").val(response.data.contact_phone)
-                        $("input[name='contact_link']").val(response.data.contact_link)
-                        
-                        $('#modalStore').modal('show')
-                    },
-                    error: function (response) {
-
-                    }
-                });
-
-            })
-
-
-            // input image
-            $('.dropify').dropify({
-                messages: {
-                    'default': 'Drag and drop a file here or click',
-                    'replace': 'Drag and drop or click to replace',
-                    'remove': 'Remove',
-                    'error': 'Ooops, something wrong appended.'
-                },
-                error: {
-                    'fileSize': 'The file size is too big (2M max).'
-                }
-            });
-
-            // send store / update
-            $("#storeForm").submit(function (e) {
-                // e.preventDefault()
-                let name = $(this).find('input').val();
-                let formData = new FormData(this);
-
-                let method = $('#method').val();
-                let url = "";
-                if (method == "store") {
-                    url = "{{ url('api/supplier') }}"
-                } else {
-                    let ids = $(this).find("input[name='id']").val()
-                    url = "{{ url('api/supplier') }}/" + ids;
-                }
-                $.ajax({
-                    type: "POST",
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    url: url,
-                    data: formData,
-                    dataType: "json",
-                    enctype: 'multipart/form-data',
-                    success: function (response) {
-                        swal({
-                            title: "Success!",
-                            text: response.message,
-                            type: "success"
-                        });
-                        // getTable()
-                        $("#modalStore").modal('hide')
-                    },
-                    error: function (response) {
-                        swal({
-                            title: "Failed!",
-                            text: response.message,
-                            type: "failed"
-                        });
-                        $("#modalStore").modal('hide')
-                    }
-                });
-
-            })
         })
 
     </script>

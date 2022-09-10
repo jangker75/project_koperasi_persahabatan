@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -21,9 +22,11 @@ return new class extends Migration
             $table->boolean('is_paylater')->default(0);
             $table->integer('status_transaction_id')->default(4);
             $table->integer('status_paylater_id')->nullable();
-            $table->datetime('transaction_date')->default(Carbon::now());
+            $table->datetime('transaction_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->enum("type", ["in", "out"])->default('in');
             $table->integer("payment_method_id")->default(1);
+            $table->integer("cash")->nullable();
+            $table->integer("change")->nullable();
             $table->string("payment_code")->nullable();
             $table->integer("requester_employee_id")->nullable();
             $table->integer("approval_employee_id")->nullable();

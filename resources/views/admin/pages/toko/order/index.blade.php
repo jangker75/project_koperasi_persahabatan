@@ -4,46 +4,64 @@
         <div class="col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Data Order</div>
-                    {{-- <div class="card-options">
-                        <a href="{{ route('admin.order.create') }}" class="btn btn-primary btn-sm">Buat Order +</a>
-                    </div> --}}
+                    <h3 class="card-title fw-bold">{{ str("list History Order")->title() }}</h3>
+                    <div class="card-options">
+                      <a href="{{ route('admin.request-order.index') }}" class="btn btn-primary">Refresh <i class="fa fa-refresh    "></i></a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="w-100">
                         <div class="table-responsive">
-                            <table class="table w-100 " id="datatable2">
-                                <thead class="table-success fw-bold text-uppercase">
-                                    <th>No</th>
-                                    <th>Order Kode</th>p
-                                    <th>Tanggal</th>
-                                    <th>Tujuan Toko</th>
-                                    <th>Pegawai</th>
-                                    <th>Requester</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                            <table class="table table-bordered" id="datatable">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode Order</th>
+                                        <th>Total</th>
+                                        <th>Tanggal</th>
+                                        <th>Paylater</th>
+                                        <th>Delivery</th>
+                                        <th>Lunas</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($orderSupplier as $i => $order)
+                                    @foreach ($orders as $i => $order)
                                     <tr>
                                         <td>{{ $i+1 }}</td>
-                                        <td>{{ $order->order_supplier_code }}</td>
-                                        <td>{{ $order->supplier->name }}</td>
-                                        <td>{{ $order->toStore->name }}</td>
+                                        <td>{{ $order->order_code }}</td>
+                                        <td>{{ format_uang($order->total) }}</td>
                                         <td>{{ $order->order_date }}</td>
-                                        <td>{{ $order->req_empl_id }}</td>
                                         <td>
-                                            
-                                            <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
-                                                data-placement="top" title="Edit Data Transfer Stock">Detail Transfer Stock <i
-                                                    class="fe fe-edit"></i></a>
-                                            <form action="{{ route('admin.order.destroy', $order->id) }}"
-                                                class="d-inline" method="post">
-                                                @csrf @method('delete')
-                                            </form>
-                                            <button type="submit" class="btn btn-danger btn-sm delete-button me-1"
-                                                data-toggle="tooltip" data-placement="top" title="Hapus Transfer Stock">Hapus Data <i
-                                                    class="fe fe-trash-2"></i></button>
+                                          @if ($order->transaction->is_paylater == 1)
+                                            <div class="btn btn-sm btn-info">Yes</div>
+                                          @else
+                                            <div class="btn btn-sm btn-warning">No</div>
+                                          @endif
+                                        </td>
+                                        <td>
+                                          @if ($order->transaction->is_delivery == 1)
+                                            <div class="btn btn-sm btn-info">Yes</div>
+                                          @else
+                                            <div class="btn btn-sm btn-warning">No</div>
+                                          @endif
+                                        </td>
+                                        <td>
+                                          @if ($order->transaction->is_paid == 1)
+                                            <div class="btn btn-sm btn-success">Lunas</div>
+                                          @else
+                                            <div class="btn btn-sm btn-danger">Belum Lunas</div>
+                                          @endif
+                                        </td>
+                                        <td>
+                                          <div class="btn btn-sm {{ $order->status->color_button}}">{{ $order->status->name }}</div>
+                                        </td>
+                                        <td>
+                                          <a href="{{ route('admin.order.show', $order->order_code) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
+                                          @if ($order->status->name == "success")
+                                            <a href="{{ route('admin.print-receipt', $order->order_code) }}" target="_blank" data-code="{{ $order->order_code}}" class="btn btn-sm btn-info reject-order print-order"><i class="fa fa-print"></i></a>                                           
+                                          @endif
                                         </td>
                                     </tr>
                                     @endforeach
@@ -55,49 +73,14 @@
             </div>
         </div>
     </div>
-
-
     <x-slot name="scriptVendor">
         <script src="{{ asset('/assets/plugins/fileuploads/js/fileupload.js') }}"></script>
-        <script src="{{ asset('../assets/plugins/select2/select2.full.min.js') }}"></script>
     </x-slot>
 
     @slot('script')
     <script>
         $(document).ready(function () {
-            let originStore;
-            let listProduk;
-
             $("#datatable").DataTable();
-            $("#datatable2").DataTable();
-
-            $('.select2').select2({
-                minimumResultsForSearch: '',
-                width: '100%'
-            });
-            $("body").on("click", ".addRows", function () {
-                let element = $(this).closest(".rowList").html();
-                element = `<tr class="rowList">` + element + `</tr>`;
-                $("#bodyTable").append(element);
-            })
-            $("body").on("click", ".deleteRows", function () {
-                var numItems = $('.rowList').length;
-                if (numItems > 1) {
-                    $(this).closest(".rowList").remove();
-                }
-            })
-
-            $("select[name='originStore']").change(function () {
-                let value = $(this).val();
-                originStore = value;
-            })
-
-            $(".product-list").keyup(function () {
-                let value = $(this).val()
-                if (value > 4) {
-                    $(this).closest(".card-search-product").toggle();
-                }
-            })
         })
 
     </script>

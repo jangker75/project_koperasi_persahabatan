@@ -30,8 +30,10 @@ class OrderRepository{
       LEFT JOIN master_data_statuses statusOrder ON transactions.status_transaction_id = statusOrder.id
       LEFT JOIN master_data_statuses statusPaylater ON transactions.status_paylater_id = statusPaylater.id
       LEFT JOIN employees ON transactions.requester_employee_id = employees.id
-      WHERE transactions.requester_employee_id IS NOT NULL
-      ORDER BY orders.order_date DESC
+      WHERE 
+        transactions.requester_employee_id IS NOT NULL AND
+        transactions.status_transaction_id = 4
+      ORDER BY transactions.transaction_date DESC, orders.id DESC
       LIMIT 100
     ";
 

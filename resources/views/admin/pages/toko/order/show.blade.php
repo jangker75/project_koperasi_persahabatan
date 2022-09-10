@@ -1,113 +1,371 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
-
-    <div class="row row-sm">
-        <div class="col-lg-12 col-xl-12">
+    <div class="row">
+        <div class="col-1">
+            <a href="{{ route('admin.request-order.index') }}" class="btn btn-danger">back</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-7 p-4">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Data Order Supplier</div>
-                    <div class="card-options">
-                        <a href="{{ route('admin.order-supplier.edit', $orderSupplier->id) }}"
-                            class="btn btn-warning btn-sm">Edit Data Request</a>
-                        @if ($orderSupplier->status_id == 3)
-                        <a href="{{ url('admin/toko/confirm-ticket-transfer-stock/' . $orderSupplier->id) }}" class="btn btn-info btn-sm ms-2">Konfirmasi Tiket Order Supplier</a>
-                        @else
-                        <a href="javascript:void(0)" class="btn btn-info btn-sm ms-2">Konfirmasi Ketersediaan Produk</a>
-                        <a href="javascript:void(0)" class="btn btn-info btn-sm ms-2">Konfirmasi Penerimaan Produk</a>
-                        <a href="javascript:void(0)" class="btn btn-success btn-sm ms-2">Print Data Order Supplier</a>
-                        @endif
-                        <form action="{{ route('admin.order-supplier.destroy', $orderSupplier->id) }}" class="d-inline"
-                            method="post">
-                            @csrf @method('delete')
-                        </form>
-                        <button type="submit" class="btn btn-danger btn-sm delete-button ms-2" data-toggle="tooltip"
-                            data-placement="top" title="Hapus Order Supplier">Hapus Data <i
-                                class="fe fe-trash-2"></i></button>
+                    <div class="card-title">
+                        Detail Paylater
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="w-100 mb-4">
-                        <div class="table-responsive">
-                            <table class="table w-100 table-striped" id="datatable">
-                                <tbody>
-                                    <tr>
-                                        <td>Order Supplier Kode</td>
-                                        <td>:</td>
-                                        <td>{{ $orderSupplier->order_supplier_code }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Dari Toko Supplier</td>
-                                        <td>:</td>
-                                        <td>{{ $orderSupplier->supplier->name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tujuan Toko</td>
-                                        <td>:</td>
-                                        <td>{{ $orderSupplier->ToStore->name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Request By</td>
-                                        <td>:</td>
-                                        <td>{{ $orderSupplier->Requester->getFullNameAttribute() }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Request Time</td>
-                                        <td>:</td>
-                                        <td>{{ $orderSupplier->order_date}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Status</td>
-                                        <td>:</td>
-                                        <td>
-                                            <div class="btn btn-warning">{{ $orderSupplier->Status->name }}</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="card-body py-2">
+                    <div class="table-responsive">
+                        <table class="table table-borderless text-nowrap mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">Nama Pemohon</td>
+                                    <td class="text-end"><span
+                                            class="fw-bold ms-auto">{{ $order->transaction->requester->full_name }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Tanggal Pemohonan</td>
+                                    <td class="text-end"><span
+                                            class="fw-bold">{{ $order->transaction->transaction_date }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Paylater</td>
+                                    <td class="text-end">
+                                        @if ($order->transaction->is_paylater == 1)
+                                        <div class="btn btn-sm btn-info">Yes</div>
+                                        @else
+                                        <div class="btn btn-sm btn-warning">No</div>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Delivery</td>
+                                    <td class="text-end">
+                                        @if ($order->transaction->is_delivery == 1)
+                                        <div class="btn btn-sm btn-info">Yes</div>
+                                        @else
+                                        <div class="btn btn-sm btn-warning">No</div>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Pelunasan</td>
+                                    <td class="text-end">
+                                        @if ($order->transaction->is_paid == 1)
+                                        <div class="btn btn-sm btn-success">Lunas</div>
+                                        @else
+                                        <div class="btn btn-sm btn-danger">Belum Lunas</div>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @if ($order->transaction->is_paylater == 1)
+                                <tr>
+                                    <td class="text-start">Status Paylater</td>
+                                    <td class="text-end">
+                                        <div class="btn {{ $order->transaction->statusPaylater->color_button }}">
+                                            {{ $order->transaction->statusPaylater->name }}
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endif
+                                @if ($order->transaction->is_delivery == 1)
+                                <tr>
+                                    <td class="text-start">Catatan Antar</td>
+                                    <td class="text-end">
+                                        <textarea name="" id="" class="form-control" rows="3"
+                                            readonly>{{ $order->note }}</textarea>
+                                    </td>
+                                </tr>
+                                @endif
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="w-100 border">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead class="table-success fw-bold text-uppercase">
-                                    <th>No</th>
-                                    <th>Produk Name</th>
-                                    <th>Jumlah diminta</th>
-                                    <th>Jumlah tersedia</th>
-                                    <th>Jumlah diterima</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($orderSupplier->detailItem as $i => $item)
-                                    <tr>
-                                        <td>{{ $i+1 }}</td>
-                                        <td>{{ $item->product->name }}</td>
-                                        <td>{{ $item->request_qty }}</td>
-                                        <td>{{ $item->available_qty }}</td>
-                                        <td>{{ $item->receive_qty }}</td>
-                                    </tr>
-                                    @endforeach
-                                    <tr></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                </div>
+            </div>
+            <div class="card cart">
+                <div class="card-header">
+                    <h3 class="card-title">Detail Pesanan</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-vcenter">
+                            <thead class="table-primary">
+                                <tr class="border-top">
+                                    <th>Title</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyCart">
+                                @foreach ($order->detail as $detail)
+                                <tr>
+                                    <td>{{ $detail->product_name }}</td>
+                                    <td>{{ format_uang($detail->price)  }}</td>
+                                    <td>{{ $detail->qty }}</td>
+                                    <td>{{ format_uang($detail->subtotal) }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-5 p-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Total Harga</div>
+                </div>
+                <div class="card-body py-2">
+                    <div class="table-responsive">
+                        <table class="table table-borderless text-nowrap mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">Sub Total</td>
+                                    <td class="text-end"><span class="fw-bold  ms-auto"
+                                            id="subtotalAll">{{ format_uang($order->subtotal) }}</span>
+                                    </td>
+                                </tr>
+                                @if ($order->transaction->is_delivery == 1)
+                                <tr>
+                                    <td class="text-start">Ongkos Kirim</td>
+                                    <td class="text-end">{{ format_uang($order->transaction->delivery_fee) }}</td>
+                                </tr>
+                                @endif
+                                <tr>
+                                    <td class="text-start">Tax</td>
+                                    <td class="text-end">{{ format_uang($order->transaction->delivery_fee) }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Additional Discount</td>
+                                    <td class="text-end">
+                                        <input type="text" name="discount" id="discount" placeholder="0"
+                                            class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start fs-18">Total Bill</td>
+                                    <td class="text-end"><span class="ms-2 fw-bold fs-23"
+                                            id="total">{{ format_uang($order->total) }}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @if ($order->transaction->is_paylater == 0 || $order->transaction->is_paylater == null)
+                        @if($order->transaction->statusTransaction->name == "waiting")
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="form-group">
+                                    <label for="">Pilih Metode Pembayaran</label><br>
+                                    <select class="form-select w-100" aria-label="Default select example"
+                                        name="payment_method" id="paymentMethod" value="1">
+                                        @foreach ($paymentMethod as $payment)
+                                        <option value="{{ $payment->name }}">{{ $payment->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="list-group-item" id="cash">
+                                <div class="form-group">
+                                    <label for="">Masukan Jumlah Uang Cash</label><br>
+                                    <input type="text" name="cash" id="cashInput" class="form-control format-uang"
+                                        placeholder="Rp 50.000">
+                                </div>
+                            </li>
+                            <li class="list-group-item" id="paymentCode">
+                                <div class="form-group">
+                                    <label for="">Masukan Kode Pembayaran</label><br>
+                                    <input type="text" name="payment_code" id="paymentCodeInput" class="form-control"
+                                        placeholder="81723......">
+                                </div>
+                            </li>
+                        </ul>
+                        @endif
+                        @endif
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-end">
+                        @if ($order->status->name == "success")
+                        <a href="{{ route('admin.print-receipt', $order->order_code) }}" target="_blank"
+                            class="btn btn-info ms-2">Print Order <i class="fa fa-print"></i></a>
+                        @elseif ($order->status->name == "failed")
+                        <button class="btn btn-danger ms-2">Request ini dibatalkan</button>
+                        @else
+                        <button id="rejectButton" class="btn btn-danger">Reject Order</button>
+                        <button id="submitButton" class="btn btn-success ms-2">Checkout Order</button>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <x-slot name="style">
+        <style>
+            .select2-results__options {
+                offset: hidden;
+            }
 
+            .select2-container {
+                width: 100% !important;
+            }
 
-    <x-slot name="scriptVendor">
-        <script src="{{ asset('/assets/plugins/fileuploads/js/fileupload.js') }}"></script>
-        <script src="{{ asset('../assets/plugins/select2/select2.full.min.js') }}"></script>
+        </style>
     </x-slot>
 
-    @slot('script')
-    <script>
-        $(document).ready(function () {
-            
-        })
+    <x-slot name="script">
+        <script>
+            $(document).ready(function () {
+                let discount = 0;
+                let paymentCode = "";
+                let cash = "0";
+                let subtotal = parseInt('{{ $order->subtotal }}');
+                let total = parseInt('{{ $order->total }}');
+                let orderCode = '{{ $order->order_code }}';
+                let employeeOndutyId = '{{ Auth::user()->employee->id }}'
 
-    </script>
-    @endslot
+                $('#paymentCode').hide();
+                $('#paymentMethod').val("{{ $paymentMethod[0]->name }}")
+
+                $('#paymentMethod').change(function () {
+
+                    if ($(this).val() == 'cash') {
+                        $('#paymentCode').hide()
+                        $('#cash').show()
+                    } else {
+                        $('#paymentCode').show()
+                        $('#cash').hide()
+                    }
+                })
+
+                $("#discount").keyup(function () {
+                    if (subtotal - $(this).val() > -1) {
+                        discount = $(this).val()
+                        total = subtotal - discount
+                        $("#total").html("Rp " + formatRupiah(String(total)))
+                    } else {
+                        swal({
+                            title: "Gagal",
+                            text: "Discount yang dimasukan tidak boleh melampaui harga",
+                            type: "error"
+                        });
+                    }
+                })
+
+                $("body").on("keyup", "#paymentCodeInput", function () {
+                    paymentCode = $(this).val()
+                })
+                $('body').on("keyup", "#cashInput", function () {
+                    cash = $(this).val()
+                })
+
+                $('#rejectButton').click(function () {
+                    let dataReject = {
+                        orderCode: orderCode,
+                        employeeOndutyId: employeeOndutyId
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        processData: false,
+                        contentType: 'application/json',
+                        cache: false,
+                        url: "{{ url('/api/reject-order') }}",
+                        data: JSON.stringify(dataReject),
+                        dataType: "json",
+                        enctype: 'multipart/form-data',
+                        success: function (response) {
+                            if (response.status) {
+                                swal({
+                                    title: "Sukses",
+                                    text: response.message,
+                                    type: "success"
+                                });
+                            }
+                            if (response.print == true) {
+                                // let cash = $("#cash").val();
+                                window.open('{{ url("admin/pos/print-receipt" ) }}/' +
+                                    response.order.order_code, '_blank');
+                            }
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000)
+                        },
+                        error: function (response) {
+                            console.log(response)
+                            swal({
+                                title: "Gagal",
+                                text: response.responseJSON.message,
+                                type: "error"
+                            });
+                        }
+                    });
+                })
+
+                $('#submitButton').click(function () {
+                    let dataValue = {
+                        orderCode: orderCode,
+                        employeeOndutyId: employeeOndutyId,
+                        paymentMethod: $('#paymentMethod').val(),
+                        discount: discount,
+                        cash: cash
+                    }
+
+                    if ($('#paymentMethod').val() == 'cash') {
+                        setCash = parseInt(cash.replace(".", ""));
+                        if (setCash < total) {
+                            swal({
+                                title: "Gagal",
+                                text: "Cash harus lebih dari total harga",
+                                type: "error"
+                            });
+                            return false;
+                        }
+                        dataValue.cash = setCash
+
+                    } else {
+                        dataValue.paymentCode = paymentCode
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        processData: false,
+                        contentType: 'application/json',
+                        cache: false,
+                        url: "{{ url('/api/checkout-order') }}",
+                        data: JSON.stringify(dataValue),
+                        dataType: "json",
+                        enctype: 'multipart/form-data',
+                        success: function (response) {
+                            console.log(response)
+                            if (response.status) {
+                                swal({
+                                    title: "Sukses",
+                                    text: response.message,
+                                    type: "success"
+                                });
+                            }
+                            if (response.print == true) {
+                                let cash = $("#cash").val();
+                                // window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order.order_code + "?cash="+cash, '_blank');
+                            }
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000)
+                        },
+                        error: function (response) {
+                            console.log(response)
+                            swal({
+                                title: "Gagal",
+                                text: response.responseJSON.message,
+                                type: "error"
+                            });
+                        }
+                    });
+                })
+            })
+
+        </script>
+    </x-slot>
 </x-admin-layout>

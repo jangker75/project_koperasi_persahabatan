@@ -35,6 +35,8 @@ Route::resource('brand', BrandController::class);
 Route::resource('supplier', SupplierController::class);
 Route::resource('order', OrderController::class);
 Route::post("order-nasabah", [OrderController::class, "orderNasabah"]);
+Route::post('reject-order', [OrderController::class, 'rejectOrder']);
+Route::post('checkout-order', [OrderController::class, 'checkoutOrder']);
 // Render Jquery DataTable Editable
 Route::post('jquery-data-editable', [JqueryEditableController::class, 'renderTable']);
 Route::post('search-employee', [EmployeeController::class, 'findEmployee']);

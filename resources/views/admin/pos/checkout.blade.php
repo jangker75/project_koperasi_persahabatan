@@ -48,11 +48,12 @@
                 </div>
             </div>
             <div class="card">
-                <div class="card-body p-3">
+                <div class="card-body p-3 position-relative">
                     <input type="text" name="scanbarcode" autofocus id="scanBarcode"
                         class="form-control form-control-lg border border-primary" placeholder="Masukan Kode SKU atau nama Produk">
                     <div id="scanBarcodeHelp" class="form-text">Scan Barcode atau Ketik Kode SKU Barang untuk menambah
                         barang atau menambah quantity.</div>
+                    <div class="position-absolute border w-75 bg-white"></div>
                 </div>
             </div>
             <div class="card">
@@ -150,6 +151,7 @@
             let discount = 0;
             let total = 0;
             let orderBy = "pos";
+            let cash = "0";
             $(document).ready(function () {
                 
                 $("#storeId").val("{{ $stores[0]->id }}");
@@ -195,6 +197,9 @@
                 })
                 $("body").on("keyup", "#paymentCodeInput", function () {
                     paymentCode = $(this).val()
+                })
+                $('body').on("keyup", "#cashInput", function () {
+                    cash = $(this).val()
                 })
 
                 $('#mySelect2').select2({
@@ -355,6 +360,7 @@
                         text: "Belum ada produk yang ditambahkan",
                         type: "error"
                     });
+                    return false;
                 }
                 let checkoutValue = {
                     item: productInCart,
@@ -368,9 +374,19 @@
                     checkoutValue.paylater = $("#mySelect2").val()
                 } else if ($('#paymentMethod').val() !== 'cash' && $('#paymentMethod').val() !== 'paylater') {
                     checkoutValue.paymentCode = paymentCode
+                } else{
+                  // setCash = parseInt(cash.replace(".",""));
+                  setCash = parseInt(cash.split(".").join(''));
+                  if(setCash < total){
+                    swal({
+                        title: "Gagal",
+                        text: "Cash harus lebih dari total harga",
+                        type: "error"
+                    });
+                    return false;
+                  }
+                  checkoutValue.cash = setCash;
                 }
-
-                // console.log(checkoutValue)
 
                 $.ajax({
                     type: "POST",
@@ -391,7 +407,7 @@
                         }
                         if (response.print == true) {
                             let cash = $("#cash").val();
-                            // window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order.order_code + "?cash="+cash, '_blank');
+                            window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order.order_code, '_blank');
                         }
                         setTimeout(function () {
                             location.reload();

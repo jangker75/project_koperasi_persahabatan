@@ -80,6 +80,10 @@
                         <span>Total Tagihan</span>
                         <span>{{ format_uang($totalBill) }}</span>
                       </div>
+                      <div class="border d-flex justify-content-between align-items-center">
+                        <span>Total Paylater</span>
+                        <span>{{ format_uang($totalPaylater) }}</span>
+                      </div>
                     </div>
                 </div>
             </div>

@@ -87,7 +87,8 @@ class OrderController extends Controller
           'order_id' => $order->id,
           'amount' => $order->total,
           'status_transaction_id' => $status,
-          'payment_method_id' => $paymentMethod->id
+          'payment_method_id' => $paymentMethod->id,
+          'is_paid' => true
         ];
 
         if(str($paymentMethod->name)->slug == "paylater"){
@@ -104,9 +105,16 @@ class OrderController extends Controller
           $inputTransaksi['is_paylater'] = true;
           $inputTransaksi['status_paylater_id'] = $statusPaylate->id;
           $inputTransaksi['requester_employee_id'] = $employee[0]->id;
-          $inputTransaksi['approval_employee_id'] = $employee[0]->id;
+          $inputTransaksi['approval_employee_id'] = $request->employeeOndutyId;
+          $inputTransaksi['is_paid'] = false;
+          $inputTransaksi['approve_date'] = Carbon::now();
           $inputTransaksi['request_date'] = Carbon::now();
+        }elseif(str($paymentMethod->name)->slug == "cash"){
+          $inputTransaksi['cash'] = (int) $request->cash;
+          $inputTransaksi['change'] = (int) $request->cash - $order->total;
         }elseif ($paymentMethod->name !== "paylater" && str($paymentMethod->name)->slug !== "cash") {
+          $inputTransaksi['cash'] = $order->total;
+          $inputTransaksi['change'] = 0;
           $inputTransaksi['payment_code'] = $request->paymentCode;
         }
 
@@ -261,7 +269,7 @@ class OrderController extends Controller
       }
     }
 
-    public function rejectPaylater(Request $request){
+    public function rejectOrder(Request $request){
       try {
         DB::beginTransaction();
         
@@ -269,18 +277,17 @@ class OrderController extends Controller
         $status = MasterDataStatus::where('name', 'failed')->first();
         $statusPaylate = MasterDataStatus::where('name', 'reject')->first();
 
-        $order->status = $status->id();
+        $order->status_id = $status->id;
         $order->employee_onduty_id = $request->employeeOndutyId;
         $order->save();
 
         foreach ($order->detail as $key => $detail) {
           $product = Product::where('name', $detail->product_name)->first();
           // update stocks
-          $stockNow = Stock::select("qty")
-                            ->where("store_id", $order->storeId)
+          $stockNow = Stock::where("store_id", $order->store_id)
                             ->where("product_id", $product->id)
                             ->first();
-          $stock = Stock::where("store_id", $order->storeId)
+          $stock = Stock::where("store_id", $order->store_id)
                       ->where("product_id", $product->id)
                       ->update([
                         "qty" => $stockNow->qty + $detail->qty
@@ -318,28 +325,46 @@ class OrderController extends Controller
     public function checkoutOrder(Request $request){
       try {
         DB::beginTransaction();
-        
+        // dd($request->all());
         $order = Order::where('order_code', $request->orderCode)->first();
         $status = MasterDataStatus::where('name', 'success')->first();
-        $statusPaylate = MasterDataStatus::where('name', 'approved')->first();
+        $statusPaylater = MasterDataStatus::where('name', 'approved')->first();
 
         // status order
-        $order->status = $status->id();
+        $order->status_id = $status->id;
         $order->employee_onduty_id = $request->employeeOndutyId;
         $order->save();
 
         // status order
         $transaction = $order->transaction;
         $transaction->status_transaction_id = $status->id;
-        $transaction->status_paylater_id = $statusPaylate->id;
         $transaction->approval_employee_id = $request->employeeOndutyId;
         $transaction->approve_date = Carbon::now();
 
-        if($request->paymentMethod){
-          $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
+        if($transaction->is_paylater == 0){
+          if(!$request->paymentMethod){
+            throw new ModelNotFoundException('User belum menginput metode Pembayaran');
+          }
+          if($request->paymentMethod !== "cash"){
+            $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
+  
+            if($request->paymentCode == "" || !$request->paymentCode){
+              throw new ModelNotFoundException('User belum menginput Kode Pembayaran');
+            }
+            $transaction->payment_method_id = $paymentMethod->id;
+            $transaction->payment_code = $request->paymentCode;
 
-          $transaction->payment_method_id = $paymentMethod->id;
-          $transaction->payment_code = $request->paymentCode;
+            $transaction->cash = $order->total;
+            $transaction->change = 0;
+          }else{
+            $transaction->cash = $request->cash;
+            $transaction->change = $request->cash - $order->total;
+          }
+          (new CompanyService())->addCreditBalance($transaction->amount, 'store_balance', $request->paymentMethod);
+        }
+
+        if($transaction->is_paylater == 1){
+          $transaction->status_paylater_id = $statusPaylater->id;
         }
 
         if($transaction->is_paylater == 0 || $transaction->is_paylater == null){
