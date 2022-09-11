@@ -229,4 +229,10 @@ class ManagementStockController extends BaseAdminController
       HistoryTransferStockService::update('Ordering', $id);
       return redirect()->back();
     }
+
+    public function rejectTicket($id){
+      $transferStock = TransferStock::find($id);
+      HistoryTransferStockService::update("reject", $id);
+      return redirect()->back();
+    }
 }

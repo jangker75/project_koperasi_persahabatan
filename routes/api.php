@@ -49,3 +49,4 @@ Route::get('product-by-sku', [ProductController::class, "searchProductBySKU"]);
 // transfer stock
 Route::get('transfer-stock-items/{id}', [TransferStockController::class, 'getDetailById']);
 Route::post('transfer-stock-confirm', [TransferStockController::class, 'confirmStock']);
+Route::post('transfer-stock-receive', [TransferStockController::class, 'receiveStock']);

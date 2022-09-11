@@ -140,126 +140,6 @@
               
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Kelola Data Supplier</div>
-                </div>
-                <div class="card-body">
-                    <div class="panel panel-primary">
-                        <div class="tab-menu-heading">
-                            <div class="tabs-menu">
-                                <!-- Tabs -->
-                                <ul class="nav panel-tabs">
-                                    <li><a href="#tab1" class="active" data-bs-toggle="tab">Daftarkan ke Supplier yang
-                                            ada</a></li>
-                                    <li><a href="#tab2" data-bs-toggle="tab">Menambah Supplier Baru</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="panel-body tabs-menu-body">
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="tab1">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="datatable">
-                                            <thead>
-                                                <tr>
-                                                    <th><input type="checkbox" value="" id="allSupplier"></th>
-                                                    <th>Name</th>
-                                                    <th>Kode Supplier</th>
-                                                    <th>Nama Kontak</th>
-                                                    <th>Nomor Kontak</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($suppliers as $supplier)
-                                                <tr>
-                                                    <td><input type="checkbox" class="check-supplier"
-                                                            value="{{ $supplier->id }}"
-                                                            name="supplier[]"></td>
-                                                    <td>{{ $supplier->name }}</td>
-                                                    <td>{{ $supplier->supplier_code }}</td>
-                                                    <td>{{ $supplier->contact_name }}</td>
-                                                    <td>{{ $supplier->contact_phone }}</td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="tab2">
-                                    <div class="row mb-4">
-                                        {!! Form::label('supplierName', __('supplier.name'), ['class' => 'col-md-2
-                                        form-label
-                                        required']) !!}
-                                        <div class="col-md-4">
-                                            {!! Form::text('new_supplier[name]', null, [
-                                            'class' =>
-                                            'form-control' .
-                                            ($errors->has('name') ? ' is-invalid' : '') .
-                                            (!$errors->has('name') && old('name') ? ' is-valid' : ''),
-                                            'placeholder' => 'Input ' . __('supplier.name'),
-                                            ]) !!}
-                                        </div>
-                                        {!! Form::label('contact_name', __('supplier.contact_name'), ['class' =>
-                                        'col-md-2 form-label
-                                        required']) !!}
-                                        <div class="col-md-4">
-                                            {!! Form::text('new_supplier[contact_name]', null, [
-                                            'class' =>
-                                            'form-control' .
-                                            ($errors->has('contact_name') ? ' is-invalid' : '') .
-                                            (!$errors->has('contact_name') && old('contact_name') ? ' is-valid' : ''),
-                                            'placeholder' => 'Input ' . __('supplier.contact_name'),
-                                            ]) !!}
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        {!! Form::label('contact_address', __('supplier.contact_address'), ['class' =>
-                                        'col-md-2 form-label
-                                        required']) !!}
-                                        <div class="col-md-4">
-                                            {!! Form::text('new_supplier[contact_address]', null, [
-                                            'class' =>
-                                            'form-control' .
-                                            ($errors->has('contact_address') ? ' is-invalid' : '') .
-                                            (!$errors->has('contact_address') && old('contact_address') ? ' is-valid' :
-                                            ''),
-                                            'placeholder' => 'Input ' . __('supplier.contact_address'),
-                                            ]) !!}
-                                        </div>
-                                        {!! Form::label('contact_phone', __('supplier.contact_phone'), ['class' =>
-                                        'col-md-2 form-label
-                                        required']) !!}
-                                        <div class="col-md-4">
-                                            {!! Form::text('new_supplier[contact_phone]', null, [
-                                            'class' =>
-                                            'form-control' .
-                                            ($errors->has('contact_phone') ? ' is-invalid' : '') .
-                                            (!$errors->has('contact_phone') && old('contact_phone') ? ' is-valid' : ''),
-                                            'placeholder' => 'Input ' . __('supplier.contact_phone'),
-                                            ]) !!}
-                                        </div>
-                                    </div>
-                                    <div class="row mb-4">
-                                        {!! Form::label('contact_link', __('supplier.contact_link'), ['class' =>
-                                        'col-md-2 form-label
-                                        required']) !!}
-                                        <div class="col-md-4">
-                                            {!! Form::text('new_supplier[contact_link]', "--", [
-                                            'class' =>
-                                            'form-control' .
-                                            ($errors->has('contact_link') ? ' is-invalid' : '') .
-                                            (!$errors->has('contact_link') && old('contact_link') ? ' is-valid' : ''),
-                                            'placeholder' => 'Input ' . __('supplier.contact_link'),
-                                            ]) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
                     <div class="card-title">Kelola Harga Produk</div>
                 </div>
                 <div class="card-body">
@@ -269,7 +149,7 @@
                             required']) !!}
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1">Rp</span>
-                                {!! Form::text('price[cost]', null, [
+                                {!! Form::text('price[cost]', 0, [
                                 'id' => 'cost',
                                 'class' =>
                                 'form-control format-uang' .
@@ -307,6 +187,7 @@
                                 ($errors->has('profit') ? ' is-invalid' : '') .
                                 (!$errors->has('profit') && old('profit') ? ' is-valid' : ''),
                                 'placeholder' => 'Input ' . __('price.profit'),
+                                'readonly' => 'readonly'
                                 ]) !!}
                             </div>
                         </div>
@@ -322,12 +203,36 @@
                                 ($errors->has('margin') ? ' is-invalid' : '') .
                                 (!$errors->has('margin') && old('margin') ? ' is-valid' : ''),
                                 'placeholder' => 'Input ' . __('price.margin'),
+                                'readonly' => 'readonly'
                                 ]) !!}
                                 <span class="input-group-text" id="basic-addon1">%</span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Kelola Stock Awal</div>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead>
+                    <th>Toko</th>
+                    <th>Jumlah Stok</th>
+                  </thead>
+                  <tbody>
+                    @foreach ($stores as $store)
+                    <tr>
+                      <td>{{ $store->name }}</td>
+                      <td>
+                        <input type="number" name="stock[{{ $store->id }}]" class="form-control" value="0">
+                      </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
             </div>
             @endif
             <div class="mb-4">
@@ -400,20 +305,64 @@
             });
 
             //calculate margin & profit
-            $('#revenue').keyup(function () {
-                let cost = $('#cost').val();
-                cost = parseInt(cost.replace('.', ''))
-                let revenue = $('#revenue').val()
-                revenue = parseInt(revenue.replace('.', ''));
+            $('#cost').focusout(function () {
+                let revenue = $('#revenue').val();
+                revenue = parseInt(revenue.replace('.', ''))
+                // if(revenue <= 0){
+                //   swal({
+                //       title: "Gagal",
+                //       text: "Harga Beli harus diinput terlebih dahulu",
+                //       type: "error"
+                //   });
+                //   return false;
+                // }
+                let cost = $('#cost').val()
+                cost = parseInt(cost.replace('.', ''));
 
                 let profit = revenue - cost;
-                let margin = profit * 100 / revenue;
+                let margin = Math.round(profit * 100 / revenue);
+
+                if(margin < 15){
+                  swal({
+                        title: "Gagal",
+                        text: "Harga harus memiliki minimal margin 15%",
+                        type: "error"
+                    });
+                    return false;
+                }
 
                 $('#margin').val(margin)
                 $('#profitPrice').val(formatRupiah(String(profit)))
             })
+            $('#revenue').focusout(function () {
+                let cost = $('#cost').val();
+                cost = parseInt(cost.replace('.', ''))
+                if(cost <= 0){
+                  swal({
+                      title: "Gagal",
+                      text: "Harga Beli harus diinput terlebih dahulu",
+                      type: "error"
+                  });
+                  return false;
+                }
+                let revenue = $('#revenue').val()
+                revenue = parseInt(revenue.replace('.', ''));
 
-            $('#categories')
+                let profit = revenue - cost;
+                let margin = Math.round(profit * 100 / revenue);
+
+                if(margin < 15){
+                  swal({
+                        title: "Gagal",
+                        text: "Harga harus memiliki minimal margin 15%",
+                        type: "error"
+                    });
+                    return false;
+                }
+
+                $('#margin').val(margin)
+                $('#profitPrice').val(formatRupiah(String(profit)))
+            })
 
         })
         $('.fc-datepicker').bootstrapdatepicker({

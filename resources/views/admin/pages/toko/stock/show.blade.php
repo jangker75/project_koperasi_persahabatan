@@ -3,6 +3,7 @@
     <div class="row row-sm">
         <div class="col-lg-12 col-xl-12">
             <div>
+                @if ($transferStock->Status->name !== "reject")
                 <div class="multi-step p-4 mb-4 d-flex justify-content-center position-relative">
                     <div class="w-75 border border-dark p-0 position-absolute top-50" style="z-index:-1;"></div>
                     <ul class="multi-step-bar nav align-items-center justify-content-between">
@@ -13,6 +14,10 @@
                         @endforeach
                     </ul>
                 </div>
+                @endif
+                @if ($transferStock->Status->name == "reject")
+                <div class="btn btn-danger-light mb-4 w-100">Tiket sudah dibatalkan</div>
+                @endif
             </div>
             <div class="card">
                 <div class="card-header">
@@ -23,7 +28,7 @@
                             class="btn btn-warning btn-sm">Edit Data Request</a>
                         <a href="{{ url('admin/toko/confirm-ticket-transfer-stock/' . $transferStock->id) }}"
                             class="btn btn-info btn-sm ms-2">Konfirmasi Tiket Transfer Stock</a>
-                        @else
+                        @endif
                         @if ($transferStock->Status->name == "Approved Ticket")
                         <a href="{{ url('admin/toko/start-order-transfer-stock/' . $transferStock->id) }}"
                             class="btn btn-info btn-sm ms-2">Mulai Order</a>
@@ -32,16 +37,16 @@
                         <button data-bs-toggle="modal" data-bs-target="#modalConfirmStock"
                             class="btn btn-info btn-sm ms-2">Konfirmasi Ketersediaan Produk</button>
                         @endif
-                        {{-- <a href="javascript:void(0)" class="btn btn-info btn-sm ms-2">Konfirmasi Penerimaan Produk</a>
-                        <a href="javascript:void(0)" class="btn btn-success btn-sm ms-2">Print Data Transfer Stock</a> --}}
+                        @if ($transferStock->Status->name == "Processing")
+                        <button data-bs-toggle="modal" data-bs-target="#modalConfirmStock"
+                            class="btn btn-info btn-sm ms-2">Konfirmasi Terima Produk</button>
                         @endif
-                        <form action="{{ route('admin.management-stock.destroy', $transferStock->id) }}"
-                            class="d-inline" method="post">
-                            @csrf @method('delete')
-                        </form>
-                        <button type="submit" class="btn btn-danger btn-sm delete-button ms-2" data-toggle="tooltip"
-                            data-placement="top" title="Hapus Transfer Stock">Batalkan Pesanan<i
-                                class="fe fe-trash-2"></i></button>
+                        @if ($transferStock->Status->name !== "reject" && $transferStock->Status->name !== "Receive")
+                        <a href="{{ url('admin/toko/reject-order-transfer-stock/' . $transferStock->id) }}" class="btn btn-danger btn-sm delete-button ms-2" data-toggle="tooltip"
+                            data-placement="top" title="Hapus Transfer Stock">
+                            Batalkan Pesanan<i class="fe fe-trash-2"></i>
+                        </a>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -123,6 +128,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="table-responsive">
+                          @if ($transferStock->Status->name == "Ordering")
                           <table class="table table-bordered">
                             <thead class="table-success fw-bold text-uppercase">
                               <tr>
@@ -150,11 +156,42 @@
                               @endforeach
                             </tbody>
                           </table>
+                          @endif
+                          @if ($transferStock->Status->name == "Processing")
+                            <table class="table table-bordered">
+                            <thead class="table-success fw-bold text-uppercase">
+                              <tr>
+                                <th>No</th>
+                                <th>Produk</th>
+                                <th>Jumlah yang dikirim</th>
+                                <th>Jumlah diterima</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @foreach ($transferStock->detailItem as $j => $item)
+                              <tr>
+                                <td>{{ $j+1 }}</td>
+                                <td>{{ $item->product->name }}</td>
+                                <td>{{ $item->available_qty }}</td>
+                                <td>
+                                  <input type="number" class="form-control input-available" placeholder="masukan jumlah yang akan dikirim"
+                                    data-id="{{ $item->id }}" data-stock="{{ $item->available_qty }}" value="{{ $item->available_qty }}">
+                                </td>
+                              </tr>
+                              @endforeach
+                            </tbody>
+                          </table>
+                          @endif
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        @if ($transferStock->Status->name == "Ordering")
                         <button type="button" class="btn btn-primary" id="submitAvailable">Konfirmasi Ketersediaan</button>
+                        @endif
+                        @if ($transferStock->Status->name == "Processing")
+                        <button type="button" class="btn btn-primary" id="submitReceive">Konfirmasi Ketersediaan</button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -233,34 +270,95 @@
               data: arrayAvailableValue
             }
             $.ajax({
-              type: "POST",
-              processData: false,
-              contentType: 'application/json',
-              cache: false,
-              url: "{{ url('/api/transfer-stock-confirm') }}",
-              data: JSON.stringify(param),
-              dataType: "json",
-              enctype: 'multipart/form-data',
-              success: function (response) {
-                swal({
-                    title: "Sukses",
-                    text: response.message,
-                    type: "success"
-                });
-                  
-                  setTimeout(function () {
-                      window.location.replace("{{ url('admin/toko/management-stock') }}/{{ $transferStock->id }}");
-                  }, 1000)
-              },
-              error: function (response) {
-                console.log(response)
+                type: "POST",
+                processData: false,
+                contentType: 'application/json',
+                cache: false,
+                url: "{{ url('/api/transfer-stock-confirm') }}",
+                data: JSON.stringify(param),
+                dataType: "json",
+                enctype: 'multipart/form-data',
+                success: function (response) {
                   swal({
-                      title: "Gagal",
+                      title: "Sukses",
                       text: response.message,
-                      type: "error"
+                      type: "success"
                   });
-              }
-          });
+                    
+                    setTimeout(function () {
+                        window.location.replace("{{ url('admin/toko/management-stock') }}/{{ $transferStock->id }}");
+                    }, 1000)
+                },
+                error: function (response) {
+                  console.log(response)
+                    swal({
+                        title: "Gagal",
+                        text: response.message,
+                        type: "error"
+                    });
+                }
+            });
+          })
+
+          $("#submitReceive").click(function(){
+            let transferStockId = "{{ $transferStock->id }}";
+            let employeeId = "{{ auth()->user()->employee->id }}"
+            let available = $(".input-available");
+            $('*').each(function() {
+                if ($(this).hasClass("is-invalid")) {
+                    swal({
+                        title: "Gagal",
+                        text: "Masih ada data yg belum sesuai",
+                        type: "error"
+                    });
+                    return false;
+                }
+            });
+
+            let arrayAvailableValue = [];
+            for(var i = 0; i < available.length; i++){
+                let toPushAvailable = {
+                  id: $(available[i]).data("id"),
+                  value: parseInt($(available[i]).val()) 
+                };
+                arrayAvailableValue.push(toPushAvailable)
+            }
+
+            let param = {
+              transferStockId: transferStockId,
+              employeeId: employeeId,
+              data: arrayAvailableValue
+            }
+
+            $.ajax({
+                type: "POST",
+                processData: false,
+                contentType: 'application/json',
+                cache: false,
+                url: "{{ url('/api/transfer-stock-receive') }}",
+                data: JSON.stringify(param),
+                dataType: "json",
+                enctype: 'multipart/form-data',
+                success: function (response) {
+                  swal({
+                      title: "Sukses",
+                      text: response.message,
+                      type: "success"
+                  });
+                    
+                    setTimeout(function () {
+                        window.location.replace("{{ url('admin/toko/management-stock') }}/{{ $transferStock->id }}");
+                    }, 1000)
+                },
+                error: function (response) {
+                  console.log(response)
+                    swal({
+                        title: "Gagal",
+                        text: response.message,
+                        type: "error"
+                    });
+                }
+            });
           })
         })
 

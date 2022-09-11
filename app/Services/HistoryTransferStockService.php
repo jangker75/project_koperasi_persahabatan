@@ -25,7 +25,10 @@ class HistoryTransferStockService{
       $title = "Konfirmasi ketersediaan berhasil, Order sedang disiapkan, transfer stock Kode: " . $transferStock->transfer_stock_code;
     }
     else if($status == "Receive"){
-      $title = Auth::user()->employee->full_name . " sudah menerima Pesanan, transfer stock Kode: " . $transferStock->transfer_stock_code;
+      $title = "Order Sudah diterima, transfer stock Kode: " . $transferStock->transfer_stock_code;
+    }
+    else if($status == "reject"){
+      $title = "Order Sudah dibatalkan, transfer stock Kode: " . $transferStock->transfer_stock_code;
     }
 
     HistoryTransferStock::create([

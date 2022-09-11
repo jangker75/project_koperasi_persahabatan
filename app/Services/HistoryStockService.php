@@ -11,7 +11,7 @@ class HistoryStockService{
       $title = "Stock berkurang dari pembelian kode order : " . $params['orderCode'] . " dengan jumlah " . $params['qty'];
       $type = "deduction";
     }else if($mode == "transfer"){
-      $title = "Stock berpindah dari toko " . $params["from"] . " ke toko " . $params["destination"];
+      $title = "Stock berpindah dari " . $params["from"] . " ke " . $params["destination"];
       $type = "move";
     }else if($mode == "supply"){
       $title = "Stock bertambah dari pengadaan barang kode : " . $params['orderSupplyCode'];

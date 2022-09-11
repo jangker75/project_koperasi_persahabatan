@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Toko\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransferStock;
+use App\Models\HistoryTransferStock;
 use App\Models\Product;
+use App\Models\Stock;
 use App\Models\TransferStock;
 use App\Repositories\ProductStockRepositories;
 use App\Repositories\TransferstockRepository;
+use App\Services\HistoryStockService;
 use App\Services\HistoryTransferStockService;
 use Carbon\Carbon;
 use Doctrine\DBAL\Query\QueryException;
@@ -134,7 +137,40 @@ class TransferStockController extends Controller
 
       HistoryTransferStockService::update("Processing", $transferStock->id);
       
-      $response['message'] = "Tiket berhasil dibuat";
+      $response['message'] = "Tiket berhasil dikonfirmasi";
+      return response()->json($response, 200);
+    }
+
+    public function receiveStock(Request $request){
+      $transferStock = TransferStock::find($request->transferStockId);
+      foreach ($request->data as $key => $data) {
+        $item = DetailTransferStock::find($data['id']);
+        $item->receive_qty = $data['value'];
+        $item->save();
+
+        $stockOrigin = Stock::where('product_id', $item->product_id)
+                          ->where('store_id', $transferStock->from_store_id)->first();
+        $destinationOrigin = Stock::where('product_id', $item->product_id)
+                          ->where('store_id', $transferStock->to_store_id)->first();
+        
+        $stockOrigin->qty = $stockOrigin->qty - $item->receive_qty;
+        $stockOrigin->save();
+        $destinationOrigin->qty = $stockOrigin->qty + $item->receive_qty;
+        $destinationOrigin->save();
+
+        (new HistoryStockService)->update("transfer", [
+          "from" => $transferStock->fromStore->name,
+          "destination" => $transferStock->toStore->name,
+          "qty" => $item->receive_qty,
+          "productId" => $item->product_id
+        ]);
+
+      }
+
+
+      HistoryTransferStockService::update("Receive", $request->transferStockId);
+      
+      $response['message'] = "Tiket berhasil diterima";
       return response()->json($response, 200);
     }
 }
