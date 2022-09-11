@@ -135,7 +135,7 @@
                                 @endif
                                 <tr>
                                     <td class="text-start">Tax</td>
-                                    <td class="text-end">{{ format_uang($order->transaction->delivery_fee) }}</td>
+                                    <td class="text-end">{{ format_uang($tax->content) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-start">Additional Discount</td>

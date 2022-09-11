@@ -1,135 +1,69 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
 
-    <div class="row row-sm">
-      @if (isset($transferStock))
-      <form action="{{ route('admin.management-stock.update', $transferStock->id) }}" method="post">
-        @csrf        
-        @method('put')
-      @else
-        <form action="{{ route('admin.management-stock.store') }}" method="post">
-        @csrf        
-      @endif
-        <div class="col-lg-12 col-xl-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="w-100 row">
-                        <div class="col-md-6">
-                            <div class="w-100  p-3">
-                                <h4 class="h4 fw-bold">Formulir untuk Transfer Stock</h4>
-                                <div class="form-group">
-                                    <label for="originStore">Origin Store</label>
-                                    <select name="originStore" class="form-control form-select select2"
-                                        data-bs-placeholder="Masukan Sumber Toko" id="originStore">
-                                        @foreach ($stores as $store)
-                                        <option value="{{ $store->id }}"
-                                          @if (isset($transferStock))
-                                            @if ($transferStock->from_store_id == $store->id)
-                                              selected
-                                            @endif
-                                          @endif
-                                          >{{ $store->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="destinationnStore">Destination Store</label>
-                                    <select name="destinationStore" class="form-control form-select select2"
-                                        data-bs-placeholder="Masukan Tujuan Toko">
-                                        @foreach ($stores as $store)
-                                        <option value="{{ $store->id }}"
-                                          @if (isset($transferStock))
-                                            @if ($transferStock->to_store_id == $store->id)
-                                              selected
-                                            @endif
-                                          @endif
-                                          >{{ $store->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+    <section class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Formulir Transfer Stock</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="originStore">Asal Toko</label>
+                                <select name="originStore" class="form-control form-select"
+                                    data-bs-placeholder="Masukan Sumber Toko" id="originStore">
+                                    @foreach ($stores as $store)
+                                    <option value="{{ $store->id }}">{{ $store->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="destinationStore">Tujuan Toko</label>
+                                <select name="destinationStore" class="form-control form-select"
+                                    data-bs-placeholder="Masukan Sumber Toko" id="destinationStore">
+                                    @foreach ($stores as $store)
+                                    <option value="{{ $store->id }}">{{ $store->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="w-100">
-                        <h1 class="h4">Input Produk</h1>
-                        <div class="table-responsive">
-                            <table class="table w-100 table-bordered">
-                                <thead class="table-primary">
-                                    <th>Produk</th>
-                                    <th>Jumlah</th>
-                                    <th>Unit</th>
-                                    <th>Action</th>
-                                </thead>
-                                <tbody id="bodyTable">
-                                  @if (isset($transferStock))
-                                  @foreach ($transferStock->detailItem as $item)
-                                  <tr class="rowList">
-                                      <td>
-                                          <input type="text" class="product-list form-control" name="product[]"
-                                              id="product" placeholder="Input Nama Produk" autocomplete="off" value="{{ $item->product->name }}">
-                                          <div class="card card-search-product">
-                                              <ul class="list-group list-group-flush data-list-product"
-                                                  id="dataListProduct">
-                                                  <li class="list-group-item product-show">test</li>
-                                              </ul>
-                                          </div>
-                                      </td>
-                                      <td><input type="number" class="quantity-list form-control" name="quantity[]"
-                                              id="quantity" placeholder="Input Jumlah Produk" value="{{ $item->request_qty }}"></td>
-                                      <td>
-                                        <select name="unit[]" class="form-control form-select">
-                                            <option value="pcs">pcs</option>
-                                            <option value="pack">pack (6 pcs)</option>
-                                            <option value="box">Kardus</option>
-                                        </select>
-                                      </td>
-                                      <td>
-                                          <span class="btn btn-danger deleteRows">&times;</span>
-                                          <span class="btn btn-primary addRows">&plus;</span>
-                                      </td>
-                                  </tr>
-                                  @endforeach
-
-                                  @else
-                                  
-                                  <tr class="rowList">
-                                      <td>
-                                          <input type="text" class="product-list form-control" name="product[]"
-                                              id="product" placeholder="Input Nama Produk" autocomplete="off">
-                                          <small class="text-small">Stocks : <strong class="stock">0</strong></small>
-                                          <div class="card card-search-product">
-                                              <ul class="list-group list-group-flush data-list-product"
-                                                  id="dataListProduct">
-                                                  <li class="list-group-item product-show">test</li>
-                                              </ul>
-                                          </div>
-                                      </td>
-                                      <td><input type="number" class="quantity-list form-control" name="quantity[]"
-                                              id="quantity" placeholder="Input Jumlah Produk"></td>
-                                      <td>
-                                        <select name="unit[]" class="form-control form-select" >
-                                            <option value="pcs">pcs</option>
-                                            <option value="pack">pack (6 pcs)</option>
-                                            <option value="box">Kardus</option>
-                                        </select>
-                                      </td>
-                                      <td>
-                                          <span class="btn btn-danger deleteRows">&times;</span>
-                                          <span class="btn btn-primary addRows">&plus;</span>
-                                      </td>
-                                  </tr>
-                                  @endif
-                                </tbody>
-                            </table>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Item Transfer Stock</div>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control product-input mb-4" placeholder="Input nama produk atau sku untuk menambah produk">
+                        <div class="position-relative">
+                            <div
+                                class="card card-search-product position-absolute border border-dark p-2">
+                                <ul class="list-group list-group-flush data-list-product p-0">
+                                    <li class="list-group-item product-show p-2">testdad</li>
+                                </ul>
+                            </div>
                         </div>
+                        <table class="table table-bordered">
+                            <thead class="table-primary fw-bold text-uppercase">
+                                <th>Nama Produk</th>
+                                <th>Jumlah yang diminta</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody id="bodyTable">
+                                <tr>
+                                  <td colspan="3" class="text-center">Belum ada produk yang ditambahkan</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+                <button class="btn btn-primary w-100" id="submit">Buat Tiket Transfer Stock</button>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Submit Data</button>
-        </form>
-    </div>
+    </section>
 
     <x-slot name="styleVendor">
         <style>
@@ -152,116 +86,209 @@
     @slot('script')
     <script>
         $(document).ready(function () {
-            let originStore = $("#originStore").val();
-            let listProduk = [];
+            let storeId = "{{ $stores[0]->id }}";
+            let destinationStoreId = "{{ $stores[1]->id }}";
+            let order = [];
+            let employeeId = "{{ auth()->user()->employee->id }}"
 
-            $('.card-search-product').hide()
-            $('.select2').select2({
-                minimumResultsForSearch: '',
-                width: '100%'
-            });
-            $("body").on("click", ".addRows", function () {
-                let element = $(this).closest(".rowList").html();
-                element = `<tr class="rowList">` + element + `</tr>`;
-                $("#bodyTable").append(element);
-            })
-            $("body").on("click", ".deleteRows", function () {
-                var numItems = $('.rowList').length;
-                if (numItems > 1) {
-                    $(this).closest(".rowList").remove();
-                }
-            })
+            function AddElement(product){
+              let elementHtml = `
+                  <tr data-id="` + product.id + `">
+                    <td>` + product.name + `</td>
+                    <td><input type="number" class="form-control quantity-input"
+                            placeholder="Ketik Jumlah Produk"></td>
+                    <td>
+                        <div class="btn btn-danger fw-bold btn-delete-row">&times;</div>
+                    </td>
+                  </tr>
+              `;
 
-            $("select[name='originStore']").change(function () {
-                let value = $(this).val();
-                originStore = value;
-            })
+              return elementHtml
+            }
 
+            $("#originStore").val(storeId)
+            $("#destinationStore").val(destinationStoreId)
+            $(".card-search-product").hide();
 
             $("#originStore").change(function () {
-                let value = $(this).val()
-                originStore = val();
+                storeId = $(this).val()
+            })
+            $("#destinationStore").change(function () {
+                destinationStoreId = $(this).val()
             })
 
-            // $("body").on("focusout",".product-list",function(){
-            //   $(this).siblings(".card-search-product").hide();
-            // })
 
-            $("body").on("keyup", ".product-list", function () {
-                let value = ""
+            $("body").on("click", ".btn-delete-row", function () {
+                let id = $(this).closest("tr").data("id")
+                var data = order.filter(function (obj) {
+                    return obj.productId !== id;
+                });
+                // get index of object with id:37
+                var removeIndex = order.map(function (item) {
+                    return item.productId;
+                }).indexOf(id);
 
-                value = $(this).val()
-                if (value.length > 4) {
-                    let datas;
-                    let element = $(this).siblings(".card-search-product");
-                    element.find(".data-list-product").html("");
+                // remove object
+                order.splice(removeIndex, 1);
+                $(this).closest("tr").remove()
+                console.log(order)
+            })
 
-                    let ajax = $.ajax({
-                        type: "post",
-                        url: "{{ url('/api/search-product') }}",
+            $("body").on("keyup", ".product-input", function () {
+                let keyword = $(this).val()
+                if (keyword.length >= 3) {
+
+                    let element = $(this).siblings(".position-relative").find(".card-search-product");
+                    element.show();
+
+                    let ul = element.find(".data-list-product");
+                    ul.html("");
+
+                    let url = "{{ url('/api/search-product') }}";
+                    let param = {
+                        keyword: keyword,
+                        notInListProduct: '',
+                        originStore: storeId
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: JSON.stringify(param),
                         dataType: "json",
-                        data: {
-                            originStore: originStore,
-                            notInListProduct: listProduk,
-                            keyword: value
-                        },
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        contentType: 'application/json',
+                        cache: false,
                         success: function (response) {
-                            console.log(response)
-                            datas = response.product;
-                            if (datas[0] !== undefined) {
-                                $.each(datas, function (k, data) {
-                                    if (data.productName !== undefined) {
-                                        if ($('*[data-product-id="' + data.productId + '"]').length == 0) {
-                                            let isid = `<li class="list-group-item product-show" data-stock="`+data.stock+`" data-product-id="` + data.productId + `">` + data.productName + `</li>`;
-                                            element.find(".data-list-product").append(isid)
-                                        }
-                                    }
-                                })
-                            } else {
-                                let isid = `<li class="list-group-item product-show">Tidak ada Produk yg dimaksud</li>`;
-                                element.find(".data-list-product").html(isid)
-                            }
+                            products = response.product
+                            products.forEach(element => {
+                                if ($('*[data-product-id="' + element.productId +
+                                        '"]').length == 0) {
+                                    ul.append(
+                                        "<li class='list-group-item product-show p-2' data-product-id='" +
+                                        element.productId + "'>" + element
+                                        .productName + " (stocks : " + element
+                                        .qty + ") </li>")
+                                }else{
+                                  console.log("asdasdsad");
+                                }
+                            });
+
+                        },
+                        error: function (xhr, status, error) {
+                            ul.html(
+                                "<li class='list-group-item product-hide p-2'>Produk tidak ditemukan (click untuk menghilangkan ini)</li>")
                         }
                     });
 
-                    element.show();
                 }
+            })
 
-                function searchData(keyword){
-                  let ajax = $.ajax({
-                      type: "post",
-                      url: "{{ url('/api/search-product') }}",
-                      dataType: "json",
-                      data: {
-                          originStore: originStore,
-                          notInListProduct: listProduk,
-                          keyword: keyword
-                      },
-                      success: function (response) {
-                          return response
-                      }
-                  });
-                }
-
+            $("body").on("click", ".product-hide", function () {
+                $(this).closest(".card-search-product").hide();
             })
 
             $("body").on("click", ".product-show", function () {
-                let nameProduct = $(this).html();
-                let idProduct = $(this).data("product-id")
-                let stock = $(this).data("stock")
-                if (listProduk.indexOf(idProduct) !== -1) {
-                    alert("Produk ini sudah di pilih sebelumnya.")
-                } else {
-                    // listProduk.push(idProduct)
-                    if(idProduct !== ""){
-                      $(this).closest(".card-search-product").siblings(".product-list").val(nameProduct)
-                      $(this).closest(".card-search-product").siblings(".stock").val(stock)
+                let keyword = $(this).text()
+                
+                let dataId = $(this).data('product-id');
+                const checker = order.find(element => {
+                    if (element.productId === dataId) {
+                        return true;
                     }
-                    $(this).closest(".card-search-product").hide();
-                    $(".data-list-product").html("")
+                    return false;
+                });
+                console.log(checker)
+                if (checker == undefined) {
+                    let element = AddElement({
+                      id: dataId,
+                      name: keyword
+                    })
+
+                    // console.log()
+                    if(order.length == 0){
+                      $("#bodyTable").html("")
+                    }
+                    $("#bodyTable").append(element)
+
+                    let toPush = {
+                        productId: $(this).data('product-id'),
+                        quantity: 0
+                    }
+                    order.push(toPush)
+                } else {
+                    swal({
+                        title: "Gagal",
+                        text: "Masukan Produk lain",
+                        type: "error"
+                    });
                 }
+                $(".product-input").val("")
+                $(this).closest(".card-search-product").hide();
+                $(this).remove();
+                console.log(order)
             })
 
+            $("body").on("keyup", ".quantity-input", function () {
+                let quantity = $(this).val();
+                let productId = $(this).closest("tr").data('id');
+                const checker = order.find(element => {
+                    if (element.productId === productId) {
+                        element.quantity = parseInt(quantity)
+                        return true;
+                    }
+                    return false;
+                });
+            })
+
+            $("#submit").click(function(){
+              if (order.length < 1) {
+                    swal({
+                        title: "Gagal",
+                        text: "Belum ada produk yang ditambahkan",
+                        type: "error"
+                    });
+                    return false;
+                }
+
+                let checkoutValue = {
+                    originStore: storeId,
+                    destinationStore: destinationStoreId,
+                    product: order,
+                    employeeId: employeeId
+                }
+                console.log()
+
+                $.ajax({
+                    type: "POST",
+                    processData: false,
+                    contentType: 'application/json',
+                    cache: false,
+                    url: "{{ url('/api/transfer-stock') }}",
+                    data: JSON.stringify(checkoutValue),
+                    dataType: "json",
+                    enctype: 'multipart/form-data',
+                    success: function (response) {
+                      swal({
+                          title: "Sukses",
+                          text: response.message,
+                          type: "success"
+                      });
+                        
+                        setTimeout(function () {
+                            window.location.replace("{{ url('admin/toko/management-stock') }}");
+                        }, 1000)
+                    },
+                    error: function (response) {
+                      console.log(response)
+                        swal({
+                            title: "Gagal",
+                            text: response.message,
+                            type: "error"
+                        });
+                    }
+                });
+            })
         })
 
     </script>

@@ -119,9 +119,9 @@ class OrderController extends Controller
         }
 
         $transaction = Transaction::create($inputTransaksi);
-        
+
         // saldo
-        if(str($paymentMethod->name)->slug !== "paylater"){
+        if($paymentMethod->name !== "paylater"){
           (new CompanyService())->addCreditBalance($transaction->amount, 'store_balance', $paymentMethod->name);
         }
 

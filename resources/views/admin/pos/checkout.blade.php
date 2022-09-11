@@ -50,10 +50,10 @@
             <div class="card">
                 <div class="card-body p-3 position-relative">
                     <input type="text" name="scanbarcode" autofocus id="scanBarcode"
-                        class="form-control form-control-lg border border-primary" placeholder="Masukan Kode SKU atau nama Produk">
+                        class="form-control form-control-lg border border-primary" placeholder="Masukan Kode SKU">
                     <div id="scanBarcodeHelp" class="form-text">Scan Barcode atau Ketik Kode SKU Barang untuk menambah
                         barang atau menambah quantity.</div>
-                    <div class="position-absolute border w-75 bg-white"></div>
+                    {{-- <div class="position-absolute border w-75 bg-white"></div> --}}
                 </div>
             </div>
             <div class="card">

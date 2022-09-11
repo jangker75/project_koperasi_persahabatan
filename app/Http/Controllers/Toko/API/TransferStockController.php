@@ -61,7 +61,6 @@ class TransferStockController extends Controller
 
     public function update(Request $request, $id)
     {
-      
       try {
           DB::beginTransaction();
           $transfer = TransferStock::find($id);

@@ -4,49 +4,50 @@
         <div class="col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Data Order Supplier</div>
+                    <div class="card-title">Riwayat Order Supplier</div>
                     <div class="card-options">
-                        <a href="{{ route('admin.order-supplier.create') }}" class="btn btn-primary btn-sm">Buat Order Supplier +</a>
+                      <a href="{{ route('admin.order-supplier.create') }}" class="btn btn-primary">Buat Order Baru &plus;</a>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="w-100">
                         <div class="table-responsive">
-                            <table class="table w-100 " id="datatable2">
-                                <thead class="table-success fw-bold text-uppercase">
+                            <table class="table w-100" id="datatable">
+                                <thead class="table-primary">
                                     <th>No</th>
-                                    <th>Kode</th>p
-                                    <th>Dari Supplier</th>
-                                    <th>Tujuan Toko</th>
-                                    <th>Tanggal</th>
-                                    <th>Requester</th>
+                                    <th>Kode Order</th>
+                                    <th>Nama Supplier</th>
+                                    <th>Tanggal Order</th>
+                                    <th>Pembuat Order</th>
+                                    <th>Tanggal Terima</th>
+                                    <th>Lokasi Terima</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($orderSupplier as $i => $order)
-                                    <tr>
-                                        <td>{{ $i+1 }}</td>
-                                        <td>{{ $order->order_supplier_code }}</td>
-                                        <td>{{ $order->supplier->name }}</td>
-                                        <td>{{ $order->toStore->name }}</td>
-                                        <td>{{ $order->order_date }}</td>
-                                        <td>{{ $order->requester->getFullNameAttribute() }}</td>
-                                        <td>
-                                            
-                                            <a href="{{ route('admin.order-supplier.show', $order->id) }}" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
-                                                data-placement="top" title="Edit Data Transfer Stock">Detail Transfer Stock <i
-                                                    class="fe fe-edit"></i></a>
-                                            <form action="{{ route('admin.order-supplier.destroy', $order->id) }}"
-                                                class="d-inline" method="post">
-                                                @csrf @method('delete')
-                                            </form>
-                                            <button type="submit" class="btn btn-danger btn-sm delete-button me-1"
-                                                data-toggle="tooltip" data-placement="top" title="Hapus Transfer Stock">Hapus Data <i
-                                                    class="fe fe-trash-2"></i></button>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                                    @if (!$orderSuppliers)
+                                      <tr>
+                                        <td colspan="9">Belum ada Order Supplier</td>
+                                      </tr>
+                                    @else
+                                      @foreach ($orderSuppliers as $i => $order)
+                                        <tr>
+                                          <td>{{ $i+1 }}</td>
+                                          <td>{{ $order->order_supplier_code }}</td>
+                                          <td>{{ $order->supplier->name }}</td>
+                                          <td>{{ $order->order_date }}</td>
+                                          <td>{{ $order->requester->full_name }}</td>
+                                          <td>{{ $order->received_date }}</td>
+                                          <td>{{ $order->toStore->name }}</td>
+                                          <td>
+                                            <div class="btn btn-sm btn-primary-light">{{ $order->status->name }}</div>
+                                          </td>
+                                          <td>
+                                            <a href="{{ route("admin.order-supplier.show", $order->id) }}" class="btn btn-sm btn-info">Lihat Detail</a>
+                                          </td>
+                                        </tr>
+                                      @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -55,6 +56,7 @@
             </div>
         </div>
     </div>
+
 
 
     <x-slot name="scriptVendor">

@@ -108,7 +108,7 @@ class MDStatusSeeder extends Seeder
             [
                 'name' => 'Processing',
                 'description' => 'Pesanan sedang disiapkan',
-                'type' => 'order_suppliers,transfer_stocks',
+                'type' => 'transfer_stocks',
             ],
             [
                 'name' => 'Receive',

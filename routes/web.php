@@ -114,6 +114,11 @@ Route::group([
       Route::get('start-order-transfer-stock/{id}', [ManagementStockController::class, 'startTicket']);
       Route::get('reject-order-transfer-stock/{id}', [ManagementStockController::class, 'rejectTicket']);
       // transfer-stock
+      // order-supplier
+      Route::get('confirm-order-supplier/{id}', [OrderSupplierController::class, 'confirmTicket']);
+      Route::get('start-order-supplier/{id}', [OrderSupplierController::class, 'startTicket']);
+      Route::get('reject-order-supplier/{id}', [OrderSupplierController::class, 'rejectTicket']);
+      // order-supplier
     });
 
     //toko-online

@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
-                        Detail Paylater
+                        Detail Order
                     </div>
                 </div>
                 <div class="card-body py-2">
@@ -18,15 +18,20 @@
                             <tbody>
                                 <tr>
                                     <td class="text-start">Nama Pemohon</td>
+                                    @if ($order->transaction->is_paylater == true)
                                     <td class="text-end"><span
                                             class="fw-bold ms-auto">{{ $order->transaction->requester->full_name }}</span>
                                     </td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="text-start">Tanggal Pemohonan</td>
+                                    @if ($order->transaction->is_paylater == true)
+                                      
                                     <td class="text-end"><span
-                                            class="fw-bold">{{ $order->transaction->transaction_date }}</span>
+                                      class="fw-bold">{{ $order->transaction->transaction_date }}</span>
                                     </td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="text-start">Paylater</td>

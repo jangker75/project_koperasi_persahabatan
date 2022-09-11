@@ -13,7 +13,6 @@ class ProductStockRepositories{
 
     $middle = "";
 
-
     $query = "
       SELECT 
         products.id AS productId,
@@ -64,6 +63,8 @@ class ProductStockRepositories{
           LEFT JOIN brands ON products.brand_id = brands.id
         WHERE
           (products.sku = '".$sku."' OR products.slug LIKE '%" . str($sku)->slug() . "%')" . $storeQuery;
+
+    // dd($sql);
     $data = DB::select(DB::raw($sql));
 
     return $data;

@@ -5,6 +5,7 @@ use App\Http\Controllers\Share\JqueryEditableController;
 use App\Http\Controllers\Toko\API\BrandController;
 use App\Http\Controllers\Toko\API\CategoryController;
 use App\Http\Controllers\Toko\API\OrderController;
+use App\Http\Controllers\Toko\API\OrderSupplierController;
 use App\Http\Controllers\Toko\API\ProductController;
 use App\Http\Controllers\Toko\API\StoreController;
 use App\Http\Controllers\Toko\API\SupplierController;
@@ -36,6 +37,7 @@ Route::resource('brand', BrandController::class);
 Route::resource('supplier', SupplierController::class);
 Route::resource('order', OrderController::class);
 Route::resource('transfer-stock', TransferStockController::class);
+Route::resource('order-supplier', OrderSupplierController::class);
 Route::post("order-nasabah", [OrderController::class, "orderNasabah"]);
 Route::post('reject-order', [OrderController::class, 'rejectOrder']);
 Route::post('checkout-order', [OrderController::class, 'checkoutOrder']);
@@ -46,7 +48,13 @@ Route::post('search-employee', [EmployeeController::class, 'findEmployee']);
 Route::get('paginate-product-in-stock-from-store', [ProductController::class, "getProductOnStockPaginate"]);
 Route::post('search-product', [ProductController::class, "searchProduct"])->name('search-product');
 Route::get('product-by-sku', [ProductController::class, "searchProductBySKU"]);
+
 // transfer stock
 Route::get('transfer-stock-items/{id}', [TransferStockController::class, 'getDetailById']);
 Route::post('transfer-stock-confirm', [TransferStockController::class, 'confirmStock']);
 Route::post('transfer-stock-receive', [TransferStockController::class, 'receiveStock']);
+
+// Order Supplier
+Route::get('order-supplier-items/{id}', [OrderSupplierController::class, 'getDetailById']);
+// Route::post('order-supplier-confirm', [OrderSupplierController::class, 'confirmStock']);
+Route::post('order-supplier-receive', [OrderSupplierController::class, 'receiveOrder']);

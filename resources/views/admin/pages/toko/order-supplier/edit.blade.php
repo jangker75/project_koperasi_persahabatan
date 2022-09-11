@@ -5,42 +5,48 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Formulir Transfer Stock</div>
+                        <div class="card-title">Formulir Order Supplier</div>
                     </div>
                     <div class="card-body">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="originStore">Asal Toko</label>
-                                <select name="originStore" class="form-control form-select"
-                                    data-bs-placeholder="Masukan Sumber Toko" id="originStore">
-                                    @foreach ($stores as $store)
-                                    <option value="{{ $store->id }}">{{ $store->name }}</option>
-                                    @endforeach
-                                </select>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="supplier">Toko Supplier</label>
+                                    <select name="supplier" class="form-control form-select select2"
+                                        data-bs-placeholder="Masukan Sumber Toko" id="supplier" value="{{ $orderSupplier->supplier_id }}">
+                                        @foreach ($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}">
+                                            {{ $supplier->name . " - " . $supplier->contact_name . " - " .  $supplier->contact_phone }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="destinationStore">Tujuan Toko</label>
+                                    <select name="destinationStore" class="form-control form-select" value="{{ $orderSupplier->to_store_id }}"
+                                        data-bs-placeholder="Masukan Sumber Toko" id="destinationStore">
+                                        @foreach ($stores as $store)
+                                        <option value="{{ $store->id }}">{{ $store->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="destinationStore">Tujuan Toko</label>
-                                <select name="destinationStore" class="form-control form-select"
-                                    data-bs-placeholder="Masukan Sumber Toko" id="destinationStore">
-                                    @foreach ($stores as $store)
-                                    <option value="{{ $store->id }}">{{ $store->name }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-6">
+                              <label for="">Catatan Pembelian</label>
+                              <textarea name="note" id="note" rows="6" class="form-control">{{ $orderSupplier->note }}</textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Item Transfer Stock</div>
+                        <div class="card-title">Item Order Supplier</div>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control product-input mb-4" placeholder="Input nama produk atau sku untuk menambah produk">
+                        <input type="text" class="form-control product-input mb-4"
+                            placeholder="Input nama produk atau sku untuk menambah produk">
                         <div class="position-relative">
-                            <div
-                                class="card card-search-product position-absolute border border-dark p-2">
+                            <div class="card card-search-product position-absolute border border-dark p-2">
                                 <ul class="list-group list-group-flush data-list-product p-0">
                                     <li class="list-group-item product-show p-2">testdad</li>
                                 </ul>
@@ -49,12 +55,13 @@
                         <table class="table table-bordered">
                             <thead class="table-primary fw-bold text-uppercase">
                                 <th>Nama Produk</th>
-                                <th>Jumlah yang diminta</th>
+                                <th>Jumlah</th>
+                                <th>Unit Pembelian</th>
                                 <th>Action</th>
                             </thead>
                             <tbody id="bodyTable">
                                 <tr>
-                                  <td colspan="3" class="text-center">Belum ada produk yang ditambahkan</td>
+                                    <td colspan="4" class="text-center">Belum ada Item Terdaftar</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -86,17 +93,42 @@
     @slot('script')
     <script>
         $(document).ready(function () {
-            let storeId = "{{ $stores[0]->id }}";
-            let destinationStoreId = "{{ $stores[1]->id }}";
+            let supplierId = "{{ $suppliers[0]->id }}";
+            let destinationStoreId = "{{ $stores[0]->id }}";
             let order = [];
             let employeeId = "{{ auth()->user()->employee->id }}"
+            let note = ""
 
-            function AddElement(product){
+            function AddElement(product) {
+                let elementHtml = `
+                  <tr data-id="` + product.id + `">
+                    <td>` + product.name + `</td>
+                    <td>
+                      <input type="number" class="form-control quantity-input" required placeholder="Masukan Jumlah Pembelian">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control request-unit" required placeholder="Unit pembelian">
+                    </td>
+                    <td>
+                        <div class="btn btn-danger fw-bold btn-delete-row">&times;</div>
+                    </td>
+                  </tr>
+              `;
+
+                return elementHtml
+            }
+
+            function renderingElement(product){
               let elementHtml = `
                   <tr data-id="` + product.id + `">
                     <td>` + product.name + `</td>
-                    <td><input type="number" class="form-control quantity-input"
-                            placeholder="Ketik Jumlah Produk"></td>
+                    <td>
+                      <input type="number" class="form-control quantity-input" required 
+                        value="`+product.quantity+`" placeholder="Masukan Jumlah Pembelian">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control request-unit" required placeholder="Unit pembelian" value="`+product.unit+`">
+                    </td>
                     <td>
                         <div class="btn btn-danger fw-bold btn-delete-row">&times;</div>
                     </td>
@@ -106,16 +138,50 @@
               return elementHtml
             }
 
-            $("#originStore").val(storeId)
+            $("#supplier").val(supplierId)
             $("#destinationStore").val(destinationStoreId)
             $(".card-search-product").hide();
 
-            $("#originStore").change(function () {
-                storeId = $(this).val()
+            $("#supplier").change(function () {
+                supplierId = $(this).val()
             })
             $("#destinationStore").change(function () {
                 destinationStoreId = $(this).val()
             })
+            $("#note").keyup(function(){
+              note = $(this).val()
+            })
+
+            function renderElement(arrayOrder){
+              $("#bodyTable").html("");
+
+              arrayOrder.forEach(element => {
+                let elementHtml = renderingElement({
+                  id: element.productId,
+                  name: element.title,
+                  quantity: element.quantity,
+                  unit: element.unit
+                })
+
+                $("#bodyTable").append(elementHtml);
+              });
+            }
+
+            $.ajax({
+                  type: "GET",
+                  url: "{{ url('api/order-supplier-items/' . $orderSupplier->id)}}",
+                  dataType: "json",
+                  cache: false,
+                  success: function (response) {
+                      console.log(response)
+                      order = response.detailItem
+                      renderElement(order)
+
+                  },
+                  error: function (xhr, status, error) {
+                      
+                  }
+              });
 
 
             $("body").on("click", ".btn-delete-row", function () {
@@ -148,7 +214,7 @@
                     let param = {
                         keyword: keyword,
                         notInListProduct: '',
-                        originStore: storeId
+                        originStore: ""
                     }
                     $.ajax({
                         type: "POST",
@@ -167,17 +233,17 @@
                                     ul.append(
                                         "<li class='list-group-item product-show p-2' data-product-id='" +
                                         element.productId + "'>" + element
-                                        .productName + " (stocks : " + element
-                                        .qty + ") </li>")
-                                }else{
-                                  console.log("asdasdsad");
+                                        .productName + "</li>")
+                                } else {
+                                    console.log("asdasdsad");
                                 }
                             });
 
                         },
                         error: function (xhr, status, error) {
                             ul.html(
-                                "<li class='list-group-item product-hide p-2'>Produk tidak ditemukan (click untuk menghilangkan ini)</li>")
+                                "<li class='list-group-item product-hide p-2'>Produk tidak ditemukan (click untuk menghilangkan ini)</li>"
+                                )
                         }
                     });
 
@@ -190,7 +256,7 @@
 
             $("body").on("click", ".product-show", function () {
                 let keyword = $(this).text()
-                
+
                 let dataId = $(this).data('product-id');
                 const checker = order.find(element => {
                     if (element.productId === dataId) {
@@ -201,19 +267,20 @@
                 console.log(checker)
                 if (checker == undefined) {
                     let element = AddElement({
-                      id: dataId,
-                      name: keyword
+                        id: dataId,
+                        name: keyword
                     })
 
                     // console.log()
-                    if(order.length == 0){
-                      $("#bodyTable").html("")
+                    if (order.length == 0) {
+                        $("#bodyTable").html("")
                     }
                     $("#bodyTable").append(element)
 
                     let toPush = {
                         productId: $(this).data('product-id'),
-                        quantity: 0
+                        quantity: 0,
+                        unit: ''
                     }
                     order.push(toPush)
                 } else {
@@ -239,10 +306,24 @@
                     }
                     return false;
                 });
+                console.log(order)
             })
 
-            $("#submit").click(function(){
-              if (order.length < 1) {
+            $("body").on("keyup", ".request-unit", function () {
+                let unit = $(this).val();
+                let productId = $(this).closest("tr").data('id');
+                const checker = order.find(element => {
+                    if (element.productId === productId) {
+                        element.unit = unit
+                        return true;
+                    }
+                    return false;
+                });
+                console.log(order)
+            })
+
+            $("#submit").click(function () {
+                if (order.length < 1) {
                     swal({
                         title: "Gagal",
                         text: "Belum ada produk yang ditambahkan",
@@ -251,20 +332,42 @@
                     return false;
                 }
 
+                order.forEach(element => {
+                    if (element.quantity < 1) {
+                        swal({
+                            title: "Gagal",
+                            text: "semua jumlah harus di isi",
+                            type: "error"
+                        });
+                        return false;
+                    }
+
+                    if (element.unit == '') {
+                        swal({
+                            title: "Gagal",
+                            text: "semua unit harus diisi",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                });
+
                 let checkoutValue = {
-                    originStore: storeId,
+                    supplierId: supplierId,
                     destinationStore: destinationStoreId,
                     product: order,
-                    employeeId: employeeId
+                    employeeId: employeeId,
+                    note: note,
+                    "_method": "put"
                 }
-                console.log()
+                console.log(checkoutValue)
 
                 $.ajax({
                     type: "POST",
                     processData: false,
                     contentType: 'application/json',
                     cache: false,
-                    url: "{{ url('/api/transfer-stock') }}",
+                    url: "{{ url('/api/order-supplier') }}/{{ $orderSupplier->id }}",
                     data: JSON.stringify(checkoutValue),
                     dataType: "json",
                     enctype: 'multipart/form-data',
@@ -274,9 +377,9 @@
                           text: response.message,
                           type: "success"
                       });
-                        
+
                         setTimeout(function () {
-                            window.location.replace("{{ url('admin/toko/management-stock') }}");
+                            window.location.replace("{{ url('admin/toko/order-supplier') }}/{{ $orderSupplier->id }}");
                         }, 1000)
                     },
                     error: function (response) {

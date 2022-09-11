@@ -64,7 +64,7 @@ class ManagementStockController extends BaseAdminController
     {
         $data['titlePage'] = "Buat Transfer Stock Product";
         $data['stores'] = Store::get();
-        return view('admin.pages.toko.stock.create-2', $data);
+        return view('admin.pages.toko.stock.create', $data);
     }
 
     /**
