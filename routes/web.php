@@ -111,6 +111,7 @@ Route::group([
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
+      Route::get('start-order-transfer-stock/{id}', [ManagementStockController::class, 'startTicket']);
       // transfer-stock
     });
 

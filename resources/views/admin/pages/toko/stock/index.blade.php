@@ -82,7 +82,7 @@
                                         <td>{{ $trStock->req_date}}</td>
                                         <td>{{ $trStock->requester->getFullNameAttribute() }}</td>
                                         <td>{{ isset($trStock->sender) ? $trStock->sender->getFullNameAttribute() : "Belum ada";}}</td>
-                                        <td><span class="badge bg-danger p-2">{{ $trStock->status->name }}</span></td>
+                                        <td><span class="badge bg-warning p-2">{{ $trStock->status->name }}</span></td>
                                         <td>
                                             
                                             <a href="{{ route('admin.management-stock.show', $trStock->id) }}" class="btn btn-success btn-sm me-1" data-toggle="tooltip"
@@ -93,7 +93,7 @@
                                                 @csrf @method('delete')
                                             </form>
                                             <button type="submit" class="btn btn-danger btn-sm delete-button me-1"
-                                                data-toggle="tooltip" data-placement="top" title="Hapus Transfer Stock">Hapus Data <i
+                                                data-toggle="tooltip" data-placement="top" title="Hapus Transfer Stock">Batalkan <i
                                                     class="fe fe-trash-2"></i></button>
                                         </td>
                                     </tr>

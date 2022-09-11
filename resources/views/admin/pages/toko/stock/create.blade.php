@@ -97,6 +97,7 @@
                                       <td>
                                           <input type="text" class="product-list form-control" name="product[]"
                                               id="product" placeholder="Input Nama Produk" autocomplete="off">
+                                          <small class="text-small">Stocks : <strong class="stock">0</strong></small>
                                           <div class="card card-search-product">
                                               <ul class="list-group list-group-flush data-list-product"
                                                   id="dataListProduct">
@@ -205,12 +206,13 @@
                             keyword: value
                         },
                         success: function (response) {
+                            console.log(response)
                             datas = response.product;
                             if (datas[0] !== undefined) {
                                 $.each(datas, function (k, data) {
                                     if (data.productName !== undefined) {
                                         if ($('*[data-product-id="' + data.productId + '"]').length == 0) {
-                                            let isid = `<li class="list-group-item product-show" data-product-id="` + data.productId + `">` + data.productName + `</li>`;
+                                            let isid = `<li class="list-group-item product-show" data-stock="`+data.stock+`" data-product-id="` + data.productId + `">` + data.productName + `</li>`;
                                             element.find(".data-list-product").append(isid)
                                         }
                                     }
@@ -246,12 +248,14 @@
             $("body").on("click", ".product-show", function () {
                 let nameProduct = $(this).html();
                 let idProduct = $(this).data("product-id")
+                let stock = $(this).data("stock")
                 if (listProduk.indexOf(idProduct) !== -1) {
                     alert("Produk ini sudah di pilih sebelumnya.")
                 } else {
                     // listProduk.push(idProduct)
                     if(idProduct !== ""){
                       $(this).closest(".card-search-product").siblings(".product-list").val(nameProduct)
+                      $(this).closest(".card-search-product").siblings(".stock").val(stock)
                     }
                     $(this).closest(".card-search-product").hide();
                     $(".data-list-product").html("")

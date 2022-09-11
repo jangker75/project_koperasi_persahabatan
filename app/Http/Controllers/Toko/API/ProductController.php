@@ -13,10 +13,15 @@ class ProductController extends Controller
 {
     public function searchProduct(Request $request){
       try {
-        $data = ProductStockRepositories::findProductOnStockByKeyword($request->keyword, $request->notInListProduct, $request->originStore);
+        $product = ProductStockRepositories::findProductOnStockByKeyword($request->keyword, $request->notInListProduct, $request->originStore);
+
+        if(!$product){
+          $data['message'] = "Failed Search Product";
+          return response()->json($data, 500);
+        }
 
         $data['message'] = "Success Search Product";
-        $data['product'] = $data;
+        $data['product'] = $product;
 
         return response()->json($data, 200);
       } catch (QueryException $e) {

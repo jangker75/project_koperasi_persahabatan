@@ -11,6 +11,8 @@ class ProductStockRepositories{
     $notInListProduct = $notIn;
     $keyword = str($keyword)->slug();
 
+    $middle = "";
+
 
     $query = "
       SELECT 
@@ -23,12 +25,16 @@ class ProductStockRepositories{
       AND stocks.qty > 0
       ";
 
-    $middle = $originStore !== null ? " AND stocks.store_id = " . $originStore : "";
-    $middle = $notInListProduct !== null ? " AND stocks.product_id NOT IN (" . implode(",", $notInListProduct) . ")" : "";
+    if($originStore !== null){
+      $middle .= " AND stocks.store_id = " . $originStore;
+    }
+    if($notInListProduct !== null){
+      $middle .= " AND stocks.product_id NOT IN (" . implode(",", $notInListProduct) . ")";
+    }
+    
     $lastQuery = " ORDER BY stocks.id DESC LIMIT 6";
     $query = $query.$middle.$lastQuery;
 
-    
     $data = DB::select(DB::raw($query));
 
     return $data;
