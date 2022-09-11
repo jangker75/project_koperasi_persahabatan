@@ -16,8 +16,11 @@ class OrderFactory extends Factory
      */
     public function definition()
     {
+        $subtotal = rand(10000, 100000);
         return [
-            //
+            'subtotal' => $subtotal,
+            'total' => $subtotal,
+            'status_id' => 3,
         ];
     }
 }

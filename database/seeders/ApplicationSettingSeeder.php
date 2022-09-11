@@ -58,6 +58,13 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Phone Number Company',
                 'type' => 'text',
             ],
+            [
+                'name' => 'delivery_fee',
+                'label' => 'Delivery Fee',
+                'content' => 0,
+                'description' => 'Biaya Antar',
+                'type' => 'number',
+            ],
         ];
         collect($data)->each(function($item){
             ApplicationSetting::create($item);

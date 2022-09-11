@@ -45,38 +45,78 @@ class MDStatusSeeder extends Seeder
                 'id' => 3,
                 'name' => 'Open',
                 'description' => 'Tiket ini baru saja dibuat',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders',
+                'color_button' => 'btn-info'
             ],
             [
                 'id' => 4,
                 'name' => 'waiting',
                 'description' => 'Tiket ini sedang menunggu untuk di process',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders,paylater',
+                'color_button' => 'btn-warning'
             ],
             [
                 'id' => 5,
                 'name' => 'process',
                 'description' => 'Tiket ini sedang dikerjakan',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders',
+                'color_button' => 'btn-warning'
             ],
             [
                 'id' => 6,
                 'name' => 'success',
                 'description' => 'Tiket ini berhasil dan sudah selesai dikerjakan',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders,paylater',
+                'color_button' => 'btn-success'
             ],
             [
                 'id' => 7,
                 'name' => 'failed',
                 'description' => 'Tiket ini gagal dikerjakan, dan dibatalkan',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders',
+                'color_button' => 'btn-danger'
             ],
             [
                 'id' => 8,
                 'name' => 'reject',
                 'description' => 'Tiket ini dibatalkan',
-                'type' => 'orders,order_suppliers,transfer_stocks',
+                'type' => 'orders',
+                'color_button' => 'btn-danger'
             ],
+            [
+                'id' => 9,
+                'name' => 'approved',
+                'description' => 'Tiket ini telah disetujui',
+                'type' => 'orders,paylater',
+                'color_button' => 'btn-success'
+            ],
+            [
+                'name' => 'Create Ticket',
+                'description' => 'Pengajuan untuk penambahan stock',
+                'type' => 'order_suppliers,transfer_stocks',
+            ],
+            [
+                'name' => 'Approved Ticket',
+                'description' => 'Pengajuan Telah di setujui',
+                'type' => 'order_suppliers,transfer_stocks',
+            ],
+            [
+                'name' => 'Ordering',
+                'description' => 'Sesi Pemesanan',
+                'type' => 'order_suppliers,transfer_stocks',
+            ],
+            [
+                'name' => 'Processing',
+                'description' => 'Pesanan sedang disiapkan',
+                'type' => 'transfer_stocks',
+            ],
+            [
+                'name' => 'Receive',
+                'description' => 'Pesanan sudah diterima',
+                'type' => 'order_suppliers,transfer_stocks',
+            ],
+            
+            
         ];
         $statusLoan = [
             [

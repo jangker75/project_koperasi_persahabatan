@@ -113,7 +113,7 @@
                                     <td>{{ $price->margin }}%</td>
                                     <td>{{ $price->updated_at }}</td>
                                     <td>
-                                        <!-- Button trigger modal -->
+                                        {{-- <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#modalRevisi">
                                             Revisi Harga Saat ini
@@ -180,7 +180,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-info" data-bs-toggle="modal"
@@ -210,7 +210,7 @@
                                                                         id="basic-addon1">Rp</span>
                                                                     <input type="text"
                                                                         class="form-control format-uang cost"
-                                                                        placeholder="Harga Modal" name="cost"
+                                                                        placeholder="Harga Modal" name="cost" value="0"
                                                                         id="cost2">
                                                                 </div>
                                                             </div>
@@ -289,27 +289,53 @@
     @slot('script')
     <script>
         $(document).ready(function () {
-            //calculate margin & profit
-            $('#revenue1').keyup(function () {
-                let cost = $('#cost1').val();
-                cost = parseInt(cost.replace('.', ''))
-                let revenue = $('#revenue1').val()
-                revenue = parseInt(revenue.replace('.', ''));
-
-                let profit = revenue - cost;
-                let margin = profit * 100 / revenue;
-
-                $('#margin1').val(margin)
-                $('#profitPrice1').val(formatRupiah(String(profit)))
-            })
-            $('#revenue2').keyup(function () {
+            $('#cost2').focusout(function () {
                 let cost = $('#cost2').val();
                 cost = parseInt(cost.replace('.', ''))
+                
                 let revenue = $('#revenue2').val()
                 revenue = parseInt(revenue.replace('.', ''));
 
                 let profit = revenue - cost;
-                let margin = profit * 100 / revenue;
+                let margin = Math.round(profit * 100 / revenue);
+
+                if(margin < 15){
+                  swal({
+                        title: "Gagal",
+                        text: "Harga harus memiliki minimal margin 15%",
+                        type: "error"
+                    });
+                    return false;
+                }
+
+                $('#margin2').val(margin)
+                $('#profitPrice2').val(formatRupiah(String(profit)))
+            })
+            $('#revenue2').focusout(function () {
+                let cost = $('#cost2').val();
+                cost = parseInt(cost.replace('.', ''))
+                if(cost <= 0){
+                  swal({
+                      title: "Gagal",
+                      text: "Harga Beli harus diinput terlebih dahulu",
+                      type: "error"
+                  });
+                  return false;
+                }
+                let revenue = $('#revenue2').val()
+                revenue = parseInt(revenue.replace('.', ''));
+
+                let profit = revenue - cost;
+                let margin = Math.round(profit * 100 / revenue);
+                
+                if(margin < 15){
+                  swal({
+                        title: "Gagal",
+                        text: "Harga harus memiliki minimal margin 15%",
+                        type: "error"
+                    });
+                    return false;
+                }
 
                 $('#margin2').val(margin)
                 $('#profitPrice2').val(formatRupiah(String(profit)))

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->datetime('order_date');
             $table->datetime('received_date')->nullable();
             $table->longText('note')->nullable();
+            $table->integer('total')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

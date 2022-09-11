@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('location');
             $table->string('image')->default('default-image.jpg');
             $table->integer('manager_id');
+            $table->boolean('is_warehouse')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

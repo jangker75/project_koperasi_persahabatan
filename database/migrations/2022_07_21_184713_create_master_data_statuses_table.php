@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('type');
+            $table->string('color_button')->nullable();
             $table->timestamps();
         });
     }

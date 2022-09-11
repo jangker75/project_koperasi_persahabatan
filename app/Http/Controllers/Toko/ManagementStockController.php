@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Toko;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransferStock;
+use App\Models\MasterDataStatus;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\TransferStock;
+use App\Repositories\TransferstockRepository;
+use App\Services\HistoryTransferStockService;
 use Carbon\Carbon;
 use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
@@ -72,13 +75,15 @@ class ManagementStockController extends BaseAdminController
      */
     public function store(Request $request)
     {
-        $transfer = TransferStock::create([
-          'from_store_id' => $request->originStore, 
-          'to_store_id' => $request->destinationStore,
-          'req_empl_id' => Auth::user()->employee->id,
-          'req_date' => Carbon::now()
-        ]);
-        try {
+      try {
+          DB::beginTransaction();
+          $transfer = TransferStock::create([
+            'from_store_id' => $request->originStore, 
+            'to_store_id' => $request->destinationStore,
+            'req_empl_id' => Auth::user()->employee->id,
+            'req_date' => Carbon::now()
+          ]);
+
           foreach ($request->product as $kPro => $product) {
 
             $product = Product::where('name', $product)->first();
@@ -93,13 +98,15 @@ class ManagementStockController extends BaseAdminController
 
             DetailTransferStock::create([
               'transfer_stock_id' => $transfer->id,
-              'product_id' => $product->id,
-              'request_qty' => $totalQty
+              'product_id' => $product->productId,
+              'request_qty' => $product->quantity
             ]);
           }
 
+          DB::commit();
           return redirect()->route('admin.management-stock.index');
         } catch (QueryException $e) {
+          DB::rollBack();
           return redirect()->back()->with("error", $e->errorInfo[2]);
         }
     }
@@ -114,6 +121,8 @@ class ManagementStockController extends BaseAdminController
     {
         $data['transferStock'] = TransferStock::find($id);
         $data['titlePage'] = "Detail Transfer Stock " .  $data['transferStock']->transfer_stock_code;
+        $data['statuses'] = MasterDataStatus::where('type', 'like', '%transfer_stocks%')->get();
+        $data['availableStock'] = TransferstockRepository::getItemFromId($id);
         return view('admin.pages.toko.stock.show', $data);
     }
 
@@ -128,7 +137,7 @@ class ManagementStockController extends BaseAdminController
       $data['transferStock'] = TransferStock::find($id);
       $data['titlePage'] = "Edit Transfer Stock " .  $data['transferStock']->transfer_stock_code;
       $data['stores'] = Store::get();
-      return view('admin.pages.toko.stock.create', $data);
+      return view('admin.pages.toko.stock.edit', $data);
     }
 
     /**
@@ -191,7 +200,6 @@ class ManagementStockController extends BaseAdminController
 
           return redirect()->route('admin.management-stock.index');
         } catch (QueryException $e) {
-          dd($e);
           return redirect()->back()->with("error", $e->errorInfo[2]);
         }
     }
@@ -212,14 +220,19 @@ class ManagementStockController extends BaseAdminController
         return redirect()->back();
     }
 
-
     public function confirmTicket($id){
-      $transfer = TransferStock::find($id);
+      HistoryTransferStockService::update('Approved Ticket', $id);
+      return redirect()->back();
+    }
 
-      $transfer->update([
-        'status_id' => 4
-      ]);
+    public function startTicket($id){
+      HistoryTransferStockService::update('Ordering', $id);
+      return redirect()->back();
+    }
 
+    public function rejectTicket($id){
+      $transferStock = TransferStock::find($id);
+      HistoryTransferStockService::update("reject", $id);
       return redirect()->back();
     }
 }
