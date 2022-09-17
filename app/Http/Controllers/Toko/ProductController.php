@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\Store;
 use App\Models\Supplier;
 use App\Services\DynamicImageService;
 use Illuminate\Http\Request;
@@ -47,6 +48,7 @@ class ProductController extends BaseAdminController
         $data['categories'] = Category::pluck('name','id');
         $data['brand'] = Brand::pluck('name','id');
         $data['suppliers'] = Supplier::get();
+        $data['stores'] = Store::get();
         $data['titlePage'] = 'Formulir Produk Baru';
         return view('admin.pages.toko.product.form', $data);
     }
@@ -87,20 +89,6 @@ class ProductController extends BaseAdminController
       // attaching product to categories
       $product->categories()->attach($request->categories);
 
-      // attaching product to suppliers
-      if(isset($request->supplier)){
-        $product->suppliers()->attach($request->supplier);
-      }else{
-        $supplier = Supplier::create([
-          'name' => $request->new_supplier['name'],
-          'contact_name' => $request->new_supplier['contact_name'],
-          'contact_address' => $request->new_supplier['contact_address'],
-          'contact_phone' => $request->new_supplier['contact_phone'],
-          'contact_link' => $request->new_supplier['contact_link'],
-        ]);
-        $product->suppliers()->attach($supplier->id);
-      }
-
       // createing price to product
       $price = Price::create([
         'product_id' => $product->id,
@@ -111,11 +99,13 @@ class ProductController extends BaseAdminController
       ]);
 
       // creating stock to product
-      $stock = Stock::create([
-        'product_id' => $product->id,
-        'store_id' => 1,
-        'qty' => 0
-      ]);
+      foreach($request->stock as $kStock => $stockRequest){
+        $stock = Stock::create([
+          'product_id' => $product->id,
+          'store_id' => $kStock,
+          'qty' => $stockRequest
+        ]);
+      }
 
       return redirect()->route('admin.product.index');
     }

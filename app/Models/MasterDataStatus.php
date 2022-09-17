@@ -9,7 +9,7 @@ class MasterDataStatus extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'type'];
+    protected $fillable = ['name', 'description', 'type', 'color_button'];
 
     public function scopeStatusEmployee($query)
     {

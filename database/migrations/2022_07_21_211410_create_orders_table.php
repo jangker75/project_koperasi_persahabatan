@@ -1,7 +1,9 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -16,15 +18,14 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_code');
-            $table->dateTime('order_date');
-            $table->boolean('is_paylater')->default(false);
+            $table->longText('note')->nullable();
+            $table->dateTime('order_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->integer('subtotal')->default(0);
-            $table->integer('tax')->default(0);
+            $table->integer('discount')->default(0);
             $table->integer('total')->default(0);
-            $table->integer('cash')->default(0);
-            $table->integer('exchange')->default(0);
-            $table->integer('transaction_id');
             $table->integer('status_id');
+            $table->integer('employee_onduty_id')->nullable();
+            $table->integer('store_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

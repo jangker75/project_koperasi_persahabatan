@@ -33,4 +33,8 @@ class ConstantEnum
         'AKTIVITAS' => 'activity_savings_balance',
         'SUKARELA' => 'voluntary_savings_balance',
     ];
+    const ORDER_BY = [
+      "pos" => "POS",
+      "nasabah" => "NASABAH"
+    ];
 }

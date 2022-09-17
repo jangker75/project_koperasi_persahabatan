@@ -18,8 +18,12 @@ return new class extends Migration
             $table->integer('order_supplier_id');
             $table->integer('product_id');
             $table->integer('request_qty');
+            $table->string('request_unit');
+            $table->integer('quantity_per_unit')->nullable();
             $table->integer('receive_qty')->nullable();
-            $table->integer('available_qty')->nullable();
+            $table->integer('price_per_unit')->nullable();
+            $table->integer('subtotal')->nullable();
+            $table->integer('all_quantity_in_units')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

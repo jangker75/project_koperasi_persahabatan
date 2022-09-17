@@ -27,6 +27,33 @@ class CmsMenuSeeder extends Seeder
                 'icon' => 'fe fe-home', 
         ]);
 
+        // POS
+        CmsMenu::create([
+                'isseparator' => true,
+                'name' => 'Point of Sale',
+        ]);
+        CmsMenu::create([
+                'name' => 'Checkout Order',
+                'url' => 'admin/pos/checkout', 
+                'icon' => 'fe fe-dollar-sign', 
+        ]);
+        CmsMenu::create([
+                'name' => 'Permintaan Order',
+                'url' => 'admin/pos/request-order', 
+                'icon' => 'fa fa-money', 
+        ]);
+        CmsMenu::create([
+                'name' => 'History Order',
+                'url' => 'admin/pos/history-order', 
+                'icon' => 'fa fa-shopping-cart', 
+        ]);
+        CmsMenu::create([
+                'name' => 'History Paylater',
+                'url' => 'admin/pos/history-paylater', 
+                'icon' => 'fa fa-credit-card', 
+        ]);
+        
+
         // Kelola Toko Menu
         CmsMenu::create([
                 'isseparator' => true,
@@ -92,20 +119,20 @@ class CmsMenuSeeder extends Seeder
         ]);
         //END Sub Menu Pengadaan
 
-        $dataPaylater = CmsMenu::create([
-                'name' => 'Paylater',
-                'url' => 'admin/paylater', 
-                'icon' => 'fa fa-money', 
-        ]);
-        // Sub Menu Paylater
-        $dataPaylater->subMenus()->create([
-                'name' => 'Pengajuan Paylater',
-                'url' => 'admin/paylater/pengajuan-paylater', 
-        ]);
-        $dataPaylater->subMenus()->create([
-                'name' => 'Kelola Data Paylater',
-                'url' => 'admin/paylater/kelola-data-paylater', 
-        ]);
+        // $dataPaylater = CmsMenu::create([
+        //         'name' => 'Paylater',
+        //         'url' => 'admin/paylater', 
+        //         'icon' => 'fa fa-money', 
+        // ]);
+        // // Sub Menu Paylater
+        // $dataPaylater->subMenus()->create([
+        //         'name' => 'Pengajuan Paylater',
+        //         'url' => 'admin/paylater/pengajuan-paylater', 
+        // ]);
+        // $dataPaylater->subMenus()->create([
+        //         'name' => 'Kelola Data Paylater',
+        //         'url' => 'admin/paylater/kelola-data-paylater', 
+        // ]);
         //END Sub Menu Paylater
 
         

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Toko\PaylaterController;
 use App\Http\Controllers\ApplicationSettingController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Master\MasterDataStatusController;
@@ -13,8 +14,10 @@ use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\Nasabah\PagesController;
 use App\Http\Controllers\Nasabah\ProfileController;
 use App\Http\Controllers\Toko\ManagementStockController;
+use App\Http\Controllers\Toko\OrderController;
 use App\Http\Controllers\Toko\OrderSupplierController;
 use App\Http\Controllers\Toko\PriceController;
+use App\Http\Controllers\toko\PrintReceiptController;
 use App\Http\Controllers\Toko\ProductController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
@@ -48,14 +51,10 @@ Route::group([
     'as' => 'nasabah.',
 ], function () {
     // customer
-    Route::get('/', function () {
-        // return redirect('/admin');
-        $data['product'] = Product::get();
-        return view('nasabah.pages.home', $data);
-    })->name('home');
-    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/', [PagesController::class, 'home'])->name('home');
     Route::get('/product', [PagesController::class, 'product'])->name('product.index');
-    Route::get('/product/{slug}', [PagesController::class, 'productDetail'])->name('product.show');
+    Route::get('/product/{sku}', [PagesController::class, 'productDetail'])->name('product.show');
+    Route::get('/checkout', [PagesController::class, 'checkout'])->name('product.checkout');
     //Logout custom
 
     Route::get('employee-savings-history/{employee_id}/{saving_type}', [EmployeeController::class, 'getEmployeeSavingsHistory'])->name('get.employee.savings.history');
@@ -64,6 +63,10 @@ Route::group([
 
     Route::get('loan-list-nasabah', [LoanNasabahController::class, 'index'])->name('loan.index');
     Route::get('loan-list-nasabah/{loan}', [LoanNasabahController::class, 'show'])->name('loan.show');
+
+    Route::get('profile', [PagesController::class, "profile"])->name('profile');
+    Route::get('riwayat-paylater', [PagesController::class, "paylaterHistory"])->name('history-paylater');
+    Route::get('detail-paylater/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
 });
 
 Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
@@ -77,12 +80,26 @@ Route::group([
     
     
 
+
+    // POS
+    
+    Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);
+    Route::get('pos/request-order', [DashboardController::class, 'requestOrder'])->name('request-order.index');
+    Route::get('pos/request-order/{orderCode}', [DashboardController::class, 'detailRequestOrder'])->name('request-order.detail');
+    Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printReceipt'])->name('print-receipt');
+    Route::get('pos/history-order', [OrderController::class, 'index'])->name('order.index');
+    Route::get('pos/history-order/{orderCode}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('pos/history-paylater', [PaylaterController::class, 'index'])->name('paylater.index');
+    Route::get('pos/history-paylater/{staffId}', [PaylaterController::class, 'show'])->name('paylater.show');
+
+
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
     Route::group([
       'prefix' => 'toko'
     ], function(){
       Route::resource('product', ProductController::class);
+    Route::resource('price', PriceController::class);
       Route::resource('category', CategoryController::class);
       Route::resource('store', StoreController::class);
       Route::resource('brand', BrandController::class);
@@ -94,7 +111,14 @@ Route::group([
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
+      Route::get('start-order-transfer-stock/{id}', [ManagementStockController::class, 'startTicket']);
+      Route::get('reject-order-transfer-stock/{id}', [ManagementStockController::class, 'rejectTicket']);
       // transfer-stock
+      // order-supplier
+      Route::get('confirm-order-supplier/{id}', [OrderSupplierController::class, 'confirmTicket']);
+      Route::get('start-order-supplier/{id}', [OrderSupplierController::class, 'startTicket']);
+      Route::get('reject-order-supplier/{id}', [OrderSupplierController::class, 'rejectTicket']);
+      // order-supplier
     });
 
     //toko-online
@@ -126,6 +150,7 @@ Route::group([
     // Download PDF
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
+    Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
 
     // Download Data
     Route::get('download-export-data-nasabah/{type}', [EmployeeController::class, 'exportData'])->name('download.data-nasabah');
