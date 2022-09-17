@@ -66,6 +66,7 @@ class LoanSubmissionController extends BaseAdminController
     public function store(LoanStoreRequest $request)
     {
         $input = $request->safe();
+        dd($input->all());
         $data['transaction_number'] = (new CodeService())->generateCode('KOP');
         $data['remaining_amount'] = $input->total_loan_amount;
         $data['created_by'] = auth()->user()->employee->id;

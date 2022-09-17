@@ -21,7 +21,8 @@ return [
     'response_date' => 'Tanggal Cek',
     'response_user' => 'Di Cek oleh',
     'created_by' => 'Di request Oleh',
-    'admin_fee' => 'Admin Fee',
+    'admin_fee' => 'Simpanan Khusus',
+    // 'admin_fee' => 'Admin Fee',
     'attachment' => 'Attachment',
     'notes_monthly_payment' => 'Pembayaran bulanan untuk bulan :month :year, nomor kontrak : :transaction_number'
 ];

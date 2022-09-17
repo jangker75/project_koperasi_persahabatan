@@ -174,9 +174,9 @@ class EmployeeController extends BaseAdminController
         $datatable = new DataTables();
         return $datatable->eloquent($query)
             ->addIndexColumn(true)
-            ->editColumn('salary', function ($row) {
-                return format_uang($row->salary);
-            })
+            // ->editColumn('salary', function ($row) {
+            //     return format_uang($row->salary);
+            // })
             ->addColumn('actions', function ($row) {
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="' . route("admin.employee.show", [$row]) . '" type="button">View</a>';
