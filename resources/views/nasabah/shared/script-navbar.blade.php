@@ -3,15 +3,14 @@
     let count = 0;
     let total = 0;
     
-    if (sessionStorage.getItem('cart') !== null) {
-        cart = JSON.parse(sessionStorage.getItem("cart"))
-
+    if (Cookies.get('cart') !== null) {
+        cart = JSON.parse(Cookies.get("cart"))
         cart.forEach(element => {
             count += element.qty
         });
         $("#totalItem").html(count)
 
-        total = sessionStorage.getItem('total')
+        total = Cookies.get('total')
     } else {
         cart = [];
     }
@@ -22,6 +21,7 @@
 
     function refreshCart() {
 
+      // console.log(cart)
       setTimeout(function(){
         // set count again
         let recount = 0;
@@ -39,14 +39,15 @@
       }, 500)
 
         setTimeout(function () {
-            sessionStorage.removeItem('cart');
-            sessionStorage.setItem('cart', JSON.stringify(cart))
+            Cookies.remove('cart');
+            Cookies.set('cart', JSON.stringify(cart))
         }, 500);
         setTimeout(function () {
-            sessionStorage.removeItem('total');
-            sessionStorage.setItem('total', total)
+            Cookies.remove('total');
+            Cookies.set('total', total)
         }, 500);
 
+        
     }
 
     function countSubtotal(item) {

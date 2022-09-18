@@ -101,12 +101,12 @@
 
 @section('script')
 <script>
-    let listCart = JSON.parse(sessionStorage.getItem('cart'));
-    let totalCheckout = JSON.parse(sessionStorage.getItem('total'));
+    let listCart = JSON.parse(Cookies.get('cart'));
+    let totalCheckout = JSON.parse(Cookies.get('total'));
     let paylater = false;
     let delivery = false;
     let note = "";
-    let storeId = sessionStorage.getItem('storeId')
+    let storeId = Cookies.get('storeId')
     $("#paymentCode").hide();
     $("#location").hide();
     $('#deliveryFee').hide()
@@ -229,8 +229,8 @@
                           type: "success"
                       });
                       
-                      sessionStorage.removeItem('cart')
-                      sessionStorage.removeItem('total')
+                      Cookies.remove('cart')
+                      Cookies.remove('total')
                       setTimeout(function () {
                           window.location.replace("{{ url('/') }}")
                       }, 2500)
@@ -266,8 +266,8 @@
                       type: "success"
                   });
                   
-                  sessionStorage.removeItem('cart')
-                  sessionStorage.removeItem('total')
+                  Cookies.remove('cart')
+                  Cookies.remove('total')
                   setTimeout(function () {
                       window.location.replace("{{ url('/') }}")
                   }, 2500)
