@@ -67,6 +67,7 @@
     @include('admin.components.script-footer')
     @include('admin.shared.toast-script')
     @include('admin.shared.script_delete_index')
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     @include('nasabah.shared.script-navbar')
 
     @yield('scriptVendor')

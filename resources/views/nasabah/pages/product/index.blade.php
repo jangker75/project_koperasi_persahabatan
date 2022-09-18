@@ -67,17 +67,17 @@
         let pages = 1;
 
         // store
-        if (sessionStorage.getItem("storeId") !== null) {
-            $("#storeId").val(sessionStorage.getItem("storeId"))
+        if (Cookies.get("storeId") !== null) {
+            $("#storeId").val(Cookies.get("storeId"))
         } else {
             $("#storeId").val("{{ $stores[0]->id }}")
         }
-        sessionStorage.setItem('storeId', $("#storeId").val())
+        Cookies.set('storeId', $("#storeId").val())
         $("#storeId").change(function () {
             cart = [];
             refreshCart()
-            sessionStorage.removeItem('storeId');
-            sessionStorage.setItem('storeId', $(this).val())
+            Cookies.remove('storeId');
+            Cookies.set('storeId', $(this).val())
             callRender()
         })
 
@@ -228,6 +228,11 @@
             } 
 
             refreshCart()
+            swal({
+                title: "Success!",
+                text: "Sukses Menambah ke keranjang",
+                type: "success"
+            });
         })
     })
 
