@@ -54,7 +54,7 @@
         let sum = 0;
 
         for (let index = 0; index < item.length; index++) {
-            sum += item[index].subtotal ;
+            sum += parseInt(item[index].subtotal);
         }
 
         return sum;
