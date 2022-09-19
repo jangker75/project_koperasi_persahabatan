@@ -11,6 +11,7 @@ use App\Models\InterestSchemeType;
 use App\Models\Loan;
 use App\Services\CodeService;
 use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use App\Services\LoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,7 +67,6 @@ class LoanSubmissionController extends BaseAdminController
     public function store(LoanStoreRequest $request)
     {
         $input = $request->safe();
-        dd($input->all());
         $data['transaction_number'] = (new CodeService())->generateCode('KOP');
         $data['remaining_amount'] = $input->total_loan_amount;
         $data['created_by'] = auth()->user()->employee->id;
@@ -197,8 +197,14 @@ class LoanSubmissionController extends BaseAdminController
                 'profit_employee_amount' => 0,
                 'description' => $notesLoanHistory,
             ]);
-            $notesCompanyBalance = __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]);
-            (new CompanyService())->addCreditBalance($loan->admin_fee, 'loan_balance', $notesCompanyBalance);
+            $notesEmployeeBalance = __('balance_company.balance_history', ['type' => 'Simpanan Khusus pinjaman baru', 'data' => $loan->transaction_number]);
+            // $notesCompanyBalance = __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]);
+            (new EmployeeService())->addCreditBalance(
+                saving_id: $loan->employee->savings->id,
+                value: $loan->admin_fee,
+                saving_type: 'activity_savings_balance',
+                description: $notesEmployeeBalance);
+            // (new CompanyService())->addCreditBalance($loan->admin_fee, 'loan_balance', $notesCompanyBalance);
         };
 
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_edit_data_success'));

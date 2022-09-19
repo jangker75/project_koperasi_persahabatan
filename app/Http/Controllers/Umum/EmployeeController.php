@@ -179,8 +179,8 @@ class EmployeeController extends BaseAdminController
             // })
             ->addColumn('actions', function ($row) {
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
-                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="' . route("admin.employee.show", [$row]) . '" type="button">View</a>';
-                $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="' . route("admin.employee.edit", [$row]) . '" type="button">Edit</a>';
+                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="' . route("admin.employee.show", [$row]) . '" type="button"><i class="fa fa-eye"></i></a>';
+                $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="' . route("admin.employee.edit", [$row]) . '" type="button"><i class="fa fa-pencil"></i></a>';
                 $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
                             <i class="fa fa-trash"></i>
                         </a>
@@ -188,7 +188,8 @@ class EmployeeController extends BaseAdminController
                             <input name="_method" type="hidden" value="delete">
                             <input name="_token" type="hidden" value="' . Session::token() . '">
                         </form>';
-                        $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="' . route("admin.employee.download.card", ['employee' => $row->id]) . '" type="button">Download Card</a>';
+                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-primary badge" href="' . route("admin.employee.download.card", ['employee' => $row->id]) . '" type="button">Download Card</a>';
+                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.employee.download.form-pendaftaran", ['employee' => $row->id]) . '" type="button">Download Form</a>';
                 $btn = $btn . '</div>';
                 return $btn;
             })
@@ -292,10 +293,14 @@ class EmployeeController extends BaseAdminController
                 ->download('data_nasabah.xlsx');
         }
     }
-
+    public function downloadFormPendaftaran(Employee $employee)
+    {
+        $data['employee'] = $employee;
+        $pdf = Pdf::loadView('admin.export.PDF.form_pendaftaran_nasabah', $data);
+        return $pdf->stream("Form_pendaftaran_".$employee->name.".pdf");
+    }
     public function downloadEmployeeCard(Employee $employee)
     {
-        // dd($employee);
         $data['employee'] = $employee;
         $scale = 2;
         $customPaper = array(0,0,242.6457 * $scale, 153.01417 * $scale);

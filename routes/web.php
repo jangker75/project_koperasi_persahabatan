@@ -130,6 +130,7 @@ Route::group([
     Route::post('check-status-loan-employee', [EmployeeController::class, 'checkStatusLoanEmployee'])->name('check.status.loan.employee');
     Route::resource('ex-employee', ExEmployeeController::class);
     Route::get('employee-download-card/{employee}', [EmployeeController::class, 'downloadEmployeeCard'])->name('employee.download.card');
+    Route::get('employee-download-form-pendaftaran/{employee}', [EmployeeController::class, 'downloadFormPendaftaran'])->name('employee.download.form-pendaftaran');
     Route::resource('cash-in-out', CashTransactionController::class);
     // Divisi Umum
 
@@ -149,6 +150,7 @@ Route::group([
 
     // Download PDF
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
+    Route::get('download-bukti-pelunasan/{loan}', [LoanListController::class, 'downloadBuktiPelunasanPDF'])->name('download.bukti-pelunasan');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
     Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
 

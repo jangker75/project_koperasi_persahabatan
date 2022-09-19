@@ -194,6 +194,10 @@ class LoanListController extends BaseAdminController
         $canvas->page_text(750, 18, "Hal {PAGE_NUM} dari {PAGE_COUNT}", null, 11, [0, 0, 0]);
         return $pdf->stream($data['title'].'.pdf');
     }
+    public function downloadBuktiPelunasanPDF(Loan $loan)
+    {
+        dd($loan);
+    }
     public function getIndexDatatables()
     {
         $keyword = request('keyword');
@@ -246,6 +250,9 @@ class LoanListController extends BaseAdminController
                 if(!$row->is_lunas && $row->approvalstatus->name == 'Approved'){
                     $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.loan.fullpayment", [$row]) .'" type="button">Pelunasan/Revisi</a>';
                     $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.kontrak.peminjaman", [$row->id]) .'" type="button">Download Kontrak</a>';
+                }
+                if($row->is_pelunasan_manual != 0){
+                    $btn = $btn . '<a class="btn btn-sm btn-warning" target="_blank" href="'. route("admin.download.bukti-pelunasan", [$row->id]) .'" type="button">Download bukti pelunasan</a>';
                 }
                 $btn = $btn . '</div>';
                 return $btn;

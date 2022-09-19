@@ -5,7 +5,7 @@ return [
     'company_id' => 'Nama Koperasi',
     'loan_balance' => 'Saldo Pinjaman',
     'store_balance' => 'Saldo Toko',
-    'other_balance' => 'Saldo Utama Koperasi',
+    'other_balance' => 'Saldo Umum',
     'total_balance' => 'Total Saldo',
 
     'source_balance' => 'Saldo Asal',

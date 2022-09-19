@@ -18,7 +18,7 @@ class Loan extends Model
         'profit_employee_ratio', 'total_pay_month', 'pay_per_x_month',
         'first_payment_date', 'notes', 'loan_approval_status_id','is_lunas',
         'response_date', 'response_user', 'admin_fee', 'created_by',
-        'attachment'
+        'attachment', 'is_pelunasan_manual'
     ];
     public function user()
     {
