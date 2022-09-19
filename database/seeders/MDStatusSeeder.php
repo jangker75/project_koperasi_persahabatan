@@ -23,7 +23,7 @@ class MDStatusSeeder extends Seeder
             ],
             [
                 'id' => 21,
-                'name' => 'Non PNS',
+                'name' => 'Kokarda',
                 'type' => 'status_employee',
             ],
             [

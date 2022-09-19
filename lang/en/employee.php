@@ -14,6 +14,7 @@ return [
     'address_2' => "Alamat 2",
     'phone' => "Nomor Telepon",
     'salary' => "Gaji (Salary)",
+    'salary_number' => "Nomor Gaji",
     'bank' => "Nama Bank",
     'rekening' => "Nomor Rekening",
     'registered_date' => "Tanggal Bergabung/Join Koperasi",

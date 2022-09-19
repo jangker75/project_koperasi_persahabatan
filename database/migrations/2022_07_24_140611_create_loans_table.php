@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('attachment', 250)->nullable();
             $table->integer('loan_approval_status_id');
             $table->integer('is_lunas')->default(0);
+            $table->integer('is_pelunasan_manual')->default(0);
             $table->timestamp('response_date')->nullable();
             $table->string('response_user', 100)->nullable();
             $table->string('created_by', 100)->nullable();

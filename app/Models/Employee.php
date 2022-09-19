@@ -17,7 +17,7 @@ class Employee extends Model
       'nik', 'nip', 'gender', 'bank', 'rekening', 'phone',
       'registered_date', 'resign_date','department_id',
       'position_id', 'status_employee_id','salary',
-      'resign_reason', 'resign_notes','birthplace'
+      'resign_reason', 'resign_notes','birthplace','salary_number'
     ];
 
     public function user(){

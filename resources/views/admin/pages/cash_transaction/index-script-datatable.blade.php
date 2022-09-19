@@ -31,7 +31,7 @@
             { data: "transaction_date", code: "transaction_date" },
             { data: "transaction_type", name: "transaction_type" },
             { data: "description", name: "description" },
-            { data: "actions", name: "actions" },
+            // { data: "actions", name: "actions" },
         ],
         language: {
             searchPlaceholder: 'Search...',

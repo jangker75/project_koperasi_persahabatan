@@ -42,6 +42,7 @@ class LoanService
             'description' => "Pelunasan Oleh Nasabah (Notes Pelunasan : ${description})",
         ]);
         $loan->update([
+            'is_pelunasan_manual' => 1,
             'is_lunas' => 1,
             'remaining_amount' => $loan->remaining_amount - $loan->remaining_amount,
             'notes' => $loan->notes. " (Notes Pelunasan : ${description})",

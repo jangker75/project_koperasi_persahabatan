@@ -31,7 +31,7 @@
                                     <th>{{ __('cash_transaction.transaction_date') }}</th>
                                     <th>{{ __('cash_transaction.transaction_type') }}</th>
                                     <th>{{ __('cash_transaction.description') }}</th>
-                                    <th>Actions</th>
+                                    {{-- <th>Actions</th> --}}
                                 </tr>
                             </thead>
                             <tbody>

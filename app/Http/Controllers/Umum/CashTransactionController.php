@@ -26,6 +26,10 @@ class CashTransactionController extends BaseAdminController
         $data['titlePage'] = 'Transaksi Kas Keluar/Masuk';
         return view('admin.pages.cash_transaction.index', $data);
     }
+    public function show($cash_in_out)
+    {
+        dd($cash_in_out);
+    }
     public function create()
     {
         $data = $this->data;
@@ -38,8 +42,8 @@ class CashTransactionController extends BaseAdminController
         DivisiUmumTransaction::create($input->merge([
             'transaction_date' => now()
         ])->all());
-        
-        if ($input->only('transaction_type') == 'credit') {
+        $input->description = $input->description ?? '';
+        if ($input->transaction_type == 'credit') {
             (new CompanyService())->addCreditBalance($input->amount, 'other_balance', $input->description);
         }else{
             (new CompanyService())->addDebitBalance($input->amount, 'other_balance', $input->description);
@@ -73,7 +77,7 @@ class CashTransactionController extends BaseAdminController
                 return format_uang($row->amount);
             })
             ->editColumn('transaction_type', function($row){
-                return ConstantEnum::TRANSACTION_TYPE[$row->transaction_type];
+                return ConstantEnum::TRANSACTION_TYPE_DIV_UMUM[$row->transaction_type];
             })
             ->editColumn('transaction_date', function ($row) {
                 return format_hari_tanggal_jam($row->transaction_date);
@@ -89,7 +93,7 @@ class CashTransactionController extends BaseAdminController
             })
             ->addColumn('actions', function ($row) {
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
-                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="' . route("admin.cash-in-out.show", [$row]) . '" type="button">View</a>';
+                // $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="' . route("admin.cash-in-out.show", [$row]) . '" type="button">View</a>';
                 $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="' . route("admin.cash-in-out.edit", [$row]) . '" type="button">Edit</a>';
                 $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
                             <i class="fa fa-trash"></i>

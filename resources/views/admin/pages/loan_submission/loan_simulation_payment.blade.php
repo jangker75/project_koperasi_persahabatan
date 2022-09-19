@@ -59,13 +59,13 @@
     </div>
     <div class="col-md-3">
         {!! Form::label('total_pay_month', __('loan.total_pay_month'), ['class' => 'form-label required']) !!}
-        {!! Form::number('total_pay_month', 12, [
-            'required' => 'required',
-            'id' => 'total_pay_month',
-            'class' =>
-                'form-control' .
-                ($errors->has('total_pay_month') ? ' is-invalid' : '') .
-                (!$errors->has('total_pay_month') && old('total_pay_month') ? ' is-valid' : ''),
+        {!! Form::select('total_pay_month', [5 => 5,10 => 10,20 => 20,30 => 30], null, [
+                'required' => 'required',
+                'id' => 'total_pay_month',
+                'class' =>
+                    'form-control form-select' .
+                    ($errors->has('total_pay_month') ? ' is-invalid' : '') .
+                    (!$errors->has('total_pay_month') && old('total_pay_month') ? ' is-valid' : ''),
         ]) !!}
     </div>
     <div class="col-md-3">

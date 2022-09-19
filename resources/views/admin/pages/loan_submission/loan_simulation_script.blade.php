@@ -31,7 +31,7 @@
         let totalLoanAmount = parseInt($('#total_loan_amount').val().replace('.',''))
         let interestType = $('#interest_amount_type').find(':selected').val()
         let interestScheme = $('#interest_scheme').find(':selected').text()
-        let totalPayMonth = $('#total_pay_month').val()
+        let totalPayMonth = $('#total_pay_month').find(':selected').text()
         let payPerXMonth = $('#pay_per_x_month').val()
         let totalPrincipalAmount = Math.round(totalLoanAmount / totalPayMonth)
         let totalInterestAmount = parseInt($('#interest_amount').val())
