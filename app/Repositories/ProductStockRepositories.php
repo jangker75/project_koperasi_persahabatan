@@ -130,4 +130,23 @@ class ProductStockRepositories{
 
     return $data;
   }
+
+  public function indexStock(){
+    $sql = "SELECT 
+              products.id, 
+              products.name,
+              products.sku,
+              (SELECT GROUP_CONCAT(stores.name)  FROM stores) AS store_name,
+              (SELECT GROUP_CONCAT(stocks.qty) FROM stocks WHERE stocks.product_id = products.id AND stocks.store_id IN (
+                SELECT id FROM stores
+              ) ORDER BY id LIMIT 1) AS qty
+            FROM products 
+            LEFT JOIN stocks ON stocks.product_id = products.id
+            LEFT JOIN stores ON stores.id = stocks.store_id
+    ";
+    
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
 }
