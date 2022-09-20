@@ -107,7 +107,9 @@ class PaylaterRepository{
           LEFT JOIN master_data_statuses ON employees.status_employee_id = master_data_statuses.id
         GROUP BY 
           employees.id,
-          transactions.requester_employee_id
+          transactions.requester_employee_id,
+          employees.first_name,
+          employees.last_name
     ";
     $data = DB::select(DB::raw($sql));
 

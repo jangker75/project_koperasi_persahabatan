@@ -9,6 +9,7 @@ use App\Models\MasterDataStatus;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\TransferStock;
+use App\Repositories\ProductStockRepositories;
 use App\Repositories\TransferstockRepository;
 use App\Services\HistoryTransferStockService;
 use Carbon\Carbon;
@@ -33,20 +34,7 @@ class ManagementStockController extends BaseAdminController
      */
     public function index()
     {
-        $query = "SELECT 
-            products.id, 
-            products.name,
-            products.sku,
-            (SELECT JSON_ARRAYAGG(stores.name)  FROM stores) AS store_name,
-            (SELECT JSON_ARRAYAGG(stocks.qty) FROM stocks WHERE stocks.product_id = products.id AND stocks.store_id IN (
-              SELECT id FROM stores
-            ) ORDER BY id LIMIT 1) AS qty
-          FROM products 
-          LEFT JOIN stocks ON stocks.product_id = products.id
-          LEFT JOIN stores ON stores.id = stocks.store_id
-        ";
-        $data['stocks'] = collect(DB::select(DB::raw($query)))->toArray(); 
-
+        $data['stocks'] = (new ProductStockRepositories())->indexStock();
         $data['stores'] = Store::get();
         $data['transfer_stocks'] = TransferStock::get();
         $data['titlePage'] = "Manament Stock Product";
