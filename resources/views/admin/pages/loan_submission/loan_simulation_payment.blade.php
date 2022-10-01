@@ -89,6 +89,11 @@
     <div class="card-header">
         <h5>Table Simulasi Pinjaman</h5>
     </div>
+    <div class="row">
+        <div class="d-flex justify-content-end">
+            <button id="btnDownloadSimulation" type="submit" class="btn btn-success btn-sm"><b>Download Tabel Simulasi</b></button>
+        </div>
+    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered text-nowrap border-bottom" id="table-simulation">
@@ -98,7 +103,9 @@
                         <th>Tgl Tagih</th>
                         <th>Saldo Hutang</th>
                         <th>Pokok</th>
-                        <th>Bunga</th>
+                        {{-- <th>Bunga</th> --}}
+                        <th>Margin KOP</th>
+                        <th>Simpanan Khusus</th>
                         <th>Total Cicilan</th>
                     </tr>
                 </thead>

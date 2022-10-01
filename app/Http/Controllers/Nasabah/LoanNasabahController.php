@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Nasabah;
 
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
+use App\Services\EmployeeService;
 use Illuminate\Http\Request;
 
 class LoanNasabahController extends Controller
@@ -18,6 +19,7 @@ class LoanNasabahController extends Controller
         $data['loansHistory'] = Loan::where('employee_id', $employeeId)
         ->where('loan_approval_status_id', '!=',50)
         ->orderBy('id', 'desc')->get();
+        
         return view('nasabah.pages.loan.index', $data);
     }
     public function show(Loan $loan)

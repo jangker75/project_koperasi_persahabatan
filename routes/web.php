@@ -64,9 +64,14 @@ Route::group([
     Route::get('loan-list-nasabah', [LoanNasabahController::class, 'index'])->name('loan.index');
     Route::get('loan-list-nasabah/{loan}', [LoanNasabahController::class, 'show'])->name('loan.show');
 
+    Route::get('edit-profile', [ProfileController::class, "edit"])->name('profile.edit');
+    Route::put('edit-profile/{employee}', [ProfileController::class, "update"])->name('profile.update');
     Route::get('profile', [PagesController::class, "profile"])->name('profile');
     Route::get('riwayat-paylater', [PagesController::class, "paylaterHistory"])->name('history-paylater');
     Route::get('detail-paylater/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
+
+    Route::post("calculate-loan-simulation", [LoanSubmissionController::class, "calculateLoanSimulation"])->name("loan-simulation");
+    Route::post("download-loan-simulation", [LoanSubmissionController::class, "downloadLoanSimulation"])->name("download-loan-simulation");
 });
 
 Route::post('custom-logout', [LogoutController::class, 'logout'])->name('admin.logout');
@@ -77,10 +82,6 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    
-
-
     // POS
     
     Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);

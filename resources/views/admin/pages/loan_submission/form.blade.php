@@ -1,12 +1,8 @@
 <x-admin-layout>
     @include('nasabah.shared.form_error')
     <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
-    <div class="alert alert-danger" role="alert" id="status-loan-employee">
-        Danger alert—At vero eos et accusamus praesentium!
-    </div>
-    <div class="alert alert-danger" role="alert" id="status-age-employee">
-        Danger alert—At vero eos et accusamus praesentium!
-    </div>
+    <div class="alert alert-danger" role="alert" id="status-loan-employee"></div>
+    <div class="alert alert-danger" role="alert" id="status-age-employee"></div>
     <div class="row">
         <div class="col-lg-12">
             @if (isset($loan))
@@ -178,6 +174,9 @@
             {!! Form::close() !!}
         </div>
     </div>
+    <form target="_blank" id="formDownloadSimulasi" action="{{ route("nasabah.download-loan-simulation") }}" method="post">
+        @csrf
+    </form>
     @slot('script')
         @include('admin.pages.loan_submission.form-script')
         @include('admin.pages.loan_submission.loan_simulation_script')

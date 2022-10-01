@@ -77,7 +77,10 @@ class DynamicImageService
     public function delete($pathbefore)
     {
         try {
-            Storage::disk('public')->delete($pathbefore);
+            $exists = Storage::disk('public')->exists($pathbefore);
+            if($exists){
+                Storage::disk('public')->delete($pathbefore);
+            }
             return true;
         } catch (QueryException $e) {
             return $e;
