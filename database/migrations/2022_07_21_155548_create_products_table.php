@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('upc')->nullable();
             $table->string('unit_measurement');
             $table->longText('description');
-            $table->string('cover');
+            $table->string('cover')->nullable();
             $table->integer('brand_id')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -13,14 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_details', function (Blueprint $table) {
+        Schema::create('opname_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->string('product_name');
+            $table->integer('opname_id');
+            $table->integer('product_id');
+            $table->integer('quantity');
+            $table->enum('type', ['minus', 'plus'])->default('minus');
+            $table->string('description');
             $table->integer('price');
-            $table->integer('qty');
-            $table->integer('discount')->default(0);
-            $table->integer('subtotal');
+            $table->integer('amount');
+            $table->boolean('is_expired')->nullable();
+            $table->boolean('expired_is_returned')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_details');
+        Schema::dropIfExists('opname_details');
     }
 };

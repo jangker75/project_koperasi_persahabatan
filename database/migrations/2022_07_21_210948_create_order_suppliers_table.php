@@ -24,6 +24,7 @@ return new class extends Migration
             $table->datetime('received_date')->nullable();
             $table->longText('note')->nullable();
             $table->integer('total')->nullable();
+            $table->boolean('is_paid')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -6,15 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OrderDetail extends Model
+class ReturnSupplier extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'order_id','product_name', 'price', 'qty', 'discount', 'subtotal'
+      'return_supplier_code', 'submit_employee_id', 'supplier_id', 
+      'note', 'status_return_id', 'status_ticket_id', 'order_supplier_id'
     ];
-
-    public function Order(){
-      return $this->belongsTo(Order::class, 'order_id');
-    }
 }

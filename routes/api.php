@@ -4,8 +4,10 @@ use App\Http\Controllers\Master\API\MasterDataStatusController;
 use App\Http\Controllers\Share\JqueryEditableController;
 use App\Http\Controllers\Toko\API\BrandController;
 use App\Http\Controllers\Toko\API\CategoryController;
+use App\Http\Controllers\Toko\API\OpnameController;
 use App\Http\Controllers\Toko\API\OrderController;
 use App\Http\Controllers\Toko\API\OrderSupplierController;
+use App\Http\Controllers\Toko\API\PaymentMethodController;
 use App\Http\Controllers\Toko\API\ProductController;
 use App\Http\Controllers\Toko\API\StoreController;
 use App\Http\Controllers\Toko\API\SupplierController;
@@ -38,11 +40,14 @@ Route::resource('supplier', SupplierController::class);
 Route::resource('order', OrderController::class);
 Route::resource('transfer-stock', TransferStockController::class);
 Route::resource('order-supplier', OrderSupplierController::class);
+Route::resource('payment-method', PaymentMethodController::class);
+Route::resource('opname', OpnameController::class);
 Route::post("order-nasabah", [OrderController::class, "orderNasabah"]);
 Route::post('reject-order', [OrderController::class, 'rejectOrder']);
 Route::post('checkout-order', [OrderController::class, 'checkoutOrder']);
 // Render Jquery DataTable Editable
 Route::post('jquery-data-editable', [JqueryEditableController::class, 'renderTable']);
+Route::post('payment-data-editable', [JqueryEditableController::class, 'paymentTable']);
 Route::post('search-employee', [EmployeeController::class, 'findEmployee']);
 // product
 Route::get('paginate-product-in-stock-from-store', [ProductController::class, "getProductOnStockPaginate"]);

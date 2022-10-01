@@ -36,12 +36,15 @@ class OrderController extends Controller
 
         $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
         $tax = ApplicationSetting::where('name', 'tax')->first();
+        $discountAll = array_column($request->item, 'discount');
+        $discountAll = array_map('intval', $discountAll);
+        $discountAll = array_sum($discountAll);
         $status = 6;
 
         // order
         $order = Order::create([
           'subtotal' => $subTotalAll,
-          'discount' => $request->discount,
+          'discount' => $request->discount + (int) $discountAll,
           'total' => $subTotalAll - $request->discount + (int) $tax->content,
           'status_id' => $status,
           'employee_onduty_id' => $request->employeeOndutyId,
@@ -59,7 +62,8 @@ class OrderController extends Controller
             'product_name' => $productInfo[0]->title,
             'price' => $productInfo[0]->price,
             'qty' => $product['qty'],
-            'subtotal' => $productInfo[0]->price*$product['qty']
+            'discount' => $product['discount'],
+            'subtotal' => (int) ($productInfo[0]->price*$product['qty']) - (int) $product['discount']
           ]);
 
           // update stock
@@ -184,8 +188,11 @@ class OrderController extends Controller
         // order detail
         foreach ($request->item as $key => $product) {
           $productInfo = ProductStockRepositories::findProductBySku($product['sku'], $request->storeId);
-          if(!$productInfo || $productInfo[0]->stock < $product['qty']){
-            throw new ModelNotFoundException('Data Produk tidak ditemukan atau stock yg tidak mencukupi');
+          if(!$productInfo){
+            throw new ModelNotFoundException('Data Produk tidak ditemukan ');
+          }
+          if($productInfo[0]->stock < $product['qty']){
+            throw new ModelNotFoundException('Stock yg tidak mencukupi');
           }
           $orderDetail = OrderDetail::create([
             'order_id' => $order->id,
@@ -332,6 +339,10 @@ class OrderController extends Controller
 
         // status order
         $order->status_id = $status->id;
+        if($request->discount){
+          $order->discount = $request->discount;
+          $order->total = $order->subtotal - $request->discount;
+        }
         $order->employee_onduty_id = $request->employeeOndutyId;
         $order->save();
 
