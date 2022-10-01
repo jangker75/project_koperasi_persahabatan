@@ -1,28 +1,33 @@
-<x-admin-layout>
-    @include('nasabah.shared.form_error')
-    <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
+@extends('nasabah.layout.base-nasabah')
+
+@section('content')
+<section class="py-4 bg-white">
+    <div class="d-flex align-items-center">
+        <a href="{{ url()->previous() }}" class="btn fw-bold h5 m-0">
+            <i class="fa fa-angle-left text-muted"></i>
+        </a>
+        <h1 class="h3 fw-bold m-0">Edit Profile</h1>
+    </div>
+</section>
+<section class="col-12">
     <div class="row">
         <div class="col-lg-12">
-            @if (isset($employee))
-                    {!! Form::model($employee, [
-                        'route' => ['admin.employee.update', $employee],
-                        'method' => 'PUT',
-                        'files' => true,
-                    ]) !!}
-                    {!! Form::hidden('id') !!}
-                @else
-                    {!! Form::open(['route' => 'admin.employee.store', 'files' => true, 'class' => 'form-horizontal']) !!}
-                @endif
+                {!! Form::model($employee, [
+                    'route' => ['nasabah.profile.update', $employee],
+                    'method' => 'PUT',
+                    'files' => true,
+                ]) !!}
+                {!! Form::hidden('id') !!}
                 @csrf
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">{{ $titlePage }}</h4>
+                    <h4 class="card-title">Edit profile</h4>
                 </div>
                 
                 <div class="card-body">
-                    <div class="row mb-4">
-                        {!! Form::label('first_name', __('employee.first_name'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-3">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('first_name', __('employee.first_name'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::text('first_name', null, [
                                 'required' => 'required',
                                 'class' =>
@@ -32,9 +37,12 @@
                                 'placeholder' => 'Input ' . __('employee.first_name'),
                             ]) !!}
                         </div>
-                        {!! Form::label('last_name', __('employee.last_name'), ['class' => 'col-md-2 form-label']) !!}
-                        <div class="col-md-4">
+                    </div>
+                    <div class="form-group form-group row mb-4">
+                        {!! Form::label('last_name', __('employee.last_name'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::text('last_name', null, [
+                                'required' => 'required',
                                 'class' =>
                                     'form-control' .
                                     ($errors->has('last_name') ? ' is-invalid' : '') .
@@ -43,11 +51,12 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('nik', __('employee.nik'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('nik', __('employee.nik'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::text('nik', null, [
                                 'required' => 'required',
+                                'readonly' => true,
                                 'class' =>
                                     'form-control' .
                                     ($errors->has('nik') ? ' is-invalid' : '') .
@@ -57,9 +66,9 @@
                         </div>
                     </div>
 
-                    <div class="row mb-4">
-                        {!! Form::label('nip', __('employee.nip'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('nip', __('employee.nip'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             {!! Form::text('nip', null, [
                                 'class' =>
                                     'form-control' .
@@ -69,9 +78,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('phone', __('employee.phone'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('phone', __('employee.phone'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             {!! Form::text('phone', null, [
                                 'class' =>
                                     'form-control' .
@@ -81,9 +90,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('gender', __('employee.gender'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('gender', __('employee.gender'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::select('gender', \App\Enums\ConstantEnum::GENDER, null, [
                                 'required' => 'required',
                                 'class' =>
@@ -94,9 +103,10 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('position_id', __('employee.position_id'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    {{ Form::hidden('position_id', $employee->position_id) }}
+                    {{-- <div class="form-group row mb-4">
+                        {!! Form::label('position_id', __('employee.position_id'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             {!! Form::select('position_id', $positionList, null, [
                                 'class' =>
                                     'form-control form-select' .
@@ -105,10 +115,10 @@
                                 'placeholder' => 'Input ' . __('employee.position_id'),
                             ]) !!}
                         </div>
-                    </div>
-                    <div class="row mb-4">
-                        {!! Form::label('bank', __('employee.bank'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    </div> --}}
+                    <div class="form-group row mb-4">
+                        {!! Form::label('bank', __('employee.bank'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::select('bank', \App\Enums\ConstantEnum::BANK, null, [
                                 'class' =>
                                     'form-control form-select' .
@@ -118,9 +128,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('rekening', __('employee.rekening'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('rekening', __('employee.rekening'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::number('rekening', null, [
                                 'required' => 'required',
                                 'class' =>
@@ -131,9 +141,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('department_id', __('employee.department_id'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('department_id', __('employee.department_id'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             {!! Form::select('department_id', $departmentList, null, [
                                 'class' =>
                                     'form-control form-select' .
@@ -143,9 +153,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('status_employee_id', __('employee.status_employee_id'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('status_employee_id', __('employee.status_employee_id'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::select('status_employee_id', $statusEmployeeList, null, [
                                 'required' => 'required',
                                 'class' =>
@@ -156,9 +166,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    {{-- <div class="row mb-4">
-                        {!! Form::label('salary', __('employee.salary'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    {{-- <div class="form-group row mb-4">
+                        {!! Form::label('salary', __('employee.salary'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::number('salary', null, [
                                 'required' => 'required',
                                 'class' =>
@@ -169,9 +179,9 @@
                             ]) !!}
                         </div>
                     </div> --}}
-                    <div class="row mb-4">
-                        {!! Form::label('salary_number', __('employee.salary_number'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('salary_number', __('employee.salary_number'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             {!! Form::number('salary_number', null, [
                                 'class' =>
                                     'form-control' .
@@ -181,9 +191,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('birthplace', __('employee.birthplace'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('birthplace', __('employee.birthplace'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             {!! Form::text('birthplace', null, [
                                 'required' => 'required',
                                 'class' =>
@@ -194,9 +204,9 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('birthday', __('employee.birthday'), ['class' => 'col-md-3 form-label required']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('birthday', __('employee.birthday'), ['class' => 'form-label required']) !!}
+                        <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
@@ -212,17 +222,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('profile_image', __('employee.profile_image'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('profile_image', __('employee.profile_image'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             <div class="input-group">
                                 {!! Form::file('profile_image', ['accept' => 'image/*', 'class'=> 'form-control','name'=>'profile_image']) !!}
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('address_1', __('employee.address_1'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('address_1', __('employee.address_1'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text">
                                     <i class="icon icon-map"></i>
@@ -238,9 +248,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        {!! Form::label('address_2', __('employee.address_2'), ['class' => 'col-md-3 form-label']) !!}
-                        <div class="col-md-9">
+                    <div class="form-group row mb-4">
+                        {!! Form::label('address_2', __('employee.address_2'), ['class' => 'form-label']) !!}
+                        <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text">
                                     <i class="icon icon-map"></i>
@@ -259,21 +269,22 @@
 
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-danger" href="{{ $currentIndex }}">{{ __('general.button_cancel') }}</a>
+                    <a class="btn btn-danger" href="{{ url()->previous() }}">{{ __('general.button_cancel') }}</a>
                     <button class="btn btn-success">{{ __('general.button_save') }}</button>
                 </div>
             </div>
             {!! Form::close() !!}
         </div>
     </div>
-    @slot('script')
-        <script>
-            $('.fc-datepicker').bootstrapdatepicker({
-                todayHighlight: true,
-                toggleActive: true,
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-            });
-        </script>
-    @endslot
-</x-admin-layout>
+</section>
+@endsection
+@push('script')
+    <script>
+        $('.fc-datepicker').bootstrapdatepicker({
+            todayHighlight: true,
+            toggleActive: true,
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+    </script>
+@endpush

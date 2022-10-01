@@ -1,7 +1,15 @@
 @extends('nasabah.layout.base-nasabah')
 @section('content')
+<section class="py-4 bg-white">
+    <div class="d-flex align-items-center">
+        <a href="{{ route('nasabah.home') }}" class="btn fw-bold h5 m-0">
+            <i class="fa fa-angle-left text-muted"></i>
+        </a>
+        <h1 class="h3 fw-bold m-0">Pinjaman Anda</h1>
+    </div>
+</section>
     <div class="min-vh-100 pb-6">
-        <a href="{{ route('nasabah.home') }}" type="button" class="btn btn-warning my-2">{{ __('general.button_cancel') }}</a>
+        {{-- <a href="{{ route('nasabah.home') }}" type="button" class="btn btn-warning my-2">{{ __('general.button_cancel') }}</a> --}}
         <div class="card">
             <div class="card-header bg-azure fs-6">
                 Status Pengajuan Pinjaman
@@ -57,7 +65,7 @@
                     </div>
                     @if ($ongoingLoan == null)
                     <div class="expanel-body">
-                      <span>Belum Ada Data</span>
+                      <span>Tidak Ada Data</span>
                     </div>
                     @else
                     <div class="expanel-body">

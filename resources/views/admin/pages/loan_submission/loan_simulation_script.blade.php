@@ -10,86 +10,98 @@
         if ($(this).val() < 0) {
             $(this).val(0)
         }
-
         $("[name='profit_employee_ratio']").val(100 - $(this).val())
     })
 
-    $('#btn-simulate-loan').click(function() {
-        addToTable()
-    })
-
-    function addMonths(numOfMonths, date = new Date()) {
-        date.setMonth(date.getMonth() + numOfMonths)
-        let a = moment(date).locale('id').format('LL')
-        return a
-    }
-    function addToTable() {
-        //delete table content
-        $('#table-simulation tbody').empty()
-        //get data for initial value
+    $("#btnDownloadSimulation").click(function(){
         let firstPaymentDate = $('#first_payment_date').val()
         let totalLoanAmount = parseInt($('#total_loan_amount').val().replace('.',''))
         let interestType = $('#interest_amount_type').find(':selected').val()
         let interestScheme = $('#interest_scheme').find(':selected').text()
         let totalPayMonth = $('#total_pay_month').find(':selected').text()
         let payPerXMonth = $('#pay_per_x_month').val()
-        let totalPrincipalAmount = Math.round(totalLoanAmount / totalPayMonth)
         let totalInterestAmount = parseInt($('#interest_amount').val())
-
-        let currentTotalLoanAmount = totalLoanAmount
-        let totalInterest = 0
-        let totalIncome = 0
-        let currentInterest = 0
+        let profitCompanyRatio = parseInt($("input[name='profit_company_ratio']").val())
         
-        //iteration for input data simulation to table
-        for (let index = 0; index <= totalPayMonth; index++) {
-            if (index != 0) {
-                currentTotalLoanAmount -= totalPrincipalAmount
+        let input1 = $("<input>").attr("type", "hidden").attr("name", "firstPaymentDate").val(firstPaymentDate);
+        let input2 = $("<input>").attr("type", "hidden").attr("name", "totalLoanAmount").val(totalLoanAmount);
+        let input3 = $("<input>").attr("type", "hidden").attr("name", "interestType").val(interestType);
+        let input4 = $("<input>").attr("type", "hidden").attr("name", "interestScheme").val(interestScheme);
+        let input5 = $("<input>").attr("type", "hidden").attr("name", "totalPayMonth").val(totalPayMonth);
+        let input6 = $("<input>").attr("type", "hidden").attr("name", "payPerXMonth").val(payPerXMonth);
+        let input7 = $("<input>").attr("type", "hidden").attr("name", "totalInterestAmount").val(totalInterestAmount);
+        let input8 = $("<input>").attr("type", "hidden").attr("name", "profitCompanyRatio").val(profitCompanyRatio);
+        
+        $("#formDownloadSimulasi").append($(input1))
+        .append($(input2)).append($(input3)).append($(input4))
+        .append($(input5)).append($(input6)).append($(input7))
+        .append($(input8));
+        $("#formDownloadSimulasi").submit()
+    })
+    // $("#formDownloadSimulasi").on("submit", function(e){
+    //     e.preventDefault();
+    // })
+    $('#btn-simulate-loan').click(function() {
+        // addToTable()
+        getDataLoanSimulation()
+    })
+
+    function getDataLoanSimulation(){
+        let firstPaymentDate = $('#first_payment_date').val()
+        let totalLoanAmount = parseInt($('#total_loan_amount').val().replace('.',''))
+        let interestType = $('#interest_amount_type').find(':selected').val()
+        let interestScheme = $('#interest_scheme').find(':selected').text()
+        let totalPayMonth = $('#total_pay_month').find(':selected').text()
+        let payPerXMonth = $('#pay_per_x_month').val()
+        let totalInterestAmount = parseInt($('#interest_amount').val())
+        let profitCompanyRatio = parseInt($("input[name='profit_company_ratio']").val())
+
+        $.ajax({
+            type: "post",
+            url: "{{ route('nasabah.loan-simulation') }}",
+            data: {
+                firstPaymentDate: firstPaymentDate,
+                totalLoanAmount: totalLoanAmount,
+                interestType: interestType,
+                interestScheme: interestScheme,
+                totalPayMonth: totalPayMonth,
+                payPerXMonth: payPerXMonth,
+                totalInterestAmount: totalInterestAmount,
+                profitCompanyRatio: profitCompanyRatio,
+                _token: "{{ csrf_token() }}",
+            },
+            dataType: "json",
+            success: function (response) {
+                addLoanSimulationToTable(response)
             }
-            //if last month still have pay under 50 rupiah, then payment will be deducted in last month
-            if((currentTotalLoanAmount - totalPrincipalAmount) <= 50){
-                totalPrincipalAmount = currentTotalLoanAmount
-            }
-            console.log('currentTotalLoanAmount',currentTotalLoanAmount);
-            console.log('totalPrincipalAmount',totalPrincipalAmount);
-            //calculate current interest based on percentage/value and scheme menurun/flat
-            if (interestType == 'percentage') {
-                if (interestScheme == 'Menurun') {
-                    currentInterest = Math.round(currentTotalLoanAmount * totalInterestAmount / 100)
-                } else {
-                    currentInterest = Math.round(totalLoanAmount * totalInterestAmount / 100)
-                }
-            } else {
-                currentInterest = totalInterestAmount
-            }
-            
-            if (index == totalPayMonth) {
-               currentInterest = totalPrincipalAmount = 0
-            }
-            
-            //calculate for row total
-            totalInterest += currentInterest
-            totalIncome = (totalIncome + currentInterest + totalPrincipalAmount)
-            
+        });
+    }
+
+    function addLoanSimulationToTable(data){
+        //delete table content
+        $('#table-simulation tbody').empty()
+        //get data for initial value
+        for (let index = 0; index < data["data"].length; index++) {
             //Insert tr to table simulation
             var trRow = '<tr>'
-            trRow += "<td>" + (index + 1) + "</td>"
-            trRow += "<td>" + addMonths(index * payPerXMonth, new Date(firstPaymentDate)) + "</td>"
-            trRow += "<td>" + formatMoney(currentTotalLoanAmount) + "</td>"
-            // console.log('totalPrincipalAmount',totalPrincipalAmount);
-            trRow += "<td>" + formatMoney(totalPrincipalAmount) + "</td>"
-            trRow += "<td>" + formatMoney(currentInterest) + "</td>"
-            trRow += "<td>" + formatMoney(currentInterest + totalPrincipalAmount) + "</td>"
-            trRow += '</tr>'
-            $('#table-simulation tbody').append(trRow)
-        }
-
-            //Insert last row for total
-            var trRow = '<tr>'
-                trRow += "<td class='fw-600' colspan='4'>Total</td>"
-                trRow += "<td class='fw-600'>"+ formatMoney(totalInterest) +"</td>"
-                trRow += "<td class='fw-600'>"+ formatMoney(totalIncome) +"</td>"
+                trRow += "<td>" + data["data"][index]["cicilan_ke"] + "</td>"
+                trRow += "<td>" + data["data"][index]["tgl_tagih"] + "</td>"
+                trRow += "<td>" + data["data"][index]["saldo_hutang"] + "</td>"
+                trRow += "<td>" + data["data"][index]["pokok"] + "</td>"
+                // trRow += "<td>" + data["data"][index]["bunga"] + "</td>"
+                trRow += "<td>" + data["data"][index]["margin_kop"] + "</td>"
+                trRow += "<td>" + data["data"][index]["margin_employee"] + "</td>"
+                trRow += "<td>" + data["data"][index]["total_cicilan"] + "</td>"
                 trRow += '</tr>'
             $('#table-simulation tbody').append(trRow)
+        }
+        //Insert last row for total
+        var trRow = '<tr>'
+                trRow += "<td class='fw-600' colspan='5'>Total</td>"
+                trRow += "<td class='fw-600'>"+ data["lastrow"]["total_bunga"] +"</td>"
+                trRow += "<td class='fw-600'>"+ data["lastrow"]["total_cicilan"] +"</td>"
+                trRow += '</tr>'
+        $('#table-simulation tbody').append(trRow)
     }
+
 </script>

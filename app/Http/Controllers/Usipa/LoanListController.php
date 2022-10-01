@@ -196,7 +196,10 @@ class LoanListController extends BaseAdminController
     }
     public function downloadBuktiPelunasanPDF(Loan $loan)
     {
-        dd($loan);
+        $data['loan'] = $loan;
+        $data['title'] = 'Form bukti pelunasan';
+        $pdf = Pdf::loadView('admin.export.PDF.form_bukti_lunas', $data);
+        return $pdf->stream($data['title'].'.pdf');
     }
     public function getIndexDatatables()
     {
@@ -233,7 +236,7 @@ class LoanListController extends BaseAdminController
                     ->orWhere('employees.last_name', 'like' , ["%$keyword%"]);
                 });
             })
-            ->addColumn('status', function($row){
+            ->editColumn('approvalstatus.name', function($row){
                 $class = ($row->approvalstatus->name == 'Waiting') ? 'bg-warning' : (($row->approvalstatus->name == 'Approved') ? 'bg-success' : 'bg-danger');
                 $btn = '<span class="badge '.$class.' rounded-pill text-white fw-bold p-2 px-3">'.$row->approvalstatus->name.'</span>';
                 return $btn;
@@ -257,7 +260,7 @@ class LoanListController extends BaseAdminController
                 $btn = $btn . '</div>';
                 return $btn;
             })
-            ->rawColumns(['actions', 'status', 'full_name', 'status_lunas'])
+            ->rawColumns(['actions', 'status', 'full_name', 'status_lunas','approvalstatus.name'])
             ->make(true);
     }
 }

@@ -13,6 +13,7 @@ use App\Services\CodeService;
 use App\Services\CompanyService;
 use App\Services\EmployeeService;
 use App\Services\LoanService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -208,5 +209,38 @@ class LoanSubmissionController extends BaseAdminController
         };
 
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_edit_data_success'));
+    }
+
+    public function downloadLoanSimulation(Request $request)
+    {
+        $return = (new LoanService())->calculateLoanSimulation(
+            firstPaymentDate: $request->input("firstPaymentDate"),
+            totalLoanAmount: $request->input("totalLoanAmount"),
+            interestType: $request->input("interestType"),
+            interestScheme: $request->input("interestScheme"),
+            totalPayMonth: $request->input("totalPayMonth"),
+            payPerXMonth: $request->input("payPerXMonth"),
+            totalInterestAmount: $request->input("totalInterestAmount"),
+            profitCompanyRatio: $request->input("profitCompanyRatio")
+        );
+        $data['title'] = 'Simulasi Pinjaman';
+        $data['data'] = $return['data'];
+        $data['lastrow'] = $return['lastrow'];
+        $pdf = Pdf::loadView('admin.export.PDF.loan_simulasi', $data);
+        return $pdf->stream($data['title'].'.pdf');
+    }
+    public function calculateLoanSimulation(Request $request)
+    {
+        $return = (new LoanService())->calculateLoanSimulation(
+            firstPaymentDate: $request->input("firstPaymentDate"),
+            totalLoanAmount: $request->input("totalLoanAmount"),
+            interestType: $request->input("interestType"),
+            interestScheme: $request->input("interestScheme"),
+            totalPayMonth: $request->input("totalPayMonth"),
+            payPerXMonth: $request->input("payPerXMonth"),
+            totalInterestAmount: $request->input("totalInterestAmount"),
+            profitCompanyRatio: $request->input("profitCompanyRatio")
+        );
+        return response()->json($return);
     }
 }

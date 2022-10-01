@@ -32,7 +32,7 @@
             { data: "full_name", name: "full_name" },
             { data: "total_loan_amount", name: "total_loan_amount" },
             { data: "remaining_amount", name: "remaining_amount" },
-            { data: "status", name: "status" },
+            { data: "approvalstatus.name", name: "approvalstatus.name" },
             { data: "status_lunas", name: "is_lunas" },
             { data: "actions", name: "actions" },
         ],

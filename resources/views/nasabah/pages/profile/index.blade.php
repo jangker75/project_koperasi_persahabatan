@@ -9,17 +9,18 @@
         <h1 class="h3 fw-bold m-0">Profile</h1>
     </div>
 </section>
-<section class="col-12">
+<section class="col-12 pb-5">
     <div class="row">
         <div class="card">
             <div class="card-body ">
                 <div class="row">
                     <div class="col-4">
-                        <img src="{{ route('showimage') }}" style="height: 80px; width: 80px;">
+                        <img src="{{ route('showimage', $employee->user->profile_image) }}" style="height: 80px; width: 80px;">
                     </div>
                     <div class="col-8">
                         <p class="h4 fw-bold">{{ $employee->full_name }}</p>
                         <p class="text-primary">NIK : {{ $employee->nik }}</p>
+                        <a class="btn btn-primary" href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
                     </div>
                     <div class="col-12 py-4">
                         <div class="row align-items-center border">
@@ -95,9 +96,9 @@
 @endsection
 
 @section('footer')
-@include('nasabah.layout.bottombar')
-@include('admin.pages.employee.history_balance_modal')
+    @include('nasabah.layout.bottombar')
+    @include('admin.pages.employee.history_balance_modal')
 @endsection
 @push('script')
-@include('admin.pages.employee.history_balance_modal_script')
+    @include('admin.pages.employee.history_balance_modal_script')
 @endpush

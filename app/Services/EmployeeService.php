@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Employee;
 use App\Models\SavingHistory;
 use App\Models\Savings;
 
@@ -32,5 +33,19 @@ class EmployeeService {
         $saving->update([
             "{$saving_type}" => $savedHistory->balance_after
         ]);
+    }
+
+    public function checkDataProfile($employeeId){
+        $employee = Employee::findOrFail($employeeId);
+        $colEmpl = array_diff(getTableColumn('employees'), [
+            'id','created_at', 'updated_at','deleted_at'
+            ,'resign_date', 'resign_reason','salary','resign_notes']);
+        $rtn = [];
+        foreach ($colEmpl as $value) {
+            if($employee->$value == '' || $employee->$value == null){
+                $rtn[$value] = 'Masih kosong';
+            }
+        }
+        return $rtn;
     }
 }
