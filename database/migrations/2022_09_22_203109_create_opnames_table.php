@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('opnames', function (Blueprint $table) {
             $table->id();
             $table->string('opname_code');
+            $table->boolean('is_commit')->default(0);
             $table->integer('store_id');
             $table->integer('employee_id')->nullable();
             $table->string('note')->nullable();

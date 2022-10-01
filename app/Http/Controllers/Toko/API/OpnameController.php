@@ -8,6 +8,7 @@ use App\Models\OpnameDetail;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Repositories\OpnameRepository;
 use App\Repositories\ProductStockRepositories;
 use App\Services\HistoryStockService;
 use Exception;
@@ -63,39 +64,14 @@ class OpnameController extends Controller
 
             if($item['isExpired']){
               $inputDetail['is_expired'] = true;
-              $inputDetail['price'] = 0;
-              $inputDetail['amount'] = 0;
-            }else{
-              $totalPrice += $price->cost * $item['quantity'];
             }
+
+            $totalPrice += $price->cost * $item['quantity'];
 
             $detail = OpnameDetail::create($inputDetail);
             
             $stockNow = (new ProductStockRepositories())->findProductOnStockByKeyword($product->slug, null, $request->storeId)[0];
 
-            if($item['type'] == 'minus'){
-              $sisa = (int) $stockNow->qty - $item['quantity'];
-
-              (new HistoryStockService())->update("opname", [
-                'opnameCode' => $opname->opname_code,
-                'type' => 'minus',
-                'productId' => $item['productId'],
-                'qty' => $item['quantity']
-              ]);
-            }else{
-              $sisa = (int) $stockNow->qty + $item['quantity'];
-
-              (new HistoryStockService())->update("opname", [
-                'opnameCode' => $opname->opname_code,
-                'type' => 'plus',
-                'productId' => $item['productId'],
-                'qty' => $item['quantity']
-              ]);
-            }
-
-            Stock::where('store_id', $request->storeId)
-                  ->where('product_id', $item['productId'])
-                  ->update(['qty' => $sisa]);
           }
 
           $opname->total_price = $totalPrice;
@@ -113,6 +89,88 @@ class OpnameController extends Controller
         }
     }
 
+    public function update(Request $request, $id){
+      try {
+        DB::beginTransaction();
+        $opname = Opname::findOrFail($id);
+
+        if($opname->is_commit == true){
+          throw new ModelNotFoundException('Opname sudah di commit');
+        }
+
+        $inputOpname = [
+          'store_id' => $request->storeId,
+          'employee_id' => $request->employeeId
+        ];
+
+        if(isset($request->note)){
+          $inputOpname['note'] = $request->note;
+        }
+
+        $opname->save();
+
+        $totalPrice = 0;
+
+        $opnameDetailExist = collect($opname->detail)->toArray();
+
+        $listProductExist = array_column($opnameDetailExist, 'product_id');
+        $listProductId = array_column($request->item, 'productId');
+
+        $diffId = array_diff($listProductExist, $listProductId);
+
+        if(count($diffId) > 0){
+          OpnameDetail::whereIn('product_id', $diffId)
+                        ->where('opname_id', $opname->id)->delete();
+        }
+
+        foreach ($request->item as $key => $item) {
+          $detail = OpnameDetail::where('product_id', $item['productId'])
+                                ->where('opname_id', $opname->id)->first();
+          
+          $product = Product::find($item['productId']);
+
+          if(!$product){
+              throw new ModelNotFoundException('Product Tidak ditemukan');
+          }
+
+          $price = Price::where('product_id', $product->id)
+                        ->where('is_active', 1)
+                        ->first();
+
+          $inputDetail = [
+            'opname_id' => $opname->id,
+            'product_id' => $item['productId'],
+            'quantity' => $item['quantity'],
+            'description' => $item['description'],
+            'type' => $item['type'],
+            'price' => $price->cost,
+            'amount' => $price->cost * $item['quantity']
+          ];
+
+          if($item['isExpired']){
+            $inputDetail['is_expired'] = true;
+          }
+          $totalPrice += $price->cost * $item['quantity'];
+
+          if($detail){
+            $detail->update($inputDetail);
+          }else{
+            OpnameDetail::create($inputDetail);
+          }
+        }
+
+        DB::commit();
+        $response['message'] = 'Success Create New Opname';
+        $response['status'] = "success";
+        return response()->json($response, 200);
+      } catch (Exception $e) {
+        DB::rollBack();
+        $response['message'] = $e->getMessage();
+        $response['status'] = "failed";
+        return response()->json($response, 500);
+      }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -128,6 +186,9 @@ class OpnameController extends Controller
           if(!$opname){
             throw new ModelNotFoundException('Opname tidak ditemukan');
           }
+          if(!$opname->is_commit == true){
+            throw new ModelNotFoundException('Opname sudah di commit');
+          }
 
           OpnameDetail::where('opname_id', $request->opnameId)->delete();
           
@@ -141,5 +202,15 @@ class OpnameController extends Controller
           $response['status'] = "failed";
           return response()->json($response, 500);
         }
+    }
+
+    public function show($id){
+      $opname = Opname::findOrFail($id);
+
+      $response['opname'] = $opname;
+      $response['detail'] = (new OpnameRepository())->findDetailOpnameByOpnameId($id);
+      $response['message'] = 'Success get Opname';
+      $response['status'] = "success";
+      return response()->json($response, 200);
     }
 }

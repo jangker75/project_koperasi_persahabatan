@@ -46,22 +46,24 @@
                                 </ul>
                             </div>
                         </div>
-                        <table class="table table-bordered">
-                            <thead class="table-primary fw-bold text-uppercase">
-                                <th>Nama Produk</th>
-                                <th>Selisih yang ditemukan</th>
-                                <th>Tipe</th>
-                                <th>Expired</th>
-                                <th>keterangan</th>
-                                <th>Action</th>
-                            </thead>
-                            <tbody id="bodyTable">
-                                <tr>
-                                    <td colspan="5" class="text-center">Belum ada produk yang ditambahkan</td>
-                                </tr>
-                                {{--  --}}
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                              <thead class="table-primary fw-bold text-uppercase">
+                                  <th>Nama Produk</th>
+                                  <th>Selisih yang ditemukan</th>
+                                  <th>Tipe</th>
+                                  <th>Expired</th>
+                                  <th>keterangan</th>
+                                  <th>Action</th>
+                              </thead>
+                              <tbody id="bodyTable">
+                                  <tr>
+                                      <td colspan="5" class="text-center">Belum ada produk yang ditambahkan</td>
+                                  </tr>
+                                  {{--  --}}
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
                 <button class="btn btn-primary w-100" id="submit">Buat Tiket Transfer Stock</button>

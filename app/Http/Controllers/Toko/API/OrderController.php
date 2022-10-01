@@ -36,15 +36,12 @@ class OrderController extends Controller
 
         $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
         $tax = ApplicationSetting::where('name', 'tax')->first();
-        $discountAll = array_column($request->item, 'discount');
-        $discountAll = array_map('intval', $discountAll);
-        $discountAll = array_sum($discountAll);
         $status = 6;
 
         // order
         $order = Order::create([
           'subtotal' => $subTotalAll,
-          'discount' => $request->discount + (int) $discountAll,
+          'discount' => $request->discount,
           'total' => $subTotalAll - $request->discount + (int) $tax->content,
           'status_id' => $status,
           'employee_onduty_id' => $request->employeeOndutyId,
@@ -332,19 +329,28 @@ class OrderController extends Controller
     public function checkoutOrder(Request $request){
       try {
         DB::beginTransaction();
-        // dd($request->all());
         $order = Order::where('order_code', $request->orderCode)->first();
         $status = MasterDataStatus::where('name', 'success')->first();
         $statusPaylater = MasterDataStatus::where('name', 'approved')->first();
+        $tax = ApplicationSetting::where('name', 'tax')->first();
+        $allSubtotal = 0;
+
+        foreach ($request->item as $key => $item) {
+          $detail = OrderDetail::find($item['id']);
+          $detail->discount = $item['discount'];
+          $detail->subtotal = $detail->subtotal - (int) $item['discount'];
+          $detail->save();
+          $allSubtotal += (int) $detail->subtotal;
+        }
 
         // status order
         $order->status_id = $status->id;
-        if($request->discount){
-          $order->discount = $request->discount;
-          $order->total = $order->subtotal - $request->discount;
-        }
+        $order->subtotal = $allSubtotal;
+        $order->discount = (int) $request->discount;
+        $order->total = $allSubtotal - ((int) $request->discount + (int) $tax->content);
         $order->employee_onduty_id = $request->employeeOndutyId;
         $order->save();
+
 
         // status order
         $transaction = $order->transaction;

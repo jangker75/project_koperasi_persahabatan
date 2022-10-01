@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('product_id');
             $table->integer('quantity');
             $table->enum('type', ['minus', 'plus'])->default('minus');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->integer('price');
             $table->integer('amount');
             $table->boolean('is_expired')->nullable();

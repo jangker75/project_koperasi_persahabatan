@@ -103,7 +103,10 @@ class OpnameController extends Controller
      */
     public function show($id)
     {
-        //
+        $data['titlePage'] = 'Kelola Data Opname Stock';
+        $data['opname'] = Opname::find($id);
+
+        return view('admin.pages.toko.opname.show', $data);
     }
 
     /**

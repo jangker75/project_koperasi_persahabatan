@@ -94,6 +94,7 @@
                                     <th>Title</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
+                                    <th>Discount</th>
                                     <th>Subtotal</th>
                                 </tr>
                             </thead>
@@ -103,7 +104,17 @@
                                     <td>{{ $detail->product_name }}</td>
                                     <td>{{ format_uang($detail->price)  }}</td>
                                     <td>{{ $detail->qty }}</td>
-                                    <td>{{ format_uang($detail->subtotal) }}</td>
+                                    <td>
+                                      @if ($order->status->name == "success")
+                                      <span class="text-danger">
+                                        {{ format_uang($detail->discount) }}
+                                      </span>
+                                      @else
+                                      <input type="text" data-id="{{ $detail->id }}" 
+                                      placeholder="0" class="form-control discount-product format-uang">
+                                      @endif
+                                    </td>
+                                    <td data-id="{{ $detail->id }}" class="subtotal">{{ format_uang($detail->subtotal) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -140,8 +151,14 @@
                                 <tr>
                                     <td class="text-start">Additional Discount</td>
                                     <td class="text-end">
-                                        <input type="text" name="discount" id="discount" placeholder="0"
-                                            class="form-control">
+                                      @if ($order->status->name == "success")
+                                        <span class="text-danger">
+                                          {{ format_uang($order->discount) }}
+                                        </span>
+                                      @else
+                                      <input type="text" name="discount" id="discount" placeholder="0"
+                                          class="form-control">
+                                      @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -223,7 +240,11 @@
                 let subtotal = parseInt('{{ $order->subtotal }}');
                 let total = parseInt('{{ $order->total }}');
                 let orderCode = '{{ $order->order_code }}';
-                let employeeOndutyId = '{{ Auth::user()->employee->id }}'
+                let employeeOndutyId = '{{ Auth::user()->employee->id }}';
+                let detail = '{{ $stringifyDetail }}';                
+                detail = JSON.parse(detail.replace(/&quot;/g,'"'));
+
+                console.log(detail)
 
                 $('#paymentCode').hide();
                 $('#paymentMethod').val("{{ $paymentMethod[0]->name }}")
@@ -309,7 +330,8 @@
                         employeeOndutyId: employeeOndutyId,
                         paymentMethod: $('#paymentMethod').val(),
                         discount: discount,
-                        cash: cash
+                        cash: cash,
+                        item: detail
                     }
 
                     if ($('#paymentMethod').val() == 'cash') {
@@ -364,7 +386,41 @@
                         }
                     });
                 })
+
+                $(".discount-product").keyup(function(){
+                  let id = $(this).data("id");
+
+                  let value = $(this).val();
+                  value = parseInt(value.replace(".", ""));
+                  
+                  const checker = detail.find(element => {
+                      if (element.id == id) {
+                        if(value !== 0){
+                          element.discount = value;
+                          element.subtotal = (element.price * element.qty) - element.discount
+                          return element;
+                        }
+                      }
+                      return false;
+                  });
+
+                  subtotal = countSubtotal(detail);
+                  total = subtotal - discount;
+                  $(".discount[data-id=" + id + "]").val(value)
+                  $(".subtotal[data-id=" + id + "]").html("Rp " + formatRupiah(String(checker.subtotal)))
+                  $("#subtotalAll").html(formatRupiah(String(subtotal), 'Rp'))
+                  $("#total").html(formatRupiah(String(total), 'Rp'))
+                })
             })
+
+            function countSubtotal(item) {
+                let sum = 0;
+
+                for (let index = 0; index < item.length; index++) {
+                    sum += item[index].subtotal;
+                }
+                return sum;
+            }
 
         </script>
     </x-slot>
