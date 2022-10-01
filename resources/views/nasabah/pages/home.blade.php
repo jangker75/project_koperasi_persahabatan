@@ -94,20 +94,20 @@
         let products = [];
 
         // storeId
-        if (sessionStorage.getItem("storeId") !== null) {
-            $("#storeId").val(sessionStorage.getItem("storeId"))
+        if (Cookies.get("storeId") !== null) {
+            $("#storeId").val(Cookies.get("storeId"))
         } else {
             $("#storeId").val("{{ $stores[0]->id }}")
         }
-        sessionStorage.setItem('storeId', $("#storeId").val())
+        Cookies.set('storeId', $("#storeId").val())
 
         // change store
         $("#storeId").change(function () {
             // empty the cart
             cart = [];
             refreshCart()
-            sessionStorage.removeItem('storeId');
-            sessionStorage.setItem('storeId', $(this).val())
+            Cookies.remove('storeId');
+            Cookies.set('storeId', $(this).val())
             callRender()
         })
 
@@ -167,13 +167,7 @@
             $("#products").html(elementHtml);
         }
 
-        function truncateString(str, num) {
-            if (str.length > num) {
-                return str.slice(0, num) + "...";
-            } else {
-                return str;
-            }
-        }
+        
 
         // -------------------------------------------------------------------------------------------------------------------
 
@@ -206,6 +200,7 @@
                           cover: "{{ asset('storage') }}/" + response.product.cover
                       }
                       cart.push(toPush);
+                      
                     },
                     error: function (xhr, status, error) {
                         swal({
@@ -216,8 +211,13 @@
                     }
                 });
             }
-
+            swal({
+                title: "Success!",
+                text: "Sukses Menambah ke keranjang",
+                type: "success"
+            });
             refreshCart();
+
         })
     })
 

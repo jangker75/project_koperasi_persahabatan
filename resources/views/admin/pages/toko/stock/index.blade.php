@@ -33,7 +33,7 @@
                                         <td>{{ $stock->name }}</td>
                                         <td>{{ $stock->sku}}</td>
                                         <?php
-                                        $qty = json_decode($stock->qty,true);
+                                        $qty = explode(",",$stock->qty);
                                           foreach ($qty as $key => $qt) {
                                             echo("<td>".$qt."</td>");
                                           }

@@ -166,6 +166,7 @@
                         });
                         // getTable()
                         $("#modalStore").modal('hide')
+                        window.location.href = "{{ route('admin.category.index') }}";
                     },
                     error: function (response) {
                         swal({

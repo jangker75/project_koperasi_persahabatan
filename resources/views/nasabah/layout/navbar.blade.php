@@ -39,11 +39,21 @@
     <div class="p-2 w-100 mt-2">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Cari Produk.." aria-label="Cari Produk.."
-                aria-describedby="basic-addon2">
+                aria-describedby="basic-addon2" id="inputSearchProduct">
             <span class="input-group-text" id="basic-addon2"><i class="fe fe-search"></i></span>
         </div>
-        <div class="position-relative py-3 d-none">
-            <div class="card position-absolute border border-primary" style="min-height: 50vh; z-index:99;"></div>
+        <div class="position-relative py-3" id="resultSearchProduct">
+            <div class="card position-absolute border border-primary" style="min-height: 20vh; z-index:99;" id="bodyResultSearchProduct">
+              <a href="" class="border d-flex">
+                <div class="w-25">
+                  <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="card-img-top" alt="">
+                </div>
+                <div class="p-2">
+                  <div class="fw-bold text-dark">Lorem ipsum dolor sit amet.</div>
+                  <div class="fw-bold text-danger">Rp 10000</div>
+                </div>
+              </a>
+            </div>
         </div>
     </div>
     @endif
