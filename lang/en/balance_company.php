@@ -11,5 +11,8 @@ return [
     'source_balance' => 'Saldo Asal',
     'destination_balance' => 'Saldo Tujuan',
     'amount' => 'Jumlah Transfer',
-    'description' => 'Catatan/Keterangan'
+    'description' => 'Catatan/Keterangan',
+
+    'employee_id' => "Nama Nasabah",
+    'employee_savings_type' => "Simpanan Nasabah"
 ];

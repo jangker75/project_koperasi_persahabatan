@@ -29,6 +29,7 @@ use App\Models\Product;
 use App\Http\Controllers\Umum\ExEmployeeController;
 use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
+use App\Models\CompanyBalance;
 use App\Services\DynamicImageService;
 use Illuminate\Support\Facades\Route;
 
@@ -131,7 +132,7 @@ Route::group([
 
     //toko-online
 
-    // Divisi Umum
+    // Divisi Umum Start
     Route::resource('employee', EmployeeController::class);
     Route::get('employee-out', [EmployeeController::class, 'employeeOut'])->name('employee.out');
     Route::post('employee-store', [EmployeeController::class, 'employeeOutStore'])->name('employee.out.store');
@@ -139,10 +140,11 @@ Route::group([
     Route::resource('ex-employee', ExEmployeeController::class);
     Route::get('employee-download-card/{employee}', [EmployeeController::class, 'downloadEmployeeCard'])->name('employee.download.card');
     Route::get('employee-download-form-pendaftaran/{employee}', [EmployeeController::class, 'downloadFormPendaftaran'])->name('employee.download.form-pendaftaran');
+    Route::get('employee-balance-information/{employee}', [EmployeeController::class, "getEmployeeBalanceInformation"])->name('employee.balance-information');
     Route::resource('cash-in-out', CashTransactionController::class);
-    // Divisi Umum
+    // Divisi Umum End
 
-    // Usipa
+    // Usipa Start
     Route::resource('loan-submission', LoanSubmissionController::class);
     Route::get('loan-submission-action-approve/{loan}/{status}', [LoanSubmissionController::class, 'actionSubmissionLoan'])->name('loan-submission.action.approval');
     Route::resource('loan-list', LoanListController::class);
@@ -153,35 +155,40 @@ Route::group([
     Route::post('loan-destroy-attachment',[LoanListController::class, 'destroyAttachment'])->name('loan.destroy.attachment');
     
     Route::resource('company-balance', CompanyBalanceController::class);
+    Route::get('company-balance-trf-employee', [CompanyBalanceController::class, 'createTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee');
+    Route::post('company-balance-trf-employee', [CompanyBalanceController::class, 'storeTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee.store');
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
-    // Usipa
+    // Usipa End
 
-    // Download PDF
+    // Download PDF Start
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
     Route::get('download-bukti-pelunasan/{loan}', [LoanListController::class, 'downloadBuktiPelunasanPDF'])->name('download.bukti-pelunasan');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
     Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
+    // Download PDF End
 
-    // Download Data
+    // Download Data Excel Start
     Route::get('download-export-data-nasabah/{type}', [EmployeeController::class, 'exportData'])->name('download.data-nasabah');
+    // Download Data Excel End
 
-    // App Setting
+    // App Setting Start
     Route::get('app-setting', [ApplicationSettingController::class, 'index'])->name('app-setting.index');
     Route::post('app-setting', [ApplicationSettingController::class, 'update'])->name('app-setting.update');
     Route::get('switcher', function () {
         return view('admin.pages.switcher.index');
     })->name('switcher');
     Route::resource('role-management', RoleManagementController::class);
-    // End App Setting
+    // End App Setting End
 
-    // Datatables Route
+    // Datatables Route Start
     Route::get('datatables-product', [ProductController::class, 'getIndexDatatables'])->name('product.index.datatables');
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
     Route::get('datatables-loan-submission-index', [LoanSubmissionController::class, 'getIndexDatatables'])->name('loan-submission.index.datatables');
     Route::get('datatables-loan-list-index', [LoanListController::class, 'getIndexDatatables'])->name('loan-list.index.datatables');
     Route::get('datatables-cash-in-out-index', [CashTransactionController::class, 'getIndexDatatables'])->name('cash-in-out.index.datatables');
-
+    // Datatables Route End
+    
     //Logout custom
     // Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
 
@@ -192,6 +199,6 @@ Route::get('image/{filename?}', [DynamicImageService::class, 'showImage'])->wher
         ->name('showimage')->middleware('auth'); //show image
 
 //Redirect all wild domain
-// Route::get('{any}', function () {
-//     return redirect(route('admin.dashboard'));
-// })->where('any', '.*');
+Route::get('{any}', function () {
+    return redirect(route('admin.dashboard'));
+})->where('any', '.*');
