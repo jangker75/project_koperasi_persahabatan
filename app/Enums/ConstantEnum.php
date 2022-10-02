@@ -22,6 +22,10 @@ class ConstantEnum
         'debit' => 'Debit',
         'credit' => 'Credit',
     ];
+    const TRANSACTION_TYPE_DIV_UMUM = [
+        'debit' => 'Kas Keluar',
+        'credit' => 'Kas Masuk',
+    ];
     const BALANCE_COMPANY = [
         'loan_balance' => 'Saldo Pinjaman',
         'store_balance' => 'Saldo Toko',

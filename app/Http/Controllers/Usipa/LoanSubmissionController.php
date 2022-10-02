@@ -11,7 +11,9 @@ use App\Models\InterestSchemeType;
 use App\Models\Loan;
 use App\Services\CodeService;
 use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use App\Services\LoanService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -196,10 +198,49 @@ class LoanSubmissionController extends BaseAdminController
                 'profit_employee_amount' => 0,
                 'description' => $notesLoanHistory,
             ]);
-            $notesCompanyBalance = __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]);
-            (new CompanyService())->addCreditBalance($loan->admin_fee, 'loan_balance', $notesCompanyBalance);
+            $notesEmployeeBalance = __('balance_company.balance_history', ['type' => 'Simpanan Khusus pinjaman baru', 'data' => $loan->transaction_number]);
+            // $notesCompanyBalance = __('balance_company.balance_history', ['type' => 'Admin fee', 'data' => $loan->transaction_number]);
+            (new EmployeeService())->addCreditBalance(
+                saving_id: $loan->employee->savings->id,
+                value: $loan->admin_fee,
+                saving_type: 'activity_savings_balance',
+                description: $notesEmployeeBalance);
+            // (new CompanyService())->addCreditBalance($loan->admin_fee, 'loan_balance', $notesCompanyBalance);
         };
 
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_edit_data_success'));
+    }
+
+    public function downloadLoanSimulation(Request $request)
+    {
+        $return = (new LoanService())->calculateLoanSimulation(
+            firstPaymentDate: $request->input("firstPaymentDate"),
+            totalLoanAmount: $request->input("totalLoanAmount"),
+            interestType: $request->input("interestType"),
+            interestScheme: $request->input("interestScheme"),
+            totalPayMonth: $request->input("totalPayMonth"),
+            payPerXMonth: $request->input("payPerXMonth"),
+            totalInterestAmount: $request->input("totalInterestAmount"),
+            profitCompanyRatio: $request->input("profitCompanyRatio")
+        );
+        $data['title'] = 'Simulasi Pinjaman';
+        $data['data'] = $return['data'];
+        $data['lastrow'] = $return['lastrow'];
+        $pdf = Pdf::loadView('admin.export.PDF.loan_simulasi', $data);
+        return $pdf->stream($data['title'].'.pdf');
+    }
+    public function calculateLoanSimulation(Request $request)
+    {
+        $return = (new LoanService())->calculateLoanSimulation(
+            firstPaymentDate: $request->input("firstPaymentDate"),
+            totalLoanAmount: $request->input("totalLoanAmount"),
+            interestType: $request->input("interestType"),
+            interestScheme: $request->input("interestScheme"),
+            totalPayMonth: $request->input("totalPayMonth"),
+            payPerXMonth: $request->input("payPerXMonth"),
+            totalInterestAmount: $request->input("totalInterestAmount"),
+            profitCompanyRatio: $request->input("profitCompanyRatio")
+        );
+        return response()->json($return);
     }
 }

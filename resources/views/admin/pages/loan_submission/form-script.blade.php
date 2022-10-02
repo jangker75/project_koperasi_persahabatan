@@ -27,7 +27,6 @@
         let percent = $('#admin_fee_percentage').val()
         let a = $('#total_loan_amount').val()
         a = parseInt(a.replace('.',''))
-        console.log(a);
         let totalAmount = a
         let amount = totalAmount * percent / 100
         $('#admin_fee').val(amount)
@@ -53,7 +52,6 @@
             },
             dataType: "json",
             success: function (response) {
-                console.log(response);
                 if (response.status_loan != undefined) {
                     let result = ''
                     result += response.status_loan + '<br><ul class="list-group">'

@@ -23,15 +23,22 @@
                 <div class="card-body">
 
                     <div class="form-group">
-                        {!! Form::label('transaction_type', __('cash_transaction.transaction_date'), ['class' => 'form-label']) !!}
-                        {{ Form::text('transaction_date', null, [
+                        {!! Form::label('transaction_date', __('cash_transaction.transaction_date'), ['class' => 'form-label']) !!}
+                        {{-- {{ Form::text('transaction_date', null, [
                             'readonly'=> true,
                             'class'=> 'form-control',
-                        ]) }}
+                        ]) }} --}}
+                        {!! Form::text('transaction_date', now()->format('d-m-Y H:i'), [
+                            'readonly' => true,
+                            'id' => 'transaction_date',
+                            'class' => 'form-control'.
+                                ($errors->has('transaction_date') ? ' is-invalid' : '') .
+                                (!$errors->has('transaction_date') && old('transaction_date') ? ' is-valid' : ''),
+                        ]) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('transaction_type', __('cash_transaction.transaction_type'), ['class' => 'form-label required']) !!}
-                        {!! Form::select('transaction_type', \App\Enums\ConstantEnum::TRANSACTION_TYPE, null, [
+                        {!! Form::select('transaction_type', \App\Enums\ConstantEnum::TRANSACTION_TYPE_DIV_UMUM, null, [
                             'required' => 'required',
                             'class' =>
                                 'form-control form-select select2' .
@@ -73,4 +80,25 @@
             {!! Form::close() !!}
         </div>
     </div>
+    @slot('style')
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+    @endslot
+    @slot('script')
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.id.js') }}"></script>
+    <script>
+        $(function () {
+            $('#transaction_date').datetimepicker({
+                initialDate: new moment(),
+                autoclose: true,
+                todayHighlight: true,
+                format:'dd-mm-yyyy hh:ii',
+                weekStart: 1,
+                todayBtn: true,
+            });
+        });
+
+        
+    </script>
+    @endslot
 </x-admin-layout>

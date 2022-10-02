@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Repositories\PaylaterRepository;
+use App\Services\EmployeeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,6 +21,9 @@ class PagesController extends Controller
       $data['categories'] = Category::get();
       $data['stores'] = Store::where('is_warehouse', false)->get();
 
+      $employeeId = auth()->user()->employee->id;
+      $data['checkDataNasabah'] = (new EmployeeService())->checkDataProfile($employeeId);
+      // dd($checkDataNasabah);
       return view('nasabah.pages.home', $data);
     }
 

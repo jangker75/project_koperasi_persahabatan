@@ -1,5 +1,8 @@
 <x-admin-layout>
-    <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
+    <div>
+        <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
+        <a target="_blank" href="{{ route("admin.employee.download.card", ['employee' => $employee->id]) }}"type="button" class="btn btn-primary mb-3">Download Card</a>
+    </div>
     <div class="row">
         <div class="col-md-6 col-lg-3">
             <x-employee.employee-balance-card-component :text="__('savings_employee.principal_savings_balance')" :value="$employee->savings->principal_savings_balance"
@@ -119,8 +122,8 @@
                             <td>{{ $employee->rekening }}</td>
                         </tr>
                         <tr>
-                            <td>{{ __('employee.salary') }}</td>
-                            <td>{{ format_uang($employee->salary) }}</td>
+                            <td>{{ __('employee.salary_number') }}</td>
+                            <td>{{ format_uang($employee->salary_number) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('employee.status_employee_id') }}</td>

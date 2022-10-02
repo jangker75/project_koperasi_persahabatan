@@ -25,14 +25,15 @@ class EmployeeRequest extends FormRequest
     {
         return [
             "first_name" => 'required',
-            "last_name" => 'required',
+            "last_name" => '',
             "nik" => "required|unique:employees,nik,{$this->id},id,deleted_at,NULL",
             "nip" => '',
             "gender" => 'required',
             "position_id" => '',
             "department_id" => '',
             "status_employee_id" => 'required',
-            "salary" => 'required',
+            "salary_number" => '',
+            // "salary" => 'required',
             "birthday" => 'required',
             "birthplace" => 'required',
             "address_1" => '',

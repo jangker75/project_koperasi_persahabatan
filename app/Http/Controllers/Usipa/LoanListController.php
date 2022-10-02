@@ -194,6 +194,13 @@ class LoanListController extends BaseAdminController
         $canvas->page_text(750, 18, "Hal {PAGE_NUM} dari {PAGE_COUNT}", null, 11, [0, 0, 0]);
         return $pdf->stream($data['title'].'.pdf');
     }
+    public function downloadBuktiPelunasanPDF(Loan $loan)
+    {
+        $data['loan'] = $loan;
+        $data['title'] = 'Form bukti pelunasan';
+        $pdf = Pdf::loadView('admin.export.PDF.form_bukti_lunas', $data);
+        return $pdf->stream($data['title'].'.pdf');
+    }
     public function getIndexDatatables()
     {
         $keyword = request('keyword');
@@ -229,7 +236,7 @@ class LoanListController extends BaseAdminController
                     ->orWhere('employees.last_name', 'like' , ["%$keyword%"]);
                 });
             })
-            ->addColumn('status', function($row){
+            ->editColumn('approvalstatus.name', function($row){
                 $class = ($row->approvalstatus->name == 'Waiting') ? 'bg-warning' : (($row->approvalstatus->name == 'Approved') ? 'bg-success' : 'bg-danger');
                 $btn = '<span class="badge '.$class.' rounded-pill text-white fw-bold p-2 px-3">'.$row->approvalstatus->name.'</span>';
                 return $btn;
@@ -247,10 +254,13 @@ class LoanListController extends BaseAdminController
                     $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.loan.fullpayment", [$row]) .'" type="button">Pelunasan/Revisi</a>';
                     $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.kontrak.peminjaman", [$row->id]) .'" type="button">Download Kontrak</a>';
                 }
+                if($row->is_pelunasan_manual != 0){
+                    $btn = $btn . '<a class="btn btn-sm btn-warning" target="_blank" href="'. route("admin.download.bukti-pelunasan", [$row->id]) .'" type="button">Download bukti pelunasan</a>';
+                }
                 $btn = $btn . '</div>';
                 return $btn;
             })
-            ->rawColumns(['actions', 'status', 'full_name', 'status_lunas'])
+            ->rawColumns(['actions', 'status', 'full_name', 'status_lunas','approvalstatus.name'])
             ->make(true);
     }
 }

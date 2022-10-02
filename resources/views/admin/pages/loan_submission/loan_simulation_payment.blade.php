@@ -59,13 +59,13 @@
     </div>
     <div class="col-md-3">
         {!! Form::label('total_pay_month', __('loan.total_pay_month'), ['class' => 'form-label required']) !!}
-        {!! Form::number('total_pay_month', 12, [
-            'required' => 'required',
-            'id' => 'total_pay_month',
-            'class' =>
-                'form-control' .
-                ($errors->has('total_pay_month') ? ' is-invalid' : '') .
-                (!$errors->has('total_pay_month') && old('total_pay_month') ? ' is-valid' : ''),
+        {!! Form::select('total_pay_month', [5 => 5,10 => 10,20 => 20,30 => 30], null, [
+                'required' => 'required',
+                'id' => 'total_pay_month',
+                'class' =>
+                    'form-control form-select' .
+                    ($errors->has('total_pay_month') ? ' is-invalid' : '') .
+                    (!$errors->has('total_pay_month') && old('total_pay_month') ? ' is-valid' : ''),
         ]) !!}
     </div>
     <div class="col-md-3">
@@ -89,6 +89,11 @@
     <div class="card-header">
         <h5>Table Simulasi Pinjaman</h5>
     </div>
+    <div class="row">
+        <div class="d-flex justify-content-end">
+            <button id="btnDownloadSimulation" type="submit" class="btn btn-success btn-sm"><b>Download Tabel Simulasi</b></button>
+        </div>
+    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered text-nowrap border-bottom" id="table-simulation">
@@ -98,7 +103,9 @@
                         <th>Tgl Tagih</th>
                         <th>Saldo Hutang</th>
                         <th>Pokok</th>
-                        <th>Bunga</th>
+                        {{-- <th>Bunga</th> --}}
+                        <th>Margin KOP</th>
+                        <th>Simpanan Khusus</th>
                         <th>Total Cicilan</th>
                     </tr>
                 </thead>

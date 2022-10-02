@@ -1,9 +1,22 @@
 @extends('nasabah.layout.base-nasabah')
 
 @section('content')
-{{-- <section class="col-12 mt-3 min-vh-100">
-    
-</section> --}}
+@if (count($checkDataNasabah) > 0)
+<section class="col-12 mt-3">
+    <div class="card text-danger bg-danger-transparent card-transparent">
+        <div class="card-body">
+            <h4 class="card-title"><b>Lengkapi Data Profile Anda</b></h4>
+            <p class="card-text">
+                <ul>
+                    @foreach ($checkDataNasabah as $key => $msg)
+                        <li><i class="fa fa-remove"></i>{{ __('employee.'.$key) }} - {{ $msg }}</li>
+                    @endforeach
+                </ul>
+            </p>
+        </div>
+    </div>
+</section>
+@endif
 <section class="col-12 mt-3">
     <img src="" alt="" class="w-100 border rounded p-0 mb-2" height="120">
     <div class="d-flex justify-content-between">
@@ -62,7 +75,7 @@
         </div>
     </div>
 </section>
-<section class="col-12 my-3">
+<section class="col-12 my-3 pb-5">
     <img src="" alt="" class="w-100 border rounded" height="120">
 </section>
 
