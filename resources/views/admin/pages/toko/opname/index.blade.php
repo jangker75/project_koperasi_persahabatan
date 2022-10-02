@@ -64,6 +64,7 @@
                   <th>Date</th>
                   <th>Staff</th>
                   <th>Jumlah Temuan</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </thead>
                 <tbody>
@@ -74,7 +75,14 @@
                       <td>{{ $opname->employee->full_name }}</td>
                       <td>{{ count($opname->detail) }}</td>
                       <td>
-                        <a href="" class="btn btn-sm btn-primary">Lihat Detail</a>
+                        @if ($opname->is_commit == false)
+                          <span class="text-danger">Placed</span>
+                          @else
+                          <span class="text-success">Commit</span>
+                        @endif
+                      </td>
+                      <td>
+                        <a href="{{ route('admin.opname.show', $opname->id) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
                       </td>
                     </tr>
                   @endforeach

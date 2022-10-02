@@ -62,7 +62,7 @@ class OpnameController extends Controller
               'amount' => $price->cost * $item['quantity']
             ];
 
-            if($item['isExpired']){
+            if($item['isExpired'] == true || $item['isExpired'] == 1){
               $inputDetail['is_expired'] = true;
             }
 
@@ -147,7 +147,7 @@ class OpnameController extends Controller
             'amount' => $price->cost * $item['quantity']
           ];
 
-          if($item['isExpired']){
+          if($item['isExpired'] == true || $item['isExpired'] == 1){
             $inputDetail['is_expired'] = true;
           }
           $totalPrice += $price->cost * $item['quantity'];
@@ -160,7 +160,7 @@ class OpnameController extends Controller
         }
 
         DB::commit();
-        $response['message'] = 'Success Create New Opname';
+        $response['message'] = 'Success Update Opname';
         $response['status'] = "success";
         return response()->json($response, 200);
       } catch (Exception $e) {
@@ -177,20 +177,21 @@ class OpnameController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
         try {
           DB::beginTransaction();
 
-          $opname = Opname::find($request->opnameId);
+          $opname = Opname::find($id);
           if(!$opname){
             throw new ModelNotFoundException('Opname tidak ditemukan');
           }
-          if(!$opname->is_commit == true){
+          if($opname->is_commit == true){
             throw new ModelNotFoundException('Opname sudah di commit');
           }
 
-          OpnameDetail::where('opname_id', $request->opnameId)->delete();
+          OpnameDetail::where('opname_id', $id)->delete();
+          $opname->delete();
           
           DB::commit();
           $response['message'] = 'Success Delete Opname';
@@ -212,5 +213,41 @@ class OpnameController extends Controller
       $response['message'] = 'Success get Opname';
       $response['status'] = "success";
       return response()->json($response, 200);
+    }
+
+    public function commit($id){
+      try {
+          DB::beginTransaction();
+
+          $opname = Opname::find($id);
+          if(!$opname){
+            throw new ModelNotFoundException('Opname tidak ditemukan');
+          }
+          if($opname->is_commit == true){
+            throw new ModelNotFoundException('Opname sudah di commit');
+          }
+
+          foreach ($opname->detail as $key => $detail) {
+            (new HistoryStockService())->update("opname", [
+              'type' => $detail->type,
+              'opnameCode' => $opname->opname_code,
+              'productId' => $detail->product_id,
+              'qty' => $detail->quantity
+            ]);
+          }
+
+          $opname->is_commit = true;
+          $opname->save();
+          
+          DB::commit();
+          $response['message'] = 'Success Commit Opname';
+          $response['status'] = "success";
+          return response()->json($response, 200);
+        } catch (Exception $e) {
+          DB::rollBack();
+          $response['message'] = $e->getMessage();
+          $response['status'] = "failed";
+          return response()->json($response, 500);
+        }
     }
 }

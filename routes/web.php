@@ -112,6 +112,7 @@ Route::group([
       Route::resource('order-supplier', OrderSupplierController::class);
       Route::resource('payment-method', PaymentMethodController::class);
       Route::resource('opname', OpnameController::class);
+      Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
       Route::get('print-form-opname/{storeId}', [OpnameController::class, 'printFormOpname']);
 
       // transfer-stock

@@ -105,6 +105,7 @@ class OpnameController extends Controller
     {
         $data['titlePage'] = 'Kelola Data Opname Stock';
         $data['opname'] = Opname::find($id);
+        
 
         return view('admin.pages.toko.opname.show', $data);
     }
@@ -117,7 +118,12 @@ class OpnameController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['titlePage'] = 'Edit Opname Stock';
+        $data['opname'] = Opname::find($id);
+        $data['type'] = ['minus', 'plus'];
+        $data['stores'] = Store::where('is_warehouse', '!=', true)->get();
+
+        return view('admin.pages.toko.opname.edit', $data);
     }
 
     /**

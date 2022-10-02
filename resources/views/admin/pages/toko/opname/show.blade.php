@@ -10,15 +10,18 @@
                     <div class="card-title">Data Opname</div>
                     <div class="card-options">
                         @if ($opname->is_commit == false)
-                        <a href="" class="btn btn-sm mx-1 btn-primary">Commit Opname</a>
-                        <a href="" class="btn btn-sm mx-1 btn-warning">Edit Opname</a>
-                        <a href="" class="btn btn-sm mx-1 btn-danger">Hapus Opname</a>
+                        <div class="btn btn-sm mx-1 btn-primary" id="commit">Commit Opname</div>
+                        <a href="{{ route('admin.opname.edit', $opname->id) }}" class="btn btn-sm mx-1 btn-warning">Edit Opname</a>
+                        <div class="btn btn-sm mx-1 btn-danger" id="delete">Hapus Opname</div>
                         @endif
-                        <a href="" class="btn btn-sm mx-1 btn-info">Print Opname</a>
+                        <a href="{{ route('admin.opname.print', $opname->id) }}" class="btn btn-sm mx-1 btn-info">Print Opname</a>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="w-100 mb-4">
+                      @if ($opname->is_commit == false)
+                      <span class="text-danger">*Status opname ini masih "Placed", stock product belum diupdate jika opname ini belum di commit</span>
+                      @endif
                         <div class="table-responsive">
                             <table class="table w-100 table-striped" id="datatable">
                                 <tbody>
@@ -95,84 +98,7 @@
                 </div>
             </div>
         </div>
-        {{-- <!-- Modal -->
-        <div class="modal fade" id="modalConfirmStock" tabindex="-1" aria-labelledby="modalConfirmStockLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-                <div class="modal-content w-100" >
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalConfirmStockLabel">Konfirmasi Ketersediaan Stock</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="table-responsive">
-                          @if ($transferStock->Status->name == "Ordering")
-                          <table class="table table-bordered">
-                            <thead class="table-success fw-bold text-uppercase">
-                              <tr>
-                                <th>No</th>
-                                <th>Produk</th>
-                                <th>Jumlah</th>
-                                <th>Stok Tersedia</th>
-                                <th>Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              @foreach ($availableStock as $j => $item)
-                              <tr>
-                                <td>{{ $j+1 }}</td>
-                                <td>{{ $item->productName }}</td>
-                                <td>{{ $item->quantity }}</td>
-                                <td>{{ $item->stock }}</td>
-                                <td>
-                                  <input type="number" class="form-control input-available @if ($item->quantity > $item->stock)
-                                    is-invalid
-                                  @endif" placeholder="masukan jumlah yang akan dikirim"
-                                    data-id="{{ $item->id }}" data-stock="{{ $item->stock }}" value="{{ $item->quantity }}">
-                                </td>
-                              </tr>
-                              @endforeach
-                            </tbody>
-                          </table>
-                          @endif
-                          @if ($transferStock->Status->name == "Processing")
-                            <table class="table table-bordered">
-                            <thead class="table-success fw-bold text-uppercase">
-                              <tr>
-                                <th>No</th>
-                                <th>Produk</th>
-                                <th>Jumlah yang dikirim</th>
-                                <th>Jumlah diterima</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              @foreach ($transferStock->detailItem as $j => $item)
-                              <tr>
-                                <td>{{ $j+1 }}</td>
-                                <td>{{ $item->product->name }}</td>
-                                <td>{{ $item->available_qty }}</td>
-                                <td>
-                                  <input type="number" class="form-control input-available" placeholder="masukan jumlah yang akan dikirim"
-                                    data-id="{{ $item->id }}" data-stock="{{ $item->available_qty }}" value="{{ $item->available_qty }}">
-                                </td>
-                              </tr>
-                              @endforeach
-                            </tbody>
-                          </table>
-                          @endif
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                        @if ($transferStock->Status->name == "Ordering")
-                        <button type="button" class="btn btn-primary" id="submitAvailable">Konfirmasi Ketersediaan</button>
-                        @endif
-                        @if ($transferStock->Status->name == "Processing")
-                        <button type="button" class="btn btn-primary" id="submitReceive">Konfirmasi Ketersediaan</button>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div> --}}
+        
     </div>
 
     <x-slot name="style">
@@ -186,7 +112,105 @@
 
     @slot('script')
     <script>
-
+      $(document).ready(function(){
+        $("#delete").click(function(){
+          swal({
+            title: "Anda yakin?",
+            text: "Opname akan dihapus?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, lanjutkan',
+            cancelButtonText: "Tidak, batalkan",
+            closeOnConfirm: false,
+            closeOnCancel: false
+          }, function(isConfirm) {
+            if (isConfirm) {
+              let param = {
+                '_method': 'DELETE'
+              };
+              $.ajax({
+                  type: "POST",
+                  processData: false,
+                  contentType: 'application/json',
+                  data: JSON.stringify(param),
+                  cache: false,
+                  url: "{{ url('api/opname') }}/{{ $opname->id }}",
+                  dataType: "json",
+                  enctype: 'multipart/form-data',
+                  success: function (response) {
+                      swal({
+                          title: "Sukses",
+                          text: response.message,
+                          type: "success"
+                      });
+                      
+                      setTimeout(function () {
+                          location.reload();
+                      }, 2500)
+                  },
+                  error: function (response) {
+                      swal({
+                          title: "Gagal",
+                          text: response.responseJSON.message,
+                          type: "error"
+                      });
+                  }
+              });
+            } else {
+              swal("Cancelled", "Delete dibatalkan", "error");
+              return false;
+            }
+          })
+        })
+        $("#commit").click(function(){
+          swal({
+            title: "Anda yakin?",
+            text: "setelah opname di commit, maka anda tidak bisa edit atau hapus opname ini",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ya, lanjutkan',
+            cancelButtonText: "Tidak, batalkan",
+            closeOnConfirm: false,
+            closeOnCancel: false
+          }, function(isConfirm) {
+            if (isConfirm) {
+              
+              $.ajax({
+                  type: "GET",
+                  processData: false,
+                  contentType: 'application/json',
+                  cache: false,
+                  url: "{{ url('api/opname-commit') }}/{{ $opname->id }}",
+                  dataType: "json",
+                  enctype: 'multipart/form-data',
+                  success: function (response) {
+                      swal({
+                          title: "Sukses",
+                          text: response.message,
+                          type: "success"
+                      });
+                      
+                      setTimeout(function () {
+                          location.reload();
+                      }, 2500)
+                  },
+                  error: function (response) {
+                      swal({
+                          title: "Gagal",
+                          text: response.responseJSON.message,
+                          type: "error"
+                      });
+                  }
+              });
+            } else {
+              swal("Cancelled", "Commit dibatalkan", "error");
+              return false;
+            }
+          })
+        })
+      })
     </script>
     @endslot
 </x-admin-layout>
