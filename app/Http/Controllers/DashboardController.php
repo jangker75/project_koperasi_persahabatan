@@ -46,6 +46,7 @@ class DashboardController extends BaseAdminController
     public function detailRequestOrder($orderCode){
       $data['titlePage'] = 'Data Paylater '. $orderCode;
       $data['order'] = Order::where('order_code', $orderCode)->first();
+      $data['stringifyDetail'] = json_encode(collect($data['order']->detail)->toArray());
       $data['employee'] = Auth::user()->employee;
       $data['tax'] = ApplicationSetting::where('name', 'tax')->first();
       $data['paymentMethod'] = PaymentMethod::where('name', '!=', 'paylater')->get();

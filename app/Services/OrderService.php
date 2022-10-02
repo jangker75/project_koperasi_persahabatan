@@ -12,9 +12,14 @@ class OrderService{
 
     $dataProduct = ProductStockRepositories::findProductBySomeSku($skus);
     $qtys = array_column($items, 'qty');
+    $dicounts = array_column($items, 'discount');
     $subTotalAll = 0;
     foreach ($dataProduct as $key => $product) {
-      $subTotalAll += $product->price * $qtys[$key];
+      if(isset($dicounts[$key])){
+        $subTotalAll += ($product->price * $qtys[$key]) - $dicounts[$key];
+      }else{
+        $subTotalAll += $product->price * $qtys[$key];
+      }
     }
 
     return $subTotalAll;

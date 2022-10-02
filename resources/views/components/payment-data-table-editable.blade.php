@@ -34,7 +34,6 @@
             },
             success: function (data) {
                 // console.log(data)
-                
                 heads = data.data.table.head;
                 bodies = data.data.table.body;
                 columnEditable = data.data.table.editable;
@@ -71,8 +70,8 @@
                         'id': tds[0],
                         '_method': 'put',
                         'name': tds[1],
-                        'guard_name': tds[2],
-                        'description': tds[2]
+                        'credentials': tds[2],
+                        'description': tds[3]
                     }
                     // console.log(data);
                     $.ajax({

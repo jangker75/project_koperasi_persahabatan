@@ -52,10 +52,10 @@ class RoleAndPermissionSeeder extends Seeder
         $usipa->givePermissionTo([
             'read usipa', 'read loan-submission', 'read loan-list'
         ]);
-        $toko->givePermissionTo([
-            'read kelola_toko', 'read data-penjualan', 'read toko', 'read product',
-            'read category', 'read supplier', 'read brand'
-        ]);
+        // $toko->givePermissionTo([
+        //     'read kelola_toko', 'read data-penjualan', 'read toko', 'read product',
+        //     'read category', 'read supplier', 'read brand'
+        // ]);
         $kasir->givePermissionTo([
             'read kelola_toko'
         ]);

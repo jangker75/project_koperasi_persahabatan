@@ -21,6 +21,7 @@
                                     <th>Pembuat Order</th>
                                     <th>Tanggal Terima</th>
                                     <th>Lokasi Terima</th>
+                                    <th>Sudah Lunas</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </thead>
@@ -40,10 +41,20 @@
                                           <td>{{ $order->received_date }}</td>
                                           <td>{{ $order->toStore->name }}</td>
                                           <td>
+                                            @if ($order->is_paid)
+                                              <div class="btn btn-success btn-sm">Lunas</div>
+                                            @else
+                                              <div class="btn btn-danger btn-sm">Belum Lunas</div>
+                                            @endif
+                                          </td>
+                                          <td>
                                             <div class="btn btn-sm btn-primary-light">{{ $order->status->name }}</div>
                                           </td>
                                           <td>
-                                            <a href="{{ route("admin.order-supplier.show", $order->id) }}" class="btn btn-sm btn-info">Lihat Detail</a>
+                                            <a href="{{ route("admin.order-supplier.show", $order->id) }}" class="btn btn-sm mb-1 me-1 btn-info">Lihat Detail</a>
+                                            @if (!$order->is_paid)
+                                            <a href="{{ route("admin.order-supplier.show", $order->id) }}" class="btn btn-sm mb-1 me-1 btn-warning">Ubah Ke Lunas</a>
+                                            @endif
                                           </td>
                                         </tr>
                                       @endforeach

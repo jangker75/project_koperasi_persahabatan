@@ -154,11 +154,11 @@
             let orderBy = "pos";
             let cash = "0";
             $(document).ready(function () {
-
+                
                 $("#storeId").val("{{ $stores[0]->id }}");
-                $("#storeId").change(function () {
-                    productInCart = [];
-                    renderElementCart(productInCart)
+                $("#storeId").change(function(){
+                  productInCart = [];
+                  renderElementCart(productInCart)
                 })
 
                 $('#elementPaylater').hide()
@@ -173,13 +173,13 @@
                         $('#paymentCode').hide()
                         $('#cash').hide()
                     } else if ($(this).val() == 'cash') {
-                        $('#elementPaylater').hide()
-                        $('#paymentCode').hide()
-                        $('#cash').show()
+                      $('#elementPaylater').hide()
+                      $('#paymentCode').hide()
+                      $('#cash').show()
                     } else {
-                        $('#elementPaylater').hide()
-                        $('#paymentCode').show()
-                        $('#cash').hide()
+                      $('#elementPaylater').hide()
+                      $('#paymentCode').show()
+                      $('#cash').hide()
                     }
                 })
 
@@ -187,7 +187,7 @@
                     if (subtotal - $(this).val() > -1) {
                         discount = $(this).val()
                         total = subtotal - discount
-                        $("#total").html("Rp " + formatRupiah(String(total)))
+                        $("#total").html("Rp " + total)
                     } else {
                         swal({
                             title: "Gagal",
@@ -245,15 +245,12 @@
                 $('#scanBarcode').bind("enterKey", function (e) {
                     let value = $(this).val()
                     $(this).val(null)
-                    if (productInCart.length == 0) {
-                        $('#bodyCart').html("")
-                    }
 
                     const checker = productInCart.find(element => {
                         if (element.sku === value) {
                             element.qty += 1;
                             element.subtotal = element.price * element.qty
-                            return element;
+                            return true;
                         }
 
                         return false;
@@ -281,11 +278,10 @@
 
                                 }
                                 productInCart.push(toPush)
-                                renderRowCart(toPush)
-                                // renderElementCart(productInCart)
-                                // subtotal = countSubtotal(productInCart);
-                                // total = subtotal - discount;
-                                // $('#total').html("Rp " + total)
+                                renderElementCart(productInCart)
+                                subtotal = countSubtotal(productInCart);
+                                total = subtotal - discount;
+                                $('#total').html("Rp " + formatRupiah(String(total))) 
                             },
                             error: function (xhr, status, error) {
                                 swal({
@@ -296,16 +292,10 @@
                             }
                         });
                     } else {
-                        let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
-                        valueBefore += 1;
-                        // $(".qty[data-sku=" + value + "]").val(valueBefore)
-                        console.log(checker);
-                        updateSku(value, "qty", valueBefore, checker.subtotal);
-
-                        // renderElementCart(productInCart)
-                        // subtotal = countSubtotal(productInCart);
-                        // total = subtotal - discount;
-                        // $('#total').html("Rp " + total)
+                        renderElementCart(productInCart)
+                        subtotal = countSubtotal(productInCart);
+                        total = subtotal - discount;
+                        $('#total').html("Rp " + formatRupiah(String(total))) 
                     }
 
 
@@ -330,66 +320,39 @@
 
                     // remove object
                     productInCart.splice(removeIndex, 1);
-                    $("tr[data-sku="+skuNumber+"]").remove();
-                    // renderElementCart(productInCart);
-                    // subtotal = countSubtotal(productInCart);
-                    // total = subtotal - discount;
-                    // $('#total').html("Rp " + total)
+                    renderElementCart(productInCart);
+                    subtotal = countSubtotal(productInCart);
+                    total = subtotal - discount;
+                    $('#total').html("Rp " + formatRupiah(String(total))) 
                 });
 
                 $('body').on('click', '.counter', function () {
-                    let sku = $(this).data('sku');
-                    let dom = $(this);
+                    let skuNumber = $(this).closest('.handle-counter').attr('id');
+                    skuNumber = skuNumber.replace("sku", "");
+
                     const checker = productInCart.find(element => {
-                        if (element.sku == sku) {
-                            if (dom.hasClass('counter-plus')) {
-                                if (element.qty < element.stock) {
-                                    element.qty += 1;
-                                    element.subtotal = (element.price * element.qty) - element
-                                        .discount;
-                                }
-                            } else {
+                        if (element.sku === skuNumber) {
+                            if ($(this).hasClass('counter-minus')) {
                                 if (element.qty > 1) {
                                     element.qty -= 1;
-                                    element.subtotal = (element.price * element.qty) - element
-                                        .discount;
+                                }
+                            } else if ($(this).hasClass('counter-plus')) {
+                                if (element.qty + 1 <= element.stock) {
+                                    element.qty += 1;
                                 }
                             }
-                            return element;
+                            element.subtotal = element.price * element.qty
+
+                            return true;
                         }
+
                         return false;
                     });
-                    updateSku(sku, "qty", checker.qty, checker.subtotal);
+                    renderElementCart(productInCart);
+                    subtotal = countSubtotal(productInCart);
+                    total = subtotal - discount;
+                    $('#total').html("Rp " + formatRupiah(String(total))) 
                 })
-            })
-
-            $("body").on("keyup", ".discount", function(){
-              let sku = $(this).data("sku");
-              let value = $(this).val()
-              value = value.replace(".", "");
-
-              if(value == ""){
-                value = 0;
-              }else{
-                value = parseInt(value)
-              }
-
-              const checker = productInCart.find(element => {
-                  if (element.sku == sku) {
-                    if(value !== 0){
-                      element.discount = value;
-                      element.subtotal = (element.price * element.qty) - element.discount
-                      return element;
-                    }
-                  }
-
-                  return false;
-              });
-              console.log(value);
-              console.log(checker);
-              if(checker !== undefined){
-                updateSku(sku, "discount", checker.discount, checker.subtotal);
-              }
             })
 
             $('#buttonCheckout').click(function () {
@@ -413,21 +376,19 @@
                     checkoutValue.paylater = $("#mySelect2").val()
                 } else if ($('#paymentMethod').val() !== 'cash' && $('#paymentMethod').val() !== 'paylater') {
                     checkoutValue.paymentCode = paymentCode
-                } else {
-                    // setCash = parseInt(cash.replace(".",""));
-                    setCash = parseInt(cash.split(".").join(''));
-                    if (setCash < total) {
-                        swal({
-                            title: "Gagal",
-                            text: "Cash harus lebih dari total harga",
-                            type: "error"
-                        });
-                        return false;
-                    }
-                    checkoutValue.cash = setCash;
+                } else{
+                  // setCash = parseInt(cash.replace(".",""));
+                  setCash = parseInt(cash.split(".").join(''));
+                  if(setCash < total){
+                    swal({
+                        title: "Gagal",
+                        text: "Cash harus lebih dari total harga",
+                        type: "error"
+                    });
+                    return false;
+                  }
+                  checkoutValue.cash = setCash;
                 }
-
-                console.log(checkoutValue);
 
                 $.ajax({
                     type: "POST",
@@ -448,14 +409,14 @@
                         }
                         if (response.print == true) {
                             let cash = $("#cash").val();
-                            window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order
-                                .order_code, '_blank');
+                            window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order.order_code, '_blank');
                         }
                         setTimeout(function () {
                             location.reload();
                         }, 1000)
                     },
                     error: function (response) {
+                      console.log(response)
                         swal({
                             title: "Gagal",
                             text: response.message,
@@ -465,6 +426,75 @@
                 });
             });
 
+            $("body").on('keyup', '.discount', function(){
+              let sku = $(this).data('sku');
+              let discountProduct = $(this).val()
+              discountProduct = discountProduct.replace(".", "");
+              discountProduct = parseInt(discountProduct);
+              // let subtotalProduct = 0;
+              
+                const checker = productInCart.find(element => {
+                  if (element.sku == sku) {
+                      if(discountProduct >= 0 && discountProduct < element.subtotal){
+                        element.discount = discountProduct;
+                        element.subtotal = (element.price*element.qty) - discountProduct;
+                        
+                        return element;
+                      }
+                      return false;
+                    }
+                  });
+                $(".subtotal[data-sku="+sku+"]").html(formatRupiah(String(checker.subtotal)))
+                console.log(checker)
+                subtotal = countSubtotal(productInCart);
+                total = subtotal - discount;
+                $('#total').html("Rp " + formatRupiah(String(total))) 
+                console.log(checker)
+            })
+
+            function renderElementCart(items) {
+                $('#bodyCart').html("");
+                let elementHtml = '';
+
+                items.forEach(product => {
+                    elementHtml = elementHtml + `
+                  <tr>
+                      <td>
+                          <div class="text-center">
+                              <img src="` + product.cover + `" alt="" class="cart-img text-center">
+                          </div>
+                      </td>
+                      <td>` + product.title + `</td>
+                      <td class="fw-bold">` + formatRupiah(String(product.price))  + `</td>
+                      <td>
+                          <div class="handle-counter" id="sku` + product.sku + `">
+                              <button type="button" class="counter-minus counter btn btn-white lh-2 shadow-none">
+                                  <i class="fa fa-minus text-muted"></i>
+                              </button>
+                              <input type="text" value="` + product.qty + `" class="qty">
+                              <button type="button" class="counter-plus counter btn btn-white lh-2 shadow-none">
+                                  <i class="fa fa-plus text-muted"></i>
+                              </button>
+                          </div>
+                          <small class="small text-danger">stock : ` + product.stock + `</small>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control format-uang discount" data-sku="` + product.sku + `" placeholder="0">
+                      </td>
+                      <td class="subtotal" data-sku="` + product.sku + `">` + formatRupiah(String(product.subtotal)) + `</td>
+                      <td>
+                          <div class=" d-flex g-2">
+                              <a class="btn text-danger bg-danger-transparent btn-icon py-1 delete-cart"
+                                  data-bs-toggle="tooltip" data-bs-original-title="Delete" id="dlt` + product.sku + `"><span
+                                      class="bi bi-trash fs-16"></span></a>
+                          </div>
+                      </td>
+                  </tr>
+                `;
+
+                    $('#bodyCart').html(elementHtml);
+                });
+            }
 
             function countSubtotal(item) {
                 let sum = 0;
@@ -472,67 +502,9 @@
                 for (let index = 0; index < item.length; index++) {
                     sum += item[index].subtotal;
                 }
+
+                $('#subtotalAll').html("Rp " + formatRupiah(String(sum)))
                 return sum;
-            }
-
-
-            function renderRowCart(product) {
-                if (productInCart.length == 0) {
-                    $('#bodyCart').html("")
-                }
-
-                let html = `
-                <tr data-sku="` + product.sku + `">
-                    <td>
-                        <div class="text-center">
-                            <img src="` + product.cover + `" alt="" class="cart-img text-center">
-                        </div>
-                    </td>
-                    <td>` + product.title + `</td>
-                    <td class="fw-bold">` + formatRupiah(String(product.price)) + `</td>
-                    <td>
-                        <div class="handle-counter" id="sku` + product.sku + `">
-                            <button type="button" data-sku="` + product.sku + `" class="counter-minus counter btn btn-white lh-2 shadow-none">
-                                <i class="fa fa-minus text-muted"></i>
-                            </button>
-                            <input type="text" value="` + product.qty + `" data-sku="` + product.sku + `" class="qty" readonly>
-                            <button type="button" data-sku="` + product.sku + `" class="counter-plus counter btn btn-white lh-2 shadow-none">
-                                <i class="fa fa-plus text-muted"></i>
-                            </button>
-                        </div>
-                        <small class="small text-danger">stock : ` + product.stock + `</small>
-                    </td>
-                    <td>
-                      <input type="text" placeholder="0" class="form-control discount format-uang" 
-                      data-sku="` + product.sku + `">
-                    </td>
-                    <td data-sku="` + product.sku + `" class="subtotal">` + formatRupiah(String(product.subtotal)) + `</td>
-                    <td>
-                        <div class=" d-flex g-2">
-                            <a class="btn text-danger bg-danger-transparent btn-icon py-1 delete-cart"
-                                data-bs-toggle="tooltip" data-bs-original-title="Delete" id="dlt` + product.sku + `"><span
-                                    class="bi bi-trash fs-16"></span></a>
-                        </div>
-                    </td>
-                </tr>
-              `;
-                $('#bodyCart').append(html)
-                subtotal = countSubtotal(productInCart)
-                total = subtotal - discount;
-
-                $("#subtotalAll").html("Rp " + formatRupiah(String(subtotal)))
-                $("#total").html("Rp " + formatRupiah(String(total)))
-            }
-
-            function updateSku(sku, param, value, subtotal) {
-                $("." + param + "[data-sku=" + sku + "]").val(value)
-                $(".subtotal[data-sku=" + sku + "]").html(formatRupiah(String(subtotal)))
-
-                subtotal = countSubtotal(productInCart)
-                total = subtotal - discount;
-
-                $("#subtotalAll").html("Rp " + formatRupiah(String(subtotal)))
-                $("#total").html("Rp " + formatRupiah(String(total)))
             }
 
         </script>
