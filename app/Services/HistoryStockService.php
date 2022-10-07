@@ -17,8 +17,13 @@ class HistoryStockService{
       $title = "Stock bertambah dari pengadaan barang kode : " . $params['orderSupplyCode'];
       $type = "induction";
     }else if($mode == "opname"){
-      $title = "Stock berkurang dari stock opname kode : " . $params['opnameCode'];
-      $type = "deduction";
+      if($params['type'] == 'minus'){
+        $title = "Stock berkurang dari stock opname kode : " . $params['opnameCode'];
+        $type = "deduction";
+      }else{
+        $title = "Stock bertambah dari stock opname kode : " . $params['opnameCode'];
+        $type = "induction";
+      }
     }else if($mode == "rejection"){
       $title = "Penambahan Stock karna pembatalan Order : " . $params['orderCode'] . " dengan jumlah ". $params['qty'];
       $type = 'induction';

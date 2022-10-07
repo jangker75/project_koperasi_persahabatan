@@ -23,14 +23,9 @@ class StoreSeeder extends Seeder
             'is_warehouse' => true
           ],
           [
-            'name' => 'Toko Lantai 1',
+            'name' => 'Toko Rawat Jalan',
             'location' => 'Lt. 1',
             'manager_id' => 2
-          ],
-          [
-            'name' => 'Toko Lantai 2',
-            'location' => 'Lt. 2',
-            'manager_id' => 3
           ],
         ])->each(function($data){
           Store::create($data);

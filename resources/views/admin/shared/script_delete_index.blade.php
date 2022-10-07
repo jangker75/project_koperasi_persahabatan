@@ -55,7 +55,7 @@
             // });
         });
 
-        $(".format-uang").keyup(function(){
+        $("body").on('keyup', '.format-uang', function(){
           $(this).val(formatRupiah($(this).val()))
         })
         function formatRupiah(angka, prefix) {

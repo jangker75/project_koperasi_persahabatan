@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string("evidance")->nullable();
             $table->boolean("is_paid")->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

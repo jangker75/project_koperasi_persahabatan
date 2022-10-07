@@ -14,8 +14,10 @@ use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\Nasabah\PagesController;
 use App\Http\Controllers\Nasabah\ProfileController;
 use App\Http\Controllers\Toko\ManagementStockController;
+use App\Http\Controllers\Toko\OpnameController;
 use App\Http\Controllers\Toko\OrderController;
 use App\Http\Controllers\Toko\OrderSupplierController;
+use App\Http\Controllers\Toko\PaymentMethodController;
 use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\toko\PrintReceiptController;
 use App\Http\Controllers\Toko\ProductController;
@@ -110,12 +112,17 @@ Route::group([
       Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
       Route::resource('management-stock', ManagementStockController::class);
       Route::resource('order-supplier', OrderSupplierController::class);
+      Route::resource('payment-method', PaymentMethodController::class);
+      Route::resource('opname', OpnameController::class);
+      Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
+      Route::get('print-form-opname/{storeId}', [OpnameController::class, 'printFormOpname']);
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
       Route::get('start-order-transfer-stock/{id}', [ManagementStockController::class, 'startTicket']);
       Route::get('reject-order-transfer-stock/{id}', [ManagementStockController::class, 'rejectTicket']);
       // transfer-stock
+
       // order-supplier
       Route::get('confirm-order-supplier/{id}', [OrderSupplierController::class, 'confirmTicket']);
       Route::get('start-order-supplier/{id}', [OrderSupplierController::class, 'startTicket']);

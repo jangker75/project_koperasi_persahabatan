@@ -59,7 +59,8 @@ class OrderController extends Controller
             'product_name' => $productInfo[0]->title,
             'price' => $productInfo[0]->price,
             'qty' => $product['qty'],
-            'subtotal' => $productInfo[0]->price*$product['qty']
+            'discount' => $product['discount'],
+            'subtotal' => (int) ($productInfo[0]->price*$product['qty']) - (int) $product['discount']
           ]);
 
           // update stock
@@ -184,8 +185,11 @@ class OrderController extends Controller
         // order detail
         foreach ($request->item as $key => $product) {
           $productInfo = ProductStockRepositories::findProductBySku($product['sku'], $request->storeId);
-          if(!$productInfo || $productInfo[0]->stock < $product['qty']){
-            throw new ModelNotFoundException('Data Produk tidak ditemukan atau stock yg tidak mencukupi');
+          if(!$productInfo){
+            throw new ModelNotFoundException('Data Produk tidak ditemukan ');
+          }
+          if($productInfo[0]->stock < $product['qty']){
+            throw new ModelNotFoundException('Stock yg tidak mencukupi');
           }
           $orderDetail = OrderDetail::create([
             'order_id' => $order->id,
@@ -325,15 +329,28 @@ class OrderController extends Controller
     public function checkoutOrder(Request $request){
       try {
         DB::beginTransaction();
-        // dd($request->all());
         $order = Order::where('order_code', $request->orderCode)->first();
         $status = MasterDataStatus::where('name', 'success')->first();
         $statusPaylater = MasterDataStatus::where('name', 'approved')->first();
+        $tax = ApplicationSetting::where('name', 'tax')->first();
+        $allSubtotal = 0;
+
+        foreach ($request->item as $key => $item) {
+          $detail = OrderDetail::find($item['id']);
+          $detail->discount = $item['discount'];
+          $detail->subtotal = $detail->subtotal - (int) $item['discount'];
+          $detail->save();
+          $allSubtotal += (int) $detail->subtotal;
+        }
 
         // status order
         $order->status_id = $status->id;
+        $order->subtotal = $allSubtotal;
+        $order->discount = (int) $request->discount;
+        $order->total = $allSubtotal - ((int) $request->discount + (int) $tax->content);
         $order->employee_onduty_id = $request->employeeOndutyId;
         $order->save();
+
 
         // status order
         $transaction = $order->transaction;

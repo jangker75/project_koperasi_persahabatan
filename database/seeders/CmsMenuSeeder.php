@@ -59,11 +59,7 @@ class CmsMenuSeeder extends Seeder
                 'isseparator' => true,
                 'name' => 'KELOLA TOKO',
         ]);
-        CmsMenu::create([
-                'name' => 'Data Penjualan',
-                'url' => 'admin/data-penjualan', 
-                'icon' => 'fe fe-dollar-sign', 
-        ]);
+        
         
         $dataToko = CmsMenu::create([
                 'name' => 'Kelola Data Toko',
@@ -92,6 +88,10 @@ class CmsMenuSeeder extends Seeder
                 'name' => 'Data Toko',
                 'url' => 'admin/toko/store', 
         ]);
+        $dataToko->subMenus()->create([
+                'name' => 'Data Metode Pembayaran',
+                'url' => 'admin/toko/payment-method', 
+        ]);
         // CmsMenu::create([
         //         'name' => 'Data Toko',
         //         'url' => 'admin/store', 
@@ -115,7 +115,7 @@ class CmsMenuSeeder extends Seeder
         ]);
         $dataPengadaan->subMenus()->create([
                 'name' => 'Audit Opname',
-                'url' => 'admin/pengadaan/audit-opname', 
+                'url' => 'admin/toko/opname', 
         ]);
         //END Sub Menu Pengadaan
 
@@ -175,15 +175,15 @@ class CmsMenuSeeder extends Seeder
         ]);
 
         // Divisi Umum
-        CmsMenu::create([
-                'isseparator' => true,
-                'name' => 'MASTER DATA',
-        ]);
-        CmsMenu::create([
-                'name' => 'Master Data Status',
-                'url' => 'admin/master-data-status', 
-                'icon' => 'fe fe-layers', 
-        ]);
+        // CmsMenu::create([
+        //         'isseparator' => true,
+        //         'name' => 'MASTER DATA',
+        // ]);
+        // CmsMenu::create([
+        //         'name' => 'Master Data Status',
+        //         'url' => 'admin/master-data-status', 
+        //         'icon' => 'fe fe-layers', 
+        // ]);
 
         // SETTING APPLICATION
         CmsMenu::create([
