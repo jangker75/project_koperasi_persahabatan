@@ -156,6 +156,7 @@ Route::group([
     // Download PDF Start
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
     Route::get('download-bukti-pelunasan/{loan}', [LoanListController::class, 'downloadBuktiPelunasanPDF'])->name('download.bukti-pelunasan');
+    Route::get('download-form-akad/{loan}', [LoanListController::class, 'downloadFormAkadPDF'])->name('download.form-akad');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
     Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
     // Download PDF End
