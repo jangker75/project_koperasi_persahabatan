@@ -65,7 +65,7 @@ class Loan extends Model
 
     public function getLastPeriodAttribute()
     {
-        $a = Carbon::parse($this->first_payment_date)->addMonth($this->total_pay_month * $this->pay_per_x_month)->format('Y-m-d');
+        $a = Carbon::parse($this->first_payment_date)->addMonth($this->total_pay_month * $this->pay_per_x_month)->subMonth()->format('Y-m-d');
         return $a;
     }
 

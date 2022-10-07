@@ -201,6 +201,21 @@ class LoanListController extends BaseAdminController
         $pdf = Pdf::loadView('admin.export.PDF.form_bukti_lunas', $data);
         return $pdf->stream($data['title'].'.pdf');
     }
+    public function downloadFormAkadPDF(Loan $loan)
+    {
+        $data['loan'] = $loan;
+        $data['title'] = 'Form Akad';
+        if ($loan->contract_type_id == 1) {
+            $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT UNIT SIMPAN PINJAM";
+        }
+        else if ($loan->contract_type_id == 2) {
+            $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT BARANG";
+        }else{
+            $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT LAINNYA";
+        }
+        $pdf = Pdf::loadView('admin.export.PDF.form_akad_pinjaman', $data);
+        return $pdf->stream($data['title'].'.pdf');
+    }
     public function getIndexDatatables()
     {
         $keyword = request('keyword');
@@ -256,6 +271,9 @@ class LoanListController extends BaseAdminController
                 }
                 if($row->is_pelunasan_manual != 0){
                     $btn = $btn . '<a class="btn btn-sm btn-warning" target="_blank" href="'. route("admin.download.bukti-pelunasan", [$row->id]) .'" type="button">Download bukti pelunasan</a>';
+                }
+                if(!$row->is_lunas && $row->approvalstatus->name == 'Approved'){
+                    $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.form-akad", [$row->id]) .'" type="button">Download form akad</a>';
                 }
                 $btn = $btn . '</div>';
                 return $btn;
