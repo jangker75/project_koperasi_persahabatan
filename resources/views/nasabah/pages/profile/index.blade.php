@@ -20,7 +20,16 @@
                     <div class="col-8">
                         <p class="h4 fw-bold">{{ $employee->full_name }}</p>
                         <p class="text-primary">NIK : {{ $employee->nik }}</p>
-                        <a class="btn btn-primary" href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
+                        <div class="row">
+                            <div class="col-12 btn-group">
+                                <a class="btn btn-primary" href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
+                                {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
+                                </button>
+                                {!! Form::close() !!}
+                            </div>
+                        </div>
                     </div>
                     <div class="col-12 py-4">
                         <div class="row align-items-center border">

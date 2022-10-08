@@ -6,6 +6,7 @@
         <a href="{{ url()->previous() }}" class="btn fw-bold h5 m-0">
             <i class="fa fa-angle-left text-muted"></i>
         </a>
+        
         <h1 class="h3 fw-bold m-0">Edit Profile</h1>
     </div>
 </section>
