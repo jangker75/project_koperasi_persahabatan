@@ -36,17 +36,14 @@ class RoleManagementController extends BaseAdminController
     public function update(Request $request, Role $role_management)
     {
         $input = $request->except(['name','_token', '_method']);
-        for ($i=0; $i < count($input); $i++) { 
-            $a = explode($input[$i]);
-            
+        $perm = [];
+        foreach ($input as $key => $value) {
+            $a = explode("_",$key);
+            $res = str_replace($a[0]."_", $a[0]." ", $key);
+            array_push($perm, $res);
         }
-        dd();
-        // foreach ($request->except(['name','_token', '_method']) as $key => $permission) {
-        //     $request->except(['name','_token', '_method'])[$key] = 
-        // }
-        $permissions = Permission::whereIn('name', $request->all())->get();
-        dd($permissions);
-        // $role_management->syncPermissions();
-        dd($request->all());
+        // dd($perm);
+        $role_management->syncPermissions($perm);
+        return redirect()->route('admin.role-management.index')->with('success', __('general.notif_edit_data_success'));
     }
 }

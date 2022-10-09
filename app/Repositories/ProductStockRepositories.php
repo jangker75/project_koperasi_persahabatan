@@ -17,11 +17,16 @@ class ProductStockRepositories{
       SELECT 
         products.id AS productId,
         products.name AS productName,
-        stocks.qty AS qty
+        products.sku AS productSKU,
+        products.cover as productCover,
+        stocks.qty AS qty,
+        prices.revenue as price
       FROM stocks
-      LEFT JOIN products ON stocks.product_id = products.id
-      WHERE products.slug LIKE '%" . $keyword ."%'
-      AND stocks.qty > 0
+        LEFT JOIN products ON stocks.product_id = products.id
+        LEFT JOIN prices ON products.id = prices.product_id AND prices.is_active = 1 AND prices.deleted_at is null
+      WHERE 
+        products.slug LIKE '%" . $keyword ."%'
+        AND stocks.qty > 0
       ";
 
     if($originStore !== null){
@@ -31,7 +36,7 @@ class ProductStockRepositories{
       $middle .= " AND stocks.product_id NOT IN (" . implode(",", $notInListProduct) . ")";
     }
     
-    $lastQuery = " ORDER BY stocks.id DESC LIMIT 6";
+    $lastQuery = " GROUP BY products.id ORDER BY stocks.id DESC LIMIT 6";
     $query = $query.$middle.$lastQuery;
 
     $data = DB::select(DB::raw($query));

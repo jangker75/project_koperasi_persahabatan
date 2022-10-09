@@ -12,7 +12,7 @@ class OrderSupplier extends Model
 
     protected $fillable = [
       'order_supplier_code', 'supplier_id', 'to_store_id',
-      'status_id', 'req_empl_id', 'order_date', 'received_date', 'note', 'total'
+      'status_id', 'req_empl_id', 'order_date', 'received_date', 'note', 'total', 'is_paid'
     ];
 
     public function supplier(){

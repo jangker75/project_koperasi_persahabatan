@@ -39,7 +39,7 @@ class OpnameController extends Controller
     {
         $data['titlePage'] = 'Halaman Reporting Opname';
         $data['type'] = ['minus', 'plus'];
-        $data['stores'] = Store::where('is_warehouse', '!=', true)->get();
+        $data['stores'] = Store::get();
         return view('admin.pages.toko.opname.create', $data);
     }
 

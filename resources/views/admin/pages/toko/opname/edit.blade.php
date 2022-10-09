@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary w-100" id="submit">Buat Tiket Transfer Stock</button>
+                <button class="btn btn-primary w-100" id="submit">Update Opname</button>
             </div>
         </div>
     </section>
@@ -207,6 +207,7 @@
                   
                   response.detail.forEach(function callback(element, index) {
                     let toPush = {
+                      id: element.id,
                       productId: element.productId,
                       quantity: element.quantity,
                       type: element.type,
@@ -416,6 +417,7 @@
                 item:order,
                 '_method': 'put'
               }
+              console.log(value);
               
               $.ajax({
                   type: "POST",

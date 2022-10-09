@@ -29,4 +29,8 @@ class Transaction extends Model
     public function statusTransaction(){
       return $this->belongsTo(MasterDataStatus::class, 'status_transaction_id');
     }
+
+    public function paymentMethod(){
+      return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
 }

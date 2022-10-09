@@ -368,10 +368,10 @@
                                     type: "success"
                                 });
                             }
-                            if (response.print == true) {
-                                let cash = $("#cash").val();
-                                // window.open('{{ url("admin/print-receipt-order" ) }}/' + response.order.order_code + "?cash="+cash, '_blank');
-                            }
+                            // let cash = $("#cash").val();
+                            window.open('{{ url("admin/pos/print-receipt" ) }}/' + dataValue.orderCode, '_blank');
+                            // if (response.print == true) {
+                            // }
                             setTimeout(function () {
                                 location.reload();
                             }, 1000)

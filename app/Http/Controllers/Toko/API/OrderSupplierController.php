@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Toko\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\ApplicationSetting;
 use App\Models\DetailOrderSupplier;
 use App\Models\MasterDataStatus;
 use App\Models\OrderSupplier;
+use App\Models\Price;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Repositories\OrderSupplierRepository;
@@ -130,10 +132,12 @@ class OrderSupplierController extends Controller
         $subtotal = [];
         foreach ($request->data as $key => $item) {
           $detail = DetailOrderSupplier::find($item['id']);
+          $detail->request_unit = $item['receiveUnit'];
           $detail->quantity_per_unit = $item['quantityPerUnit'];
-          $detail->price_per_unit = $item['price'];
+          $detail->price_per_unit = $item['newCost'];
+          $detail->receive_unit = $item['receiveUnit'];
           $detail->receive_qty = $item['receiveQty'];
-          $detail->subtotal = $item['receiveQty']*$item['price'];
+          $detail->subtotal = $item['receiveQty']*$item['newCost'];
           $detail->all_quantity_in_units = $item['quantityPerUnit']*$detail->request_qty;
           $detail->save();
 
@@ -149,14 +153,67 @@ class OrderSupplierController extends Controller
             "productId" => $detail->product_id,
             'qty' => $detail->all_quantity_in_units
           ]);
+
+          $oldPrice = Price::where('product_id', $item['productId'])
+                          ->where('is_active', true)->first();
+          Price::where('product_id', $item['productId'])
+                ->update(['is_active' => false]);
+
+          $profit = (int) ($item['newRevenue'] - $item['newCost']);
+          $margin = ($profit*100)/$item['newCost'];
+          // dd($item['isSamePrice'], $margin, $profit);
+          $appSetting = ApplicationSetting::where('name', 'minimum_margin_price')->first();
+            
+          if($item['isSamePrice'] == false || $item['isSamePrice'] == 0){
+            $profit = (int) ($item['newRevenue'] - $item['newCost']);
+            $margin = ($profit*100)/$item['newCost'];
+
+            if($margin < (int) $appSetting->content){
+              throw new ModelNotFoundException('Margin Harga tidak boleh kurang dari ' . $appSetting->content."%");
+            }
+
+            Price::create([
+              'product_id' => $detail->product_id,
+              'cost' => $item['newCost'],
+              'revenue' => $item['newRevenue'],
+              'margin' => $margin,
+              'profit' => $profit,
+              'is_active' => true
+            ]);
+          }else if($item['isSamePrice'] == true || $item['isSamePrice'] == 1){
+            $profit = (int) ($oldPrice->revenue - $item['newCost']);
+            $margin = ($profit*100)/$item['newCost'];
+
+            if($margin < (int) $appSetting->content){
+              throw new ModelNotFoundException('Margin Harga tidak boleh kurang dari ' . $appSetting->content."%");
+            }
+
+            Price::create([
+              'product_id' => $detail->product_id,
+              'cost' => $item['newCost'],
+              'revenue' => $oldPrice->revenue,
+              'margin' => $margin,
+              'profit' => $profit,
+              'is_active' => true
+            ]);
+          }else{
+            $oldPrice->is_active == true;
+            $oldPrice->save();
+          }
         }
         
+        // (new CompanyService())->addDebitBalance($orderSupplier->total, 'store_balance', 'order-supplier kode : '. $orderSupplier->order_supplier_code);
+        
+        // if($request->isPaid == true || $request->isPaid == 1){
+        //   $orderSupplier->is_paid == true;
+        // }else{
+        //   $orderSupplier->is_paid == false;
+        // }
         $orderSupplier->total = array_sum($subtotal);
         $orderSupplier->status_id = $status->id;
         $orderSupplier->save();
 
-        (new CompanyService())->addDebitBalance($orderSupplier->total, 'store_balance', 'order-supplier kode : '. $orderSupplier->order_supplier_code);
-
+        
         DB::commit();
         $response['message'] = "Tiket berhasil diedit";
         return response()->json($response, 200);

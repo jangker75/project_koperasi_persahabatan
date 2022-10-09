@@ -205,7 +205,7 @@
 
                 $('#mySelect2').select2({
                     placeholder: "Masukan NIK / Nama Staff",
-                    minimumInputLength: 5,
+                    minimumInputLength: 3,
                     ajax: {
                         url: "{{ url('api/search-employee') }}",
                         type: 'POST',
@@ -446,11 +446,11 @@
                                 type: "success"
                             });
                         }
-                        if (response.print == true) {
-                            let cash = $("#cash").val();
-                            window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order
-                                .order_code, '_blank');
-                        }
+                        let cash = $("#cash").val();
+                        window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order
+                            .order_code, '_blank');
+                        // if (response.print == true) {
+                        // }
                         setTimeout(function () {
                             location.reload();
                         }, 1000)
@@ -470,7 +470,7 @@
                 let sum = 0;
 
                 for (let index = 0; index < item.length; index++) {
-                    sum += item[index].subtotal;
+                    sum += parseInt(item[index].subtotal);
                 }
                 return sum;
             }

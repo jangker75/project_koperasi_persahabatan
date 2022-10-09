@@ -58,15 +58,14 @@
                               </thead>
                               <tbody id="bodyTable">
                                   <tr>
-                                      <td colspan="5" class="text-center">Belum ada produk yang ditambahkan</td>
+                                      <td colspan="6" class="text-center">Belum ada produk yang ditambahkan</td>
                                   </tr>
-                                  {{--  --}}
                               </tbody>
                           </table>
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary w-100" id="submit">Buat Tiket Transfer Stock</button>
+                <button class="btn btn-primary w-100" id="submit">Buat Tiket Opname</button>
             </div>
         </div>
     </section>
