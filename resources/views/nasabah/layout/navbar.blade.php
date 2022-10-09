@@ -42,8 +42,8 @@
                 aria-describedby="basic-addon2" id="inputSearchProduct">
             <span class="input-group-text" id="basic-addon2"><i class="fe fe-search"></i></span>
         </div>
-        <div class="position-relative py-3" id="resultSearchProduct">
-            <div class="card position-absolute border border-primary" style="min-height: 20vh; z-index:99;" id="bodyResultSearchProduct">
+        <div class="position-relative">
+            <div class="card position-absolute border border-primary mt-3" id="resultSearchProduct" style="min-height: 12vh; z-index:99;" id="bodyResultSearchProduct">
               <a href="" class="border d-flex">
                 <div class="w-25">
                   <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="card-img-top" alt="">

@@ -2,6 +2,9 @@
 
     <div class="row row-sm">
         <div class="col-lg-12 col-xl-12">
+            <div class="mb-4">
+              <a href="{{ route('admin.management-stock.index') }}" class="btn btn-danger">kembali</a>
+            </div>
             <div>
                 @if ($transferStock->Status->name !== "reject")
                 <div class="multi-step p-4 mb-4 d-flex justify-content-center position-relative">

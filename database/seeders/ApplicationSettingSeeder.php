@@ -65,6 +65,13 @@ class ApplicationSettingSeeder extends Seeder
                 'description' => 'Biaya Antar',
                 'type' => 'number',
             ],
+            [
+                'name' => 'minimum_margin_price',
+                'label' => 'Minimum Margin Price',
+                'content' => 15,
+                'description' => 'Batas Minimum Margin',
+                'type' => 'number',
+            ]
         ];
         collect($data)->each(function($item){
             ApplicationSetting::create($item);

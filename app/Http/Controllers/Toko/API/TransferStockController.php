@@ -153,8 +153,8 @@ class TransferStockController extends Controller
                           ->where('store_id', $transferStock->to_store_id)->first();
         
         $stockOrigin->qty = $stockOrigin->qty - $item->receive_qty;
+        $destinationOrigin->qty = $destinationOrigin->qty + $item->receive_qty;
         $stockOrigin->save();
-        $destinationOrigin->qty = $stockOrigin->qty + $item->receive_qty;
         $destinationOrigin->save();
 
         (new HistoryStockService)->update("transfer", [

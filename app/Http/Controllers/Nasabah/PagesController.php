@@ -10,6 +10,7 @@ use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\Transaction;
+use App\Repositories\OrderRepository;
 use App\Repositories\PaylaterRepository;
 use App\Services\EmployeeService;
 use Illuminate\Http\Request;
@@ -63,6 +64,14 @@ class PagesController extends Controller
       $data['employee'] = Auth::user()->employee;
       $data['paylater'] = PaylaterRepository::getDataPaylaterFromStaffId(Auth::user()->employee->id);
       // dd($data);
+      return view("nasabah.pages.paylater.index", $data);
+    }
+
+    public function orderHistory(){
+      $data['employee'] = Auth::user()->employee;
+      $data['orders'] = (new OrderRepository())->getOrderFromEmployee($data['employee']->id);
+      // $data['paylater'] = PaylaterRepository::getDataPaylaterFromStaffId(Auth::user()->employee->id);
+      dd($data);
       return view("nasabah.pages.paylater.index", $data);
     }
 

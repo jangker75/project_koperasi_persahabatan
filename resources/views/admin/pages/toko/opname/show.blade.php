@@ -2,8 +2,8 @@
 
     <div class="row row-sm">
         <div class="col-lg-12 col-xl-12">
-            <div>
-                
+            <div class="mb-4">
+                <a href="{{ route('admin.opname.index') }}" class="btn btn-danger">kembali</a>
             </div>
             <div class="card">
                 <div class="card-header">
@@ -54,6 +54,17 @@
                                         <td>Catatan</td>
                                         <td>:</td>
                                         <td>{{ $opname->note }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Status</td>
+                                      <td>:</td>
+                                      <td>
+                                        @if ($opname->is_commit == false)
+                                          <span class="text-danger fw-bold">Placed</span>
+                                          @else
+                                          <span class="text-success fw-bold">Commit</span>
+                                        @endif
+                                      </td>
                                     </tr>
                                 </tbody>
                             </table>

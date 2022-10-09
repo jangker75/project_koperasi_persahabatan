@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\DB;
 
 class OrderRepository{
 
-  public static function getOrderFromEmployee(){
+  public static function getOrderFromEmployee($employeeId = null){
+    if($employeeId == null){
+      $where = "transactions.requester_employee_id IS NOT NULL";
+    }else{
+      $where = "transactions.requester_employee_id = " . $employeeId;
+    }
+
     $sql = "
       SELECT
         orders.id AS orderId,
@@ -26,13 +32,14 @@ class OrderRepository{
         CONCAT(employees.first_name, ' ', employees.last_name) AS requesterName,
         transactions.transaction_date AS requestDate
       FROM orders
-      LEFT JOIN transactions ON orders.id = transactions.order_id
+      LEFT JOIN transactions ON orders.id = transactions.order_id and transactions.deleted_at IS NOT NULL
       LEFT JOIN master_data_statuses statusOrder ON transactions.status_transaction_id = statusOrder.id
       LEFT JOIN master_data_statuses statusPaylater ON transactions.status_paylater_id = statusPaylater.id
-      LEFT JOIN employees ON transactions.requester_employee_id = employees.id
+      LEFT JOIN employees ON transactions.requester_employee_id = employees.id and employees.deleted_at IS NOT NULL
       WHERE 
-        transactions.requester_employee_id IS NOT NULL AND
-        transactions.status_transaction_id = 4
+        " . $where . " AND
+        transactions.status_transaction_id = 4 AND
+        orders.deleted_at IS NOT NULL
       ORDER BY transactions.transaction_date DESC, orders.id DESC
       LIMIT 100
     ";

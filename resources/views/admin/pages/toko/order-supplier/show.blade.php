@@ -21,13 +21,13 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Data Transfer Stock</div>
+                    <div class="card-title">Data Order Supplier</div>
                     <div class="card-options">
                         @if ($orderSupplier->status->name == "Create Ticket")
                         <a href="{{ route('admin.order-supplier.edit', $orderSupplier->id) }}"
                             class="btn btn-warning btn-sm">Edit Data Request</a>
                         <a href="{{ url('admin/toko/confirm-order-supplier/' . $orderSupplier->id) }}"
-                            class="btn btn-info btn-sm ms-2">Konfirmasi Tiket Transfer Stock</a>
+                            class="btn btn-info btn-sm ms-2">Konfirmasi Tiket Order Supplier</a>
                         @endif
                         @if ($orderSupplier->status->name == "Approved Ticket")
                         <button class="btn btn-info btn-sm ms-2">Print Surat Jalan</button>
@@ -36,12 +36,12 @@
                         @endif
                         @if ($orderSupplier->status->name == "Ordering")
                         <button class="btn btn-info btn-sm ms-2">Print Surat Jalan</button>
-                        <button data-bs-toggle="modal" data-bs-target="#modalConfirmStock"
-                            class="btn btn-info btn-sm ms-2">Konfirmasi Terima Produk</button>
+                        <a href="{{ route('admin.order-supplier.receive', $orderSupplier->id) }}"
+                            class="btn btn-info btn-sm ms-2">Konfirmasi Terima Produk</a>
                         @endif
                         @if ($orderSupplier->status->name !== "reject" && $orderSupplier->status->name !== "Receive")
                         <a href="{{ url('admin/toko/reject-order-supplierk/' . $orderSupplier->id) }}" class="btn btn-danger btn-sm delete-button ms-2" data-toggle="tooltip"
-                            data-placement="top" title="Hapus Transfer Stock">
+                            data-placement="top" title="Hapus Order Supplier">
                             Batalkan Pesanan<i class="fe fe-trash-2"></i>
                         </a>
                         @endif

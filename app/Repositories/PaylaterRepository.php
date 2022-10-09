@@ -92,7 +92,8 @@ class PaylaterRepository{
           positions.name AS positionName,
           master_data_statuses.name AS statusName,
           COUNT(transactions.requester_employee_id) AS countTransaction,
-          SUM(transactions.amount) AS totalAmount
+          SUM(transactions.amount) AS totalAmount,
+          SUM(CASE WHEN transactions.is_paid != 1 THEN transactions.amount ELSE 0 END) AS totalUnpaid
         FROM employees
           LEFT JOIN 
           (

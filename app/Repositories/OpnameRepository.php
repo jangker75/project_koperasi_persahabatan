@@ -8,6 +8,7 @@ class OpnameRepository{
 
   public function findDetailOpnameByOpnameId($id){
     $sql = "SELECT 
+        opname_details.id as id,
         opname_details.opname_id AS opnameId,
         opname_details.product_id as productId,
         products.name AS productName,
