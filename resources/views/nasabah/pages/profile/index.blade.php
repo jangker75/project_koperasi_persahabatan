@@ -23,13 +23,15 @@
                 <div class="col-8">
                     <p class="h3 fw-bold">{{ $employee->full_name }}</p>
                     {{-- <p class="text-dark">NIK : {{ $employee->nik }}</p> --}}
-                    <a class="btn btn-primary btn-sm"
-                        href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
-                    {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
-                    <button type="submit" class="btn btn-warning">
-                        <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
-                    </button>
-                    {!! Form::close() !!}
+                    <div class="d-flex">
+                      <a class="btn btn-primary btn-sm me-2"
+                          href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
+                      {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
+                      <button type="submit" class="btn btn-warning btn-sm">
+                          <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
+                      </button>
+                      {!! Form::close() !!}
+                    </div>
                 </div>
                 <div class="col-12 pt-4">
                     <div class="card border m-0">
