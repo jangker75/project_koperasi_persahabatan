@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 
-class TransferstockRepository{
+class TransferStockRepository {
   public static function getItemFromId($id){
     $sql = "
       SELECT 

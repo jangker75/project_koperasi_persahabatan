@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Models\TransferStock;
 use App\Repositories\ProductStockRepositories;
-use App\Repositories\TransferstockRepository;
+use App\Repositories\TransferStockRepository;
 use App\Services\HistoryTransferStockService;
 use Carbon\Carbon;
 use Doctrine\DBAL\Query\QueryException;
@@ -110,7 +110,7 @@ class ManagementStockController extends BaseAdminController
         $data['transferStock'] = TransferStock::find($id);
         $data['titlePage'] = "Detail Transfer Stock " .  $data['transferStock']->transfer_stock_code;
         $data['statuses'] = MasterDataStatus::where('type', 'like', '%transfer_stocks%')->get();
-        $data['availableStock'] = TransferstockRepository::getItemFromId($id);
+        $data['availableStock'] = TransferStockRepository::getItemFromId($id);
         return view('admin.pages.toko.stock.show', $data);
     }
 
