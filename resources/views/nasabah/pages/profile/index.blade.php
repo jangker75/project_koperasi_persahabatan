@@ -25,6 +25,11 @@
                     {{-- <p class="text-dark">NIK : {{ $employee->nik }}</p> --}}
                     <a class="btn btn-primary btn-sm"
                         href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
+                    {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
+                    <button type="submit" class="btn btn-warning">
+                        <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
+                    </button>
+                    {!! Form::close() !!}
                 </div>
                 <div class="col-12 pt-4">
                     <div class="card border m-0">

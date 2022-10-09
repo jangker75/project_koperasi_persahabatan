@@ -309,4 +309,20 @@ class EmployeeController extends BaseAdminController
         
         return $pdf->stream("kartu_anggota_".$employee->name.".pdf");
     }
+    public function getEmployeeBalanceInformation(Employee $employee)
+    {
+        $result = [
+            "name" => $employee->full_name,
+            "principal_savings_balance_value" => $employee->savings->principal_savings_balance,
+            "mandatory_savings_balance_value" => $employee->savings->mandatory_savings_balance,
+            "activity_savings_balance_value" => $employee->savings->activity_savings_balance,
+            "voluntary_savings_balance_value" => $employee->savings->voluntary_savings_balance,
+            "principal_savings_balance" => format_uang($employee->savings->principal_savings_balance),
+            "mandatory_savings_balance" => format_uang($employee->savings->mandatory_savings_balance),
+            "activity_savings_balance" => format_uang($employee->savings->activity_savings_balance),
+            "voluntary_savings_balance" => format_uang($employee->savings->voluntary_savings_balance),
+        ];
+        return response()->json($result);
+    }
+    
 }

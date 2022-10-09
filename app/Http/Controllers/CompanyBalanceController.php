@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Enums\ConstantEnum;
 use App\Models\Company;
 use App\Models\CompanyBalanceHistory;
+use App\Models\Employee;
 use App\Models\Loan;
 use App\Models\LoanHistory;
 use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CompanyBalanceController extends BaseAdminController
@@ -36,6 +39,7 @@ class CompanyBalanceController extends BaseAdminController
         $data['titlePage'] = 'Transfer Saldo';
         return view('admin.pages.company_balance.transfer_saldo_form', $data);
     }
+    
     public function store(Request $request)
     {
         $input = $request->validate([
@@ -65,5 +69,34 @@ class CompanyBalanceController extends BaseAdminController
             'type' => __("balance_company.{$balance_type}"),
             'data' => $history,
         ]);
+    }
+    public function createTransferSaldoEmployee()
+    {
+        $data = $this->data;
+        $data['employeeList'] = Employee::active()
+        ->select(DB::raw('concat(first_name, " ", last_name," (", nik, ")") as name'), 'id')
+        ->pluck('name', 'id');
+        $data['titlePage'] = 'Tarik Saldo dari Nasabah';
+        return view('admin.pages.company_balance.transfer_saldo_employee_form', $data);   
+    }
+    public function storeTransferSaldoEmployee(Request $request)
+    {
+        $input = $request->validate([
+            "employee_id" => "required",
+            "employee_savings_type" => "required",
+            "company_balance" => "required",
+            "amount" => "required",
+            "description" => "",
+        ]);
+        $typeEmployeeBalance = __('savings_employee.'.$input['employee_savings_type']);
+        $employee = Employee::findOrFail($input["employee_id"]);
+        $notes = 'Transfer Saldo From '.$employee->full_name. ' ('.$typeEmployeeBalance.') To KOPERASI ('. __('balance_company.'.$input["company_balance"]) . (($request->input('description') != null) ? '). Description : '. $input['description'] : '');
+        (new EmployeeService())->addDebitBalance(
+            saving_id: $employee->savings->id,
+            value: $input['amount'],
+            saving_type: $input['employee_savings_type'],
+            description: $notes);
+        (new CompanyService())->addCreditBalance($input['amount'] , $input['company_balance'], $notes);
+        return redirect()->route('admin.company-balance.index')->with('success', 'Transfer Saldo sukses');
     }
 }
