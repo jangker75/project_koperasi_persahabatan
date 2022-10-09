@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Models\Stock;
 use App\Models\TransferStock;
 use App\Repositories\ProductStockRepositories;
-use App\Repositories\TransferstockRepository;
+use App\Repositories\TransferStockRepository;
 use App\Services\HistoryStockService;
 use App\Services\HistoryTransferStockService;
 use Carbon\Carbon;
@@ -118,7 +118,7 @@ class TransferStockController extends Controller
     }
 
     public function getDetailById($id){
-      $data['detailItem'] = TransferstockRepository::getItemFromId($id);
+      $data['detailItem'] = TransferStockRepository::getItemFromId($id);
       $data['message'] = "Tiket berhasil dibuat";
       return response()->json($data, 200);
     }
