@@ -31,6 +31,7 @@
                                         <th>status</th>
                                         <th>Jumlah Permintaan</th>
                                         <th>total paylater</th>
+                                        <th>total tagihan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -45,6 +46,7 @@
                                         <td>{{ $paylater->statusName }}</td>
                                         <td>{{ $paylater->countTransaction }}</td>
                                         <td>{{ format_uang($paylater->totalAmount) }}</td>
+                                        <td><span class="text-danger">{{ format_uang($paylater->totalUnpaid) }}</span></td>
                                         <td>
                                           <a href="{{ route('admin.paylater.show', $paylater->id) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
                                         </td>

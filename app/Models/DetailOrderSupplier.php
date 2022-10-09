@@ -11,7 +11,7 @@ class DetailOrderSupplier extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'order_supplier_id', 'product_id', 'request_qty', 'request_unit', 'receive_qty', 
+      'order_supplier_id', 'product_id', 'request_qty', 'request_unit','receive_unit', 'receive_qty', 
       'price_per_unit', 'subtotal', 'quantity_per_unit', 'all_quantity_in_units'
     ];
 

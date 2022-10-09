@@ -26,13 +26,17 @@
 
     <style>
         body {
-            background-color: #ddd;
+            background-color: #fff;
         }
         
 
         .navbar-nasabah {
             background-color: #343584;
             color: #f0f0f0;
+        }
+
+        .bg-content{
+          background-color: #fff;
         }
 
     </style>
@@ -52,7 +56,7 @@
                     @include('nasabah.layout.navbar')
                 </div>
                 @endif
-                <div class="col-12 col-md-4 offset-md-4 bg-light">
+                <div class="col-12 col-md-4 offset-md-4 bg-content">
                     <div class="row">
                         @yield('content')
                     </div>

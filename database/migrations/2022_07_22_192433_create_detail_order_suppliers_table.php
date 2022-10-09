@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('product_id');
             $table->integer('request_qty');
             $table->string('request_unit');
+            $table->string('receive_unit')->nullable();
             $table->integer('quantity_per_unit')->nullable();
             $table->integer('receive_qty')->nullable();
             $table->integer('price_per_unit')->nullable();

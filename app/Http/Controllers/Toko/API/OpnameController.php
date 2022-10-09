@@ -124,8 +124,7 @@ class OpnameController extends Controller
         }
 
         foreach ($request->item as $key => $item) {
-          $detail = OpnameDetail::where('product_id', $item['productId'])
-                                ->where('opname_id', $opname->id)->first();
+          $detail = OpnameDetail::where('id', $item['id'])->first();
           
           $product = Product::find($item['productId']);
 

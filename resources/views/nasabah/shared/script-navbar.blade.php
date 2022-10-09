@@ -2,8 +2,9 @@
     let cart = [];
     let count = 0;
     let total = 0;
+    $('#resultSearchProduct').hide();
     
-    if (Cookies.get('cart') !== null) {
+    if (Cookies.get('cart') !== undefined) {
         cart = JSON.parse(Cookies.get("cart"))
         cart.forEach(element => {
             count += element.qty
@@ -21,22 +22,22 @@
 
     function refreshCart() {
 
-      // console.log(cart)
-      setTimeout(function(){
-        // set count again
-        let recount = 0;
-        cart.forEach(element => {
-            recount += element.qty
-        });
-        count = recount;
-        $("#totalItem").html(recount)
+        // console.log(cart)
+        setTimeout(function () {
+            // set count again
+            let recount = 0;
+            cart.forEach(element => {
+                recount += element.qty
+            });
+            count = recount;
+            $("#totalItem").html(recount)
 
-        // set total price
-        total = countSubtotal(cart)
+            // set total price
+            total = countSubtotal(cart)
 
-        // rerender element
-        refreshElementCart(cart)
-      }, 500)
+            // rerender element
+            refreshElementCart(cart)
+        }, 500)
 
         setTimeout(function () {
             Cookies.remove('cart');
@@ -47,7 +48,7 @@
             Cookies.set('total', total)
         }, 500);
 
-        
+
     }
 
     function countSubtotal(item) {
@@ -126,7 +127,7 @@
     $('body').on('click', '.delete-from-cart', function () {
         let skuNumber = $(this).attr('id');
         skuNumber = skuNumber.replace("dlt", "");
-        
+
 
         // get index of object with id:37
         var removeIndex = cart.map(function (item) {
@@ -166,6 +167,58 @@
 
     // -------------------------------------------------------------------------------------------------------------------
 
+    
 
+    $(document).ready(function () {
+        listProductInSearch = [];
+        $("#inputSearchProduct").keyup(function () {
+            let keyword = $(this).val();
+            let storeId = Cookies.get('storeId');
+            // console.log(value, storeId);
+
+            let url = "{{ url('/api/search-product') }}";
+            let param = {
+                keyword: keyword,
+                notInListProduct: '',
+                originStore: storeId
+            }
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(param),
+                dataType: "json",
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: 'application/json',
+                cache: false,
+                success: function (response) {
+                    listProductInSearch = response.product
+                    console.log(listProductInSearch)
+                    renderSearchResult(listProductInSearch);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error)
+                }
+            });
+        })
+
+        function renderSearchResult(data){
+          $("#resultSearchProduct").html("")
+          data.forEach(element => {
+            let html = `<a href="http://127.0.0.1:8000/product/` + element.productSKU + `" class="border d-flex">
+                <div class="w-25">
+                  <img src="http://127.0.0.1:8000/storage/` + element.productCover + `" class="card-img-top" alt="">
+                </div>
+                <div class="p-2">
+                  <div class="fw-bold text-dark">` + truncateString(element.productName, 24) + `</div>
+                  <div class="fw-bold text-danger">` + formatRupiah(String(element.price), 'Rp ') + `</div>
+                </div>
+              </a>`;
+            
+            $("#resultSearchProduct").append(html)
+            $('#resultSearchProduct').show()
+          });
+        }
+    })
 
 </script>

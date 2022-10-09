@@ -69,6 +69,8 @@ Route::group([
     Route::get('edit-profile', [ProfileController::class, "edit"])->name('profile.edit');
     Route::put('edit-profile/{employee}', [ProfileController::class, "update"])->name('profile.update');
     Route::get('profile', [PagesController::class, "profile"])->name('profile');
+    Route::get('riwayat-order', [PagesController::class, "orderHistory"])->name('history-order');
+    Route::get('detail-order/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
     Route::get('riwayat-paylater', [PagesController::class, "paylaterHistory"])->name('history-paylater');
     Route::get('detail-paylater/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
 
@@ -113,6 +115,8 @@ Route::group([
       Route::resource('order-supplier', OrderSupplierController::class);
       Route::resource('payment-method', PaymentMethodController::class);
       Route::resource('opname', OpnameController::class);
+      // Route::resource('return');
+
       Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
       Route::get('print-form-opname/{storeId}', [OpnameController::class, 'printFormOpname']);
 
@@ -126,6 +130,7 @@ Route::group([
       Route::get('confirm-order-supplier/{id}', [OrderSupplierController::class, 'confirmTicket']);
       Route::get('start-order-supplier/{id}', [OrderSupplierController::class, 'startTicket']);
       Route::get('reject-order-supplier/{id}', [OrderSupplierController::class, 'rejectTicket']);
+      Route::get('order-supplier-receive/{id}', [OrderSupplierController::class, 'receiveView'])->name('order-supplier.receive');
       // order-supplier
     });
 

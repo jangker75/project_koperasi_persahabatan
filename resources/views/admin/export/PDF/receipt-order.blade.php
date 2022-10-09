@@ -175,6 +175,9 @@
                 <tr>
                     <td colspan="2">Kode : {{ $order->order_code}}</td>
                 </tr>
+                <tr>
+                    <td colspan="2">Metode Bayar : {{ $order->transaction->paymentMethod->name}}</td>
+                </tr>
                 @if ($order->transaction->is_paylater == 1)
                 <tr>
                     <td colspan="2">Anggota : {{ $order->transaction->requester->full_name }}</td>

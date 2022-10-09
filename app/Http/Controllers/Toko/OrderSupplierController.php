@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
+use App\Models\ApplicationSetting;
 use App\Models\DetailOrderSupplier;
 use App\Models\MasterDataStatus;
 use App\Models\OrderSupplier;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\Supplier;
+use App\Repositories\OrderSupplierRepository;
 use Carbon\Carbon;
 use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
@@ -228,5 +230,15 @@ class OrderSupplierController extends Controller
       $orderSupplier->status_id = $status->id;
       $orderSupplier->save();
       return redirect()->back();
+    }
+
+    public function receiveView($id){
+      $data['orderSupplier'] = OrderSupplier::find($id);
+      $data['titlePage'] = "Edit Order Supplier " .  $data['orderSupplier']->order_supplier_code;
+      $data['detail'] = (new OrderSupplierRepository())->getItemFromId($id);
+      $data['detailStringify'] = json_encode(collect($data['detail'])->toArray());
+      $data['margin'] = ApplicationSetting::where('name', 'minimum_margin_price')->first();
+      $data['margin'] = $data['margin']->content;
+      return view('admin.pages.toko.order-supplier.receive', $data);
     }
 }
