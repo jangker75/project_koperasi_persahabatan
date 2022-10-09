@@ -22,6 +22,8 @@
                 <div class="col-8">
                     <p class="h3 fw-bold">{{ $employee->full_name }}</p>
                     {{-- <p class="text-dark">NIK : {{ $employee->nik }}</p> --}}
+                    <a class="btn btn-primary btn-sm me-2"
+                          href="{{ route('nasabah.profile.changepassword', ['employee' => $employee->id]) }}">Change Password</a>
                     <div class="d-flex">
                       <a class="btn btn-primary btn-sm me-2"
                           href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
