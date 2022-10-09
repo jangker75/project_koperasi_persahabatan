@@ -25,4 +25,7 @@ return [
     'department_id' => "Pangkat/Golongan",
     'status_employee_id' => "Status Karyawan",
     'profile_image' => 'Foto Profil',
+    'old_password' => 'Password Lama',
+    'password' => 'Password Baru',
+    'password_confirmation' => 'Konfirmasi Password Baru',
 ];

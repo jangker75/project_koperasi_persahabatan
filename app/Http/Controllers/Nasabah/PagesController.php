@@ -10,11 +10,14 @@ use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaylaterRepository;
 use App\Services\EmployeeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class PagesController extends Controller
 {
@@ -39,6 +42,33 @@ class PagesController extends Controller
       $data['stores'] = Store::where('is_warehouse', false)->get();
       return view('nasabah.pages.product.show', $data);
     }
+
+    public function changepassword()
+    {
+      return view('nasabah.pages.changepassword.index');
+    }
+    public function postChangepassword(Request $request)
+    {
+        $validated = $request->validate([
+          'old_password' => 'required|alpha_dash',
+          'password' => ['required_without:id', 'nullable','confirmed', Password::min(8)->letters()],
+        ],
+        [
+          'password.min' => 'Minimal 8 Karakter',
+          'password.confirmed' => 'Konfirmasi password tidak sama'
+        ]);
+        if(Hash::check($validated['old_password'],auth()->user()->password)){
+          $a = User::where('id', auth()->user()->id)->update([
+            'password' => Hash::make($validated['password']),
+          ]);
+          return redirect()->route('nasabah.profile')->with('success', __('general.notif_edit_data_success'));
+        }else{
+          return redirect()->back()->withErrors('password lama salah');
+        }
+        
+    }
+
+
 
     public function checkout(){
       $data['paymentMethods'] = PaymentMethod::get();

@@ -70,6 +70,9 @@ Route::group([
     Route::get('edit-profile', [ProfileController::class, "edit"])->name('profile.edit');
     Route::put('edit-profile/{employee}', [ProfileController::class, "update"])->name('profile.update');
     Route::get('profile', [PagesController::class, "profile"])->name('profile');
+    Route::get('profile', [PagesController::class, "profile"])->name('profile');
+    Route::get('profile/changepassword', [PagesController::class, "changepassword"])->name('profile.changepassword');
+    Route::post('profile/changepassword', [PagesController::class, "postChangepassword"])->name('profile.changepassword');
     Route::get('riwayat-order', [PagesController::class, "orderHistory"])->name('history-order');
     Route::get('detail-order/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
     Route::get('riwayat-paylater', [PagesController::class, "paylaterHistory"])->name('history-paylater');
