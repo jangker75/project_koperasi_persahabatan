@@ -3,7 +3,7 @@
     let count = 0;
     let total = 0;
     $('#resultSearchProduct').hide();
-    
+
     if (Cookies.get('cart') !== undefined) {
         cart = JSON.parse(Cookies.get("cart"))
         cart.forEach(element => {
@@ -205,9 +205,9 @@
         function renderSearchResult(data){
           $("#resultSearchProduct").html("")
           data.forEach(element => {
-            let html = `<a href="http://127.0.0.1:8000/product/` + element.productSKU + `" class="border d-flex">
+            let html = `<a href="{{ url('product') }}/` + element.productSKU + `" class="border d-flex">
                 <div class="w-25">
-                  <img src="http://127.0.0.1:8000/storage/` + element.productCover + `" class="card-img-top" alt="">
+                  <img src="{{ url('storage') }}/` + element.productCover + `" class="card-img-top" alt="">
                 </div>
                 <div class="p-2">
                   <div class="fw-bold text-dark">` + truncateString(element.productName, 24) + `</div>
