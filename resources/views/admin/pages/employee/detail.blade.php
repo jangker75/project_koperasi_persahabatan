@@ -123,7 +123,7 @@
                         </tr>
                         <tr>
                             <td>{{ __('employee.salary_number') }}</td>
-                            <td>{{ format_uang($employee->salary_number) }}</td>
+                            <td>{{ ($employee->salary_number) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('employee.status_employee_id') }}</td>
