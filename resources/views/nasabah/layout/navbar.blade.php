@@ -44,7 +44,7 @@
     <div class="p-2 w-100 mt-2">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Cari Produk.." aria-label="Cari Produk.."
-                aria-describedby="basic-addon2" id="inputSearchProduct" autocomplete="false">
+                aria-describedby="basic-addon2" id="inputSearchProduct" autocomplete="off">
             <span class="input-group-text" id="basic-addon2"><i class="fe fe-search"></i></span>
         </div>
         <div class="position-relative">
