@@ -14,22 +14,23 @@
         <div class="col-12 py-2">
             <div class="row">
                 <div class="col-4 d-flex justify-content-center align-items-center">
-                    {{-- <img src="{{ route('showimage', $employee->user->profile_image) }}" style="height: 80px; width:
-                    80px;">
-                    --}}
-                    <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="rounded border border-primary p-0"
+                    <img src="{{ route('showimage', $employee->user->profile_image) }}" class="rounded border border-primary p-0"
                         style="height: 80px; width: 80px;">
+                    {{-- <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="rounded border border-primary p-0"
+                        style="height: 80px; width: 80px;"> --}}
                 </div>
                 <div class="col-8">
                     <p class="h3 fw-bold">{{ $employee->full_name }}</p>
                     {{-- <p class="text-dark">NIK : {{ $employee->nik }}</p> --}}
-                    <a class="btn btn-primary btn-sm"
-                        href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
-                    {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
-                    <button type="submit" class="btn btn-warning">
-                        <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
-                    </button>
-                    {!! Form::close() !!}
+                    <div class="d-flex">
+                      <a class="btn btn-primary btn-sm me-2"
+                          href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
+                      {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
+                      <button type="submit" class="btn btn-warning btn-sm">
+                          <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
+                      </button>
+                      {!! Form::close() !!}
+                    </div>
                 </div>
                 <div class="col-12 pt-4">
                     <div class="card border m-0">
