@@ -129,14 +129,14 @@
                 </div>
                 <div class="form-group">
                     {!! Form::label('total_pay_month', __('loan.total_pay_month'), ['class' => 'form-label required']) !!}
-                    {!! Form::number('total_pay_month', 12, [
+                    {!! Form::select('total_pay_month', [5 => 5,10 => 10,20 => 20,30 => 30], null, [
                         'required' => 'required',
                         'id' => 'total_pay_month',
                         'class' =>
-                            'form-control' .
-                            ($errors->has('total_pay_month') ? ' is-invalid' : '') .
-                            (!$errors->has('total_pay_month') && old('total_pay_month') ? ' is-valid' : ''),
-                    ]) !!}
+                            'form-control form-select' .
+                    ($errors->has('total_pay_month') ? ' is-invalid' : '') .
+                    (!$errors->has('total_pay_month') && old('total_pay_month') ? ' is-valid' : ''),
+        ]) !!}
                 </div>
                 <div class="form-group">
                     {!! Form::label('pay_per_x_month', __('loan.pay_per_x_month'), ['class' => 'form-label required']) !!}
@@ -144,6 +144,7 @@
                         {!! Form::number('pay_per_x_month', 1, [
                             'required' => 'required',
                             'id' => 'pay_per_x_month',
+                            'readonly' => true,
                             'class' =>
                                 'form-control' .
                                 ($errors->has('pay_per_x_month') ? ' is-invalid' : '') .

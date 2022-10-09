@@ -19,7 +19,8 @@ class DashboardController extends BaseAdminController
 {
     public function __construct()
     {
-        parent::__construct();
+        // parent::__construct();
+
         $this->data['currentIndex'] = route('admin.dashboard');
     }
     public function index()

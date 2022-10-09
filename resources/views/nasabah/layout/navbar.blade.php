@@ -6,7 +6,12 @@
                 <img src="{{ asset('assets/images/logo/logo3.png') }}" alt="" height="48">
             </a>
         </div>
-        <div class="col-6 d-flex justify-content-end">
+        <div class="col-6 d-flex justify-content-end align-items-center">
+            @if (getUserRole() != "nasabah")
+                <form action="{{ route('admin.dashboard') }}" method="get">
+                    <button type="submit" class="btn btn-sm btn-success me-1">Admin Panel</button>
+                </form>
+            @endif
             <button type="button" class="btn btn-sm text-white border border-white position-relative"
                 data-bs-toggle="offcanvas" data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount">
                 <i class="fa fa-shopping-basket"></i>
@@ -58,6 +63,5 @@
     </div>
     @endif
 </nav>
-
 
 <!-- Navbar -->

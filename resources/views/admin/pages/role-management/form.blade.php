@@ -65,7 +65,11 @@
                                             $permissionUpdate = 'update ' . $namePermission;
                                             $permissionDelete = 'delete ' . $namePermission;
                                         @endphp
-                                        <tr>
+                                        @if ($menu->isseparator)
+                                            <tr style='background-color: rgb(54, 213, 252);'>
+                                        @else
+                                            <tr>
+                                        @endif
                                             <td>
                                                 @if ($menu->isseparator)
                                                     {{ $menu->name }}

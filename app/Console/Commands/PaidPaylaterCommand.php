@@ -13,7 +13,7 @@ class PaidPaylaterCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'paylater:paid';
+    protected $signature = 'kokarda:paylater-paid';
 
     /**
      * The console command description.
