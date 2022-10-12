@@ -21,6 +21,7 @@ use App\Http\Controllers\Toko\PaymentMethodController;
 use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\toko\PrintReceiptController;
 use App\Http\Controllers\Toko\ProductController;
+use App\Http\Controllers\Toko\ReturnSupplierController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
 use App\Http\Controllers\Umum\CashTransactionController;
@@ -115,11 +116,13 @@ Route::group([
       Route::resource('supplier', SupplierController::class);
       Route::resource('management-price', PriceController::class);
       Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
+      Route::get('history-stock-product/{productId}', [ManagementStockController::class, 'historyStock'])->name('history.stock.product');
+      Route::post("update-manual-stock/{productId}", [ProductController::class, 'updateManualStock'])->name('update.manual.stock');
       Route::resource('management-stock', ManagementStockController::class);
       Route::resource('order-supplier', OrderSupplierController::class);
       Route::resource('payment-method', PaymentMethodController::class);
       Route::resource('opname', OpnameController::class);
-      // Route::resource('return');
+      Route::resource('return-supplier', ReturnSupplierController::class);
 
       Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
       Route::get('print-form-opname/{storeId}', [OpnameController::class, 'printFormOpname']);

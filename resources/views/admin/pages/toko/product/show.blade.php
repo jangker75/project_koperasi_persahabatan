@@ -14,7 +14,8 @@
                             @csrf @method('delete')
                         </form>
                         <button type="submit" class="btn btn-danger delete-button me-1" data-toggle="tooltip"
-                            data-placement="top" title="Hapus Produk">Hapus Product <i class="fe fe-trash-2"></i></button>
+                            data-placement="top" title="Hapus Produk">Hapus Product <i
+                                class="fe fe-trash-2"></i></button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -113,74 +114,6 @@
                                     <td>{{ $price->margin }}%</td>
                                     <td>{{ $price->updated_at }}</td>
                                     <td>
-                                        {{-- <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#modalRevisi">
-                                            Revisi Harga Saat ini
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="modalRevisi" tabindex="-1"
-                                            aria-labelledby="modalRevisiLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="modalRevisiLabel">Formulir revisi
-                                                            harga</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="{{ route('admin.price.update', $price->id) }}"
-                                                            method="post">
-                                                            @csrf @method('put')
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text"
-                                                                        id="basic-addon1">Rp</span>
-                                                                    <input type="text"
-                                                                        class="form-control format-uang cost"
-                                                                        placeholder="Harga Modal" name="cost" id="cost1"
-                                                                        value="{{ format_uang_no_prefix($price->cost)  }}">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text"
-                                                                        id="basic-addon1">Rp</span>
-                                                                    <input type="text"
-                                                                        class="form-control format-uang revenue"
-                                                                        placeholder="Harga Jual" name="revenue"
-                                                                        id="revenue1"
-                                                                        value="{{ format_uang_no_prefix($price->revenue)  }}">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text"
-                                                                        id="basic-addon1">Rp</span>
-                                                                    <input type="text" class="form-control profit"
-                                                                        placeholder="Keuntungan" name="profit" readonly
-                                                                        id="profitPrice1"
-                                                                        value="{{ format_uang_no_prefix($price->profit)  }}">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text"
-                                                                        id="basic-addon1">%</span>
-                                                                    <input type="text" class="form-control margin"
-                                                                        placeholder="Margin" name="margin" readonly
-                                                                        id="margin1" value="{{ $price->margin }}">
-                                                                </div>
-                                                            </div>
-                                                            <button type="submit" class="btn btn-warning">Revisi
-                                                                Harga</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> --}}
 
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-info" data-bs-toggle="modal"
@@ -210,8 +143,26 @@
                                                                         id="basic-addon1">Rp</span>
                                                                     <input type="text"
                                                                         class="form-control format-uang cost"
-                                                                        placeholder="Harga Modal" name="cost" value="0"
+                                                                        placeholder="Harga Modal" name="cost"
                                                                         id="cost2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">%</span>
+                                                                    <input type="text" class="form-control margin"
+                                                                        placeholder="Margin" name="margin" id="margin2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text"
+                                                                        id="basic-addon1">Rp</span>
+                                                                    <input type="text"
+                                                                        class="form-control format-uang profit"
+                                                                        placeholder="Keuntungan" name="profit"
+                                                                        id="profit2">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group">
@@ -221,25 +172,7 @@
                                                                     <input type="text"
                                                                         class="form-control format-uang revenue"
                                                                         placeholder="Harga Jual" name="revenue"
-                                                                        id="revenue2">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text"
-                                                                        id="basic-addon1">Rp</span>
-                                                                    <input type="text" class="form-control profit"
-                                                                        placeholder="Keuntungan" name="profit" readonly
-                                                                        id="profitPrice2">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text"
-                                                                        id="basic-addon1">%</span>
-                                                                    <input type="text" class="form-control margin"
-                                                                        placeholder="Margin" name="margin" readonly
-                                                                        id="margin2">
+                                                                        id="revenue2" readonly>
                                                                 </div>
                                                             </div>
                                                             <button type="submit" class="btn btn-warning">Revisi
@@ -258,7 +191,42 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Kelola Stock Product</div>
+                    <div class="card-title">Kelola Stok Produk</div>
+                    <div class="card-options">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                            data-bs-target="#modalManualStock">
+                            Edit Manual Data Stok Produk
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalManualStock" tabindex="-1" aria-labelledby="modalManualStockLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalManualStockLabel">Formulir Edit Manual Stok</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <form action="{{ route('admin.update.manual.stock', $product->id) }}" method="POST" id="formManualStock">
+                                        @csrf
+                                        @foreach ($product->stock as $stock)
+                                        <div class="form-group">
+                                          <label for="{{ $stock->id }}">{{ $stock->store->name }}</label>
+                                          <input type="number" name="stock[{{ $stock->id }}]" id="" value="{{ $stock->qty }}" class="form-control" placeholder="Masukan Jumlah Stok">
+                                        </div>
+                                        @endforeach
+                                        <div class="btn btn-primary" id="btnSubmitManualStock">Submit</div>
+                                      </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ route("admin.history.stock.product", $product->id) }}" class="btn btn-info ms-2">Lihat History Stok</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -289,56 +257,98 @@
     @slot('script')
     <script>
         $(document).ready(function () {
-            $('#cost2').focusout(function () {
-                let cost = $('#cost2').val();
-                cost = parseInt(cost.replace('.', ''))
-                
-                let revenue = $('#revenue2').val()
-                revenue = parseInt(revenue.replace('.', ''));
 
-                let profit = revenue - cost;
-                let margin = Math.round(profit * 100 / revenue);
+            let cost = 0;
+            let margin = 0;
+            let profit = 0;
+            let revenue = 0;
+            let limit = parseInt("{{ $limitMargin }}")
 
-                if(margin < 15){
-                  swal({
-                        title: "Gagal",
-                        text: "Harga harus memiliki minimal margin 15%",
-                        type: "error"
-                    });
-                    return false;
+            function changeValue(key, value) {
+                switch (key) {
+                    case "cost":
+                        cost = value
+                        profit = margin * cost / 100;
+                        break;
+                    case "margin":
+                        margin = value
+                        profit = margin * cost / 100;
+                        break;
+                    case "profit":
+                        profit = value
+                        if (profit * 100 / cost < limit) {
+                            swal({
+                                title: "Gagal",
+                                text: "Harga harus memiliki minimal margin " + limit + "%",
+                                type: "error"
+                            });
+                            return false;
+                        } else {
+                            margin = Math.ceil(profit * 100 / cost);
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
 
-                $('#margin2').val(margin)
-                $('#profitPrice2').val(formatRupiah(String(profit)))
+                revenue = profit + cost;
+
+                $("#cost2").val(formatRupiah(String(cost)));
+                $("#margin2").val(formatRupiah(String(margin)));
+                $("#profit2").val(formatRupiah(String(profit)));
+                $("#revenue2").val(formatRupiah(String(revenue)));
+            }
+
+            $("#cost2").change(function () {
+                let value = $(this).val();
+                value = parseInt(value.replace('.', ''))
+                changeValue('cost', value);
             })
-            $('#revenue2').focusout(function () {
-                let cost = $('#cost2').val();
-                cost = parseInt(cost.replace('.', ''))
-                if(cost <= 0){
-                  swal({
-                      title: "Gagal",
-                      text: "Harga Beli harus diinput terlebih dahulu",
-                      type: "error"
-                  });
-                  return false;
-                }
-                let revenue = $('#revenue2').val()
-                revenue = parseInt(revenue.replace('.', ''));
 
-                let profit = revenue - cost;
-                let margin = Math.round(profit * 100 / revenue);
-                
-                if(margin < 15){
-                  swal({
+            $("#profit2").change(function () {
+                let value = $(this).val();
+                value = parseInt(value.replace('.', ''))
+                changeValue('profit', value);
+            })
+
+            $("#margin2").change(function () {
+                let value = $(this).val();
+                value = parseInt(value.replace('.', ''))
+                if (value < limit) {
+                    swal({
                         title: "Gagal",
-                        text: "Harga harus memiliki minimal margin 15%",
+                        text: "Harga harus memiliki minimal margin " + limit + "%",
                         type: "error"
                     });
+                    $("#margin").val(formatRupiah(String(margin)));
                     return false;
                 }
+                changeValue('margin', value);
+            })
 
-                $('#margin2').val(margin)
-                $('#profitPrice2').val(formatRupiah(String(profit)))
+
+
+            $("#btnSubmitManualStock").click(function(e){
+              swal({
+                title: "Anda yakin?",
+                text: "Perubahan ini Akan mengubah stock secara Paksa",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ya, lanjutkan',
+                cancelButtonText: "Tidak, batalkan",
+                closeOnConfirm: false,
+                closeOnCancel: false
+              }, function(isConfirm) {
+                if (!isConfirm) {
+                  e.preventDefault();
+                  swal("Cancelled", "Dibatalkan", "error");
+                  return false;
+                }else{
+                  $("#formManualStock").submit();
+                }
+              })
             })
         })
 

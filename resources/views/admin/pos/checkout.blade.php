@@ -103,6 +103,23 @@
                             <label for="">Masukan Jumlah Uang Cash</label><br>
                             <input type="text" name="cash" id="cashInput" class="form-control format-uang"
                                 placeholder="Rp 50.000">
+                            <div class="row mt-4">
+                              <div class="col">
+                                <div class="btn btn-outline-primary btn-cash" data-price="5.000">Rp 5000</div>
+                              </div>
+                              <div class="col">
+                                <div class="btn btn-outline-primary btn-cash" data-price="10.000">Rp 10.000</div>
+                              </div>
+                              <div class="col">
+                                <div class="btn btn-outline-primary btn-cash" data-price="20.000">Rp 20.000</div>
+                              </div>
+                              <div class="col">
+                                <div class="btn btn-outline-primary btn-cash" data-price="50.000">Rp 50.000</div>
+                              </div>
+                              <div class="col">
+                                <div class="btn btn-outline-primary btn-cash" data-price="100.000">Rp 100.000</div>
+                              </div>
+                            </div>
                         </div>
                     </li>
                     <li class="list-group-item" id="paymentCode">
@@ -154,6 +171,11 @@
             let orderBy = "pos";
             let cash = "0";
             $(document).ready(function () {
+
+                $("body").on("click", ".btn-cash", function(){
+                  cash = $(this).data('price');
+                  $("#cashInput").val(cash)
+                })
 
                 $("#storeId").val("{{ $stores[0]->id }}");
                 $("#storeId").change(function () {

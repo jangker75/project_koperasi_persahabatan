@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransferStock;
+use App\Models\HistoryStock;
 use App\Models\MasterDataStatus;
 use App\Models\Product;
 use App\Models\Store;
@@ -36,7 +37,7 @@ class ManagementStockController extends BaseAdminController
     {
         $data['stocks'] = (new ProductStockRepositories())->indexStock();
         $data['stores'] = Store::get();
-        $data['transfer_stocks'] = TransferStock::get();
+        $data['transfer_stocks'] = TransferStock::latest()->get();
         $data['titlePage'] = "Manament Stock Product";
         $data['statuses'] = collect(DB::select(DB::raw("SELECT name, description FROM master_data_statuses WHERE master_data_statuses.`type` LIKE '%transfer_stocks%'")))->toArray();
 
@@ -222,5 +223,12 @@ class ManagementStockController extends BaseAdminController
       $transferStock = TransferStock::find($id);
       HistoryTransferStockService::update("reject", $id);
       return redirect()->back();
+    }
+
+    public function historyStock($productId){
+        $product = Product::find($productId);
+        $data['historyStock'] = HistoryStock::where('product_id', $productId)->latest()->get();
+        $data['titlePage'] = "Detail History Stok Produk : " .  $product->name;
+        return view('admin.pages.toko.stock.history', $data);
     }
 }
