@@ -27,7 +27,7 @@
             { data: "last_name", name: "last_name" },
             { data: "nik", code: "nik" },
             { data: "nip", name: "nip" },
-            { data: "salary", name: "salary" },
+            { data: "salary_number", name: "salary_number" },
             { data: "position.name", name: "position.name" },
             { data: "actions", name: "actions" },
         ],

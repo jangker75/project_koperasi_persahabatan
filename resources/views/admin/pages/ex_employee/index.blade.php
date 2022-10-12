@@ -13,7 +13,7 @@
                                     <th>{{ __('employee.last_name') }}</th>
                                     <th>{{ __('employee.nik') }}</th>
                                     <th>{{ __('employee.nip') }}</th>
-                                    <th>{{ __('employee.salary') }}</th>
+                                    <th>{{ __('employee.salary_number') }}</th>
                                     <th>{{ __('employee.position_id') }}</th>
                                     <th>Actions</th>
                                 </tr>

@@ -148,6 +148,7 @@ Route::group([
     Route::resource('ex-employee', ExEmployeeController::class);
     Route::get('employee-download-card/{employee}', [EmployeeController::class, 'downloadEmployeeCard'])->name('employee.download.card');
     Route::get('employee-download-form-pendaftaran/{employee}', [EmployeeController::class, 'downloadFormPendaftaran'])->name('employee.download.form-pendaftaran');
+    Route::get('ex-employee-download-form-keluar/{employee}', [ExEmployeeController::class, 'downloadFormKeluar'])->name('ex-employee.download.form-keluar');
     Route::get('employee-balance-information/{employee}', [EmployeeController::class, "getEmployeeBalanceInformation"])->name('employee.balance-information');
     Route::resource('cash-in-out', CashTransactionController::class);
     // Divisi Umum End

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Umum;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
@@ -112,10 +113,19 @@ class ExEmployeeController extends BaseAdminController
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.ex-employee.show", [$row]) .'" type="button">View</a>';
+                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.ex-employee.download.form-keluar", ['employee' => $row->id]) . '" type="button">Download Form Keluar</a>';
                 $btn = $btn . '</div>';
                 return $btn;
             })
             ->rawColumns(['actions'])
             ->make(true);
+    }
+    public function downloadFormKeluar(Employee $employee)
+    {
+        $data['employee'] = $employee;
+        $data['title'] = "Form Anggota Keluar";
+        $pdf = Pdf::loadView('admin.export.PDF.form_keluar', $data);
+        // return view('admin.export.PDF.form_keluar', $data);
+        return $pdf->stream("Form_keluar_".$employee->name.".pdf");
     }
 }
