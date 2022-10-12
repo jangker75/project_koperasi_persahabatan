@@ -116,6 +116,7 @@ Route::group([
       Route::resource('supplier', SupplierController::class);
       Route::resource('management-price', PriceController::class);
       Route::get('prices-from-product/{productId}', [PriceController::class, 'pricesProduct'])->name('prices.from.product');
+      Route::get('history-stock-product/{productId}', [ManagementStockController::class, 'historyStock'])->name('history.stock.product');
       Route::post("update-manual-stock/{productId}", [ProductController::class, 'updateManualStock'])->name('update.manual.stock');
       Route::resource('management-stock', ManagementStockController::class);
       Route::resource('order-supplier', OrderSupplierController::class);

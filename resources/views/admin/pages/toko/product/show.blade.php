@@ -224,6 +224,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <a href="{{ route("admin.history.stock.product", $product->id) }}" class="btn btn-info ms-2">Lihat History Stok</a>
                     </div>
                 </div>
                 <div class="card-body">
