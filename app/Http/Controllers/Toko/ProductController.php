@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Toko;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use App\Models\ApplicationSetting;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\HistoryStock;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Store;
 use App\Models\Supplier;
 use App\Services\DynamicImageService;
+use App\Services\HistoryStockService;
 use Illuminate\Http\Request;
 
 class ProductController extends BaseAdminController
@@ -22,6 +25,8 @@ class ProductController extends BaseAdminController
     {
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.product.index');
+        $this->data['limitMargin'] = ApplicationSetting::where("name", "minimum_margin_price")->first();
+        $this->data['limitMargin'] = $this->data['limitMargin']->content;
     }
     /**
      * Display a listing of the resource.
@@ -228,5 +233,30 @@ class ProductController extends BaseAdminController
         //   })
         //   ->rawColumns(['actions'])
         //   ->make(true);
+    }
+
+    public function updateManualStock($productId, Request $request){
+      $product = Product::find($productId);
+      foreach ($request->stock as $stockId => $value) {
+        $stockBefore = Stock::where('id', $stockId)->first();
+        Stock::where('id', $stockId)->update(['qty' => $value]);
+
+        $input = [
+          "title" => "Edit Manual Stok produk sku : " . $product->sku . " dari stok " . $stockBefore->qty . " menjadi " . $value,
+          "product_id" => $productId
+        ];
+
+        if($stockBefore->qty > (int) $value){
+          $input['type'] = 'deduction';
+          $input['qty'] = $stockBefore->qty - (int) $value;
+        }else{
+          $input['type'] = 'induction';
+          $input['qty'] = (int) $value - $stockBefore->qty;
+        }
+        
+        HistoryStock::create($input);
+      }
+
+      return redirect()->route("admin.product.show", $productId);
     }
 }

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('amount');
             $table->boolean('is_expired')->nullable();
-            $table->boolean('is_returned')->nullable();
+            $table->boolean('is_returned')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -117,6 +117,10 @@ class CmsMenuSeeder extends Seeder
                 'name' => 'Audit Opname',
                 'url' => 'admin/toko/opname', 
         ]);
+        $dataPengadaan->subMenus()->create([
+                'name' => 'Return Barang',
+                'url' => 'admin/toko/return-supplier', 
+        ]);
         //END Sub Menu Pengadaan
 
         // $dataPaylater = CmsMenu::create([

@@ -101,7 +101,7 @@ class PriceController extends Controller
     }
 
     public function pricesProduct($productId){
-      $data['prices'] = Price::where('product_id', $productId)->get();
+      $data['prices'] = Price::where('product_id', $productId)->latest()->get();
       $product = Product::select('id', 'name')->where('id', $productId)->first();
       $data['titlePage'] = 'History Produk '. $product->name;
 

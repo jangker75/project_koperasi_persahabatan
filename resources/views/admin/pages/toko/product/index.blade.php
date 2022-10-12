@@ -48,7 +48,7 @@
                                         <a href="{{ route('admin.product.show', $product->id) }}" class="btn btn-primary btn-sm me-1" data-toggle="tooltip"
                                             data-placement="top" title="Lihat Detail Produk"><i
                                                 class="fe fe-eye"></i></a>
-                                        <a href="#" class="btn btn-warning btn-sm me-1" data-toggle="tooltip"
+                                        <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-warning btn-sm me-1" data-toggle="tooltip"
                                             data-placement="top" title="Edit Data Produk"><i class="fe fe-edit"></i></a>
                                         <form action="{{ route('admin.product.destroy', $product->id) }}" class="d-inline" method="post">
                                           @csrf @method('delete')

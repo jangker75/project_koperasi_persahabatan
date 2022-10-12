@@ -149,7 +149,7 @@
                             required']) !!}
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1">Rp</span>
-                                {!! Form::text('price[cost]', 0, [
+                                {!! Form::text('price[cost]', null , [
                                 'id' => 'cost',
                                 'class' =>
                                 'form-control format-uang' .
@@ -161,18 +161,20 @@
                             
                         </div>
                         <div class="col-md-3">
-                            {!! Form::label('revenue', __('price.revenue'), ['class' => 'form-label
+                            {!! Form::label('margin', __('price.margin'), ['class' => 'form-label
                             required']) !!}
                             <div class="input-group">
-                                <span class="input-group-text" id="basic-addon1">Rp</span>
-                                {!! Form::text('price[revenue]', null, [
-                                'id' => 'revenue',
+                                
+                                {!! Form::text('price[margin]', null, [
+                                'id' => 'margin',
                                 'class' =>
                                 'form-control format-uang' .
-                                ($errors->has('revenue') ? ' is-invalid' : '') .
-                                (!$errors->has('revenue') && old('revenue') ? ' is-valid' : ''),
-                                'placeholder' => 'Input ' . __('price.revenue'),
+                                ($errors->has('margin') ? ' is-invalid' : '') .
+                                (!$errors->has('margin') && old('margin') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('price.margin')
+                                // 'readonly' => 'readonly'
                                 ]) !!}
+                                <span class="input-group-text" id="basic-addon1">%</span>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -186,28 +188,29 @@
                                 'form-control format-uang' .
                                 ($errors->has('profit') ? ' is-invalid' : '') .
                                 (!$errors->has('profit') && old('profit') ? ' is-valid' : ''),
-                                'placeholder' => 'Input ' . __('price.profit'),
-                                'readonly' => 'readonly'
+                                'placeholder' => 'Input ' . __('price.profit')
+                                // 'readonly' => 'readonly'
                                 ]) !!}
                             </div>
                         </div>
                         <div class="col-md-3">
-                            {!! Form::label('margin', __('price.margin'), ['class' => 'form-label
+                            {!! Form::label('revenue', __('price.revenue'), ['class' => 'form-label
                             required']) !!}
                             <div class="input-group">
-                                
-                                {!! Form::text('price[margin]', null, [
-                                'id' => 'margin',
+                                <span class="input-group-text" id="basic-addon1">Rp</span>
+                                {!! Form::text('price[revenue]', null, [
+                                'id' => 'revenue',
                                 'class' =>
                                 'form-control format-uang' .
-                                ($errors->has('margin') ? ' is-invalid' : '') .
-                                (!$errors->has('margin') && old('margin') ? ' is-valid' : ''),
-                                'placeholder' => 'Input ' . __('price.margin'),
+                                ($errors->has('revenue') ? ' is-invalid' : '') .
+                                (!$errors->has('revenue') && old('revenue') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('price.revenue'),
                                 'readonly' => 'readonly'
                                 ]) !!}
-                                <span class="input-group-text" id="basic-addon1">%</span>
                             </div>
                         </div>
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -304,67 +307,77 @@
                 }
             });
 
-            //calculate margin & profit
-            $('#cost').focusout(function () {
-                let revenue = $('#revenue').val();
-                revenue = parseInt(revenue.replace('.', ''))
-                // if(revenue <= 0){
-                //   swal({
-                //       title: "Gagal",
-                //       text: "Harga Beli harus diinput terlebih dahulu",
-                //       type: "error"
-                //   });
-                //   return false;
-                // }
-                let cost = $('#cost').val()
-                cost = parseInt(cost.replace('.', ''));
+            let cost = 0;
+            let margin = 0;
+            let profit = 0;
+            let revenue = 0;
+            let limit = parseInt("{{ $limitMargin }}") 
 
-                let profit = revenue - cost;
-                let margin = Math.round(profit * 100 / revenue);
-
-                if(margin < 15){
-                  swal({
+            function changeValue(key, value){
+              switch (key) {
+                case "cost":
+                  cost = value
+                  profit = margin*cost/100;
+                  break;
+                case "margin":
+                  margin = value
+                  profit = margin*cost/100;
+                  break;
+                case "profit":
+                  profit = value
+                  if(profit*100/cost < limit){
+                    swal({
                         title: "Gagal",
-                        text: "Harga harus memiliki minimal margin 15%",
+                        text: "Harga harus memiliki minimal margin "+limit+"%",
                         type: "error"
                     });
                     return false;
-                }
-
-                $('#margin').val(margin)
-                $('#profitPrice').val(formatRupiah(String(profit)))
+                  }else{
+                    margin = Math.ceil(profit*100/cost);
+                  }
+                  break;
+              
+                default:
+                  break;
+              }
+    
+              revenue = profit+cost;
+    
+              $("#cost").val(formatRupiah(String(cost)));
+              $("#margin").val(formatRupiah(String(margin)));
+              $("#profitPrice").val(formatRupiah(String(profit)));
+              $("#revenue").val(formatRupiah(String(revenue)));
+            }
+    
+            $("#cost").change(function(){
+              let value = $(this).val();
+              value = parseInt(value.replace('.', ''))
+              changeValue('cost', value);
             })
-            $('#revenue').focusout(function () {
-                let cost = $('#cost').val();
-                cost = parseInt(cost.replace('.', ''))
-                if(cost <= 0){
-                  swal({
+    
+            $("#profitPrice").change(function(){
+              let value = $(this).val();
+              value = parseInt(value.replace('.', ''))
+              changeValue('profit', value);
+            })
+    
+            $("#margin").change(function(){
+              let value = $(this).val();
+              value = parseInt(value.replace('.', ''))
+              if(value < limit){
+                swal({
                       title: "Gagal",
-                      text: "Harga Beli harus diinput terlebih dahulu",
+                      text: "Harga harus memiliki minimal margin "+limit+"%",
                       type: "error"
                   });
+                  $("#margin").val(formatRupiah(String(margin)));
                   return false;
-                }
-                let revenue = $('#revenue').val()
-                revenue = parseInt(revenue.replace('.', ''));
-
-                let profit = revenue - cost;
-                let margin = Math.round(profit * 100 / revenue);
-
-                if(margin < 15){
-                  swal({
-                        title: "Gagal",
-                        text: "Harga harus memiliki minimal margin 15%",
-                        type: "error"
-                    });
-                    return false;
-                }
-
-                $('#margin').val(margin)
-                $('#profitPrice').val(formatRupiah(String(profit)))
+              }
+              changeValue('margin', value);
             })
-
         })
+        
+
         $('.fc-datepicker').bootstrapdatepicker({
             todayHighlight: true,
             toggleActive: true,
