@@ -107,7 +107,7 @@
                         </tr>
                         <tr>
                             <td>{{ __('employee.department_id') }}</td>
-                            <td>{{ $employee->department->name }}</td>
+                            <td>{{ $employee->department->name ?? ""}}</td>
                         </tr>
                         <tr>
                             <td>{{ __('employee.phone') }}</td>

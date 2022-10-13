@@ -28,7 +28,7 @@
             </tr>
             <tr>
                 <td class="label-info">Bagian/Unit Kerja</td>
-                <td>: {{ $loan->employee->department->name }}</td>
+                <td>: {{ $loan->employee->department->name ?? ""}}</td>
             </tr>
             <tr>
                 <td class="label-info">Alamat</td>
