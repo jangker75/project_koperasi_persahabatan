@@ -7,6 +7,7 @@ use App\Models\ApplicationSetting;
 use App\Models\MasterDataStatus;
 use App\Models\Order;
 use App\Models\PaymentMethod;
+use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,8 @@ class OrderController extends Controller
     {
         $waiting = MasterDataStatus::where('name', 'waiting')->first();
         $data['orders'] = Order::where('status_id', '!=', $waiting->id)->latest()->get();
+        $data['orders'] = (new OrderRepository())->getAllOrders();
+        // dd($data['orders']);
         $data['titlePage'] = "List Order";
         $data['statuses'] = collect(DB::select(DB::raw("SELECT name, description FROM master_data_statuses WHERE master_data_statuses.`type` LIKE '%orders%'")))->toArray();
         
