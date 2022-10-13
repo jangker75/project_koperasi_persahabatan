@@ -54,7 +54,20 @@
                         class="form-control form-control-lg border border-primary" placeholder="Masukan Kode SKU">
                     <div id="scanBarcodeHelp" class="form-text">Scan Barcode atau Ketik Kode SKU Barang untuk menambah
                         barang atau menambah quantity.</div>
-                    {{-- <div class="position-absolute border w-75 bg-white"></div> --}}
+                    <div class="position-absolute w-100">
+                        <div class="card position-absolute border border-primary" id="resultSearchProduct"
+                            style="min-height: 12vh; z-index:99;" id="bodyResultSearchProduct">
+                            <a href="" class="border d-flex">
+                                <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="card-img-top"
+                                  alt="" style="width: 60px;">
+                                
+                                <div class="p-2 ms-2">
+                                    <div class="fw-bold text-dark">Lorem ipsum dolor sit amet.</div>
+                                    <div class="fw-bold text-danger">Rp 10000</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card">
@@ -104,21 +117,21 @@
                             <input type="text" name="cash" id="cashInput" class="form-control format-uang"
                                 placeholder="Rp 50.000">
                             <div class="row mt-4">
-                              <div class="col">
-                                <div class="btn btn-outline-primary btn-cash" data-price="5.000">Rp 5000</div>
-                              </div>
-                              <div class="col">
-                                <div class="btn btn-outline-primary btn-cash" data-price="10.000">Rp 10.000</div>
-                              </div>
-                              <div class="col">
-                                <div class="btn btn-outline-primary btn-cash" data-price="20.000">Rp 20.000</div>
-                              </div>
-                              <div class="col">
-                                <div class="btn btn-outline-primary btn-cash" data-price="50.000">Rp 50.000</div>
-                              </div>
-                              <div class="col">
-                                <div class="btn btn-outline-primary btn-cash" data-price="100.000">Rp 100.000</div>
-                              </div>
+                                <div class="col">
+                                    <div class="btn btn-outline-primary btn-cash" data-price="5.000">Rp 5000</div>
+                                </div>
+                                <div class="col">
+                                    <div class="btn btn-outline-primary btn-cash" data-price="10.000">Rp 10.000</div>
+                                </div>
+                                <div class="col">
+                                    <div class="btn btn-outline-primary btn-cash" data-price="20.000">Rp 20.000</div>
+                                </div>
+                                <div class="col">
+                                    <div class="btn btn-outline-primary btn-cash" data-price="50.000">Rp 50.000</div>
+                                </div>
+                                <div class="col">
+                                    <div class="btn btn-outline-primary btn-cash" data-price="100.000">Rp 100.000</div>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -172,9 +185,122 @@
             let cash = "0";
             $(document).ready(function () {
 
-                $("body").on("click", ".btn-cash", function(){
-                  cash = $(this).data('price');
-                  $("#cashInput").val(cash)
+                $("#resultSearchProduct").hide();
+                listProductInSearch = [];
+                $("#scanBarcode").keyup(function () {
+                    let keyword = $(this).val();
+                    let storeId = $("#storeId").val();
+                    // console.log(value, storeId);
+
+                    let url = "{{ url('/api/search-product') }}";
+                    let param = {
+                        keyword: keyword,
+                        notInListProduct: '',
+                        originStore: storeId
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: JSON.stringify(param),
+                        dataType: "json",
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        contentType: 'application/json',
+                        cache: false,
+                        success: function (response) {
+                            listProductInSearch = response.product
+                            console.log(listProductInSearch)
+                            renderSearchResult(listProductInSearch);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(error)
+                        }
+                    });
+                })
+
+                function renderSearchResult(data){
+                  $("#resultSearchProduct").html("")
+                  data.forEach(element => {
+                    let html = `<div class="border d-flex search-click" data-sku="` + element.productSKU + `">
+                        <img src="{{ url('storage') }}/` + element.productCover + `" class="card-img-top"
+                                  alt="" style="width: 60px;">
+                        <div class="p-2">
+                          <div class="fw-bold text-dark">` + truncateString(element.productName, 24) + `</div>
+                          <div class="fw-bold text-danger">` + formatRupiah(String(element.price), 'Rp ') + `</div>
+                        </div>
+                      </div>`;
+                    
+                    $("#resultSearchProduct").append(html)
+                    $('#resultSearchProduct').show()
+                  });
+                }
+
+                $("body").on("click", ".search-click", function(){
+                  let value = String($(this).data('sku'))
+                  $("#scanBarcode").val(null)
+                  if (productInCart.length == 0) {
+                      $('#bodyCart').html("")
+                  }
+
+                  const checker = productInCart.find(element => {
+                      if (element.sku === value) {
+                          element.qty += 1;
+                          element.subtotal = element.price * element.qty
+                          return element;
+                      }
+
+                      return false;
+                  });
+
+                  if (checker == undefined) {
+                      $.ajax({
+                          type: "GET",
+                          url: "{{ url('/api/product-by-sku') }}?sku=" + value + "&storeId=" +
+                              $("#storeId").val(),
+                          cache: "false",
+                          datatype: "html",
+                          success: function (response) {
+                              let toPush = {
+                                  title: response.product.title,
+                                  sku: response.product.sku,
+                                  price: response.product.price,
+                                  qty: 1,
+                                  discount: 0,
+                                  subtotal: response.product.price,
+                                  stock: response.product.stock,
+                                  cover: "{{ asset('storage') }}/" + response.product
+                                      .cover
+
+                              }
+                              setTimeout(() => {
+                                productInCart.push(toPush)
+                                renderRowCart(toPush)
+                              }, 1000);
+                              
+                          },
+                          error: function (xhr, status, error) {
+                              swal({
+                                  title: "Gagal",
+                                  text: "Produk tidak ditemukan atau stock sedang kosong",
+                                  type: "error"
+                              });
+                          }
+                      });
+                  } else {
+                      let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
+                      valueBefore += 1;
+                      
+                      console.log(checker);
+                      updateSku(value, "qty", valueBefore, checker.subtotal);
+                  }
+
+                  $("#resultSearchProduct").html("")
+                  $("#resultSearchProduct").hide();
+                })
+
+                $("body").on("click", ".btn-cash", function () {
+                    cash = $(this).data('price');
+                    $("#cashInput").val(cash)
                 })
 
                 $("#storeId").val("{{ $stores[0]->id }}");
@@ -304,10 +430,7 @@
                                 }
                                 productInCart.push(toPush)
                                 renderRowCart(toPush)
-                                // renderElementCart(productInCart)
-                                // subtotal = countSubtotal(productInCart);
-                                // total = subtotal - discount;
-                                // $('#total').html("Rp " + total)
+                                
                             },
                             error: function (xhr, status, error) {
                                 swal({
@@ -320,14 +443,9 @@
                     } else {
                         let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
                         valueBefore += 1;
-                        // $(".qty[data-sku=" + value + "]").val(valueBefore)
+                        
                         console.log(checker);
                         updateSku(value, "qty", valueBefore, checker.subtotal);
-
-                        // renderElementCart(productInCart)
-                        // subtotal = countSubtotal(productInCart);
-                        // total = subtotal - discount;
-                        // $('#total').html("Rp " + total)
                     }
 
 
@@ -352,7 +470,7 @@
 
                     // remove object
                     productInCart.splice(removeIndex, 1);
-                    $("tr[data-sku="+skuNumber+"]").remove();
+                    $("tr[data-sku=" + skuNumber + "]").remove();
                     // renderElementCart(productInCart);
                     // subtotal = countSubtotal(productInCart);
                     // total = subtotal - discount;
@@ -385,33 +503,33 @@
                 })
             })
 
-            $("body").on("keyup", ".discount", function(){
-              let sku = $(this).data("sku");
-              let value = $(this).val()
-              value = value.replace(".", "");
+            $("body").on("keyup", ".discount", function () {
+                let sku = $(this).data("sku");
+                let value = $(this).val()
+                value = value.replace(".", "");
 
-              if(value == ""){
-                value = 0;
-              }else{
-                value = parseInt(value)
-              }
+                if (value == "") {
+                    value = 0;
+                } else {
+                    value = parseInt(value)
+                }
 
-              const checker = productInCart.find(element => {
-                  if (element.sku == sku) {
-                    if(value !== 0){
-                      element.discount = value;
-                      element.subtotal = (element.price * element.qty) - element.discount
-                      return element;
+                const checker = productInCart.find(element => {
+                    if (element.sku == sku) {
+                        if (value !== 0) {
+                            element.discount = value;
+                            element.subtotal = (element.price * element.qty) - element.discount
+                            return element;
+                        }
                     }
-                  }
 
-                  return false;
-              });
-              console.log(value);
-              console.log(checker);
-              if(checker !== undefined){
-                updateSku(sku, "discount", checker.discount, checker.subtotal);
-              }
+                    return false;
+                });
+                console.log(value);
+                console.log(checker);
+                if (checker !== undefined) {
+                    updateSku(sku, "discount", checker.discount, checker.subtotal);
+                }
             })
 
             $('#buttonCheckout').click(function () {
@@ -555,6 +673,14 @@
 
                 $("#subtotalAll").html("Rp " + formatRupiah(String(subtotal)))
                 $("#total").html("Rp " + formatRupiah(String(total)))
+            }
+
+            function truncateString(str, num) {
+                if (str.length > num) {
+                    return str.slice(0, num) + "...";
+                } else {
+                    return str;
+                }
             }
 
         </script>

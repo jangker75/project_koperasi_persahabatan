@@ -2,6 +2,7 @@
   
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class OrderRepository{
@@ -50,6 +51,14 @@ class OrderRepository{
   }
 
   public function getAllOrders($startDate = null, $endDate = null){
+    $where = "";
+
+    if($startDate !== null && $endDate !== null){
+      $start = Carbon::parse(strtotime($startDate))->format('Y-m-d');
+      $end = Carbon::parse(strtotime($endDate))->format('Y-m-d');
+
+      $where = " AND orders.order_date BETWEEN '" . $start . " 00:00:00' AND '" . $end . " 23:59:59' ";
+    }
 
     $sql = "
       SELECT
@@ -77,7 +86,7 @@ class OrderRepository{
       LEFT JOIN master_data_statuses statusPaylater ON transactions.status_paylater_id = statusPaylater.id
       LEFT JOIN employees ON transactions.requester_employee_id = employees.id and employees.deleted_at IS NULL
       WHERE 
-        orders.deleted_at IS NULL
+        orders.deleted_at IS NULL". $where ."
       GROUP BY
         orders.id
       ORDER BY 

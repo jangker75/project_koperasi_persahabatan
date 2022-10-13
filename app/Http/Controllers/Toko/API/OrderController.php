@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Transaction;
 use App\Repositories\EmployeeRepository;
+use App\Repositories\OrderRepository;
 use App\Repositories\PaylaterRepository;
 use App\Repositories\ProductStockRepositories;
 use App\Services\CompanyService;
@@ -399,5 +400,10 @@ class OrderController extends Controller
         $response['status'] = "failed";
         return response()->json($response, 500);
       }
+    }
+
+    public function getDataOrder(Request $request){
+      $orders = (new OrderRepository())->getAllOrders($request->start, $request->end);
+      return response()->json($orders, 200);
     }
 }

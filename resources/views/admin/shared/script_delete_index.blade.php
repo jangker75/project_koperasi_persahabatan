@@ -74,6 +74,13 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
+        function truncateString(str, num) {
+        if (str.length > num) {
+            return str.slice(0, num) + "...";
+        } else {
+            return str;
+        }
+    }
     });
 
 </script>

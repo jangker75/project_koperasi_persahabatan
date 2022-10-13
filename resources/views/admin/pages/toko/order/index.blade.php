@@ -89,10 +89,34 @@
     @slot('script')
     <script>
         $(document).ready(function () {
+            let Data = [];
             let table = $("#datatable").DataTable();
             $('input[name="daterange"]').daterangepicker();
             $("#resetDate").click(function(){
               $('input[name="daterange"]').val("")
+              let date = {
+                start: null,
+                end: null
+              }
+
+              $.ajax({
+                  type: "POST",
+                  processData: false,
+                  contentType: 'application/json',
+                  cache: false,
+                  url: "{{ url('api/get-data-order') }}",
+                  data: JSON.stringify(date),
+                  dataType: "json",
+                  enctype: 'multipart/form-data',
+                  success: function (response) {
+                    Data = response;
+                    renderElement(Data);
+                    $("#datatable").DataTable();
+                  },
+                  error: function (response) {
+                    
+                  }
+              });
             })
 
             $('input[name="daterange"]').change(function(){
@@ -103,12 +127,87 @@
                 start: value[0].replace(" ", ""),
                 end: value[1].replace(" ", "")
               }
-              console.log(date);
+
+              $.ajax({
+                  type: "POST",
+                  processData: false,
+                  contentType: 'application/json',
+                  cache: false,
+                  url: "{{ url('api/get-data-order') }}",
+                  data: JSON.stringify(date),
+                  dataType: "json",
+                  enctype: 'multipart/form-data',
+                  success: function (response) {
+                    Data = response;
+                    renderElement(Data);
+                    $("#datatable").DataTable();
+                  },
+                  error: function (response) {
+                    
+                  }
+              });
             })
-            // setInterval( function () {
-            //     $("#bodyTable").html("");
-            //     $("#datatable").DataTable();
-            // }, 3000 );
+
+            function renderElement(arrOb){
+              $("#bodyTable").html("")
+              arrOb.forEach(function callback(element, index) {
+                let isPaylater = "";
+                let isDelivery = "";
+                let isPaid = "";
+                let print = `
+                  <a href="{{ url('admin/pos/print-receipt') }}/`+element.orderCode+`" target="_blank" data-code="{{ `+element.orderCode+`}}" class="btn btn-sm btn-info reject-order print-order"><i class="fa fa-print"></i></a>
+                `
+
+                if(element.isPaylater == 1){
+                  isPaylater = `<div class="btn btn-sm btn-info">Yes</div>`
+                }else{
+                  isPaylater = `<div class="btn btn-sm btn-warning">No</div>`
+                }
+                if(element.isDelivery == 1){
+                  isDelivery = `<div class="btn btn-sm btn-info">Yes</div>`
+                }else{
+                  isDelivery = `<div class="btn btn-sm btn-warning">No</div>`
+                }
+                if(element.isPaid == 1){
+                  isPaid = `<div class="btn btn-sm btn-success">Lunas</div>`
+                }else{
+                  isPaid = `<div class="btn btn-sm btn-danger">Belum Lunas</div>`
+                }
+                if(element.statusOrderName !== "success"){
+                  print = ""
+                }
+
+                $("#bodyTable").append(`
+                  <tr>
+                    <td>`+ (index+1) +`</td>
+                    <td>` + element.orderCode + `</td>
+                    <td>` + formatRupiah(String(element.total), 'Rp')  + `</td>
+                    <td>` + element.orderDate + `</td>
+                    <td>
+                      
+                      ` + isPaylater + `
+                    </td>
+                    <td>
+                      
+                      ` + isDelivery + `
+                    </td>
+                    <td>
+                      ` + isPaid + `
+                    </td>
+                    <td>
+                      ` + element.totalQtyProduct + `
+                    </td>
+                    <td>
+                      <div class="btn btn-sm {{ $order->statusOrderColorButton}}">{{ $order->statusOrderName }}</div>
+                    </td>
+                    <td>
+                      <a href="{{ url('admin/pos/history-order') }}/`+element.orderCode+`" class="btn btn-sm btn-primary">Lihat Detail</a>
+                      `+print+`
+                    </td>
+                </tr>
+                `);
+              });
+            }
         })
 
     </script>
