@@ -140,7 +140,7 @@
             <tr>
                 <td class="label-info">Pangkat/Golongan</td>
                 <td class="label-separator">:</td>
-                <td>{{ $loan->employee->department->name }}</td>
+                <td>{{ $loan->employee->department->name ?? ""}}</td>
             </tr>
             <tr>
                 <td class="label-info">Satuan Organisasi/Telp/Pes</td>

@@ -124,6 +124,7 @@ class LoanListController extends BaseAdminController
     public function downloadKontrakPeminjamanPDF(Loan $loan_id)
     {
         $data['loan'] = $loan_id;
+        // dd($data['loan']->employee);
         switch ($loan_id->contract_type_id) {
             case 1: //if contract pinjaman uang
                 $pdf = Pdf::loadView('admin.export.PDF.permohonan_pinjaman_uang', $data);
@@ -156,6 +157,7 @@ class LoanListController extends BaseAdminController
         
         // Add an image to the pdf 
         $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
+        
         return $pdf->stream('kontrak.pdf');
     }
     public function uploadAttachment(Request $request)
