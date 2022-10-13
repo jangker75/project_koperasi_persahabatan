@@ -19,7 +19,17 @@ class Employee extends Model
       'position_id', 'status_employee_id','salary',
       'resign_reason', 'resign_notes','birthplace','salary_number'
     ];
-
+    public  static function boot() {
+      parent::boot();
+      static::deleting(function($employee) {
+          //remove related rows
+          $employee->user->delete();
+          $employee->loan->each(function($row){
+            $row->delete();
+          });
+          $employee->savings->delete();
+      });
+  }
     public function user(){
       return $this->hasOne(User::class, 'id', 'user_id');
     }

@@ -8,7 +8,7 @@
                     </div>
                     <div>
                         <a type="button" target="_blank" class="btn btn-primary fw-bold text-wrap" href="{{ route('admin.download.loan.report') }}">
-                        Download Report</a>
+                            <i class="fa fa-print"></i> Download Report</a>
                     </div>
                     <div>
                         <span>Filter status</span>
