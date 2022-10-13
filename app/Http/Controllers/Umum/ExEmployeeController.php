@@ -112,8 +112,8 @@ class ExEmployeeController extends BaseAdminController
             })
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
-                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.ex-employee.show", [$row]) .'" type="button">View</a>';
-                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.ex-employee.download.form-keluar", ['employee' => $row->id]) . '" type="button">Download Form Keluar</a>';
+                $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.ex-employee.show", [$row]) .'" type="button"><i class="fa fa-eye"></i></a>';
+                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.ex-employee.download.form-keluar", ['employee' => $row->id]) . '" type="button"><i class="fa fa-download"></i> Form Keluar</a>';
                 $btn = $btn . '</div>';
                 return $btn;
             })
