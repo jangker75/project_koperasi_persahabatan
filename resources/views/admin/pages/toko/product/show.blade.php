@@ -264,33 +264,33 @@
             let revenue = 0;
             let limit = parseInt("{{ $limitMargin }}")
 
-            function changeValue(key, value) {
-                switch (key) {
-                    case "cost":
-                        cost = value
-                        profit = margin * cost / 100;
-                        break;
-                    case "margin":
-                        margin = value
-                        profit = margin * cost / 100;
-                        break;
-                    case "profit":
-                        profit = value
-                        if (profit * 100 / cost < limit) {
-                            swal({
-                                title: "Gagal",
-                                text: "Harga harus memiliki minimal margin " + limit + "%",
-                                type: "error"
-                            });
-                            return false;
-                        } else {
-                            margin = Math.ceil(profit * 100 / cost);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+            function changeValue(key, value){
+              switch (key) {
+                case "cost":
+                  cost = value
+                  profit = cost*margin/(100-margin);
+                  break;
+                case "margin":
+                  margin = value
+                  profit = cost*margin/(100-margin);
+                  break;
+                case "profit":
+                  profit = value
+                  if(profit*100/(cost+profit) < limit){
+                    swal({
+                        title: "Gagal",
+                        text: "Harga harus memiliki minimal margin "+limit+"%",
+                        type: "error"
+                    });
+                    return false;
+                  }else{
+                    margin = Math.ceil(profit*100/(cost+profit));
+                  }
+                  break;
+              
+                default:
+                  break;
+              }
 
                 revenue = profit + cost;
 

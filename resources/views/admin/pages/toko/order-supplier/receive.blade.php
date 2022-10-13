@@ -289,14 +289,14 @@
                   }
                   element.subtotal = element.receiveQty * element.pricePerUnit;
                   element.quantityAll = element.receiveQty * element.quantityPerUnit;
-                  element.newCost = Math.ceil(element.subtotal/element.quantityAll);
+                  element.newCost = Math.round((element.subtotal/element.quantityAll)*10)/10;
                   element.newProfit = element.newRevenue - element.newCost;
-                  element.newMargin = Math.ceil((element.newProfit * 100)/element.newCost)
+                  element.newMargin = Math.round((element.newProfit*100/element.newRevenue)*10)/10;
                   return true;
                 }
                 return false;
             });
-
+            console.log(checker)
             if(checker !== undefined){
               $(".subtotal[data-id=" + checker.id + "]").html(formatRupiah(String(checker.subtotal), 'Rp'))
               $(".quantity-all[data-id=" + checker.id + "]").html(checker.quantityAll);

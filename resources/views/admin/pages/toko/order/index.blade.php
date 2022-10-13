@@ -10,6 +10,11 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="text-small text-danger mb-2">*table ini hanya menampilkan 100 history order terbaru, untuk menampilkan lebih spesifik mohon gunakan fitur filter by tanggal</div>
+                    <div class="d-flex w-50 mb-2">
+                      <input type="text" name="daterange" class="form-control w-50 me-4" placeholder="Masukan tanggal">
+                      <button class="btn btn-danger" id="resetDate">Reset tanggal</button>
+                    </div>
                     <div class="w-100">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="datatable">
@@ -22,45 +27,49 @@
                                         <th>Paylater</th>
                                         <th>Delivery</th>
                                         <th>Lunas</th>
+                                        <th>Produk Terjual</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="bodyTable">
                                     @foreach ($orders as $i => $order)
                                     <tr>
                                         <td>{{ $i+1 }}</td>
-                                        <td>{{ $order->order_code }}</td>
+                                        <td>{{ $order->orderCode }}</td>
                                         <td>{{ format_uang($order->total) }}</td>
-                                        <td>{{ $order->order_date }}</td>
+                                        <td>{{ $order->orderDate }}</td>
                                         <td>
-                                          @if ($order->transaction->is_paylater == 1)
+                                          @if ($order->isPaylater == 1)
                                             <div class="btn btn-sm btn-info">Yes</div>
                                           @else
                                             <div class="btn btn-sm btn-warning">No</div>
                                           @endif
                                         </td>
                                         <td>
-                                          @if ($order->transaction->is_delivery == 1)
+                                          @if ($order->isDelivery == 1)
                                             <div class="btn btn-sm btn-info">Yes</div>
                                           @else
                                             <div class="btn btn-sm btn-warning">No</div>
                                           @endif
                                         </td>
                                         <td>
-                                          @if ($order->transaction->is_paid == 1)
+                                          @if ($order->isPaid == 1)
                                             <div class="btn btn-sm btn-success">Lunas</div>
                                           @else
                                             <div class="btn btn-sm btn-danger">Belum Lunas</div>
                                           @endif
                                         </td>
                                         <td>
-                                          <div class="btn btn-sm {{ $order->status->color_button}}">{{ $order->status->name }}</div>
+                                          {{ $order->totalQtyProduct }}
                                         </td>
                                         <td>
-                                          <a href="{{ route('admin.order.show', $order->order_code) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
-                                          @if ($order->status->name == "success")
-                                            <a href="{{ route('admin.print-receipt', $order->order_code) }}" target="_blank" data-code="{{ $order->order_code}}" class="btn btn-sm btn-info reject-order print-order"><i class="fa fa-print"></i></a>                                           
+                                          <div class="btn btn-sm {{ $order->statusOrderColorButton}}">{{ $order->statusOrderName }}</div>
+                                        </td>
+                                        <td>
+                                          <a href="{{ route('admin.order.show', $order->orderCode) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
+                                          @if ($order->statusOrderName == "success")
+                                            <a href="{{ route('admin.print-receipt', $order->orderCode) }}" target="_blank" data-code="{{ $order->orderCode}}" class="btn btn-sm btn-info reject-order print-order"><i class="fa fa-print"></i></a>                                           
                                           @endif
                                         </td>
                                     </tr>
@@ -80,7 +89,26 @@
     @slot('script')
     <script>
         $(document).ready(function () {
-            $("#datatable").DataTable();
+            let table = $("#datatable").DataTable();
+            $('input[name="daterange"]').daterangepicker();
+            $("#resetDate").click(function(){
+              $('input[name="daterange"]').val("")
+            })
+
+            $('input[name="daterange"]').change(function(){
+              let value = $(this).val();
+              value = value.split('-')
+
+              let date = {
+                start: value[0].replace(" ", ""),
+                end: value[1].replace(" ", "")
+              }
+              console.log(date);
+            })
+            // setInterval( function () {
+            //     $("#bodyTable").html("");
+            //     $("#datatable").DataTable();
+            // }, 3000 );
         })
 
     </script>
