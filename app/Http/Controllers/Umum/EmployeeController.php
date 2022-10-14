@@ -322,6 +322,8 @@ class EmployeeController extends BaseAdminController
             "mandatory_savings_balance" => format_uang($employee->savings->mandatory_savings_balance),
             "activity_savings_balance" => format_uang($employee->savings->activity_savings_balance),
             "voluntary_savings_balance" => format_uang($employee->savings->voluntary_savings_balance),
+            "total_savings_balance" => format_uang($employee->savings->total_balance),
+            "total_savings_value" => $employee->savings->total_balance
         ];
         return response()->json($result);
     }

@@ -52,9 +52,6 @@
                                             class="badge {{ $class }} rounded-pill text-white fw-bold p-2 px-3">{{ $loan->approvalstatus->name }}</span>
                                     </td>
                                     <td>
-                                        {{-- <button data-bs-toggle="modal" data-loan-id="{{ $loan->id }}"
-                                            data-loan-number="{{ $loan->transaction_number }}"
-                                        data-bs-target="#modalHistoryLoan" class="btn btn-primary btn-sm loan-history-modal">Lihat Detail</button> --}}
                                         <button data-bs-toggle="modal"
                                             value="{{ route('admin.loan-list.show', [$loan->id]) }}"
                                             data-loan-number="{{ $loan->transaction_number }}"

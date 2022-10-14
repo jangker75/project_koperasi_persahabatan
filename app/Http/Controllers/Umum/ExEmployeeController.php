@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Umum;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -113,12 +115,53 @@ class ExEmployeeController extends BaseAdminController
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.ex-employee.show", [$row]) .'" type="button"><i class="fa fa-eye"></i></a>';
+                $btn = $btn . '<button data-bs-toggle="modal" data-employeeid="'.$row->id.'" class="btn btn-sm btn-primary badge btn-cairkan-simpanan" data-bs-target="#modalCairkanSimpanan" value="' . route("admin.ex-employee.cairkan-simpanan", ['employee' => $row->id]) . '" type="button"><i class="fa fa-upload"></i> Cairkan Simpanan</button>';
                 $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.ex-employee.download.form-keluar", ['employee' => $row->id]) . '" type="button"><i class="fa fa-download"></i> Form Keluar</a>';
                 $btn = $btn . '</div>';
                 return $btn;
             })
             ->rawColumns(['actions'])
             ->make(true);
+    }
+    public function cairkanSimpanan(Employee $employee)
+    {
+        $data['principal'] = $employee->savings->principal_savings_balance;
+        $data['voluntary'] = $employee->savings->voluntary_savings_balance;
+        $data['mandatory'] = $employee->savings->mandatory_savings_balance;
+        $data['activity'] = $employee->savings->activity_savings_balance;
+        $total = $data['principal'] + $data['voluntary'] + $data['mandatory'] + $data['activity'];
+        $notesCompany = "Pencairan Saldo Simpanan oleh {$employee->full_name} ($employee->nik). Description : (Simp Pokok = ".format_uang($data['principal'])." Simp Wajib = ".format_uang($data['mandatory'])." Simp Aktivitas = ".format_uang($data['activity'])." Simp Sukarela = ".format_uang($data['voluntary']).")";
+        $notesEmployee = "Pencairan Saldo Simpanan";
+        if($data['principal'] > 0){
+            (new EmployeeService())->addDebitBalance(
+                saving_id: $employee->savings->id,
+                value: $data['principal'],
+                saving_type: 'principal_savings_balance',
+                description: $notesEmployee);
+        }
+        if($data['voluntary'] > 0){
+            (new EmployeeService())->addDebitBalance(
+                saving_id: $employee->savings->id,
+                value: $data['voluntary'],
+                saving_type: 'voluntary_savings_balance',
+                description: $notesEmployee);
+        }
+        if($data['mandatory'] > 0){
+            (new EmployeeService())->addDebitBalance(
+                saving_id: $employee->savings->id,
+                value: $data['mandatory'],
+                saving_type: 'mandatory_savings_balance',
+                description: $notesEmployee);
+        }
+        if($data['activity'] > 0){
+            (new EmployeeService())->addDebitBalance(
+                saving_id: $employee->savings->id,
+                value: $data['activity'],
+                saving_type: 'activity_savings_balance',
+                description: $notesEmployee);
+        }
+        (new CompanyService())->addDebitBalance($total , 'loan_balance', $notesCompany);
+        return redirect()->route('admin.ex-employee.index')->with('success', 'Pencairan saldo berhasil');
     }
     public function downloadFormKeluar(Employee $employee)
     {

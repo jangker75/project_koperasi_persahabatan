@@ -55,7 +55,6 @@
     $('.filter-btn').click(function(e){
         status = $(this).data('status')
         table.draw()
-        console.log('status', status);
     })
 
 </script>

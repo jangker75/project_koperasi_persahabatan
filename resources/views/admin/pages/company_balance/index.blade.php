@@ -194,4 +194,11 @@
             })
         </script>
     @endslot
+    @slot('style')
+        <style>
+            table#table-history-balance-modal tr th{
+                font-weight: 800;
+            }
+        </style>
+    @endslot
 </x-admin-layout>

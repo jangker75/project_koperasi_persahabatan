@@ -48,7 +48,6 @@
     //Confirmation dialog action approval
     $('#datatable').on('click', '.action-button', function(e) {
             let linkbutton = $(this).prop("href");
-            console.log(linkbutton);
             e.preventDefault();
             swal({
                 title: "Are you sure?",
