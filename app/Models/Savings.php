@@ -17,6 +17,11 @@ class Savings extends Model
         'voluntary_savings_balance',
     ];
 
+    public function getTotalBalanceAttribute()
+    {
+        $total = $this->principal_savings_balance + $this->mandatory_savings_balance +$this->activity_savings_balance + $this->voluntary_savings_balance;
+        return $total;
+    }
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');

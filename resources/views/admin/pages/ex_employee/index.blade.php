@@ -26,7 +26,15 @@
             </div>
         </div>
     </div>
+    @include('admin.pages.ex_employee.detail_cairkan_simpanan_modal')
     @slot('script')
         @include('admin.pages.ex_employee.index-script-datatable')
+    @endslot
+    @slot('style')
+        <style>
+            table#tableSimpananModal {
+                border-collapse: collapse;
+            }
+        </style>
     @endslot
 </x-admin-layout>
