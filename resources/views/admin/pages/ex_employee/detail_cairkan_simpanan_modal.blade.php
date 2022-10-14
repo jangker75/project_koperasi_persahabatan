@@ -40,7 +40,7 @@
             <div class="modal-footer">
                 <form action="" id="formCairkanSimpanan" method="post">
                     @csrf
-                <button type="submit" class="btn btn-success">Cairkan</button>
+                <button type="submit" id="btnCairkan" class="btn btn-success">Cairkan</button>
                 </form>
                 <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
