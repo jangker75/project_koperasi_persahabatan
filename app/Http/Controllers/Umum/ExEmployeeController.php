@@ -115,7 +115,7 @@ class ExEmployeeController extends BaseAdminController
             ->addColumn('actions', function($row){
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.ex-employee.show", [$row]) .'" type="button"><i class="fa fa-eye"></i></a>';
-                $btn = $btn . '<button data-bs-toggle="modal" data-employeeid="'.$row->id.'" class="btn btn-sm btn-primary badge btn-cairkan-simpanan" data-bs-target="#modalCairkanSimpanan" value="' . route("admin.ex-employee.cairkan-simpanan", ['employee' => $row->id]) . '" type="button"><i class="fa fa-upload"></i> Cairkan Simpanan</button>';
+                $btn = $btn . '<button data-bs-toggle="modal" data-employeeid="'.$row->id.'" class="btn btn-sm btn-primary badge btn-cairkan-simpanan" data-bs-target="#modalCairkanSimpanan" value="' . route("admin.ex-employee.cairkan-simpanan", ['employee' => $row->id]) . '" type="button"><i class="fa fa-upload"></i> Cek Simpanan</button>';
                 $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.ex-employee.download.form-keluar", ['employee' => $row->id]) . '" type="button"><i class="fa fa-download"></i> Form Keluar</a>';
                 $btn = $btn . '</div>';
                 return $btn;

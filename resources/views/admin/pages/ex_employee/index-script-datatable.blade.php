@@ -48,6 +48,7 @@
         $('#datatable').on('click', '.btn-cairkan-simpanan', function(e) {
             let employeeId = $(this).data('employeeid')
             let url = $(this).val()
+            $('#btnCairkan').attr('disabled', false)
             $('#formCairkanSimpanan').attr('action', url)
             console.log($(this).data('employeeid'));
             $.ajax({
@@ -61,6 +62,9 @@
                     $("#principal_savings").text(response['principal_savings_balance'])
                     $("#voluntary_savings").text(response['voluntary_savings_balance'])
                     $("#total_savings").text(response['total_savings_balance'])
+                    if(response['total_savings_value'] <= 0){
+                        $('#btnCairkan').attr('disabled', true)
+                    }
                 }
             }); 
         })
