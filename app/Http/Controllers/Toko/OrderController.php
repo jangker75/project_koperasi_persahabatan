@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
 use App\Models\ApplicationSetting;
+use App\Models\Employee;
 use App\Models\MasterDataStatus;
 use App\Models\Order;
 use App\Models\PaymentMethod;
+use App\Models\Product;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,14 +28,9 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $waiting = MasterDataStatus::where('name', 'waiting')->first();
-        $data['orders'] = Order::where('status_id', '!=', $waiting->id)->latest()->get();
-        $data['orders'] = (new OrderRepository())->getAllOrders();
-        // dd($data['orders']);
+    {        
         $data['titlePage'] = "List Order";
-        $data['statuses'] = collect(DB::select(DB::raw("SELECT name, description FROM master_data_statuses WHERE master_data_statuses.`type` LIKE '%orders%'")))->toArray();
-        
+        $data['employees'] = Employee::whereNull('resign_date')->get();
         return view('admin.pages.toko.order.index', $data);
     }
 

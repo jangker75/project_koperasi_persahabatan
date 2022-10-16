@@ -50,15 +50,30 @@ class OrderRepository{
     return $data;
   }
 
-  public function getAllOrders($startDate = null, $endDate = null){
+  public function getAllOrders($params){
     $where = "";
+    $page = 1;
 
-    if($startDate !== null && $endDate !== null){
-      $start = Carbon::parse(strtotime($startDate))->format('Y-m-d');
-      $end = Carbon::parse(strtotime($endDate))->format('Y-m-d');
-
-      $where = " AND orders.order_date BETWEEN '" . $start . " 00:00:00' AND '" . $end . " 23:59:59' ";
+    foreach ($params as $key => $param) {
+      if($param['key'] == "date"){
+        if($param['value']['startDate'] !== null && $param['value']['endDate'] !== null){
+          $start = Carbon::parse(strtotime($param['value']['startDate']))->format('Y-m-d');
+          $end = Carbon::parse(strtotime($param['value']['endDate']))->format('Y-m-d');
+        }
+        $where .= " AND orders.order_date BETWEEN '" . $start . " 00:00:00' AND '" . $end . " 23:59:59'";
+      }
+      
+      else if($param['key'] == "employeeId"){
+        $where .= " AND transactions.requester_employee_id = '" . $param['value'] . "'";
+      }
+      else if($param['key'] == "page"){
+        $page = (int) $param['value'];
+      }
+      else{
+        $where .= " AND orders." . strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $param['key'])) . " = '" . $param['value'] . "'";
+      }
     }
+
 
     $sql = "
       SELECT
@@ -90,10 +105,10 @@ class OrderRepository{
       GROUP BY
         orders.id
       ORDER BY 
-        transactions.transaction_date DESC, orders.id DESC
-      LIMIT 100
+        orders.id DESC
+      LIMIT 20 OFFSET " . ($page - 1)*100 . "
     ";
-    
+    // dd($sql);
     $data = DB::select(DB::raw($sql));
 
     return $data;

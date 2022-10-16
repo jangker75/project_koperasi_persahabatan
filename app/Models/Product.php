@@ -33,4 +33,8 @@ class Product extends Model
     public function stock(){
       return $this->hasMany(Stock::class);
     }
+
+    public function activePrice(){
+      return $this->price()->where("is_active", "=", "1");
+    }
 }

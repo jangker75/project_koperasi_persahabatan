@@ -49,15 +49,7 @@
         </div>
         <div class="position-relative">
             <div class="card position-absolute border border-primary mt-3" id="resultSearchProduct" style="min-height: 12vh; z-index:99;" id="bodyResultSearchProduct">
-              <a href="" class="border d-flex">
-                <div class="w-25">
-                  <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="card-img-top" alt="">
-                </div>
-                <div class="p-2">
-                  <div class="fw-bold text-dark">Lorem ipsum dolor sit amet.</div>
-                  <div class="fw-bold text-danger">Rp 10000</div>
-                </div>
-              </a>
+              
             </div>
         </div>
     </div>
