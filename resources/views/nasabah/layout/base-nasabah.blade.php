@@ -25,11 +25,6 @@
     {{ isset($styleVendor) ? $styleVendor : '' }}
 
     <style>
-        body {
-            background-color: #fff;
-        }
-        
-
         .navbar-nasabah {
             background-color: #343584;
             color: #f0f0f0;

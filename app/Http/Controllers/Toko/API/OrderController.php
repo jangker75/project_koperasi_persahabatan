@@ -403,7 +403,7 @@ class OrderController extends Controller
     }
 
     public function getDataOrder(Request $request){
-      $orders = (new OrderRepository())->getAllOrders($request->start, $request->end);
+      $orders = (new OrderRepository())->getAllOrders($request->params);
       return response()->json($orders, 200);
     }
 }
