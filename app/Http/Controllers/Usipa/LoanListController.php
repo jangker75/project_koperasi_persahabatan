@@ -124,6 +124,7 @@ class LoanListController extends BaseAdminController
     public function downloadKontrakPeminjamanPDF(Loan $loan_id)
     {
         $data['loan'] = $loan_id;
+        // dd($data['loan']->employee);
         switch ($loan_id->contract_type_id) {
             case 1: //if contract pinjaman uang
                 $pdf = Pdf::loadView('admin.export.PDF.permohonan_pinjaman_uang', $data);
@@ -156,6 +157,7 @@ class LoanListController extends BaseAdminController
         
         // Add an image to the pdf 
         $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
+        
         return $pdf->stream('kontrak.pdf');
     }
     public function uploadAttachment(Request $request)
@@ -264,16 +266,16 @@ class LoanListController extends BaseAdminController
             })
             ->addColumn('actions', function($row){
                 $btn = '<div class="d-flex justify-content-center btn-group btn-list">';
-                $btn = $btn . '<a class="btn btn-sm btn-warning" href="'. route("admin.loan-list.show", [$row]) .'" type="button">View</a>';
+                $btn = $btn . '<a class="btn btn-sm btn-warning" href="'. route("admin.loan-list.show", [$row]) .'" type="button"><i class="fa fa-eye"></i></a>';
                 if(!$row->is_lunas && $row->approvalstatus->name == 'Approved'){
                     $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.loan.fullpayment", [$row]) .'" type="button">Pelunasan/Revisi</a>';
-                    $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.kontrak.peminjaman", [$row->id]) .'" type="button">Download Kontrak</a>';
+                    $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.kontrak.peminjaman", [$row->id]) .'" type="button"><i class="fa fa-download"></i> Kontrak</a>';
                 }
                 if($row->is_pelunasan_manual != 0){
-                    $btn = $btn . '<a class="btn btn-sm btn-warning" target="_blank" href="'. route("admin.download.bukti-pelunasan", [$row->id]) .'" type="button">Download bukti pelunasan</a>';
+                    $btn = $btn . '<a class="btn btn-sm btn-warning" target="_blank" href="'. route("admin.download.bukti-pelunasan", [$row->id]) .'" type="button"><i class="fa fa-download"></i> bukti pelunasan</a>';
                 }
                 if(!$row->is_lunas && $row->approvalstatus->name == 'Approved'){
-                    $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.form-akad", [$row->id]) .'" type="button">Download form akad</a>';
+                    $btn = $btn . '<a class="btn btn-sm btn-success" target="_blank" href="'. route("admin.download.form-akad", [$row->id]) .'" type="button"><i class="fa fa-download"></i> form akad</a>';
                 }
                 $btn = $btn . '</div>';
                 return $btn;

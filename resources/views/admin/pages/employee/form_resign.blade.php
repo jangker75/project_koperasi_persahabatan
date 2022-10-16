@@ -1,6 +1,7 @@
 <x-admin-layout>
     @include('nasabah.shared.form_error')
     <a href="{{ $currentIndex }}" type="button" class="btn btn-danger mb-3">{{ __('general.button_cancel') }}</a>
+    <div class="alert alert-danger" role="alert" id="status-loan-employee"></div>
     <div class="row">
         <div class="col-lg-12">
             {!! Form::open(['route' => 'admin.employee.out.store', 'files' => true, 'class' => 'form-horizontal']) !!}
@@ -16,6 +17,7 @@
                         <div class="col-md-9">
                             {!! Form::select('employee_id', $employeeList, null, [
                                 'required' => 'required',
+                                'id' => 'employee_id',
                                 'class' =>
                                     'form-control form-select select2' .
                                     ($errors->has('employee_id') ? ' is-invalid' : '') .
@@ -71,7 +73,7 @@
                 </div>
                 <div class="card-footer">
                     <a class="btn btn-danger" href="{{ $currentIndex }}">{{ __('general.button_cancel') }}</a>
-                    <button class="btn btn-success">{{ __('general.button_save') }}</button>
+                    <button id="btn-save" class="btn btn-success">{{ __('general.button_save') }}</button>
                 </div>
             </div>
             {!! Form::close() !!}
@@ -79,6 +81,40 @@
     </div>
     @slot('script')
         <script>
+            //Notification for status age employee and loan ongoing
+            $('#status-loan-employee, #status-age-employee').hide() 
+            
+            //Ajax for checking status employee
+            $('#employee_id').on('change', function(){
+                $('#status-loan-employee, #status-age-employee').hide() 
+                $('#btn-save').attr('disabled',false)
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('admin.check.status.loan.employee') }}",
+                    data: {
+                        employee_id: $(this).val(),
+                        _token: "{{ csrf_token() }}",
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status_loan != undefined) {
+                            let result = ''
+                            result += response.status_loan + '<br><ul class="list-group">'
+                            response.transaction_number.forEach((item)=> {
+                                result += '<li class="listunorder bg-transparent border-0 fw-bold">' + item + '</li>'
+                            })
+                            result += '</ul>'
+                            $('#status-loan-employee').html(result).show();
+                        }
+                        if(response.status_loan != undefined){
+                            $('#btn-save').attr('disabled',true)
+                        }
+                        // if(response.status_age != undefined){
+                        //     $('#status-age-employee').text(response.status_age).show();
+                        // }
+                    }
+                });
+            })
             $('.fc-datepicker').bootstrapdatepicker({
                 todayHighlight: true,
                 toggleActive: true,

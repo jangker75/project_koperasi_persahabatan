@@ -188,8 +188,9 @@ class EmployeeController extends BaseAdminController
                             <input name="_method" type="hidden" value="delete">
                             <input name="_token" type="hidden" value="' . Session::token() . '">
                         </form>';
-                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-primary badge" href="' . route("admin.employee.download.card", ['employee' => $row->id]) . '" type="button">Download Card</a>';
-                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.employee.download.form-pendaftaran", ['employee' => $row->id]) . '" type="button">Download Form</a>';
+                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-primary badge" href="' . route("admin.employee.download.card", ['employee' => $row->id]) . '" type="button"><i class="fa fa-download"></i> ID Card</a>';
+                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-success badge" href="' . route("admin.employee.download.form-pendaftaran", ['employee' => $row->id]) . '" type="button"><i class="fa fa-download"></i> Form Daftar</a>';
+                $btn = $btn . '<a target="_blank" class="btn btn-sm btn-warning badge" href="' . route("admin.ex-employee.download.form-keluar", ['employee' => $row->id]) . '" type="button"><i class="fa fa-download"></i> Form Keluar</a>';
                 $btn = $btn . '</div>';
                 return $btn;
             })
@@ -261,10 +262,8 @@ class EmployeeController extends BaseAdminController
             ->with(['statusEmployee' => function($query){
                 $query->select('id', 'name');
             }])    
-            ->select(
-                DB::raw('concat(first_name, " ", last_name) as fullname'),
-                'nik','status_employee_id', 'bank', 'rekening'
-            )
+            ->select(DB::raw('concat(first_name, " ", last_name) as fullname'),
+                'first_name', 'last_name','nik','status_employee_id', 'bank', 'rekening')
             ->get();
         
         //Reformat field
@@ -275,11 +274,13 @@ class EmployeeController extends BaseAdminController
             }
             $item['status_employee_id'] = $item->statusEmployee->name;
             $item['bank'] = ConstantEnum::BANK[$item->bank];
+            $item['fullname'] = $item->first_name . " " . $item->last_name;
             unset($item->statusEmployee);
+            unset($item->first_name);
+            unset($item->last_name);
             return $item;
         });
         $data['datas'] = $employee->toArray();
-
         if ($type == 'pdf') {
             $pdf = Pdf::loadView('admin.export.Excel.basic_report', $data);
             $pdf->output();
@@ -321,6 +322,8 @@ class EmployeeController extends BaseAdminController
             "mandatory_savings_balance" => format_uang($employee->savings->mandatory_savings_balance),
             "activity_savings_balance" => format_uang($employee->savings->activity_savings_balance),
             "voluntary_savings_balance" => format_uang($employee->savings->voluntary_savings_balance),
+            "total_savings_balance" => format_uang($employee->savings->total_balance),
+            "total_savings_value" => $employee->savings->total_balance
         ];
         return response()->json($result);
     }

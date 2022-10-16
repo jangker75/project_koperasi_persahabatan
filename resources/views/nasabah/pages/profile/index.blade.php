@@ -39,7 +39,7 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">NIK (Nomor Induk Koperasi) : {{ $employee->nik }}</li>
                             <li class="list-group-item">NIP (Nomor Induk Pegawai) : {{ $employee->nip }}</li>
-                            <li class="list-group-item">Pangkat/Golongan : {{ $employee->department->name }}</li>
+                            <li class="list-group-item">Pangkat/Golongan : {{ $employee->department->name ?? ''}}</li>
                             <li class="list-group-item">Status Karyawan : {{ $employee->statusEmployee->name }}</li>
                         </ul>
                     </div>

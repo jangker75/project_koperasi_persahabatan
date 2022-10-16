@@ -3,7 +3,7 @@
 return [
     'balance_history' => ':type by :data',
     'company_id' => 'Nama Koperasi',
-    'loan_balance' => 'Saldo Pinjaman',
+    'loan_balance' => 'Saldo UsiPa',
     'store_balance' => 'Saldo Toko',
     'other_balance' => 'Saldo Utama',
     'total_balance' => 'Total Saldo',

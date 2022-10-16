@@ -132,7 +132,7 @@
             <tr>
                 <td class="label-info">No Gaji/Golongan</td>
                 <td class="label-separator">:</td>
-                <td>{{ $employee->salary_number ?? '_______' }} / {{ $employee->department->name }}</td>
+                <td>{{ $employee->salary_number ?? '_______' }} / {{ $employee->department->name ?? "" }}</td>
             </tr>
             <tr>
                 <td class="label-info">Unit Kerja</td>

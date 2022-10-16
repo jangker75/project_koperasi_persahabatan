@@ -26,7 +26,7 @@ class DashboardController extends BaseAdminController
     public function index()
     {
         $data = $this->data;
-        $data['loanNew'] = Loan::where('loan_approval_status_id','=',50)->orderBy('id','desc')->limit(5)->get();
+        $data['loanNew'] = Loan::with('employee')->where('loan_approval_status_id','=',50)->orderBy('id','desc')->limit(5)->get();
         $data['titlePage'] = 'Dashboard';
         return view('admin.pages.dashboard.index', $data);
     }

@@ -17,7 +17,7 @@
                       <div class="col-12 col-md-6 mb-4">
                         <h5>Nama : {{ $employee->full_name }}</h5>
                         <h5>NIK : {{ $employee->nik }}</h5>
-                        <h5>Department : {{ $employee->department->name }}</h5>
+                        <h5>Department : {{ $employee->department->name ?? ""}}</h5>
                         <h5>Position : {{ $employee->position->name }}</h5>
                         <h5>status : {{ $employee->statusEmployee->name }}</h5>
                       </div>
