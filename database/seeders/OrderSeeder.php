@@ -18,7 +18,7 @@ class OrderSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0; $i < 50; $i++) { 
+        for ($i=0; $i < 1000; $i++) { 
           $d = str_pad((string)rand(1,28), 2, "0", STR_PAD_LEFT); 
           $m = str_pad((string)rand(8,10), 2, "0", STR_PAD_LEFT); 
 

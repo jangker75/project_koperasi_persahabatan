@@ -37,7 +37,7 @@ class ProductController extends BaseAdminController
     {
       $data = $this->data;
       $data['titlePage'] = 'Kelola Data Produk';
-      $data['products'] = Product::latest()->get();
+      $data['products'] = Product::limit(50)->get();
       
       return view('admin.pages.toko.product.index', $data);
     }
