@@ -25,25 +25,24 @@
                 </x-basic-sidebar>
                 @foreach (getMenus() as $menu)
                 
-                        @if ( $checkpermission || getUserRole() == 'superadmin')
-                            @if ($menu->isseparator)
-                                <li class="sub-category">
-                                    <h3>{{ $menu->name }}</h3>
-                                </li>
-                            @elseif($menu->subMenus->count() == 0)
-                                <x-basic-sidebar link="{{ $menu->url }}" text="{{ $menu->name }}"
-                                    icon="{{ $menu->icon }}">
-                                </x-basic-sidebar>
-                            @else
-                                <x-multi-sidebar text="{{ $menu->name }}" icon="{{ $menu->icon }}"
-                                    link="{{ $menu->url }}">
-                                    @foreach ($menu->subMenus as $submenu)
-                                        <x-sub-multi-sidebar link="{{ $submenu->url }}" text="{{ $submenu->name }}">
-                                        </x-sub-multi-sidebar>
-                                    @endforeach
-                                </x-multi-sidebar>
-                            @endif
-                        @endif
+                @if ($menu->isseparator)
+                    <li class="sub-category">
+                        <h3>{{ $menu->name }}</h3>
+                    </li>
+                @elseif($menu->subMenus->count() == 0)
+                    <x-basic-sidebar link="{{ $menu->url }}" text="{{ $menu->name }}"
+                        icon="{{ $menu->icon }}">
+                    </x-basic-sidebar>
+                @else
+                    <x-multi-sidebar text="{{ $menu->name }}" icon="{{ $menu->icon }}"
+                        link="{{ $menu->url }}">
+                        @foreach ($menu->subMenus as $submenu)
+                            <x-sub-multi-sidebar link="{{ $submenu->url }}" text="{{ $submenu->name }}">
+                            </x-sub-multi-sidebar>
+                        @endforeach
+                    </x-multi-sidebar>
+                @endif
+                        
                 @endforeach
 
                 {{-- @foreach ($sideMenus as $menu)
