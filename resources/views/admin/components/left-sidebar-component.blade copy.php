@@ -24,7 +24,12 @@
                 <x-basic-sidebar link="admin/dashboard" text="Dashboard" icon="fe fe-home">
                 </x-basic-sidebar>
                 @foreach (getMenus() as $menu)
-                
+                {{-- @php
+                    $url = explode('/',$menu->url);
+                    $checkpermission = ($menu->isseparator) 
+                        ? auth()->user()->roles[0]->hasPermissionTo('read '.str_replace(' ', '_', strtolower($menu->name)))
+                        : auth()->user()->roles[0]->hasPermissionTo('read '.$url[count($url) - 1]);
+                @endphp --}}
                         @if ( $checkpermission || getUserRole() == 'superadmin')
                             @if ($menu->isseparator)
                                 <li class="sub-category">
