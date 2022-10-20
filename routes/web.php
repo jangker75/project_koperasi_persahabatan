@@ -99,6 +99,7 @@ Route::group([
     Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printReceipt'])->name('print-receipt');
     Route::get('pos/history-order', [OrderController::class, 'index'])->name('order.index');
     Route::get('pos/history-order/{orderCode}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('pos/paid-order/{orderCode}', [OrderController::class, 'paid'])->name('order.paid');
     Route::get('pos/history-paylater', [PaylaterController::class, 'index'])->name('paylater.index');
     Route::get('pos/history-paylater/{staffId}', [PaylaterController::class, 'show'])->name('paylater.show');
 

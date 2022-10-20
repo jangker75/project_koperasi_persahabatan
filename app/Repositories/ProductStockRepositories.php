@@ -164,4 +164,24 @@ class ProductStockRepositories{
 
     return $data;
   }
+
+  public function indexProduct(){
+    $sql = "
+      SELECT
+        products.id AS id,
+        products.name AS name,
+        products.sku AS sku,
+        products.unit_measurement AS unit_measurement,
+        prices.revenue AS price,
+        if(brands.name IS NULL, '--', brands.name) AS brand
+      FROM products
+      LEFT JOIN prices ON products.id = prices.product_id AND prices.deleted_at IS NULL AND prices.is_active = 1
+      LEFT JOIN brands ON products.brand_id = brands.id AND brands.deleted_at IS NULL
+      GROUP BY 
+        products.id
+    ";
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
 }
