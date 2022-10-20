@@ -30,6 +30,7 @@
 <script src="{{ asset('assets/plugins/p-scroll/perfect-scrollbar.js') }}"></script>
 <script src="{{ asset('assets/plugins/p-scroll/pscroll.js') }}"></script>
 <script src="{{ asset('assets/plugins/p-scroll/pscroll-1.js') }}"></script>
+<script src="{{ asset('assets/plugins/p-scroll/pscroll-2.js') }}"></script>
 
 <!-- INTERNAL SELECT2 JS -->
 <script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>
@@ -61,6 +62,14 @@
 <script src="{{ asset('assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
 {{-- datatable --}}
 
+{{-- Moment Js --}}
+<script src="{{ asset('assets/plugins/moment/moment-with-locales.min.js') }}"></script>
+{{-- Money Format --}}
+<script src="{{ asset('assets/js/simple.money.format.js') }}"></script>
+
 <!-- CUSTOM JS -->
 <script src="{{ asset('assets/js/custom.js') }}"></script>
+
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 

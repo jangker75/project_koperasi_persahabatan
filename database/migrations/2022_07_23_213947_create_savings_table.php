@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('savings', function (Blueprint $table) {
             $table->id();
             $table->integer('employee_id');
-            $table->bigInteger('principal_savings_amount');
-            $table->bigInteger('mandatory_savings_amount');
-            $table->bigInteger('activity_savings_amount');
-            $table->bigInteger('voluntary_savings_amount');
+            $table->bigInteger('principal_savings_balance');
+            $table->bigInteger('mandatory_savings_balance');
+            $table->bigInteger('activity_savings_balance');
+            $table->bigInteger('voluntary_savings_balance');
             $table->timestamps();
             $table->softDeletes();
         });

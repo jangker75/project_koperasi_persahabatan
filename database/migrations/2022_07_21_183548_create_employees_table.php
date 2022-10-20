@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('nik');
             $table->string('nip')->nullable();
             $table->date('birthday');
+            $table->string('birthplace', 100);
             $table->string('gender', 50);
             $table->string('address_1')->nullable();
             $table->string('address_2')->nullable();
@@ -35,6 +36,7 @@ return new class extends Migration
             $table->integer('position_id')->nullable();
             $table->integer('status_employee_id')->nullable();
             $table->integer('salary')->default(0);
+            $table->string('salary_number',20)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

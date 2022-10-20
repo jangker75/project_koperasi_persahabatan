@@ -15,16 +15,40 @@ class DepartmentSeeder extends Seeder
     public function run()
     {
         Department::create([
-            'name' => 'Poli Gigi',
-            'department_code' => 'PGG',
+            'name' => 'Honorer',
+            'department_code' => 'HONOR',
         ]);
         Department::create([
-            'name' => 'Poli Anak',
-            'department_code' => 'PNK',
+            'name' => 'Golongan I',
+            'department_code' => 'GOLN1',
         ]);
         Department::create([
-            'name' => 'UMUM',
-            'department_code' => 'UMM',
+            'name' => 'Golongan II',
+            'department_code' => 'GOLN2',
+        ]);
+        Department::create([
+            'name' => 'Golongan III',
+            'department_code' => 'GOLN1',
+        ]);
+        Department::create([
+            'name' => 'Golongan IV',
+            'department_code' => 'GOLN4',
+        ]);
+        Department::create([
+            'name' => 'PPPK',
+            'department_code' => 'PPPK1',
+        ]);
+        Department::create([
+            'name' => 'KONTRAK',
+            'department_code' => 'KONTR',
+        ]);
+        Department::create([
+            'name' => 'FKUI',
+            'department_code' => 'FKUI1',
+        ]);
+        Department::create([
+            'name' => 'CPNS',
+            'department_code' => 'CPNS1',
         ]);
     }
 }

@@ -32,10 +32,9 @@
                                 'placeholder' => 'Input ' . __('employee.first_name'),
                             ]) !!}
                         </div>
-                        {!! Form::label('last_name', __('employee.last_name'), ['class' => 'col-md-2 form-label required']) !!}
+                        {!! Form::label('last_name', __('employee.last_name'), ['class' => 'col-md-2 form-label']) !!}
                         <div class="col-md-4">
                             {!! Form::text('last_name', null, [
-                                'required' => 'required',
                                 'class' =>
                                     'form-control' .
                                     ($errors->has('last_name') ? ' is-invalid' : '') .
@@ -157,7 +156,7 @@
                             ]) !!}
                         </div>
                     </div>
-                    <div class="row mb-4">
+                    {{-- <div class="row mb-4">
                         {!! Form::label('salary', __('employee.salary'), ['class' => 'col-md-3 form-label required']) !!}
                         <div class="col-md-9">
                             {!! Form::number('salary', null, [
@@ -167,6 +166,31 @@
                                     ($errors->has('salary') ? ' is-invalid' : '') .
                                     (!$errors->has('salary') && old('salary') ? ' is-valid' : ''),
                                 'placeholder' => 'Input ' . __('employee.salary'),
+                            ]) !!}
+                        </div>
+                    </div> --}}
+                    <div class="row mb-4">
+                        {!! Form::label('salary_number', __('employee.salary_number'), ['class' => 'col-md-3 form-label']) !!}
+                        <div class="col-md-9">
+                            {!! Form::number('salary_number', null, [
+                                'class' =>
+                                    'form-control' .
+                                    ($errors->has('salary_number') ? ' is-invalid' : '') .
+                                    (!$errors->has('salary_number') && old('salary_number') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('employee.salary_number'),
+                            ]) !!}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        {!! Form::label('birthplace', __('employee.birthplace'), ['class' => 'col-md-3 form-label required']) !!}
+                        <div class="col-md-9">
+                            {!! Form::text('birthplace', null, [
+                                'required' => 'required',
+                                'class' =>
+                                    'form-control' .
+                                    ($errors->has('birthplace') ? ' is-invalid' : '') .
+                                    (!$errors->has('birthplace') && old('birthplace') ? ' is-valid' : ''),
+                                'placeholder' => 'Input ' . __('employee.birthplace'),
                             ]) !!}
                         </div>
                     </div>
@@ -185,6 +209,14 @@
                                         (!$errors->has('birthday') && old('birthday') ? ' is-valid' : ''),
                                     'placeholder' => 'Input ' . __('employee.birthday') . ' (YYYY-MM-DD)',
                                 ]) !!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        {!! Form::label('profile_image', __('employee.profile_image'), ['class' => 'col-md-3 form-label']) !!}
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                {!! Form::file('profile_image', ['accept' => 'image/*', 'class'=> 'form-control','name'=>'profile_image']) !!}
                             </div>
                         </div>
                     </div>

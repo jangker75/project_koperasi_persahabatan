@@ -17,12 +17,22 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word(),
-            'sku' => $this->faker->randomDigit(),
+            'name' => $this->faker->sentence(3),
+            'sku' => $this->randomNumber(16),
             'unit_measurement' => 'kilogram (kg)',
             'description' => $this->faker->paragraph(3),
             'cover' => 'default-image.jpg',
             'brand_id' => 1
         ];
     }
+
+    public function randomNumber($length) {
+    $result = '';
+
+    for($i = 0; $i < $length; $i++) {
+        $result .= mt_rand(0, 9);
+    }
+
+    return $result;
+}
 }

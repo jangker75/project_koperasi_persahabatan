@@ -36,6 +36,10 @@ class PositionSeeder extends Seeder
             'position_code' => 'MGR',
         ]);
         Position::create([
+            'name' => 'Divisi Umum',
+            'position_code' => 'UMM',
+        ]);
+        Position::create([
             'name' => 'Nasabah',
             'position_code' => 'NSB',
         ]);

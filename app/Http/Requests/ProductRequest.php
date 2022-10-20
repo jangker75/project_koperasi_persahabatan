@@ -27,9 +27,8 @@ class ProductRequest extends FormRequest
             'name' => 'required|string',
             'sku' => 'required|string',
             'unit_measurement' => 'required|string',
-            'description' => 'string|max:255',
+            'description' => 'string',
             'cover' => 'mimes:png,jpg',
-            'brand_id' => 'integer'
         ];
     }
 }

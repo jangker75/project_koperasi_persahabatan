@@ -13,7 +13,7 @@
                                     <th>{{ __('employee.last_name') }}</th>
                                     <th>{{ __('employee.nik') }}</th>
                                     <th>{{ __('employee.nip') }}</th>
-                                    <th>{{ __('employee.salary') }}</th>
+                                    <th>{{ __('employee.salary_number') }}</th>
                                     <th>{{ __('employee.position_id') }}</th>
                                     <th>Actions</th>
                                 </tr>
@@ -26,7 +26,15 @@
             </div>
         </div>
     </div>
+    @include('admin.pages.ex_employee.detail_cairkan_simpanan_modal')
     @slot('script')
         @include('admin.pages.ex_employee.index-script-datatable')
+    @endslot
+    @slot('style')
+        <style>
+            table#tableSimpananModal {
+                border-collapse: collapse;
+            }
+        </style>
     @endslot
 </x-admin-layout>

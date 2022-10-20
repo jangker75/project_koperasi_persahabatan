@@ -5,12 +5,12 @@
             <a class="header-brand1" href="{{ url('/') }}">
                 <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}" class="header-brand-img desktop-logo"
                     alt="logo">
-                <img height="50px" src="{{ asset('assets/images/logo/logo.png') }}" class="header-brand-img toggle-logo"
-                    alt="logo">
-                <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}" class="header-brand-img light-logo"
-                    alt="logo">
-                <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}" class="header-brand-img light-logo1"
-                    alt="logo">
+                <img height="50px" src="{{ asset('assets/images/logo/logo.png') }}"
+                    class="header-brand-img toggle-logo" alt="logo">
+                <img height="50px" src="{{ asset('assets/images/logo/logo.png') }}"
+                    class="header-brand-img light-logo" alt="logo">
+                <img height="50px" src="{{ asset('assets/images/logo/logo2.png') }}"
+                    class="header-brand-img light-logo1" alt="logo">
             </a>
             <!-- LOGO -->
         </div>
@@ -21,7 +21,31 @@
                 </svg>
             </div>
             <ul class="side-menu">
-                @foreach ($sideMenus as $menu)
+                <x-basic-sidebar link="admin/dashboard" text="Dashboard" icon="fe fe-home">
+                </x-basic-sidebar>
+                @foreach (getMenus() as $menu)
+                
+                @if ($menu->isseparator)
+                    <li class="sub-category">
+                        <h3>{{ $menu->name }}</h3>
+                    </li>
+                @elseif($menu->subMenus->count() == 0)
+                    <x-basic-sidebar link="{{ $menu->url }}" text="{{ $menu->name }}"
+                        icon="{{ $menu->icon }}">
+                    </x-basic-sidebar>
+                @else
+                    <x-multi-sidebar text="{{ $menu->name }}" icon="{{ $menu->icon }}"
+                        link="{{ $menu->url }}">
+                        @foreach ($menu->subMenus as $submenu)
+                            <x-sub-multi-sidebar link="{{ $submenu->url }}" text="{{ $submenu->name }}">
+                            </x-sub-multi-sidebar>
+                        @endforeach
+                    </x-multi-sidebar>
+                @endif
+                        
+                @endforeach
+
+                {{-- @foreach ($sideMenus as $menu)
                     @if (isset($menu['isseparator']))
                         <li class="sub-category">
                             <h3>{{ $menu['text'] }}</h3>
@@ -40,7 +64,7 @@
                             <x-slot name="text">{{ $menu['text'] }}</x-slot>
                         </x-basic-sidebar>
                     @endif
-                @endforeach
+                @endforeach --}}
 
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"

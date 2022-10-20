@@ -18,6 +18,14 @@
                 <div class="navbar navbar-collapse responsive-navbar p-0">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                         <div class="d-flex order-lg-2">
+                            <!-- FRONTEND NASABAH -->
+                            <div class="d-flex">
+                                <form action="{{ route('nasabah.home') }}" method="get">
+                                    <button type="submit" class="btn btn-sm btn-success me-1">Frontend Nasabah</button>
+                                </form>
+                            </div>
+                            <!--END FRONTEND NASABAH -->
+
                             <!-- DARK MODE -->
                             <div class="d-flex country">
                                 <a class="nav-link icon theme-layout nav-link-bg layout-setting">
@@ -110,7 +118,7 @@
                                         </div>
                                     </div>
                                     <div class="dropdown-divider m-0"></div>
-                                    <a class="dropdown-item" href="profile.html">
+                                    <a class="dropdown-item" href="{{ route('nasabah.profile.changepassword') }}">
                                         <i class="dropdown-icon fe fe-user"></i> Profile
                                     </a>
                                     {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}

@@ -14,10 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('category_has_product', function (Blueprint $table) {
-            $table->foreignId('category_id')->constrained('categories');
-            $table->foreignId('product_id')->constrained('products');
+            $table->integer('category_id');
+            $table->integer('product_id');
             $table->primary(['category_id', 'product_id']);
-            $table->timestamps();
         });
     }
 
