@@ -1,14 +1,14 @@
 <script>
     
-    // $('#datatable thead tr').clone(true).appendTo( '#datatable thead' );
-    // // Setup - add a text input to each header cell
-    // $('#datatable thead tr:eq(1) th').each( function (i) {
-    //     if (i == 1) {
-    //         return $(this).html( '' );
-    //     }
-    //     var title = $(this).text();
-    //     $(this).html( '<input class="form-control" type="text" placeholder="'+title+'" data-index="'+i+'" />' );
-    // } );
+    $('#datatable thead tr').clone(true).appendTo( '#datatable thead' );
+    // Setup - add a text input to each header cell
+    $('#datatable thead tr:eq(1) th').each( function (i) {
+        if (i == 1) {
+            return $(this).html( '' );
+        }
+        var title = $(this).text();
+        $(this).html( '<input class="form-control" type="text" placeholder="'+title+'" data-index="'+i+'" />' );
+    } );
     let table = $('#datatable').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
@@ -37,11 +37,11 @@
         }
     });
 
-    // // Filter event handler
-    // $( table.table().container() ).on( 'keyup', 'thead input', function () {
-    //     table
-    //         .column($(this).data('index') )
-    //         .search( this.value )
-    //         .draw();
-    // } );
+    // Filter event handler
+    $( table.table().container() ).on( 'keyup', 'thead input', function () {
+        table
+            .column($(this).data('index') )
+            .search( this.value )
+            .draw();
+    } );
 </script>

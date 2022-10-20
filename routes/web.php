@@ -196,6 +196,7 @@ Route::group([
     // End App Setting End
 
     // Datatables Route Start
+    Route::get('datatables-order', [OrderController::class, 'getIndexDatatables'])->name('order.index.datatables');
     Route::get('datatables-product', [ProductController::class, 'getIndexDatatables'])->name('product.index.datatables');
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
