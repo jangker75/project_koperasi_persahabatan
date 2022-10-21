@@ -202,7 +202,7 @@ class EmployeeController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Form Anggota Keluar';
         $data['employeeList'] = Employee::active()
-            ->select(DB::raw('concat(first_name, " ", last_name," (", nik, ")") as name'), 'id')
+            ->select(DB::raw('concat(COALESCE(first_name,""), " ", COALESCE(last_name,"")," (", nik, ")") as name'), 'id')
             ->pluck('name', 'id');
         return view('admin.pages.employee.form_resign', $data);
     }
