@@ -49,7 +49,7 @@ class LoanSubmissionController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Pengajuan Pinjaman';
         $data['employeeList'] = Employee::active()
-        ->select(DB::raw('concat(first_name, " ", last_name," (", nik, ")") as name'), 'id')
+        ->select(DB::raw('concat(COALESCE(first_name,""), " ", COALESCE(last_name,"")," (", nik, ")") as name'), 'id')
         ->pluck('name', 'id');
         $data['contractTypeList'] = ContractType::query()
         ->select(DB::raw('concat(name, " (", contract_type_code, ")") as name'), 'id')
