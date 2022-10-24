@@ -190,7 +190,7 @@
             // send store / update
             $("#storeForm").submit(function (e) {
 
-                // e.preventDefault();
+                e.preventDefault();
                 let name = $(this).find('input').val();
                 let formData = new FormData(this);
 
