@@ -222,6 +222,7 @@
                         });
                         // getTable()
                         $("#modalStore").modal('hide')
+                        location.reload();
                     },
                     error: function (response) {
                         swal({
