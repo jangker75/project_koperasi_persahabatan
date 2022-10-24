@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
+use App\Models\Promo;
 use Illuminate\Http\Request;
 
 class PromoController extends Controller
@@ -14,7 +15,10 @@ class PromoController extends Controller
      */
     public function index()
     {
-        //
+        $data['promos'] = Promo::latest()->get();
+        $data['titlePage'] = 'Promo';
+
+        return view('admin.pages.toko.promo.index', $data);
     }
 
     /**

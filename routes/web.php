@@ -21,6 +21,7 @@ use App\Http\Controllers\Toko\PaymentMethodController;
 use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\toko\PrintReceiptController;
 use App\Http\Controllers\Toko\ProductController;
+use App\Http\Controllers\Toko\PromoController;
 use App\Http\Controllers\Toko\ReturnSupplierController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
@@ -124,6 +125,7 @@ Route::group([
       Route::resource('payment-method', PaymentMethodController::class);
       Route::resource('opname', OpnameController::class);
       Route::resource('return-supplier', ReturnSupplierController::class);
+      Route::resource('promo', PromoController::class);
 
       Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
       Route::get('print-form-opname/{storeId}', [OpnameController::class, 'printFormOpname']);

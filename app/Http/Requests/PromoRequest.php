@@ -24,7 +24,9 @@ class PromoRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'string',
+            'text' => 'string',
+            'image' => 'mimes:png,jpg;max:2048'
         ];
     }
 }

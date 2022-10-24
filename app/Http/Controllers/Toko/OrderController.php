@@ -80,7 +80,7 @@ class OrderController extends Controller
         return $datatable->eloquent($query)
           ->addIndexColumn(true)
           ->addColumn('actions', function($row){
-              $btn = '<a href="'.route('admin.product.show', $row).'"
+              $btn = '<a href="'.route('admin.order.show', $row['order_code']).'"
                 class="btn btn-primary btn-sm me-1" data-toggle="tooltip" data-placement="top"
                 target="_blank" title="Lihat Detail Produk">Lihat Detail</a>';
               return $btn;

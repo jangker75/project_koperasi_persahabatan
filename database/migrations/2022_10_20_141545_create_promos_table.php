@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('promos', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('text');
+            $table->longText('text');
             $table->string('image');
-            $table->string('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

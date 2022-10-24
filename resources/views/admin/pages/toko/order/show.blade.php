@@ -18,11 +18,9 @@
                             <tbody>
                                 <tr>
                                     <td class="text-start">Nama Pemohon</td>
-                                    @if ($order->transaction->is_paylater == true)
                                     <td class="text-end"><span
                                             class="fw-bold ms-auto">{{ $order->transaction->requester->full_name }}</span>
                                     </td>
-                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="text-start">Tanggal Pemohonan</td>

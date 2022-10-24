@@ -9,6 +9,7 @@ use App\Http\Controllers\Toko\API\OrderController;
 use App\Http\Controllers\Toko\API\OrderSupplierController;
 use App\Http\Controllers\Toko\API\PaymentMethodController;
 use App\Http\Controllers\Toko\API\ProductController;
+use App\Http\Controllers\Toko\API\PromoController;
 use App\Http\Controllers\Toko\API\StoreController;
 use App\Http\Controllers\Toko\API\SupplierController;
 use App\Http\Controllers\Toko\API\TransferStockController;
@@ -41,6 +42,7 @@ Route::resource('order', OrderController::class);
 Route::resource('transfer-stock', TransferStockController::class);
 Route::resource('order-supplier', OrderSupplierController::class);
 Route::resource('payment-method', PaymentMethodController::class);
+Route::resource('promo', PromoController::class);
 Route::resource('opname', OpnameController::class);
 Route::post("order-nasabah", [OrderController::class, "orderNasabah"]);
 Route::post('reject-order', [OrderController::class, 'rejectOrder']);
@@ -64,6 +66,7 @@ Route::post('transfer-stock-receive', [TransferStockController::class, 'receiveS
 Route::get('order-supplier-items/{id}', [OrderSupplierController::class, 'getDetailById']);
 // Route::post('order-supplier-confirm', [OrderSupplierController::class, 'confirmStock']);
 Route::post('order-supplier-receive', [OrderSupplierController::class, 'receiveOrder']);
+
 
 // opname
 Route::get('opname-commit/{id}', [OpnameController::class, 'commit'])->name('opname.commit');

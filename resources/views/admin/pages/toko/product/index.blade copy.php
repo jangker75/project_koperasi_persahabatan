@@ -56,7 +56,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @foreach ($products as $i => $product)
+                                @foreach ($products as $i => $product)
                                 <tr>
                                     <td>{{ $i+1 }}</td>
                                     <td>{{ $product->name }}</td>
@@ -90,7 +90,7 @@
                                                 class="fe fe-trash-2"></i></button>
                                     </td>
                                 </tr>
-                                @endforeach --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

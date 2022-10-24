@@ -4,7 +4,7 @@
         <div class="col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title fw-bold">{{ str("list Toko terdaftar")->title() }}</h3>
+                    <h3 class="card-title fw-bold">{{ str("list Promo terdaftar")->title() }}</h3>
                 </div>
                 <div class="card-body">
                     <!-- Button trigger modal -->
@@ -16,10 +16,10 @@
                     <!-- Modal -->
                     <div class="modal fade" id="modalStore" data-bs-backdrop="static" data-bs-keyboard="false"
                         tabindex="-1" aria-labelledby="modalStoreLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalStoreLabel">Create New Toko</h5>
+                                    <h5 class="modal-title" id="modalStoreLabel">Create New Promo</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close">&times;</button>
                                 </div>
@@ -29,19 +29,21 @@
                                             <input type="hidden" name="_method" id="method" value="post">
                                             <input type="hidden" name="id" id="id">
                                             <input class="form-control mb-4" name="name"
-                                                placeholder="{{ __('store.name') }}" type="text">
-                                            <textarea name="location" id="" class="form-control mb-4" cols="30" rows="5"
-                                                placeholder="{{ __('store.location') }}"></textarea>
-                                            <select name="manager_id" id="" class="form-control form-select mb-4">
-                                                @foreach ($employees as $employee)
-                                                <option value="{{ $employee->id }}">{{ $employee->first_name }}
-                                                    {{ $employee->last_name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <img src="" id="displayImage" class="mb-4" alt="" height="240"
+                                                placeholder="Masukan Judul" type="text">
+                                            <div class="mt-4">Text Promo</div>
+                                            <textarea name="text" id="text" class="form-control mb-4" cols="30" rows="5"
+                                                placeholder="Masukan text"></textarea>
+                                            <div class="mt-4">Gambar Promo</div>
+                                            <div class="row mb-4">
+                                              <div class="col-6">
+                                                <img src="" id="displayImage" class="mb-4" alt="" height="240"
                                                 style="display: none;">
-                                            <input type="file" class="dropify mb-4" name="cover" data-bs-height="180"
+                                              </div>
+                                              <div class="col-6">
+                                                <input type="file" class="dropify mb-4" name="cover" data-bs-height="180"
                                                 data-max-file-size="2M" />
+                                              </div>
+                                            </div>
                                             <button type="submit" class="btn btn-primary w-100">Submit New Data</button>
                                         </div>
                                     </form>
@@ -55,26 +57,36 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No</th>
-                                        <th>{{ __("store.name") }}</th>
-                                        <th>{{ __("store.store_code") }}</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($stores as $i => $store)
+                                    @foreach ($promos as $i => $promo)
                                     <tr>
                                         <td>{{ $i+1 }}</td>
-                                        <td>{{ $store->name }}</td>
-                                        <td>{{ $store->store_code }}</td>
+                                        <td>{{ $promo->name }}</td>
                                         <td>
-                                            <span class="btn btn-sm btn-primary btn-detail" id="{{ $store->id }}">Lihat
+                                          @if ($promo->is_active == 1)
+                                            aktif
+                                          @else
+                                            tidak aktif
+                                          @endif
+                                        </td>
+                                        <td>
+                                          <img src="{{ route('showimage', $promo->image) }}" alt="" style="height: 72px;">
+                                        </td>
+                                        <td>
+                                            <span class="btn btn-sm btn-primary btn-detail" id="{{ $promo->id }}">Lihat
                                                 Detail</span>
-                                            <form action="{{ route('admin.store.destroy', $store->id) }}"
+                                            <form action="{{ route('admin.promo.destroy', $promo->id) }}"
                                                 class="d-inline" method="post">
                                                 @csrf @method('delete')
                                             </form>
                                             <button type="submit" class="btn btn-danger btn-sm delete-button me-1"
-                                                data-toggle="tooltip" data-placement="top" title="Hapus Produk"><i
+                                                data-toggle="tooltip" data-placement="top" title="Hapus Promo"><i
                                                     class="fe fe-trash-2"></i></button>
                                         </td>
                                     </tr>
@@ -90,6 +102,8 @@
 
     <x-slot name="scriptVendor">
         <script src="{{ asset('/assets/plugins/fileuploads/js/fileupload.js') }}"></script>
+        <script src="https://cdn.tiny.cloud/1/2yzm6dte4n45dr6lv2g3t2ztb6yfqvo31pdgr4329i0dmuti/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"></script>
     </x-slot>
 
     @slot('script')
@@ -100,6 +114,7 @@
             $("#showModal").click(function () {
                 $("#storeForm")[0].reset();
                 $("#displayImage").hide();
+                tinymce.get('text').setContent('')
             })
 
             $('.btn-detail').click(function () {
@@ -110,13 +125,13 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('api/store') }}/" + id,
+                    url: "{{ url('api/promo') }}/" + id,
                     dataType: "json",
                     success: function (response) {
                         console.log(response)
                         $("input[name='name']").val(response.data.name)
-                        $("textarea[name='location']").val(response.data.location)
-                        $("select[name='manager_id']").val(response.data.manager_id)
+                        $("textarea[name='text']#text").val(response.data.text)
+                        tinymce.get('text').setContent(response.data.text)
                         $("#displayImage").attr("src", "{{ asset('storage') }}/" + response
                             .data.image)
                         $("#displayImage").show();
@@ -129,6 +144,15 @@
 
             })
 
+            // for description
+            let tinyMCE = tinymce.init({
+                selector: 'textarea#text',
+                menubar: false,
+                height: 320,
+                toolbar: 'undo redo ' +
+                    'bold italic backcolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | '
+            });
 
             // input image
             $('.dropify').dropify({
@@ -146,18 +170,21 @@
             // send store / update
             $("#storeForm").submit(function (e) {
 
-                e.preventDefault();
+                // e.preventDefault();
                 let name = $(this).find('input').val();
                 let formData = new FormData(this);
 
                 let method = $('#method').val();
+                // console.log(method)
                 let url = "";
                 if (method == "post") {
-                    url = "{{ url('api/store') }}"
+                    url = "{{ url('api/promo') }}"
                 } else {
                     let ids = $(this).find("input[name='id']").val()
-                    url = "{{ url('api/store') }}/" + ids;
+                    url = "{{ url('api/promo') }}/" + ids;
                 }
+
+                // console.log(formData);
                 $.ajax({
                     type: "POST",
                     processData: false,
