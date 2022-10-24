@@ -18,11 +18,9 @@
                             <tbody>
                                 <tr>
                                     <td class="text-start">Nama Pemohon</td>
-                                    @if ($order->transaction->is_paylater == true)
                                     <td class="text-end"><span
                                             class="fw-bold ms-auto">{{ $order->transaction->requester->full_name }}</span>
                                     </td>
-                                    @endif
                                 </tr>
                                 <tr>
                                     <td class="text-start">Tanggal Pemohonan</td>
@@ -145,8 +143,7 @@
                                 <tr>
                                     <td class="text-start">Additional Discount</td>
                                     <td class="text-end">
-                                        <input type="text" name="discount" id="discount" placeholder="0"
-                                            class="form-control">
+                                        {{ format_uang($order->discount) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -191,6 +188,10 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
+                        @if ($order->transaction->is_paid !== 1)
+                        <a href="{{ route('admin.order.paid', $order->order_code) }}"
+                            class="btn btn-info ms-2">Bayar Order</a>
+                        @endif
                         @if ($order->status->name == "success")
                         <a href="{{ route('admin.print-receipt', $order->order_code) }}" target="_blank"
                             class="btn btn-info ms-2">Print Order <i class="fa fa-print"></i></a>

@@ -46,13 +46,17 @@
     <div>
         <div class="container">
             <div class="row" style="min-height: 100vh;">
-                @if (Request::segment(1) == "product" || Request::segment(1) == null)
-                <div class="col-12 col-md-4 offset-md-4 p-0">
-                    @include('nasabah.layout.navbar')
+                {{-- @if (Request::segment(1) == "product" || Request::segment(1) == null)
+                <div class="col-12 col-md-4 offset-md-4 p-0 mb-0">
+                  @include('nasabah.layout.navbar')
                 </div>
-                @endif
-                <div class="col-12 col-md-4 offset-md-4 bg-content">
-                    <div class="row">
+                @endif --}}
+                
+                <div class="col-12 col-md-4 offset-md-4 p-0 bg-content">
+                    @if (Request::segment(1) == "product" || Request::segment(1) == null)
+                      @include('nasabah.layout.navbar')
+                    @endif
+                    <div class="row px-4">
                         @yield('content')
                     </div>
                 </div>

@@ -48,7 +48,7 @@
             <span class="input-group-text" id="basic-addon2"><i class="fe fe-search"></i></span>
         </div>
         <div class="position-relative">
-            <div class="card position-absolute border border-primary mt-3" id="resultSearchProduct" style="min-height: 12vh; z-index:99;" id="bodyResultSearchProduct">
+            <div class="card position-absolute border border-primary mt-3" id="resultSearchProduct" style="min-height: 12vh; z-index:99; display:none;" id="bodyResultSearchProduct">
               
             </div>
         </div>

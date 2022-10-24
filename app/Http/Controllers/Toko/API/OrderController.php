@@ -112,6 +112,10 @@ class OrderController extends Controller
           $inputTransaksi['approve_date'] = Carbon::now();
           $inputTransaksi['request_date'] = Carbon::now();
         }elseif(str($paymentMethod->name)->slug == "cash"){
+          if($request->employeeRequester !== null){
+            $requesterEmployee = EmployeeRepository::findEmployeeByNameOrNik($request->employeeRequester);
+            $inputTransaksi['requester_employee_id'] = $requesterEmployee[0]->id;
+          }
           $inputTransaksi['cash'] = (int) $request->cash;
           $inputTransaksi['change'] = (int) $request->cash - $order->total;
         }elseif ($paymentMethod->name !== "paylater" && str($paymentMethod->name)->slug !== "cash") {
