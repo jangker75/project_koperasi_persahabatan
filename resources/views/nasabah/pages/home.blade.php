@@ -18,11 +18,36 @@
 </section>
 @endif
 <section class="col-12 mt-3">
-    <img src="" alt="" class="w-100 border rounded p-0 mb-2" height="120">
-    <div class="d-flex justify-content-between">
-        <small>...</small>
-        <small>lihat semua promo</small>
+  @if (count($promos)  > 0)
+    <div class="w-100">
+      <div id="carousel-indicators" class="carousel slide pointer-event" data-bs-ride="carousel">
+          <ol class="carousel-indicators">
+              @foreach ($promos as $key => $promo)
+              <li data-bs-target="#carousel-indicators" data-bs-slide-to="{{ $key }}" @if ($key == 0)
+                class="active" aria-current="true"
+              @endif></li>
+              @endforeach
+          </ol>
+          <div class="carousel-inner">
+              @foreach ($promos as $key => $promo)
+              <div class="carousel-item 
+              @if ($key == 0)
+                active
+              @endif
+              ">
+                  <img class="d-block w-100 br-5 border p-0" height="192" style="object-fit: cover;" alt="" src="{{ route('showimage', $promo->image) }}" data-bs-holder-rendered="true">
+              </div>
+              @endforeach
+          </div>
+      </div>
+      
+      <div class="d-flex justify-content-between py-2">
+          <small>...</small>
+          <a href="">lihat semua promo</a>
+      </div>
+      
     </div>
+    @endif
     <div class="row p-2">
         <div class="col-6 mb-3">
             <a href="{{ route('nasabah.loan-submission.index') }}" style="text-decoration: none;color: inherit;">
@@ -76,7 +101,35 @@
     </div>
 </section>
 <section class="col-12 my-3 pb-5">
-    <img src="" alt="" class="w-100 border rounded" height="120">
+    @if ($promos !== null)
+    <div class="w-100">
+        <div id="carousel-indicators" class="carousel slide pointer-event" data-bs-ride="carousel">
+            <ol class="carousel-indicators">
+                @foreach ($promos as $key => $promo)
+                <li data-bs-target="#carousel-indicators" data-bs-slide-to="{{ $key }}" @if ($key == 0)
+                  class="active" aria-current="true"
+                @endif></li>
+                @endforeach
+            </ol>
+            <div class="carousel-inner">
+                @foreach ($promos as $key => $promo)
+                <div class="carousel-item 
+                @if ($key == 0)
+                  active
+                @endif
+                ">
+                    <img class="d-block w-100 br-5 border p-0" height="192" style="object-fit: cover;" alt="" src="{{ route('showimage', $promo->image) }}" data-bs-holder-rendered="true">
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+        {{-- <div class="d-flex justify-content-between py-2">
+            <small>...</small>
+            <a href="">lihat semua promo</a>
+        </div> --}}
+    </div>
+    <div class="py-5"></div>
 </section>
 
 
@@ -166,8 +219,6 @@
             });
             $("#products").html(elementHtml);
         }
-
-        
 
         // -------------------------------------------------------------------------------------------------------------------
 

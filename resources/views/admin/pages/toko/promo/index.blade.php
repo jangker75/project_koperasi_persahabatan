@@ -57,9 +57,10 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No</th>
-                                        <th>Title</th>
+                                        <th>Judul</th>
+                                        {{-- <th>Status</th> --}}
+                                        <th>Gambar</th>
                                         <th>Status</th>
-                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -68,15 +69,34 @@
                                     <tr>
                                         <td>{{ $i+1 }}</td>
                                         <td>{{ $promo->name }}</td>
-                                        <td>
+                                        {{-- <td>
                                           @if ($promo->is_active == 1)
                                             aktif
                                           @else
                                             tidak aktif
                                           @endif
-                                        </td>
+                                        </td> --}}
                                         <td>
                                           <img src="{{ route('showimage', $promo->image) }}" alt="" style="height: 72px;">
+                                        </td>
+                                        <td>
+                                          @if ($promo->is_active == 1)
+                                            <div class="form-group">
+                                              <label class="custom-switch form-switch">
+                                                  <input type="checkbox" name="custom-switch-radio" class="custom-switch-input" data-id="{{ $promo->id }}" checked>
+                                                  <span class="custom-switch-indicator"></span>
+                                                  <span class="custom-switch-description" data-id="{{ $promo->id }}">Aktif</span>
+                                              </label>
+                                          </div>
+                                          @else
+                                            <div class="form-group">
+                                              <label class="custom-switch form-switch">
+                                                  <input type="checkbox" name="custom-switch-radio" class="custom-switch-input" data-id="{{ $promo->id }}">
+                                                  <span class="custom-switch-indicator"></span>
+                                                  <span class="custom-switch-description" data-id="{{ $promo->id }}">Tidak Aktif</span>
+                                              </label>
+                                          </div>
+                                          @endif
                                         </td>
                                         <td>
                                             <span class="btn btn-sm btn-primary btn-detail" id="{{ $promo->id }}">Lihat
@@ -213,6 +233,37 @@
                     }
                 });
 
+            })
+
+            $(".custom-switch-input").click(function(){
+              let id = $(this).data("id")
+              if ($(this).is(":checked")) {
+                $(".custom-switch-description[data-id=" + id + "]").html("Aktif")
+              } else {
+                $(".custom-switch-description[data-id=" + id + "]").html("Tidak Aktif")
+              }
+
+              $.ajax({
+                    type: "GET",
+                    url: "{{ url('api/change-status-promo') }}/" + id,
+                    success: function (response) {
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            type: "success"
+                        });
+                        // getTable()
+                        // $("#modalStore").modal('hide')
+                    },
+                    error: function (response) {
+                        swal({
+                            title: "Failed!",
+                            text: response.message,
+                            type: "failed"
+                        });
+                        // $("#modalStore").modal('hide')
+                    }
+                });
             })
         })
 

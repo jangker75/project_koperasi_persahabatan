@@ -70,3 +70,4 @@ Route::post('order-supplier-receive', [OrderSupplierController::class, 'receiveO
 
 // opname
 Route::get('opname-commit/{id}', [OpnameController::class, 'commit'])->name('opname.commit');
+Route::get('change-status-promo/{id}', [PromoController::class, 'changeStatus'])->name('promo.change-status');

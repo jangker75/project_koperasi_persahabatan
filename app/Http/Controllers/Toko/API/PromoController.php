@@ -127,4 +127,28 @@ class PromoController extends Controller
     {
         //
     }
+
+    public function changeStatus($id){
+      try {
+        $promo = Promo::find($id);
+
+        if($promo->is_active == 1){
+          $promo->is_active = false;
+        }else{
+          $promo->is_active = true;
+        }
+
+        $promo->save();
+
+        return response()->json([
+            'message' => 'Success update status'
+        ], 200);
+      } catch (QueryException $e) {
+        return response()->json([
+            'message' => 'Failed update status',
+            'error' => $e,
+            'errorMessage' => $e->errorInfo[2]
+        ], 500);
+      }
+    }
 }
