@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <div class="w-100">
                         <div class="table-responsive">
-                            <table class="table w-100" id="datatable">
+                            <table class="table w-100" id="datatable2">
                                 <thead class="table-primary">
                                     <th>
                                         <input type="checkbox" name="checkboxAll" id="checkboxAll">
@@ -58,19 +58,23 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table" id="datatable2">
+              <table class="table" id="datatable">
                 <thead class="table-primary">
+                  <th></th>
                   <th>No</th>
-                  <th>Date</th>
+                  <th>Kode</th>
+                  <th>Tanggal</th>
                   <th>Staff</th>
+                  <th>Lokasi</th>
                   <th>Jumlah Temuan</th>
                   <th>Status</th>
                   <th>Action</th>
                 </thead>
                 <tbody>
-                  @foreach ($opnames as $k => $opname)
+                  {{-- @foreach ($opnames as $k => $opname)
                     <tr>
                       <td>{{ $k+1 }}</td>
+                      <td>{{ $opname->opname_code }}</td>
                       <td>{{ $opname->created_at }}</td>
                       <td>{{ $opname->employee->full_name }}</td>
                       <td>{{ count($opname->detail) }}</td>
@@ -85,7 +89,7 @@
                         <a href="{{ route('admin.opname.show', $opname->id) }}" class="btn btn-sm btn-primary">Lihat Detail</a>
                       </td>
                     </tr>
-                  @endforeach
+                  @endforeach --}}
                 </tbody>
               </table>
             </div>
@@ -100,12 +104,13 @@
     </x-slot>
 
     @slot('script')
+    @include('admin.pages.toko.opname.index-script-datatable')
     <script>
         $(document).ready(function () {
             let originStore;
             let listProduk;
 
-            $("#datatable").DataTable();
+            // $("#datatable").DataTable();
             $("#datatable2").DataTable();
 
             // $('.select2').select2({

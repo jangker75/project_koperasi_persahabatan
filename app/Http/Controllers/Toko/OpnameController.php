@@ -12,6 +12,7 @@ use App\Services\HistoryStockService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class OpnameController extends Controller
 {
@@ -147,6 +148,34 @@ class OpnameController extends Controller
     public function destroy($id)
     {
         
+    }
+
+    public function getIndexDatatables()
+    {
+        $query = Opname::query()
+        ->select(
+          'opnames.*',
+          DB::raw('if(opnames.is_commit = 1, "Commit", "Placed") as status'), 
+          DB::raw('COUNT(opname_details.id) as countDetail'),
+          'stores.name as storeName',
+          DB::raw('IF(employees.first_name is null, "-", concat(employees.first_name, " ", employees.last_name)) as employee')
+          )
+        ->leftJoin('opname_details', 'opnames.id', '=', 'opname_details.opname_id')
+        ->leftJoin('employees', 'opnames.employee_id', '=', 'employees.id')
+        ->leftJoin('stores', 'opnames.store_id', '=', 'stores.id')
+        ->groupBy('opnames.id');
+        
+        $datatable = new DataTables();
+        return $datatable->eloquent($query)
+          ->addIndexColumn(true)
+          ->addColumn('actions', function($row){
+              $btn = '<a href="'.route('admin.opname.show', $row).'"
+                class="btn btn-primary btn-sm me-1" data-toggle="tooltip" data-placement="top"
+                target="_blank" title="Lihat Detail Produk">Lihat Detail</a>';
+              return $btn;
+          })
+          ->rawColumns(['actions'])
+          ->make(true);
     }
 
     public function printFormOpname($storeId){
