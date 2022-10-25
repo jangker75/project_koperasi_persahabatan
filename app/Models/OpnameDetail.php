@@ -11,7 +11,7 @@ class OpnameDetail extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'opname_id', 'product_id', 'quantity', 'description', 'price', 'amount', 'is_expired', 'is_returned'
+      'opname_id', 'product_id', 'quantity','type' , 'description', 'price', 'amount', 'is_expired', 'is_returned'
     ];
 
     public function opname(){
