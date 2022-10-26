@@ -170,6 +170,7 @@ Route::group([
     Route::post('loan-upload-attachment',[LoanListController::class, 'uploadAttachment'])->name('loan.upload.attachment');
     Route::post('loan-destroy-attachment',[LoanListController::class, 'destroyAttachment'])->name('loan.destroy.attachment');
     
+    
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-trf-employee', [CompanyBalanceController::class, 'createTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee');
     Route::post('company-balance-trf-employee', [CompanyBalanceController::class, 'storeTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee.store');
@@ -181,6 +182,7 @@ Route::group([
     Route::get('download-bukti-pelunasan/{loan}', [LoanListController::class, 'downloadBuktiPelunasanPDF'])->name('download.bukti-pelunasan');
     Route::get('download-form-akad/{loan}', [LoanListController::class, 'downloadFormAkadPDF'])->name('download.form-akad');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
+    Route::get('download-loan-list-simulation/{loan}', [LoanListController::class, 'downloadFormSimulationPDF'])->name('download.loan-list-simulation');
     Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
     // Download PDF End
 

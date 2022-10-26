@@ -165,6 +165,7 @@ class LoanService
         $totalIncome = 0;
         $currentInterest = 0;
         $result = [];
+        
         for ($index = 0; $index <= $totalPayMonth; $index++) {
             if ($index != 0) {
                 $currentTotalLoanAmount -= $totalPrincipalAmount;
