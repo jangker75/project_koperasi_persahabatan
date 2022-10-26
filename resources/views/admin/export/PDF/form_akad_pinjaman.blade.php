@@ -172,7 +172,7 @@
         
         <p class="pasal-title">Pasal 3</p>
         <p class="pasal-content">
-            Pinjaman diberikan jangka waktu {{ $loan->total_pay_month }} bulan, dimulai bulan {{ \Carbon\Carbon::parse($loan->first_payment_date)->format('m-Y') }} s/d {{ \Carbon\Carbon::parse($loan->last_period)->format("m-Y") }} dengan cicilan per bulan {{ format_uang($loan->payment_tenor) }} dibayar setiap diterimanya gaji pegawai atau tanggal 1 setiap bulannya.
+            Pinjaman diberikan jangka waktu {{ $loan->total_pay_month }} bulan, dimulai bulan {{ \Carbon\Carbon::parse($loan->first_payment_date)->format('m-Y') }} s/d {{ \Carbon\Carbon::parse($loan->last_period)->format("m-Y") }} dengan cicilan per bulan {{ format_uang($loan->first_payment_amount) }} dibayar setiap diterimanya gaji pegawai atau tanggal 1 setiap bulannya.
         </p>
         <section class="footer">
             <div>
