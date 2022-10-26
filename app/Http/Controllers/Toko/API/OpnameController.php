@@ -233,6 +233,17 @@ class OpnameController extends Controller
               'productId' => $detail->product_id,
               'qty' => $detail->quantity
             ]);
+
+            $stock = Stock::where('store_id', $opname->store_id)->where('product_id', $detail->product_id)->first();
+            if($detail->type == "plus"){
+              $stock->qty = $stock->qty + $detail->quantity;
+            }else{
+              if($detail->quantity > $stock->qty){
+                throw new ModelNotFoundException('Stok tidak cukup untuk dikurangi');
+              }
+              $stock->qty = $stock->qty - $detail->quantity;
+            }
+            $stock->save();
           }
 
           $opname->is_commit = true;

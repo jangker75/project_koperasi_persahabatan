@@ -309,7 +309,7 @@
                     renderElementCart(productInCart)
                 })
 
-                $('#elementPaylater').hide()
+                // $('#elementPaylater').hide()
                 $('#paymentCode').hide()
 
                 $('#buttonPaylater').click(function () {
@@ -317,15 +317,15 @@
                 })
                 $('#paymentMethod').change(function () {
                     if ($(this).val() == 'paylater') {
-                        $('#elementPaylater').show()
+                        // $('#elementPaylater').show()
                         $('#paymentCode').hide()
                         $('#cash').hide()
                     } else if ($(this).val() == 'cash') {
-                        $('#elementPaylater').hide()
+                        // $('#elementPaylater').hide()
                         $('#paymentCode').hide()
                         $('#cash').show()
                     } else {
-                        $('#elementPaylater').hide()
+                        // $('#elementPaylater').hide()
                         $('#paymentCode').show()
                         $('#cash').hide()
                     }
@@ -501,110 +501,110 @@
                     });
                     updateSku(sku, "qty", checker.qty, checker.subtotal);
                 })
-            })
 
-            $("body").on("keyup", ".discount", function () {
-                let sku = $(this).data("sku");
-                let value = $(this).val()
-                value = value.replace(".", "");
-
-                if (value == "") {
-                    value = 0;
-                } else {
-                    value = parseInt(value)
-                }
-
-                const checker = productInCart.find(element => {
-                    if (element.sku == sku) {
-                        if (value !== 0) {
-                            element.discount = value;
-                            element.subtotal = (element.price * element.qty) - element.discount
-                            return element;
-                        }
+                $("body").on("keyup", ".discount", function () {
+                    let sku = $(this).data("sku");
+                    let value = $(this).val()
+                    value = value.replace(".", "");
+    
+                    if (value == "") {
+                        value = 0;
+                    } else {
+                        value = parseInt(value)
                     }
-
-                    return false;
-                });
-                console.log(value);
-                console.log(checker);
-                if (checker !== undefined) {
-                    updateSku(sku, "discount", checker.discount, checker.subtotal);
-                }
-            })
-
-            $('#buttonCheckout').click(function () {
-                if (productInCart.length < 1) {
-                    swal({
-                        title: "Gagal",
-                        text: "Belum ada produk yang ditambahkan",
-                        type: "error"
+    
+                    const checker = productInCart.find(element => {
+                        if (element.sku == sku) {
+                            if (value !== 0) {
+                                element.discount = value;
+                                element.subtotal = (element.price * element.qty) - element.discount
+                                return element;
+                            }
+                        }
+    
+                        return false;
                     });
-                    return false;
-                }
-                let checkoutValue = {
-                    item: productInCart,
-                    discount: discount,
-                    storeId: $("#storeId").val(),
-                    orderBy: orderBy,
-                    paymentMethod: $('#paymentMethod').val(),
-                    employeeOndutyId: "{{ auth()->user()->employee->id }}"
-                }
-                if ($('#paymentMethod').val() == 'paylater') {
-                    checkoutValue.paylater = $("#mySelect2").val()
-                } else if ($('#paymentMethod').val() !== 'cash' && $('#paymentMethod').val() !== 'paylater') {
-                    checkoutValue.paymentCode = paymentCode
-                } else {
-                    // setCash = parseInt(cash.replace(".",""));
-                    setCash = parseInt(cash.split(".").join(''));
-                    if (setCash < total) {
+                    console.log(value);
+                    console.log(checker);
+                    if (checker !== undefined) {
+                        updateSku(sku, "discount", checker.discount, checker.subtotal);
+                    }
+                })
+    
+                $('#buttonCheckout').click(function () {
+                    if (productInCart.length < 1) {
                         swal({
                             title: "Gagal",
-                            text: "Cash harus lebih dari total harga",
+                            text: "Belum ada produk yang ditambahkan",
                             type: "error"
                         });
                         return false;
                     }
-                    checkoutValue.cash = setCash;
-                }
-
-                console.log(checkoutValue);
-
-                $.ajax({
-                    type: "POST",
-                    processData: false,
-                    contentType: 'application/json',
-                    cache: false,
-                    url: "{{ url('/api/order') }}",
-                    data: JSON.stringify(checkoutValue),
-                    dataType: "json",
-                    enctype: 'multipart/form-data',
-                    success: function (response) {
-                        if (response.status) {
+                    let checkoutValue = {
+                        item: productInCart,
+                        discount: discount,
+                        storeId: $("#storeId").val(),
+                        orderBy: orderBy,
+                        paymentMethod: $('#paymentMethod').val(),
+                        employeeOndutyId: "{{ auth()->user()->employee->id }}",
+                        employeeRequester: $("#mySelect2").val()
+                    }
+                    if ($('#paymentMethod').val() == 'paylater') {
+                        checkoutValue.paylater = $("#mySelect2").val()
+                    } else if ($('#paymentMethod').val() !== 'cash' && $('#paymentMethod').val() !== 'paylater') {
+                        checkoutValue.paymentCode = paymentCode
+                    } else {
+                        // setCash = parseInt(cash.replace(".",""));
+                        setCash = parseInt(cash.split(".").join(''));
+                        if (setCash < total) {
                             swal({
-                                title: "Sukses",
+                                title: "Gagal",
+                                text: "Cash harus lebih dari total harga",
+                                type: "error"
+                            });
+                            return false;
+                        }
+                        checkoutValue.cash = setCash;
+                    }
+    
+                    console.log(checkoutValue);
+    
+                    $.ajax({
+                        type: "POST",
+                        processData: false,
+                        contentType: 'application/json',
+                        cache: false,
+                        url: "{{ url('/api/order') }}",
+                        data: JSON.stringify(checkoutValue),
+                        dataType: "json",
+                        enctype: 'multipart/form-data',
+                        success: function (response) {
+                            if (response.status) {
+                                swal({
+                                    title: "Sukses",
+                                    text: response.message,
+                                    type: "success"
+                                });
+                            }
+                            let cash = $("#cash").val();
+                            window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order
+                                .order_code, '_blank');
+                            // if (response.print == true) {
+                            // }
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000)
+                        },
+                        error: function (response) {
+                            swal({
+                                title: "Gagal",
                                 text: response.message,
-                                type: "success"
+                                type: "error"
                             });
                         }
-                        let cash = $("#cash").val();
-                        window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order
-                            .order_code, '_blank');
-                        // if (response.print == true) {
-                        // }
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000)
-                    },
-                    error: function (response) {
-                        swal({
-                            title: "Gagal",
-                            text: response.message,
-                            type: "error"
-                        });
-                    }
+                    });
                 });
-            });
-
+            })
 
             function countSubtotal(item) {
                 let sum = 0;

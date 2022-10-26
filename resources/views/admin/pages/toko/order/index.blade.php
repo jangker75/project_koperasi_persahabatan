@@ -6,15 +6,30 @@
                 <div class="card-header">
                     <h3 class="card-title fw-bold">{{ str("list History Order")->title() }}</h3>
                     <div class="card-options">
-                        <a href="{{ route('admin.request-order.index') }}" class="btn btn-primary">Refresh <i
+                        <a href="{{ route('admin.order.index') }}" class="btn btn-primary">Refresh <i
                                 class="fa fa-refresh    "></i></a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="text-small text-danger mb-2">*Table ini akan menampilkan 50 data terbaru, silahkan
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="h5">Total Transaksi</div>
+                      </div>
+                    </div>
+                    <div class="row mb-4">
+                      <div class="col-3">
+                        filter :
+                        <div class="input-group">
+                            <input type="text" name="daterange" class="form-control"
+                                placeholder="Masukan tanggal" autocomplete="off">
+                            <button class="btn btn-danger btn-sm" id="resetDate">Reset tanggal</button>
+                        </div>
+                      </div>
+                    </div>
+                    {{-- <div class="text-small text-danger mb-2">*Table ini akan menampilkan 50 data terbaru, silahkan
                         gunakan filter page atau filter by tgl untuk menampilkan data berikutnya</div>
-                    <div class="mb-2">Filter :</div>
-                    <div class="row mb-4" id="filters">
+                    <div class="mb-2">Filter :</div> --}}
+                    {{-- <div class="row mb-4" id="filters">
                       <div class="col-auto">
                         <input type="text" class="form-control" id="orderCode"  placeholder="Kode order">
                       </div>
@@ -47,12 +62,13 @@
                             </div>
                         </div>
                       </div>
-                    </div>
+                    </div> --}}
                     <div class="w-100">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="datatable">
                                 <thead class="table-primary">
                                     <tr>
+                                        <th></th>
                                         <th>No</th>
                                         <th>Kode Order</th>
                                         <th>Total</th>
@@ -81,262 +97,263 @@
     </x-slot>
 
     @slot('script')
+    @include('admin.pages.toko.order.index-script-datatable')
     <script>
-        $(document).ready(function () {
-            let Data = [];
-            // let table = $("#datatable").DataTable();
-            $('input[name="daterange"]').daterangepicker({
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: " to "
-                }
-            });
+        // $(document).ready(function () {
+        //     let Data = [];
+        //     // let table = $("#datatable").DataTable();
+        //     $('input[name="daterange"]').daterangepicker({
+        //         locale: {
+        //             format: 'YYYY-MM-DD',
+        //             separator: " to "
+        //         }
+        //     });
 
-            let params = [
-              {
-                key: "page",
-                value: 1
-              }
-            ];
+        //     let params = [
+        //       {
+        //         key: "page",
+        //         value: 1
+        //       }
+        //     ];
 
-            refreshElement()
+        //     refreshElement()
 
-            // page
-            $('.counter').click(function(){
-              let valueNow = parseInt($("#pageNumber").val());
-              if ($(this).hasClass('counter-plus')) {
-                valueNow++;
-              } else {
-                $("#pageNumber").val()
-                if (valueNow > 1) {
-                  valueNow--;
-                }
-              }
-              const checker = params.find(element => {
-                  if (element.key == "page") {
-                      element.value = valueNow
-                      return element;
-                  }
+        //     // page
+        //     $('.counter').click(function(){
+        //       let valueNow = parseInt($("#pageNumber").val());
+        //       if ($(this).hasClass('counter-plus')) {
+        //         valueNow++;
+        //       } else {
+        //         $("#pageNumber").val()
+        //         if (valueNow > 1) {
+        //           valueNow--;
+        //         }
+        //       }
+        //       const checker = params.find(element => {
+        //           if (element.key == "page") {
+        //               element.value = valueNow
+        //               return element;
+        //           }
 
-                  return false;
-              });
+        //           return false;
+        //       });
 
-              $("#pageNumber").val(valueNow)
-              console.log(params)
-              refreshElement()
-            })
+        //       $("#pageNumber").val(valueNow)
+        //       console.log(params)
+        //       refreshElement()
+        //     })
 
-            // date
-            $("#resetDate").click(function () {
-                $('input[name="daterange"]').val("")
+        //     // date
+        //     $("#resetDate").click(function () {
+        //         $('input[name="daterange"]').val("")
 
-                // get index of object with id:37
-                var removeIndex = params.map(function (item) {
-                    return item.key;
-                }).indexOf("date");
+        //         // get index of object with id:37
+        //         var removeIndex = params.map(function (item) {
+        //             return item.key;
+        //         }).indexOf("date");
 
-                // remove object
-                params.splice(removeIndex, 1);
+        //         // remove object
+        //         params.splice(removeIndex, 1);
 
-                console.log(params)
-                refreshElement()
-            })
+        //         console.log(params)
+        //         refreshElement()
+        //     })
 
-            $('input[name="daterange"]').change(function () {
-                let value = $(this).val();
-                value = value.split('to')
+        //     $('input[name="daterange"]').change(function () {
+        //         let value = $(this).val();
+        //         value = value.split('to')
 
-                const checker = params.find(element => {
-                    if (element.key == "date") {
-                        element.value.startDate = value[0].replace(" ", ""),
-                            element.value.endDate = value[1].replace(" ", "")
-                        return element;
-                    }
+        //         const checker = params.find(element => {
+        //             if (element.key == "date") {
+        //                 element.value.startDate = value[0].replace(" ", ""),
+        //                     element.value.endDate = value[1].replace(" ", "")
+        //                 return element;
+        //             }
 
-                    return false;
-                });
-                // console.log(checker)
-                if (checker == undefined) {
-                    let toPush = {
-                        key: "date",
-                        value: {
-                            startDate: value[0].replace(" ", ""),
-                            endDate: value[1].replace(" ", "")
-                        }
-                    }
-                    params.push(toPush);
-                }
-                console.log(params)
-                refreshElement()
+        //             return false;
+        //         });
+        //         // console.log(checker)
+        //         if (checker == undefined) {
+        //             let toPush = {
+        //                 key: "date",
+        //                 value: {
+        //                     startDate: value[0].replace(" ", ""),
+        //                     endDate: value[1].replace(" ", "")
+        //                 }
+        //             }
+        //             params.push(toPush);
+        //         }
+        //         console.log(params)
+        //         refreshElement()
                 
-            })
+        //     })
 
-            // employee
-            $("#employeeId").change(function(){
-              let valueEmp = parseInt($(this).val()); 
+        //     // employee
+        //     $("#employeeId").change(function(){
+        //       let valueEmp = parseInt($(this).val()); 
               
-              if(valueEmp == 0){
-                // get index of object with id:37
-                var removeIndex = params.map(function (item) {
-                    return item.key;
-                }).indexOf("employeeId");
+        //       if(valueEmp == 0){
+        //         // get index of object with id:37
+        //         var removeIndex = params.map(function (item) {
+        //             return item.key;
+        //         }).indexOf("employeeId");
 
-                // remove object
-                params.splice(removeIndex, 1);
-              }else{
-                const checker = params.find(element => {
-                    if (element.key == "employeeId") {
-                        element.value = valueEmp
-                        return element;
-                    }
+        //         // remove object
+        //         params.splice(removeIndex, 1);
+        //       }else{
+        //         const checker = params.find(element => {
+        //             if (element.key == "employeeId") {
+        //                 element.value = valueEmp
+        //                 return element;
+        //             }
 
-                    return false;
-                });
-                // console.log(checker)
-                if (checker == undefined) {
-                    let toPush = {
-                        key: "employeeId",
-                        value: valueEmp
-                    }
-                    params.push(toPush);
-                }
-              }
-              console.log(params)
-              refreshElement()
-            })
+        //             return false;
+        //         });
+        //         // console.log(checker)
+        //         if (checker == undefined) {
+        //             let toPush = {
+        //                 key: "employeeId",
+        //                 value: valueEmp
+        //             }
+        //             params.push(toPush);
+        //         }
+        //       }
+        //       console.log(params)
+        //       refreshElement()
+        //     })
 
-            // kodeOrder
-            $("#orderCode").change(function(){
-              let valueCode = $(this).val()
-              if(valueCode == "" || valueCode == null){
-                // get index of object with id:37
-                var removeIndex = params.map(function (item) {
-                    return item.key;
-                }).indexOf("orderCode");
+        //     // kodeOrder
+        //     $("#orderCode").change(function(){
+        //       let valueCode = $(this).val()
+        //       if(valueCode == "" || valueCode == null){
+        //         // get index of object with id:37
+        //         var removeIndex = params.map(function (item) {
+        //             return item.key;
+        //         }).indexOf("orderCode");
 
-                // remove object
-                params.splice(removeIndex, 1);
+        //         // remove object
+        //         params.splice(removeIndex, 1);
                 
-              }else{
-                const checker = params.find(element => {
-                    if (element.key == "orderCode") {
-                        element.value = valueCode
-                        return element;
-                    }
+        //       }else{
+        //         const checker = params.find(element => {
+        //             if (element.key == "orderCode") {
+        //                 element.value = valueCode
+        //                 return element;
+        //             }
 
-                    return false;
-                });
-                if (checker == undefined) {
-                    let toPush = {
-                        key: "orderCode",
-                        value: valueCode
-                    }
-                    params.push(toPush);
-                }
-              }
+        //             return false;
+        //         });
+        //         if (checker == undefined) {
+        //             let toPush = {
+        //                 key: "orderCode",
+        //                 value: valueCode
+        //             }
+        //             params.push(toPush);
+        //         }
+        //       }
 
-              console.log(params)
-              refreshElement()
-            })
+        //       console.log(params)
+        //       refreshElement()
+        //     })
 
-            function renderElement(arrOb) {
+        //     function renderElement(arrOb) {
                 
-                arrOb.forEach(function callback(element, index) {
-                    let isPaylater = "";
-                    let isDelivery = "";
-                    let isPaid = "";
-                    let requester = "";
-                    let print = `<a href="{{ url('admin/pos/print-receipt') }}/` + element.orderCode +
-                        `" target="_blank" data-code="{{ ` + element.orderCode + `}}" class="btn btn-sm btn-info reject-order print-order"><i class="fa fa-print"></i></a>`
-                    if (element.isPaylater == 1) {
-                        isPaylater = `<div class="btn btn-sm btn-info">Yes</div>`
-                    } else {
-                        isPaylater = `<div class="btn btn-sm btn-warning">No</div>`
-                    }
-                    if (element.isDelivery == 1) {
-                        isDelivery = `<div class="btn btn-sm btn-info">Yes</div>`
-                    } else {
-                        isDelivery = `<div class="btn btn-sm btn-warning">No</div>`
-                    }
-                    if (element.isPaid == 1) {
-                        isPaid = `<div class="btn btn-sm btn-success">Lunas</div>`
-                    } else {
-                        isPaid = `<div class="btn btn-sm btn-danger">Belum Lunas</div>`
-                    }
-                    if (element.requesterName != null) {
-                        requester = `<div>` + element.requesterName + `</div>`
-                    } else {
-                        requester = `<div>--</div>`
-                    }
+        //         arrOb.forEach(function callback(element, index) {
+        //             let isPaylater = "";
+        //             let isDelivery = "";
+        //             let isPaid = "";
+        //             let requester = "";
+        //             let print = `<a href="{{ url('admin/pos/print-receipt') }}/` + element.orderCode +
+        //                 `" target="_blank" data-code="{{ ` + element.orderCode + `}}" class="btn btn-sm btn-info reject-order print-order"><i class="fa fa-print"></i></a>`
+        //             if (element.isPaylater == 1) {
+        //                 isPaylater = `<div class="btn btn-sm btn-info">Yes</div>`
+        //             } else {
+        //                 isPaylater = `<div class="btn btn-sm btn-warning">No</div>`
+        //             }
+        //             if (element.isDelivery == 1) {
+        //                 isDelivery = `<div class="btn btn-sm btn-info">Yes</div>`
+        //             } else {
+        //                 isDelivery = `<div class="btn btn-sm btn-warning">No</div>`
+        //             }
+        //             if (element.isPaid == 1) {
+        //                 isPaid = `<div class="btn btn-sm btn-success">Lunas</div>`
+        //             } else {
+        //                 isPaid = `<div class="btn btn-sm btn-danger">Belum Lunas</div>`
+        //             }
+        //             if (element.requesterName != null) {
+        //                 requester = `<div>` + element.requesterName + `</div>`
+        //             } else {
+        //                 requester = `<div>--</div>`
+        //             }
 
-                    if (element.statusOrderName !== "success") {
-                        print = ""
-                    }
+        //             if (element.statusOrderName !== "success") {
+        //                 print = ""
+        //             }
 
-                    $("#bodyTable").append(`
-                      <tr>
-                        <td>` + (index + 1) + `</td>
-                        <td>` + element.orderCode + `</td>
-                        <td>` + formatRupiah(String(element.total), 'Rp') + `</td>
-                        <td>` + element.orderDate + `</td>
-                        <td>` + requester + `</td>
-                        <td>
+        //             $("#bodyTable").append(`
+        //               <tr>
+        //                 <td>` + (index + 1) + `</td>
+        //                 <td>` + element.orderCode + `</td>
+        //                 <td>` + formatRupiah(String(element.total), 'Rp') + `</td>
+        //                 <td>` + element.orderDate + `</td>
+        //                 <td>` + requester + `</td>
+        //                 <td>
                           
-                          ` + isPaylater + `
-                        </td>
-                        <td>
+        //                   ` + isPaylater + `
+        //                 </td>
+        //                 <td>
                           
-                          ` + isDelivery + `
-                        </td>
-                        <td>
-                          ` + isPaid + `
-                        </td>
-                        <td>
-                          ` + element.totalQtyProduct + `
-                        </td>
-                        <td>
-                          <div class="btn btn-sm `+element.statusOrderColorButton+`">`+element.statusOrderName+`</div>
-                        </td>
-                        <td>
-                          <a href="{{ url('admin/pos/history-order') }}/` + element.orderCode + `" class="btn btn-sm btn-primary">Lihat Detail</a>
-                          ` + print + `
-                        </td>
-                      </tr>
-                    `);
-                });
+        //                   ` + isDelivery + `
+        //                 </td>
+        //                 <td>
+        //                   ` + isPaid + `
+        //                 </td>
+        //                 <td>
+        //                   ` + element.totalQtyProduct + `
+        //                 </td>
+        //                 <td>
+        //                   <div class="btn btn-sm `+element.statusOrderColorButton+`">`+element.statusOrderName+`</div>
+        //                 </td>
+        //                 <td>
+        //                   <a href="{{ url('admin/pos/history-order') }}/` + element.orderCode + `" class="btn btn-sm btn-primary">Lihat Detail</a>
+        //                   ` + print + `
+        //                 </td>
+        //               </tr>
+        //             `);
+        //         });
 
-                $("#datatable").DataTable();
-            }
+        //         $("#datatable").DataTable();
+        //     }
 
-            function refreshElement() {
-                $("#bodyTable").html("")
-                let value = {
-                    params: params
-                }
-                $.ajax({
-                    type: "POST",
-                    processData: false,
-                    contentType: 'application/json',
-                    cache: false,
-                    url: "{{ url('api/get-data-order') }}",
-                    data: JSON.stringify(value),
-                    dataType: "json",
-                    enctype: 'multipart/form-data',
-                    success: function (response) {
-                        Data = response;
+        //     function refreshElement() {
+        //         $("#bodyTable").html("")
+        //         let value = {
+        //             params: params
+        //         }
+        //         $.ajax({
+        //             type: "POST",
+        //             processData: false,
+        //             contentType: 'application/json',
+        //             cache: false,
+        //             url: "{{ url('api/get-data-order') }}",
+        //             data: JSON.stringify(value),
+        //             dataType: "json",
+        //             enctype: 'multipart/form-data',
+        //             success: function (response) {
+        //                 Data = response;
                         
-                    },
-                    error: function (response) {
+        //             },
+        //             error: function (response) {
 
-                    },
-                    complete: function(data){
-                      renderElement(Data);
-                    }
-                });
+        //             },
+        //             complete: function(data){
+        //               renderElement(Data);
+        //             }
+        //         });
 
-                // $("#datatable").DataTable();
-            }
-        })
+        //         // $("#datatable").DataTable();
+        //     }
+        // })
 
     </script>
     @endslot
