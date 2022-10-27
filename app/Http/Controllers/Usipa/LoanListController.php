@@ -233,7 +233,6 @@ class LoanListController extends BaseAdminController
         );
         $loanCountHistory = LoanHistory::where('loan_id', $loan->id)->count() - 1;
         $data['title'] = 'Simulasi Pinjaman';
-        // $data['data'] = $loanSimulation['data'];
         $data['lastrow'] = $loanSimulation['lastrow'];
         $data['loan'] = $loan;
         $new_data = [];

@@ -144,7 +144,7 @@
                 @foreach ($data as $index => $item)
                     <tr>
                         <td>{{ $item['cicilan_ke'] }}</td>
-                        <td style="text-align: left !important;">{{ $item['tgl_tagih'] }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item['tgl_tagih_raw'])->format('d/m/Y') }}</td>
                         <td>{{ $item['saldo_hutang'] }}</td>
                         <td>{{ $item['pokok'] }}</td>
                         <td>{{ $item['margin_kop'] }}</td>
