@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Opname;
 use App\Models\OpnameDetail;
 use App\Models\Product;
 use App\Models\Store;
 use App\Repositories\ProductStockRepositories;
 use App\Services\HistoryStockService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +30,7 @@ class OpnameController extends Controller
         $data['stocks'] = (new ProductStockRepositories())->indexStock();
         $data['opnames'] = Opname::latest()->get();
         $data['stores'] = Store::get();
+        $data['categories'] = Category::latest()->get();
 
         return view('admin.pages.toko.opname.index', $data);
     }
@@ -178,8 +182,19 @@ class OpnameController extends Controller
           ->make(true);
     }
 
-    public function printFormOpname($storeId){
-      $data['stock'] = (new ProductStockRepositories())->indexStock($storeId);
-      dd($data);
+    public function printFormOpname(Request $request){
+      if($request->mode == "orderToday"){
+        $data['opname'] = (new ProductStockRepositories())->getProdukFromOrderToday($request->storeId);
+      }elseif ($request->mode == "category") {
+        $data['opname'] = (new ProductStockRepositories())->getProductByCategoryId($request->storeId, $request->categoryId);
+      }elseif ($request->mode == "allProduct") {
+        $data['opname'] = (new ProductStockRepositories())->indexStock($request->storeId);
+      }
+      else{
+        $data['opname'] = [];
+      }
+      // return view('admin.export.PDF.opname', $data);
+      $pdf = Pdf::loadView('admin.export.PDF.opname', $data);
+      return $pdf->download("opname-". date("YYYY-MM-DD") .".pdf");
     }
 }

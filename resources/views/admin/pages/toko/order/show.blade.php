@@ -18,8 +18,10 @@
                             <tbody>
                                 <tr>
                                     <td class="text-start">Nama Pemohon</td>
-                                    <td class="text-end"><span
-                                            class="fw-bold ms-auto">{{ $order->transaction->requester->full_name }}</span>
+                                    <td class="text-end">
+                                      @if ($order->transaction->requester !== null)
+                                      <span class="fw-bold ms-auto">{{ $order->transaction->requester->full_name }}</span>
+                                      @endif
                                     </td>
                                 </tr>
                                 <tr>
