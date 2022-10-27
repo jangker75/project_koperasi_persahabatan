@@ -33,6 +33,7 @@ use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
 use App\Models\CompanyBalance;
 use App\Services\DynamicImageService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -128,7 +129,7 @@ Route::group([
       Route::resource('promo', PromoController::class);
 
       Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
-      Route::get('print-form-opname/{storeId}', [OpnameController::class, 'printFormOpname']);
+      Route::get('print-form-opname', [OpnameController::class, 'printFormOpname']);
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
@@ -217,7 +218,18 @@ Route::group([
 Route::get('image/{filename?}', [DynamicImageService::class, 'showImage'])->where('filename', '.*')
         ->name('showimage')->middleware('auth'); //show image
 
-//Redirect all wild domain
-Route::get('{any}', function () {
-    return redirect(route('admin.dashboard'));
-})->where('any', '.*');
+Route::get("create-data", function(){
+  for ($i=0; $i < 200; $i++) { 
+    $pro = rand(1,3386);
+    $cat = rand(1,20);
+
+    DB::table('category_has_product')->insert([
+      'category_id' => $cat,
+      'product_id' => $pro
+    ]);
+  }
+});
+// //Redirect all wild domain
+// Route::get('{any}', function () {
+//     return redirect(route('admin.dashboard'));
+// })->where('any', '.*');
