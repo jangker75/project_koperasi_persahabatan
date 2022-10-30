@@ -109,9 +109,9 @@
           width:10%;
           text-align: center;
         }
-        .col-desc{
+        /* .col-desc{
           width: 40%;
-        }
+        } */
     </style>
 </head>
 
@@ -142,6 +142,9 @@
                 <th class="col-name">Nama</th>
                 <th class="col-sku">SKU</th>
                 <th class="col-data">Data</th>
+                @if (request('mode') == 'orderToday')
+                  <th>Jumlah terjual</th>
+                @endif
                 <th class="col-temuan">Jumlah Temuan</th>
                 <th class="col-diff">Jumlah Perbedaan</th>
                 <th class="col-desc">Keterangan</th>
@@ -154,6 +157,9 @@
                   <td>{{ $opnam->name }}</td>
                   <td>{{ $opnam->sku }}</td>
                   <td class="col-data">{{ $opnam->qty }}</td>
+                  @if (request('mode') == 'orderToday')
+                    <td style="text-align: center;">{{ $opnam->qtyOrder }}</td>
+                  @endif
                   <td></td>
                   <td></td>
                   <td></td>

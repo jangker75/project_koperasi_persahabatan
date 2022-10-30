@@ -193,7 +193,8 @@ class ProductStockRepositories{
     $sql = "
       SELECT
         products.id,
-        products.sku, 
+        products.sku,
+        order_details.qty as qtyOrder, 
         order_details.product_name as name,
         stocks.qty
       FROM orders
