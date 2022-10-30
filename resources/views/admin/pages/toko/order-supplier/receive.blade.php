@@ -289,7 +289,7 @@
                   }
                   element.subtotal = element.receiveQty * element.pricePerUnit;
                   element.quantityAll = element.receiveQty * element.quantityPerUnit;
-                  element.newCost = Math.round((element.subtotal/element.quantityAll)*10)/10;
+                  element.newCost = Math.round((element.subtotal/element.quantityAll));
                   element.newProfit = element.newRevenue - element.newCost;
                   element.newMargin = Math.round((element.newProfit*100/element.newRevenue)*10)/10;
                   return true;
@@ -314,7 +314,6 @@
               data: detail
             }
 
-            console.log(params);
             $.ajax({
                   type: "POST",
                   processData: false,
