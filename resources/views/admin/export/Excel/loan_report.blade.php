@@ -11,6 +11,7 @@
             padding: 5px;
             border: 1px solid black;
             border-collapse: collapse;
+            font-size: 11px;
         }
         .logo-koperasi {
             position: absolute;
@@ -34,6 +35,7 @@
                 <th>NIP</th>
                 <th>Nama Karyawan</th>
                 <th>No Kontrak</th>
+                <th>Tipe Kontrak</th>
                 <th>Pokok</th>
                 <th>Bunga</th>
                 <th>Adm</th>
@@ -43,15 +45,16 @@
         <tbody>
             @foreach ($loans as $key => $loan)
                 <tr>
-                    <td colspan="9" style="font-weight: bold">Tanggal : {{ $key }}</td>
+                    <td colspan="10" style="font-weight: bold">Tanggal : {{ $key }}</td>
                 </tr>
                 @foreach ($loan as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->employee->nip }}</td>
-                        <td>{{ $item->employee->nik }}</td>
+                        <td style="width: 7%;">{{ $item->employee->nik }}</td>
                         <td>{{ $item->employee->full_name }}</td>
                         <td>{{ $item->transaction_number }}</td>
+                        <td>{{ $item->contracttype->name }}</td>
                         <td>{{ format_uang($item->remaining_amount) }}</td>
                         <td>{{ format_uang($item->actual_interest_amount) }}</td>
                         <td>{{ format_uang($item->admin_fee) }}</td>
@@ -59,7 +62,7 @@
                     </tr>
                 @endforeach
                 <tr style="font-weight: bold; border-bottom: 4px double black;">
-                    <td style="text-align: right;" colspan="5">Total Tanggal {{ $key }} :</td>
+                    <td style="text-align: right;" colspan="6">Total Tanggal {{ $key }} :</td>
                     <td>{{ format_uang(collect($loan)->sum('remaining_amount')) }}</td>
                     <td>{{ format_uang(collect($loan)->sum('actual_interest_amount')) }}</td>
                     <td>{{ format_uang(collect($loan)->sum('admin_fee')) }}</td>
