@@ -112,11 +112,11 @@ class OrderSupplierController extends Controller
           }
           DetailOrderSupplier::whereNotIn('id', $ids)->delete();
           DB::commit();
-          $response['message'] = "Tiket berhasil diedit";
+          $response['message'] = "Tiket berhasil diterima";
           return response()->json($response, 200);
         } catch (QueryException $e) {
           DB::rollBack();
-          $response['message'] = "Tiket gagal dibuat";
+          $response['message'] = "Tiket gagal diterima";
           return response()->json($response, 500);
         }
     }
@@ -204,11 +204,11 @@ class OrderSupplierController extends Controller
         
         // (new CompanyService())->addDebitBalance($orderSupplier->total, 'store_balance', 'order-supplier kode : '. $orderSupplier->order_supplier_code);
         
-        // if($request->isPaid == true || $request->isPaid == 1){
-        //   $orderSupplier->is_paid == true;
-        // }else{
-        //   $orderSupplier->is_paid == false;
-        // }
+        if($request->isPaid == true || $request->isPaid == 1){
+          $orderSupplier->is_paid == true;
+        }else{
+          $orderSupplier->is_paid == false;
+        }
         $orderSupplier->total = array_sum($subtotal);
         $orderSupplier->status_id = $status->id;
         $orderSupplier->save();
@@ -223,5 +223,28 @@ class OrderSupplierController extends Controller
         return response()->json($response, 500);
       }
       
+    }
+
+    public function changeToPaid($id){
+      try {
+        $orderSupplier = OrderSupplier::find($id);
+        if(!$orderSupplier){
+          throw new ModelNotFoundException('Order Supplier not found');
+        }
+        $statusReceive = MasterDataStatus::where('name', 'Receive')->first();
+        if($orderSupplier->status_id == $statusReceive->id){
+          throw new ModelNotFoundException('Data belum berstatus "receive"');
+        }
+        if($orderSupplier->is_paid == 1){
+          throw new ModelNotFoundException('order ini sudah dibayar');
+        }
+
+        $orderSupplier->is_paid = true;
+        $orderSupplier->save();
+      } catch (QueryException $e) {
+          DB::rollBack();
+          $response['message'] = "Tiket gagal dibayar";
+          return response()->json($response, 500);
+        }
     }
 }

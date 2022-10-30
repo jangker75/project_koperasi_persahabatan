@@ -51,9 +51,9 @@
                                             <div class="btn btn-sm btn-primary-light">{{ $order->status->name }}</div>
                                           </td>
                                           <td>
-                                            <a href="{{ route("admin.order-supplier.show", $order->id) }}" class="btn btn-sm mb-1 me-1 btn-info">Lihat Detail</a>
-                                            @if (!$order->is_paid)
-                                            <a href="{{ route("admin.order-supplier.show", $order->id) }}" class="btn btn-sm mb-1 me-1 btn-warning">Ubah Ke Lunas</a>
+                                            <a href="{{ route("admin.order-supplier.show", $order->id) }}" target="_blank" class="btn btn-sm mb-1 me-1 btn-info">Lihat Detail</a>
+                                            @if (($order->is_paid == null || $order->is_paid == 0) && $order->status->name == "Receive")
+                                              <div class="btn btn-sm mb-1 me-1 btn-warning btn-paid" data-id="{{ $order->id }}">Ubah Ke Lunas</div>
                                             @endif
                                           </td>
                                         </tr>
@@ -73,6 +73,7 @@
     <x-slot name="scriptVendor">
         <script src="{{ asset('/assets/plugins/fileuploads/js/fileupload.js') }}"></script>
         <script src="{{ asset('../assets/plugins/select2/select2.full.min.js') }}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </x-slot>
 
     @slot('script')
@@ -110,6 +111,47 @@
                 if (value > 4) {
                     $(this).closest(".card-search-product").toggle();
                 }
+            })
+
+            $("body").on("click", ".btn-paid", function(){
+              let id = $(this).data('id');
+              
+              Swal.fire({
+                title: 'Apa anda yakin?',
+                text: "Status akan diubah menjadi lunas",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjut ubah status'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  let url = "{{ url('api/order-supplier-paid') }}/" + id
+                  $.ajax({
+                      type: "GET",
+                      url: url,
+                      success: function (response) {
+                        swal({
+                            title: "Sukses",
+                            text: response.message,
+                            type: "success"
+                        });
+                          
+                          setTimeout(function () {
+                              // window.location.replace("{{ url('admin/toko/order-supplier') }}");
+                          }, 1000)
+                      },
+                      error: function (response) {
+                        console.log(response)
+                          swal({
+                              title: "Gagal",
+                              text: response.responseJSON.message,
+                              type: "error"
+                          });
+                      }
+                  });
+                }
+              })
             })
         })
 

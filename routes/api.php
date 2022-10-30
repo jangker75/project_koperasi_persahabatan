@@ -66,6 +66,7 @@ Route::post('transfer-stock-receive', [TransferStockController::class, 'receiveS
 Route::get('order-supplier-items/{id}', [OrderSupplierController::class, 'getDetailById']);
 // Route::post('order-supplier-confirm', [OrderSupplierController::class, 'confirmStock']);
 Route::post('order-supplier-receive', [OrderSupplierController::class, 'receiveOrder']);
+Route::get('order-supplier-paid/{id}', [OrderSupplierController::class, 'changeToPaid']);
 
 
 // opname
