@@ -178,6 +178,9 @@
 
             $("#submitPrint").click(function(){
               let url = "{{ url('admin/toko/print-form-opname') }}?storeId="+printStoreId+"&mode="+printMode;
+              if(printMode == 'category'){
+                url = url + "&categoryId=" + printCategoryId;
+              }
               window.open(url, "", "width=800,height=400");
             })
         })
