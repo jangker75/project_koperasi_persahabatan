@@ -165,6 +165,7 @@ class LoanService
         $totalIncome = 0;
         $currentInterest = 0;
         $result = [];
+        
         for ($index = 0; $index <= $totalPayMonth; $index++) {
             if ($index != 0) {
                 $currentTotalLoanAmount -= $totalPrincipalAmount;
@@ -198,6 +199,7 @@ class LoanService
             $tgl_tagih = Carbon::parse($firstPaymentDate)->addMonths($index * $payPerXMonth);
             $result["data"][] = [
                 "cicilan_ke" => $index +1,
+                "tgl_tagih_raw" => $tgl_tagih,
                 "tgl_tagih" => format_tanggal_bulan_tahun($tgl_tagih),
                 "saldo_hutang" => format_uang_no_prefix($currentTotalLoanAmount),
                 "pokok" => format_uang_no_prefix($totalPrincipalAmount),

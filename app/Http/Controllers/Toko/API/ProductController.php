@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function searchProduct(Request $request){
       try {
         $product = ProductStockRepositories::findProductOnStockByKeyword($request->keyword, $request->notInListProduct, $request->originStore);
-
+        
         if(!$product){
           $data['message'] = "Failed Search Product";
           return response()->json($data, 500);

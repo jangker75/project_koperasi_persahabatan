@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Toko;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Opname;
 use App\Models\OpnameDetail;
 use App\Models\Product;
 use App\Models\Store;
 use App\Repositories\ProductStockRepositories;
 use App\Services\HistoryStockService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class OpnameController extends Controller
 {
@@ -26,6 +30,7 @@ class OpnameController extends Controller
         $data['stocks'] = (new ProductStockRepositories())->indexStock();
         $data['opnames'] = Opname::latest()->get();
         $data['stores'] = Store::get();
+        $data['categories'] = Category::latest()->get();
 
         return view('admin.pages.toko.opname.index', $data);
     }
@@ -149,8 +154,47 @@ class OpnameController extends Controller
         
     }
 
-    public function printFormOpname($storeId){
-      $data['stock'] = (new ProductStockRepositories())->indexStock($storeId);
-      dd($data);
+    public function getIndexDatatables()
+    {
+        $query = Opname::query()
+        ->select(
+          'opnames.*',
+          DB::raw('if(opnames.is_commit = 1, "Commit", "Placed") as status'), 
+          DB::raw('COUNT(opname_details.id) as countDetail'),
+          'stores.name as storeName',
+          DB::raw('IF(employees.first_name is null, "-", concat(employees.first_name, " ", employees.last_name)) as employee')
+          )
+        ->leftJoin('opname_details', 'opnames.id', '=', 'opname_details.opname_id')
+        ->leftJoin('employees', 'opnames.employee_id', '=', 'employees.id')
+        ->leftJoin('stores', 'opnames.store_id', '=', 'stores.id')
+        ->groupBy('opnames.id');
+        
+        $datatable = new DataTables();
+        return $datatable->eloquent($query)
+          ->addIndexColumn(true)
+          ->addColumn('actions', function($row){
+              $btn = '<a href="'.route('admin.opname.show', $row).'"
+                class="btn btn-primary btn-sm me-1" data-toggle="tooltip" data-placement="top"
+                target="_blank" title="Lihat Detail Produk">Lihat Detail</a>';
+              return $btn;
+          })
+          ->rawColumns(['actions'])
+          ->make(true);
+    }
+
+    public function printFormOpname(Request $request){
+      if($request->mode == "orderToday"){
+        $data['opname'] = (new ProductStockRepositories())->getProdukFromOrderToday($request->storeId);
+      }elseif ($request->mode == "category") {
+        $data['opname'] = (new ProductStockRepositories())->getProductByCategoryId($request->storeId, $request->categoryId);
+      }elseif ($request->mode == "allProduct") {
+        $data['opname'] = (new ProductStockRepositories())->indexStock($request->storeId);
+      }
+      else{
+        $data['opname'] = [];
+      }
+      // return view('admin.export.PDF.opname', $data);
+      $pdf = Pdf::loadView('admin.export.PDF.opname', $data);
+      return $pdf->download("opname-". date("YYYY-MM-DD") .".pdf");
     }
 }

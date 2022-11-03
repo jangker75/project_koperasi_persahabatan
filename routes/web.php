@@ -21,6 +21,7 @@ use App\Http\Controllers\Toko\PaymentMethodController;
 use App\Http\Controllers\Toko\PriceController;
 use App\Http\Controllers\toko\PrintReceiptController;
 use App\Http\Controllers\Toko\ProductController;
+use App\Http\Controllers\Toko\PromoController;
 use App\Http\Controllers\Toko\ReturnSupplierController;
 use App\Http\Controllers\Toko\StoreController;
 use App\Http\Controllers\Toko\SupplierController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\Usipa\LoanListController;
 use App\Http\Controllers\Usipa\LoanSubmissionController;
 use App\Models\CompanyBalance;
 use App\Services\DynamicImageService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -99,6 +101,7 @@ Route::group([
     Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printReceipt'])->name('print-receipt');
     Route::get('pos/history-order', [OrderController::class, 'index'])->name('order.index');
     Route::get('pos/history-order/{orderCode}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('pos/paid-order/{orderCode}', [OrderController::class, 'paid'])->name('order.paid');
     Route::get('pos/history-paylater', [PaylaterController::class, 'index'])->name('paylater.index');
     Route::get('pos/history-paylater/{staffId}', [PaylaterController::class, 'show'])->name('paylater.show');
 
@@ -123,9 +126,10 @@ Route::group([
       Route::resource('payment-method', PaymentMethodController::class);
       Route::resource('opname', OpnameController::class);
       Route::resource('return-supplier', ReturnSupplierController::class);
+      Route::resource('promo', PromoController::class);
 
       Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
-      Route::get('print-form-opname/{storeId}', [OpnameController::class, 'printFormOpname']);
+      Route::get('print-form-opname', [OpnameController::class, 'printFormOpname']);
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
@@ -167,6 +171,7 @@ Route::group([
     Route::post('loan-upload-attachment',[LoanListController::class, 'uploadAttachment'])->name('loan.upload.attachment');
     Route::post('loan-destroy-attachment',[LoanListController::class, 'destroyAttachment'])->name('loan.destroy.attachment');
     
+    
     Route::resource('company-balance', CompanyBalanceController::class);
     Route::get('company-balance-trf-employee', [CompanyBalanceController::class, 'createTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee');
     Route::post('company-balance-trf-employee', [CompanyBalanceController::class, 'storeTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee.store');
@@ -178,6 +183,7 @@ Route::group([
     Route::get('download-bukti-pelunasan/{loan}', [LoanListController::class, 'downloadBuktiPelunasanPDF'])->name('download.bukti-pelunasan');
     Route::get('download-form-akad/{loan}', [LoanListController::class, 'downloadFormAkadPDF'])->name('download.form-akad');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
+    Route::get('download-loan-list-simulation/{loan}', [LoanListController::class, 'downloadFormSimulationPDF'])->name('download.loan-list-simulation');
     Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
     // Download PDF End
 
@@ -195,6 +201,8 @@ Route::group([
     // End App Setting End
 
     // Datatables Route Start
+    Route::get('datatables-order', [OrderController::class, 'getIndexDatatables'])->name('order.index.datatables');
+    Route::get('datatables-opname', [OpnameController::class, 'getIndexDatatables'])->name('opname.index.datatables');
     Route::get('datatables-product', [ProductController::class, 'getIndexDatatables'])->name('product.index.datatables');
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
@@ -212,7 +220,18 @@ Route::group([
 Route::get('image/{filename?}', [DynamicImageService::class, 'showImage'])->where('filename', '.*')
         ->name('showimage')->middleware('auth'); //show image
 
-//Redirect all wild domain
-Route::get('{any}', function () {
-    return redirect(route('admin.dashboard'));
-})->where('any', '.*');
+Route::get("create-data", function(){
+  for ($i=0; $i < 200; $i++) { 
+    $pro = rand(1,3386);
+    $cat = rand(1,20);
+
+    DB::table('category_has_product')->insert([
+      'category_id' => $cat,
+      'product_id' => $pro
+    ]);
+  }
+});
+// //Redirect all wild domain
+// Route::get('{any}', function () {
+//     return redirect(route('admin.dashboard'));
+// })->where('any', '.*');

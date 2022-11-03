@@ -18,16 +18,17 @@
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
         // dom: 'lBfrtip',
         ajax: {
-            url: "{{ route('admin.product.index.datatables') }}",
+            url: "{{ route('admin.opname.index.datatables') }}",
         },
         columns: [
             { data: "id", name: "id", visible: false},
             { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
-            { data: "name", name: "name" },
-            { data: "sku", name: "sku" },
-            { data: "unit_measurement", code: "unit_measurement" },
-            { data: "brandName", code: "brandName" },
-            { data: "price", code: "price" },
+            { data: "opname_code", name: "opname_code" },
+            { data: "created_at", name: "created_at" },
+            { data: "employee", name: "employee" },
+            { data: "storeName", name: "storeName" },
+            { data: "countDetail", name: "countDetail" },
+            { data: "status", name: "status" },
             { data: "actions", name: "actions" },
         ],
         language: {

@@ -148,9 +148,15 @@ class ProductStockRepositories{
       SELECT
         stocks.product_id AS id,
         products.name AS name,
-      products.sku AS sku,
+        products.sku AS sku,
         (SELECT GROUP_CONCAT(stores.name)  FROM stores) AS store_name,
-        GROUP_CONCAT(stocks.qty) AS qty
+        stocks.qty AS qty,
+        JSON_ARRAY(
+            JSON_OBJECT(
+              'store_id', stocks.store_id,
+              'quantity' , stocks.qty
+            )
+        ) AS qtyResult
       FROM stocks 
         LEFT JOIN products ON stocks.product_id = products.id AND products.deleted_at IS NULL
       " . $whereClause . "
@@ -160,8 +166,66 @@ class ProductStockRepositories{
         stocks.store_id ASC
     ";
 
+    return DB::select(DB::raw($sql));
+  }
+
+  public function indexProduct(){
+    $sql = "
+      SELECT
+        products.id AS id,
+        products.name AS name,
+        products.sku AS sku,
+        products.unit_measurement AS unit_measurement,
+        prices.revenue AS price,
+        if(brands.name IS NULL, '--', brands.name) AS brand
+      FROM products
+      LEFT JOIN prices ON products.id = prices.product_id AND prices.deleted_at IS NULL AND prices.is_active = 1
+      LEFT JOIN brands ON products.brand_id = brands.id AND brands.deleted_at IS NULL
+      GROUP BY 
+        products.id
+    ";
     $data = DB::select(DB::raw($sql));
 
     return $data;
+  }
+
+  public function getProdukFromOrderToday($storeId){
+    $sql = "
+      SELECT
+        products.id,
+        products.sku,
+        order_details.qty as qtyOrder, 
+        order_details.product_name as name,
+        stocks.qty
+      FROM orders
+        LEFT JOIN order_details ON orders.id = order_details.order_id AND order_details.deleted_at IS NULL
+        LEFT JOIN products ON order_details.product_name = products.name
+        LEFT JOIN stocks ON stocks.store_id = " . $storeId . " AND products.id = stocks.product_id
+      WHERE 
+        DATE(orders.order_date) = CURDATE() AND
+        orders.deleted_at IS NULL	
+      GROUP BY order_details.product_name
+    ";
+
+    return DB::select(DB::raw($sql));
+  }
+
+  public function getProductByCategoryId($storeId, $categoryId){
+    $sql = "
+      SELECT 
+        products.id,
+        products.sku,
+        products.name,
+        stocks.qty
+      FROM categories
+      LEFT JOIN category_has_product ON categories.id = category_has_product.category_id
+      LEFT JOIN products ON category_has_product.product_id = products.id
+      LEFT JOIN stocks ON products.id = stocks.product_id AND stocks.store_id = " . $storeId . "
+      WHERE
+        categories.id = " . $categoryId . " AND categories.deleted_at IS NULL
+      GROUP BY category_has_product.product_id
+    ";
+
+    return DB::select(DB::raw($sql));
   }
 }

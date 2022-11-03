@@ -14,9 +14,12 @@ use App\Models\Product;
 use App\Models\Stock;
 use App\Models\Store;
 use App\Models\Supplier;
+use App\Repositories\ProductStockRepositories;
 use App\Services\DynamicImageService;
 use App\Services\HistoryStockService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class ProductController extends BaseAdminController
 {
@@ -207,32 +210,28 @@ class ProductController extends BaseAdminController
     public function getIndexDatatables()
     {
         $query = Product::query()
-        ->with('price')
-        ->get();
-
-        dd($query);
-        // $datatable = new DataTables();
-        // return $datatable->eloquent($query)
-        //   ->addIndexColumn(true)
-        //   ->editColumn('salary', function($row){
-        //       return format_uang($row->salary);
-        //   })
-        //   ->addColumn('actions', function($row){
-        //       $btn = '<div class="btn-list align-center d-flex justify-content-center">';
-        //       $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="'. route("admin.employee.show", [$row]) .'" type="button">View</a>';
-        //       $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="'. route("admin.employee.edit", [$row]) .'" type="button">Edit</a>';
-        //       $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
-        //                   <i class="fa fa-trash"></i>
-        //               </a>
-        //               <form method="POST" action="' . route('admin.employee.destroy', [$row]) . '">
-        //                   <input name="_method" type="hidden" value="delete">
-        //                   <input name="_token" type="hidden" value="' . Session::token() . '">
-        //               </form>';
-        //       $btn = $btn . '</div>';
-        //       return $btn;
-        //   })
-        //   ->rawColumns(['actions'])
-        //   ->make(true);
+        ->select(
+          'products.*',
+          DB::raw('if(brands.name IS NULL, "-", brands.name) as brandName'), 
+          DB::raw('concat("Rp. ", format(prices.revenue, 0)) as price'))
+        ->leftJoin('brands', 'products.brand_id', '=', 'brands.id')
+        ->leftJoin('prices', function($join){
+          $join->on('products.id', '=', 'prices.product_id');
+          $join->on('prices.is_active','=', DB::raw("'". 1 . "'"));
+        })
+        ->groupBy('products.id');
+        
+        $datatable = new DataTables();
+        return $datatable->eloquent($query)
+          ->addIndexColumn(true)
+          ->addColumn('actions', function($row){
+              $btn = '<a href="'.route('admin.product.show', $row).'"
+                class="btn btn-primary btn-sm me-1" data-toggle="tooltip" data-placement="top"
+                target="_blank" title="Lihat Detail Produk">Lihat Detail</a>';
+              return $btn;
+          })
+          ->rawColumns(['actions'])
+          ->make(true);
     }
 
     public function updateManualStock($productId, Request $request){

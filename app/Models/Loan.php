@@ -62,6 +62,14 @@ class Loan extends Model
         : $this->interest_amount;
         return $interest_amount;
     }
+    public function getFirstPaymentAmountAttribute()
+    {
+        $interest_amount = ($this->interest_amount_type == 'percentage') 
+        ? $this->interest_amount / 100 * ($this->total_loan_amount)
+        : $this->interest_amount;
+        $totalFirstPayment = $this->payment_tenor + $interest_amount;
+        return $totalFirstPayment;
+    }
 
     public function getLastPeriodAttribute()
     {

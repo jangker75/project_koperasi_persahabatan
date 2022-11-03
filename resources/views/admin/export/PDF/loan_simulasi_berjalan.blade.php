@@ -34,10 +34,13 @@
             padding-top: 7px;
             padding-bottom: 7px;
             border: 2px solid black;
+            font-size: 14px;
         }
         table.table-simulasi td{
             padding: 5px;
             border: 1px solid black;
+            font-size: 13px;
+            text-align: center;
         }
     </style>
 </head>
@@ -67,27 +70,27 @@
                         <tr>
                             <td>NIK</td>
                             <td>:</td>
-                            <td>______________</td>
+                            <td>{{ $loan->employee->nik }}</td>
                         </tr>
                         <tr>
-                            <td>Nama</td>
+                            <td>{{ __('employee.name') }}</td>
                             <td>:</td>
-                            <td>______________</td>
+                            <td>{{ $loan->employee->full_name }}</td>
                         </tr>
                         <tr>
-                            <td>Jenis Kontrak</td>
+                            <td>Jenis Pinjaman</td>
                             <td>:</td>
-                            <td>______________</td>
+                            <td>{{ $loan->contracttype->name }}</td>
                         </tr>
                         <tr>
                             <td>Bunga</td>
                             <td>:</td>
-                            <td>______________</td>
+                            <td>{{ $loan->interest_amount }} Per {{ $loan->pay_per_x_month }} Bulan</td>
                         </tr>
                         <tr>
                             <td>Jumlah Diterima</td>
                             <td>:</td>
-                            <td>______________</td>
+                            <td>{{ format_uang($loan->received_amount) }}</td>
                         </tr>
                     </table>
                 </td>
@@ -106,7 +109,7 @@
                         <tr>
                             <td>Simpanan Khusus</td>
                             <td>:</td>
-                            <td>______________</td>
+                            <td>{{ format_uang($loan->admin_fee) }}</td>
                         </tr>
                         <tr>
                             <td>Margin</td>
@@ -127,32 +130,34 @@
         <table class="table-simulasi" style="width: 100%;">
             <thead>
                 <tr>
-                    <th>Cicilan-ke #</th>
-                    <th>Tgl Tagih</th>
+                    <th style="width: 4%">No</th>
+                    <th style="width: 18%;">Tgl Tagih</th>
                     <th>Sisa Pokok</th>
-                    <th>Pokok</th>
-                    <th>Margin KOP</th>
-                    <th>Simpanan Khusus</th>
-                    <th>Total Cicilan</th>
+                    <th style="width: 12%">Pokok</th>
+                    <th style="width: 12%">Margin KOP</th>
+                    <th style="width: 12%">Simpanan Khusus</th>
+                    <th style="width: 12%">Total Potongan</th>
+                    <th>Status Bayar</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $item)
+                @foreach ($data as $index => $item)
                     <tr>
                         <td>{{ $item['cicilan_ke'] }}</td>
-                        <td>{{ $item['tgl_tagih'] }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item['tgl_tagih_raw'])->format('d/m/Y') }}</td>
                         <td>{{ $item['saldo_hutang'] }}</td>
                         <td>{{ $item['pokok'] }}</td>
                         <td>{{ $item['margin_kop'] }}</td>
                         <td>{{ $item['margin_employee'] }}</td>
                         <td>{{ $item['total_cicilan'] }}</td>
+                        <td>{{ ($loop->last) ? 'Lunas' : $item['status_bayar'] }}</td>
                     </tr>
                 @endforeach
-                    <tr>
-                        <td colspan="5"><b>Total</b></td>
+                    {{-- <tr>
+                        <td colspan="6"><b>Total</b></td>
                         <td>{{ format_uang(str_replace(".","",$lastrow["total_bunga"])) }}</td>
                         <td>{{ format_uang(str_replace(".","",$lastrow["total_cicilan"])) }}</td>
-                    </tr>
+                    </tr> --}}
             </tbody>
         </table>
     </section>

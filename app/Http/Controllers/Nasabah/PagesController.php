@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Models\Promo;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\User;
@@ -27,7 +28,8 @@ class PagesController extends Controller
 
       $employeeId = auth()->user()->employee->id;
       $data['checkDataNasabah'] = (new EmployeeService())->checkDataProfile($employeeId);
-      // dd($checkDataNasabah);
+      $data['promos'] = Promo::where('is_active', 1)->latest()->get();
+      // dd($data);
       return view('nasabah.pages.home', $data);
     }
 

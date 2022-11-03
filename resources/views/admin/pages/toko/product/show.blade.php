@@ -272,7 +272,7 @@
                   break;
                 case "margin":
                   margin = value
-                  profit = cost*margin/(100-margin);
+                  profit = Math.round(cost*margin/(100-margin));
                   break;
                 case "profit":
                   profit = value
@@ -295,7 +295,7 @@
                 revenue = profit + cost;
 
                 $("#cost2").val(formatRupiah(String(cost)));
-                $("#margin2").val(formatRupiah(String(margin)));
+                $("#margin2").val(margin);
                 $("#profit2").val(formatRupiah(String(profit)));
                 $("#revenue2").val(formatRupiah(String(revenue)));
             }
