@@ -9,6 +9,7 @@ use App\Models\ContractType;
 use App\Models\Employee;
 use App\Models\InterestSchemeType;
 use App\Models\Loan;
+use App\Repositories\EmployeeRepository;
 use App\Services\CodeService;
 use App\Services\CompanyService;
 use App\Services\EmployeeService;
@@ -48,9 +49,7 @@ class LoanSubmissionController extends BaseAdminController
     {
         $data = $this->data;
         $data['titlePage'] = 'Pengajuan Pinjaman';
-        $data['employeeList'] = Employee::active()
-        ->select(DB::raw('concat(COALESCE(first_name,""), " ", COALESCE(last_name,"")," (", nik, ")") as name'), 'id')
-        ->pluck('name', 'id');
+        $data['employeeList'] = EmployeeRepository::getListDropdown();
         $data['contractTypeList'] = ContractType::query()
         ->select(DB::raw('concat(name, " (", contract_type_code, ")") as name'), 'id')
         ->pluck('name', 'id');

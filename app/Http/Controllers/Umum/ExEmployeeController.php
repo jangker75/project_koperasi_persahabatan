@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Umum;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Models\Loan;
+use App\Models\Transaction;
+use App\Repositories\PaylaterRepository;
 use App\Services\CompanyService;
 use App\Services\EmployeeService;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -167,6 +170,12 @@ class ExEmployeeController extends BaseAdminController
     {
         $data['employee'] = $employee;
         $data['title'] = "Form Anggota Keluar";
+        $query = Loan::where('employee_id', $employee->id)->where('is_lunas', 0);
+        $data['loanNotPaidPinjamanUang'] = $query->where('contract_type_id', 1)->get();
+        $data['loanNotPaidPinjamanBarang'] = $query->where('contract_type_id', 2)->get();
+        $data['loanNotPaidPinjamanLainnya'] = $query->where('contract_type_id', 3)->get();
+        $data['tokoNotPaidPaylater'] = Transaction::where('requester_employee_id', $employee->id)
+        ->where('is_paid', 0)->get();
         $pdf = Pdf::loadView('admin.export.PDF.form_keluar', $data);
         // return view('admin.export.PDF.form_keluar', $data);
         return $pdf->stream("Form_keluar_".$employee->name.".pdf");

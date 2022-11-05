@@ -176,6 +176,8 @@ Route::group([
     Route::get('company-balance-trf-employee', [CompanyBalanceController::class, 'createTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee');
     Route::post('company-balance-trf-employee', [CompanyBalanceController::class, 'storeTransferSaldoEmployee'])->name('company-balance.transfer-saldo-employee.store');
     Route::get('company-balance-history/{balance_type}', [CompanyBalanceController::class, 'getCompanyBalanceHistory'])->name('get.company.balance.history');
+    Route::get('company-balance-trf-simp-sukarela', [CompanyBalanceController::class, 'createTransferSimpSukarela'])->name('company-balance.transfer-simp-sukarela');
+    Route::post('company-balance-trf-simp-sukarela', [CompanyBalanceController::class, 'storeTransferSimpSukarela'])->name('company-balance.transfer-simp-sukarela.store');
     // Usipa End
 
     // Download PDF Start

@@ -2,6 +2,7 @@
   
 namespace App\Repositories;
 
+use App\Models\Employee;
 use Illuminate\Support\Facades\DB;
 
 class EmployeeRepository{
@@ -38,11 +39,11 @@ class EmployeeRepository{
     $sql = '
         SELECT 
           employees.id,
-          CONCAT(employees.first_name, " ", employees.last_name, " - ", employees.nik) AS fullname,
+          CONCAT(COALESCE(employees.first_name,""), " ", COALESCE(employees.last_name,""), " - ", COALESCE(employees.nik,"")) AS fullname,
           employees.nik as nik
         FROM employees
         WHERE employees.deleted_at IS NULL 
-        AND employees.nik LIKE "' . $keyword . '%" OR employees.first_name LIKE "' . $keyword . '%" OR employees.last_name LIKE "' . $keyword . '%"
+        AND (employees.nik LIKE "' . $keyword . '%" OR employees.first_name LIKE "' . $keyword . '%" OR employees.last_name LIKE "' . $keyword . '%")
         ORDER BY employees.first_name ASC LIMIT 4
     ';
 
@@ -50,7 +51,12 @@ class EmployeeRepository{
 
     return $data;
   }
-
+  public static function getListDropdown(){
+    $q = Employee::active()
+        ->select(DB::raw('concat(COALESCE(first_name,""), " ", COALESCE(last_name,"")," (", nik, ")") as name'), 'id')
+        ->pluck('name', 'id');
+      return $q;
+  }
   
 
 }
