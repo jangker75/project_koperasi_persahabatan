@@ -17,6 +17,7 @@
                                 <th>Debit</th>
                                 <th>Saldo Akhir</th>
                                 <th>Keterangan</th>
+                                <th>tanggal_order</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
