@@ -203,11 +203,7 @@
                             <td>:</td>
                             <td><b>{{ format_uang($employee->savings->activity_savings_balance + $employee->savings->voluntary_savings_balance + $employee->savings->principal_savings_balance + $employee->savings->mandatory_savings_balance) }}</b></td>
                         </tr>
-                        <tr>
-                            <td><b>Yang dibayarkan</b></td>
-                            <td>:</td>
-                            <td><b>Rp. ____________</b></td>
-                        </tr>
+                        
                     </table>
                 </td>
                 <td>
@@ -215,22 +211,27 @@
                         <tr>
                             <td>Sisa Pinjaman Uang</td>
                             <td>:</td>
-                            <td>Rp. _____________</td>
+                            <td>{{ format_uang($loanNotPaidPinjamanUang->sum('remaining_amount')) }}</td>
                         </tr>
                         <tr>
                             <td>Sisa Pinjaman Barang</td>
                             <td>:</td>
-                            <td>Rp. _____________</td>
+                            <td>{{ format_uang($loanNotPaidPinjamanBarang->sum('remaining_amount')) }}</td>
                         </tr>
                         <tr>
                             <td>Sisa Pinjaman Lainnya</td>
                             <td>:</td>
-                            <td>Rp. _____________</td>
+                            <td>{{ format_uang($loanNotPaidPinjamanLainnya->sum('remaining_amount')) }}</td>
                         </tr>
                         <tr>
                             <td>Sisa Pinjaman Toko</td>
                             <td>:</td>
-                            <td>Rp. _____________</td>
+                            <td>{{ format_uang($tokoNotPaidPaylater->sum('amount')) }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Yang dibayarkan</b></td>
+                            <td>:</td>
+                            <td><b>Rp. ____________</b></td>
                         </tr>
                     </table>
                 </td>

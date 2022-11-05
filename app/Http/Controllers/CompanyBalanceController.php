@@ -8,6 +8,7 @@ use App\Models\CompanyBalanceHistory;
 use App\Models\Employee;
 use App\Models\Loan;
 use App\Models\LoanHistory;
+use App\Repositories\EmployeeRepository;
 use App\Services\CompanyService;
 use App\Services\EmployeeService;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class CompanyBalanceController extends BaseAdminController
     public function getCompanyBalanceHistory($balance_type)
     {
         $history = CompanyBalanceHistory::where('balance_id', 1)
-        ->{Str::camel($balance_type)}()->get();
+        ->{Str::camel($balance_type)}()->orderBy('created_at', 'desc')->get();
         $history->map(function($data){
             $data->balance_before = format_uang($data->balance_before);
             $data->balance_after = format_uang($data->balance_after);
@@ -73,9 +74,7 @@ class CompanyBalanceController extends BaseAdminController
     public function createTransferSaldoEmployee()
     {
         $data = $this->data;
-        $data['employeeList'] = Employee::active()
-        ->select(DB::raw('concat(first_name, " ", last_name," (", nik, ")") as name'), 'id')
-        ->pluck('name', 'id');
+        $data['employeeList'] = EmployeeRepository::getListDropdown();
         $data['titlePage'] = 'Tarik Saldo dari Nasabah';
         return view('admin.pages.company_balance.transfer_saldo_employee_form', $data);   
     }
@@ -98,5 +97,48 @@ class CompanyBalanceController extends BaseAdminController
             description: $notes);
         (new CompanyService())->addCreditBalance($input['amount'] , $input['company_balance'], $notes);
         return redirect()->route('admin.company-balance.index')->with('success', 'Transfer Saldo sukses');
+    }
+
+    public function createTransferSimpSukarela()
+    {
+        $data = $this->data;
+        $data['employeeList'] = EmployeeRepository::getListDropdown();
+        $data['titlePage'] = 'Tambah/Tarik saldo simpanan Nasabah';
+        $data['transactionType'] = [
+            'debit' => 'Pencairan',
+            'credit' => 'Simpan',
+        ];
+        return view('admin.pages.company_balance.transfer_saldo_simp_sukarela_form', $data);   
+    }
+    public function storeTransferSimpSukarela(Request $request)
+    {
+        $input = $request->validate([
+            "employee_id" => "required",
+            "transaction_type" => "required",
+            "company_balance" => "required",
+            "amount" => "required",
+            "description" => "",
+        ]);
+        $employee = Employee::find($input['employee_id']);
+        $typeTrans = "Pencairan";
+        if($input['transaction_type'] == 'debit'){
+            $notes = $typeTrans . ' Simpanan Sukarela From KOPERASI ('. __('balance_company.'.$input["company_balance"]) . ') To '.$employee->full_name. (($request->input('description') != null) ? '. Description : '. $input['description'] : '');
+            (new EmployeeService())->addDebitBalance(
+                saving_id: $employee->savings->id,
+                value: $input['amount'],
+                saving_type: "voluntary_savings_balance",
+                description: $notes);
+            (new CompanyService())->addDebitBalance($input['amount'] , $input['company_balance'], $notes);
+        }else{
+            $typeTrans = "Penambahan";
+            $notes = $typeTrans. ' Simpanan Sukarela From '.$employee->full_name. ' To KOPERASI ('. __('balance_company.'.$input["company_balance"]) . (($request->input('description') != null) ? '). Description : '. $input['description'] : '');
+            (new EmployeeService())->addCreditBalance(
+                saving_id: $employee->savings->id,
+                value: $input['amount'],
+                saving_type: "voluntary_savings_balance",
+                description: $notes);
+            (new CompanyService())->addCreditBalance($input['amount'] , $input['company_balance'], $notes);
+        }
+        return redirect()->route('admin.company-balance.index')->with('success', $typeTrans. ' Simpanan Sukarela sukses');
     }
 }
