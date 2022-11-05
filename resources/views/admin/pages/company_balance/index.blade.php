@@ -187,7 +187,8 @@
                                     (item.transaction_type == 'credit' ? item.amount : "") + "</td><td>" +
                                     (item.transaction_type == 'debit' ? item.amount : "") + "</td><td>" +
                                     item.balance_after + "</td><td>" +
-                                    item.description + "</td></tr>"
+                                    item.description + "</td><td>" +
+                                    item.transaction_date_order + "</td></tr>"
                             })
                         }
                     }).then(() => {
@@ -203,7 +204,11 @@
                                 searchPlaceholder: 'Search...',
                                 scrollX: "100%",
                                 sSearch: '',
-                            }
+                            },
+                            columnDefs: [
+                                { "orderData": 5, "targets": 0 },
+                                { "visible": false, "targets": 5 },
+                            ]
                         });
                     });
                 })
