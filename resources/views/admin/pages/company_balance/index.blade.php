@@ -8,6 +8,9 @@
             <a href="{{ route('admin.company-balance.transfer-saldo-employee') }}">
                 <button class="btn btn-success">Tarik Saldo dari Nasabah</button>
             </a>
+            <a href="{{ route('admin.company-balance.transfer-simp-sukarela') }}">
+                <button class="btn btn-warning">Tambah/Tarik saldo simpanan Nasabah</button>
+            </a>
         </div>
     </div>
     <div class="row">
@@ -170,6 +173,7 @@
                 $('.balance-card').on('click', function(e){
                     let type = $(this).data('type-balance')
                     $('#table-history-balance-modal tbody tr').remove()
+                    $('#table-history-balance-modal').DataTable().clear().destroy();
                     let tRow = ''
                     $.ajax({
                         type: "get",
@@ -189,8 +193,22 @@
                     }).then(() => {
                         // add data requested to modal body
                         $('#table-history-balance-modal tbody').append(tRow)
+                        $('#table-history-balance-modal').DataTable({
+                            orderCellsTop: true,
+                            fixedHeader: true,
+                            processing: true,
+                            order: [[0, "desc"]],
+                            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                            language: {
+                                searchPlaceholder: 'Search...',
+                                scrollX: "100%",
+                                sSearch: '',
+                            }
+                        });
                     });
                 })
+
+                
             })
         </script>
     @endslot
