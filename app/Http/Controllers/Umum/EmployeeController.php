@@ -224,6 +224,7 @@ class EmployeeController extends BaseAdminController
         $history->map(function ($data) {
             $data->balance_after = format_uang($data->balance_after);
             $data->amount = format_uang($data->amount);
+            $data->transaction_date_order = $data->transaction_date;
             $data->transaction_date = format_hari_tanggal_jam($data->transaction_date);
             return $data;
         });
