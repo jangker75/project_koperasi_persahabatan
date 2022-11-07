@@ -21,7 +21,7 @@
             <div class="card">
                 <div class="card-body p-3 position-relative">
                     <input type="text" name="scanbarcode" autofocus id="scanBarcode"
-                        class="form-control form-control-sm border-primary" placeholder="Masukan Kode SKU">
+                        class="form-control form-control-sm border-primary" placeholder="Masukan Kode SKU" autocomplete="off">
                     <div id="scanBarcodeHelp" class="form-text text-small">Scan Barcode atau Ketik Kode SKU Barang untuk menambah
                         barang atau menambah quantity.</div>
                     <div class="position-absolute w-100">
@@ -205,35 +205,42 @@
 
                 $("#resultSearchProduct").hide();
                 listProductInSearch = [];
-                $("#scanBarcode").keyup(function () {
-                    let keyword = $(this).val();
-                    let storeId = $("#storeId").val();
-                    // console.log(value, storeId);
-
-                    let url = "{{ url('/api/search-product') }}";
-                    let param = {
-                        keyword: keyword,
-                        notInListProduct: '',
-                        originStore: storeId
-                    }
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: JSON.stringify(param),
-                        dataType: "json",
-                        enctype: 'multipart/form-data',
-                        processData: false,
-                        contentType: 'application/json',
-                        cache: false,
-                        success: function (response) {
-                            listProductInSearch = response.product
-                            console.log(listProductInSearch)
-                            renderSearchResult(listProductInSearch);
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(error)
+                $("#scanBarcode").keyup(function (e) {
+                    if (e.keyCode == 13) {
+                        $("#resultSearchProduct").hide();
+                        $(this).trigger("enterKey");
+                    }else{
+                      let keyword = $(this).val();
+                      let storeId = $("#storeId").val();
+                      if(isNaN(parseInt(keyword))){
+                        if(keyword.length > 1){
+                          let url = "{{ url('/api/search-product') }}";
+                          let param = {
+                              keyword: keyword,
+                              notInListProduct: '',
+                              originStore: storeId
+                          }
+                          $.ajax({
+                              type: "POST",
+                              url: url,
+                              data: JSON.stringify(param),
+                              dataType: "json",
+                              enctype: 'multipart/form-data',
+                              processData: false,
+                              contentType: 'application/json',
+                              cache: false,
+                              success: function (response) {
+                                  listProductInSearch = response.product
+                                  console.log(listProductInSearch)
+                                  renderSearchResult(listProductInSearch);
+                              },
+                              error: function (xhr, status, error) {
+                                  console.log(error)
+                              }
+                          });
                         }
-                    });
+                      }
+                    }
                 })
 
                 function renderSearchResult(data){
@@ -332,12 +339,12 @@
                     renderElementCart(productInCart)
                 })
 
-                // $('#elementPaylater').hide()
                 $('#paymentCode').hide()
 
                 $('#buttonPaylater').click(function () {
                     $('#elementPaylater').toggle()
                 })
+
                 $('#paymentMethod').change(function () {
                     if ($(this).val() == 'paylater') {
                         // $('#elementPaylater').show()
@@ -424,6 +431,8 @@
                         $('#bodyCart').html("")
                     }
 
+                    $("#resultSearchProduct").hide();
+
                     const checker = productInCart.find(element => {
                         if (element.sku === value) {
                             element.qty += 1;
@@ -433,7 +442,6 @@
 
                         return false;
                     });
-
 
                     if (checker == undefined) {
                         $.ajax({
@@ -477,12 +485,6 @@
 
 
                 });
-                $('#scanBarcode').keyup(function (e) {
-                    if (e.keyCode == 13) {
-                        $(this).trigger("enterKey");
-                    }
-                });
-
 
                 $('body').on('click', '.delete-cart', function () {
                     let skuNumber = $(this).attr('id');
