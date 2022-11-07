@@ -26,7 +26,7 @@ class ProductStockRepositories{
         LEFT JOIN prices ON products.id = prices.product_id AND prices.is_active = 1 AND prices.deleted_at is null
       WHERE 
         products.deleted_at IS NULL AND
-        products.slug LIKE '%" . $keyword ."%'
+        (products.slug LIKE '%" . $keyword ."%' OR products.sku LIKE '%" . $keyword ."%')
         AND stocks.qty > 0
       ";
 
