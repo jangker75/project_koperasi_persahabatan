@@ -132,6 +132,11 @@
             <div class="card-header">
                 Riwayat
             </div>
+            <div class="row">
+                <div class="d-flex justify-content-end">
+                    <a target="_blank" href="{{ route('admin.download.loan-list-simulation', ['loan' => $loan->id]) }}" id="btnDownloadSimulation" type="button" class="btn btn-success btn-sm"><b>Download Tabel Simulasi</b></a>
+                </div>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">

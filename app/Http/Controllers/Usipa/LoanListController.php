@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Usipa;
 
 use App\Http\Controllers\BaseAdminController;
 use App\Models\Loan;
+use App\Models\LoanHistory;
 use App\Services\DynamicImageService;
 use App\Services\LoanService;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -216,6 +217,35 @@ class LoanListController extends BaseAdminController
             $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT LAINNYA";
         }
         $pdf = Pdf::loadView('admin.export.PDF.form_akad_pinjaman', $data);
+        return $pdf->stream($data['title'].'.pdf');
+    }
+    public function downloadFormSimulationPDF(Loan $loan)
+    {
+        $loanSimulation = (new LoanService())->calculateLoanSimulation(
+            firstPaymentDate: $loan->first_payment_date,
+            totalLoanAmount: $loan->total_loan_amount,
+            interestType: $loan->interest_amount_type,
+            interestScheme: $loan->interestscheme->name,
+            totalPayMonth: $loan->total_pay_month,
+            payPerXMonth: $loan->pay_per_x_month,
+            totalInterestAmount: $loan->interest_amount,
+            profitCompanyRatio: $loan->profit_company_ratio
+        );
+        $loanCountHistory = LoanHistory::where('loan_id', $loan->id)->count() - 1;
+        $data['title'] = 'Simulasi Pinjaman';
+        $data['lastrow'] = $loanSimulation['lastrow'];
+        $data['loan'] = $loan;
+        $new_data = [];
+        foreach ($loanSimulation['data'] as $index => &$item) {
+            $statBayar = "Belum bayar";
+            if($index < $loanCountHistory){
+                $statBayar = "Sudah bayar";
+            }
+            $item['status_bayar'] = $statBayar;
+            $new_data[] = $item;
+        }
+        $data['data'] = $new_data;
+        $pdf = Pdf::loadView('admin.export.PDF.loan_simulasi_berjalan', $data);
         return $pdf->stream($data['title'].'.pdf');
     }
     public function getIndexDatatables()
