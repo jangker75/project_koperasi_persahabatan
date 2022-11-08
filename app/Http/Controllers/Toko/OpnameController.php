@@ -28,9 +28,9 @@ class OpnameController extends Controller
     {
         $data['titlePage'] = 'Kelola Data Opname Stock';
         $data['stocks'] = (new ProductStockRepositories())->indexStock();
-        $data['opnames'] = Opname::latest()->get();
         $data['stores'] = Store::get();
         $data['categories'] = Category::latest()->get();
+        $data['opnames'] = Opname::latest()->get();
 
         return view('admin.pages.toko.opname.index', $data);
     }

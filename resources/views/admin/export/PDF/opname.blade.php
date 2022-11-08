@@ -130,7 +130,7 @@
                 Badan Hukum No. 2149/B.H/I
             </p>
             <p style="margin-top: 50px; margin-bottom: 50px; text-align: center; font-weight: 700">
-                FORMULIR STOCK OPNAME
+                FORMULIR STOCK OPNAME <?php date('DD-MM-YYYY') ?>
             </p>
         </div>
     </section>

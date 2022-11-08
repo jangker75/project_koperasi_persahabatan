@@ -116,7 +116,7 @@
                 elementHtml = elementHtml + `
                 <div class="col-6 px-2">
                     <div class="card shadow border">
-                        <img src="` + "{{ asset('storage') }}/" + element.cover + `" class="card-img-top" alt="">
+                        <img src="` + "{{ asset('storage') }}/" + element.cover + `" class="card-img-top" alt="" style="max-height: 128px; object-fit:cover;">
                         <div class="card-body p-1">
                             <div class="w-100 p-0" style="height: 40px;">
                                 <div class="fw-bold">` + truncateString(element.title, 20) + `</div>

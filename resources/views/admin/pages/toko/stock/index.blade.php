@@ -198,6 +198,39 @@
                     $(this).closest(".card-search-product").toggle();
                 }
             })
+
+            $("#colCategory").hide();
+            let printStoreId = "{{ $stores[0]->id }}";
+            let printMode = "orderToday";
+            let printCategoryId = "{{ $categories[0]->id }}";
+
+            $("#printStoreId").change(function(){
+              printStoreId = $(this).val()
+              console.log(printStoreId)
+            })
+
+            $("#printCategoryId").change(function(){
+              printCategoryId = $(this).val()
+              console.log(printCategoryId)
+            })
+
+            $("#printMode").change(function(){
+              printMode = $(this).val()
+              console.log(printMode)
+              if(printMode == "category"){
+                $("#colCategory").show();
+              }else{
+                $("#colCategory").hide();
+              }
+            })
+
+            $("#submitPrint").click(function(){
+              let url = "{{ url('admin/toko/print-form-opname') }}?storeId="+printStoreId+"&mode="+printMode;
+              if(printMode == 'category'){
+                url = url + "&categoryId=" + printCategoryId;
+              }
+              window.open(url, "", "width=800,height=400");
+            })
         })
 
     </script>
