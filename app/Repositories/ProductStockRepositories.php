@@ -76,6 +76,36 @@ class ProductStockRepositories{
     return $data;
   }
 
+  public static function findProductById($id, $storeId = null){
+    $storeQuery = "";
+
+    if($storeId !== null){
+      $storeQuery = " AND stocks.store_id = " . $storeId . " AND stocks.qty > 0";
+    }
+    
+    $sql = "
+        SELECT
+          products.id AS id,
+          products.name AS title,
+          products.sku AS sku,
+          products.cover,
+          products.description,
+	        products.unit_measurement,
+	        IF(brands.name IS NULL, '--', brands.name) AS brandName,
+          (SELECT prices.revenue FROM prices WHERE prices.product_id = products.id ORDER BY prices.id DESC LIMIT 1) AS price,
+          stocks.qty AS stock
+        FROM 
+          products
+          LEFT JOIN stocks ON products.id = stocks.product_id
+          LEFT JOIN brands ON products.brand_id = brands.id
+        WHERE
+          products.id = " . $id . $storeQuery;
+
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
+
   public static function findProductBySomeSku($sku){
     $sql = "
       SELECT

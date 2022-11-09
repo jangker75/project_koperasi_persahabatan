@@ -44,7 +44,7 @@ class EmployeeRepository{
         FROM employees
         WHERE employees.deleted_at IS NULL 
         AND (employees.nik LIKE "' . $keyword . '%" OR employees.first_name LIKE "' . $keyword . '%" OR employees.last_name LIKE "' . $keyword . '%")
-        ORDER BY employees.first_name ASC LIMIT 4
+        ORDER BY employees.first_name ASC LIMIT 8
     ';
 
     $data = DB::select(DB::raw($sql));
