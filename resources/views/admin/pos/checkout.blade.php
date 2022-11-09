@@ -671,7 +671,7 @@
                 <tr data-sku="` + product.sku + `" data-id="` + product.id + `">
                     <td>
                         <div class="text-center">
-                            <img src="` + product.cover + `" alt="" class="cart-img text-center">
+                            <img src="{{ url('image') }}/` + product.cover + `" alt="" class="cart-img text-center">
                         </div>
                     </td>
                     <td class="fs-10 fw-bold">` + product.title + `</td>
