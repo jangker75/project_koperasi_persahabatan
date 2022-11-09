@@ -308,8 +308,7 @@
                                     discount: 0,
                                     subtotal: response.product.price,
                                     stock: response.product.stock,
-                                    cover: "{{ asset('storage') }}/" + response.product
-                                        .cover
+                                    cover: response.product.cover
   
                                 }
                                 setTimeout(() => {
@@ -470,6 +469,7 @@
                             datatype: "html",
                             success: function (response) {
                                 let toPush = {
+                                    id: response.product.id,
                                     title: response.product.title,
                                     sku: response.product.sku,
                                     price: response.product.price,
@@ -477,8 +477,7 @@
                                     discount: 0,
                                     subtotal: response.product.price,
                                     stock: response.product.stock,
-                                    cover: "{{ asset('storage') }}/" + response.product
-                                        .cover
+                                    cover:  response.product.cover
 
                                 }
                                 productInCart.push(toPush)
@@ -494,11 +493,8 @@
                             }
                         });
                     } else {
-                        let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
-                        valueBefore += 1;
-                        
-                        console.log(checker);
-                        updateSku(value, "qty", valueBefore, checker.subtotal);
+
+                        updateById(checker.id, "qty", checker.qty, checker.subtotal);
                     }
 
 
