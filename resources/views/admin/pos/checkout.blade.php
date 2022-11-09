@@ -262,7 +262,7 @@
                     });
                   }else{
                     let html = `<div class="border d-flex search-click close-click">
-                          <div class="p-4 text-center">produk tidak ditemukan atau stok kosong</div>
+                          <div class="p-4" style="text-align: center;">produk tidak ditemukan atau stok kosong</div>
                         </div>`;
                       
                       $("#resultSearchProduct").append(html)
