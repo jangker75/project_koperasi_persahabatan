@@ -35,7 +35,10 @@ class OrderController extends Controller
         $calculateService = new OrderService();
         $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
 
-        $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
+        $paymentMethod = PaymentMethod::where('name', "like", "%".$request->paymentMethod."%")->first();
+        if(!$paymentMethod){
+          throw new ModelNotFoundException('Payment method tidak ditemukan');
+        }
         $tax = ApplicationSetting::where('name', 'tax')->first();
         $status = 6;
 

@@ -640,7 +640,7 @@
                         error: function (response) {
                             swal({
                                 title: "Gagal",
-                                text: response.message,
+                                text: response.responseJSON.message,
                                 type: "error"
                             });
                         }
