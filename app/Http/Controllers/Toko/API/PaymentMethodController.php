@@ -35,6 +35,7 @@ class PaymentMethodController extends Controller
     {
         try {
             $input = $request->all();
+            $input['name'] = str($input['name'])->lower();
             $PaymentMethod = PaymentMethod::create($input);
 
             return response()->json([
@@ -76,6 +77,7 @@ class PaymentMethodController extends Controller
         try {
             $PaymentMethod = PaymentMethod::find($id);
             $input = $request->all();
+            $input['name'] = str($input['name'])->lower();
             $PaymentMethod->update($input);
             $PaymentMethod->save();
 
