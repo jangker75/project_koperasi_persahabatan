@@ -26,7 +26,7 @@
                         barang atau menambah quantity.</div>
                     <div class="position-absolute w-100">
                         <div class="card position-absolute border border-primary" id="resultSearchProduct"
-                            style="min-height: 12vh; z-index:99;" id="bodyResultSearchProduct">
+                            style="min-height: 12vh; z-index:99; overflow-y: scroll;" id="bodyResultSearchProduct">
                             <a href="" class="border d-flex">
                                 <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="card-img-top"
                                   alt="" style="width: 60px;">
@@ -513,6 +513,12 @@
                     // remove object
                     productInCart.splice(removeIndex, 1);
                     $("tr[data-id=" + idNumber + "]").remove();
+
+                    subtotal = countSubtotal(productInCart)
+                    total = subtotal - discount;
+
+                    $("#subtotalAll").html("Rp " + formatRupiah(String(subtotal)))
+                    $("#total").html("Rp " + formatRupiah(String(total)))
                     
                 });
 
@@ -630,7 +636,7 @@
                             }
                             let cash = $("#cash").val();
                             window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order
-                                .order_code, '_blank');
+                                .order_code, '',"width=800,height=400");
                             // if (response.print == true) {
                             // }
                             setTimeout(function () {
