@@ -190,7 +190,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
-                        @if ($order->transaction->is_paid !== 1)
+                        @if ($order->transaction->is_paid != 1)
                         <a href="{{ route('admin.order.paid', $order->order_code) }}"
                             class="btn btn-info ms-2">Bayar Order</a>
                         @endif
