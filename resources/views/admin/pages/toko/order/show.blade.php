@@ -1,7 +1,7 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
     <div class="row">
         <div class="col-1">
-            <a href="{{ route('admin.request-order.index') }}" class="btn btn-danger">back</a>
+            <a href="{{ route('admin.order.index') }}" class="btn btn-danger">back</a>
         </div>
     </div>
     <div class="row">

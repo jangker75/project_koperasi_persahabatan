@@ -14,14 +14,17 @@
                         <div class="table-responsive">
                             <table class="table table-bordered" id="datatable">
                                 <thead>
+                                  <th></th>
                                   <th>No</th>
-                                  <th>code</th>
+                                  <th>Kode</th>
                                   <th>tanggal</th>
                                   <th>supplier</th>
-                                  <th>status</th>
+                                  <th>toko</th>
+                                  <th>requester</th>
                                   <th>catatan</th>
                                   <th>jumlah produk</th>
-                                  <th>action</th>
+                                  <th>status</th>
+                                  <th>Action</th>
                                 </thead>
                             </table>
                         </div>
@@ -35,6 +38,7 @@
     </x-slot>
 
     @slot('script')
+    @include('admin.pages.toko.return-supplier.index-script-datatable')
     <script>
 
     </script>
