@@ -11,8 +11,8 @@ class ReturnSupplier extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'return_supplier_code', 'submit_employee_id', 'supplier_id', 
-      'note', 'status_return_id', 'status_ticket_id'
+      'return_supplier_code','store_id', 'submit_employee_id', 'supplier_id', 
+      'note', 'is_commit'
     ];
 
     public function details(){

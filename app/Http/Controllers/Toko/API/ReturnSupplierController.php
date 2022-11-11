@@ -13,10 +13,6 @@ class ReturnSupplierController extends Controller
 {
     public function store(Request $request){
       $input = $request->all();
-      $status = MasterDataStatus::where('name', 'waiting')->first();
-      $input['status_return_id'] = $status->id;
-      $input['status_ticket_id'] = $status->id;
-      // dd($input);
       $returnSupplier = ReturnSupplier::create($input);
 
       foreach ($input['items'] as $key => $item) {

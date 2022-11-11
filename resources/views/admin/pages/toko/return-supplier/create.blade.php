@@ -9,13 +9,24 @@
                 <div class="card-body">
                     <form method="post">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-md-6">
                                 <div class="mb-4">
-                                    <label for="supplierId" class="fw-bold">Pilih Supplier Tujuan</label>
+                                    <label for="supplierId" class="fw-bold">Pilih Supplier (Pemasok)</label>
                                     <select class="form-select" name="supplier_id" id="supplierId"
                                         placeholder="Pilih Supplier">
                                         @foreach ($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="mb-4">
+                                    <label for="supplierId" class="fw-bold">Pilih Toko Tujuan</label>
+                                    <select class="form-select" name="store_id" id="storeId"
+                                        placeholder="Pilih Toko">
+                                        @foreach ($stores as $store)
+                                        <option value="{{ $store->id }}">{{ $store->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -87,11 +98,17 @@
         $(document).ready(function () {
             let productInCart = [];
             let supplierId = "{{ $suppliers[0]->id }}";
+            let storeId = "{{ $stores[0]->id }}";
             let note = "--";
 
             $("#supplierId").change(function () {
                 supplierId = $(this).val();
             })
+
+            $("#storeId").change(function () {
+                storeId = $(this).val();
+            })
+            
 
             $("#note").change(function () {
                 note = $(this).val();
@@ -112,33 +129,34 @@
             $("#resultSearchProduct").hide();
 
             listProductInSearch = [];
+
             $("#scanBarcode").keyup(function () {
 
                 let keyword = $(this).val();
-                let storeId = 1;
-
                 let url = "{{ url('/api/search-product') }}";
+
                 let param = {
                     keyword: keyword,
                     notInListProduct: '',
                     originStore: storeId
                 }
+
                 $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: JSON.stringify(param),
-                    dataType: "json",
-                    enctype: 'multipart/form-data',
-                    processData: false,
-                    contentType: 'application/json',
-                    cache: false,
-                    success: function (response) {
-                        listProductInSearch = response.product
-                        renderSearchResult(listProductInSearch);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error)
-                    }
+                  type: "POST",
+                  url: url,
+                  data: JSON.stringify(param),
+                  dataType: "json",
+                  enctype: 'multipart/form-data',
+                  processData: false,
+                  contentType: 'application/json',
+                  cache: false,
+                  success: function (response) {
+                      listProductInSearch = response.product
+                      renderSearchResult(listProductInSearch);
+                  },
+                  error: function (xhr, status, error) {
+                      console.log(error)
+                  }
                 });
             })
 
@@ -178,7 +196,7 @@
                 if (checker == undefined) {
                     $.ajax({
                         type: "GET",
-                        url: "{{ url('/api/product-by-sku') }}?sku=" + value + "&storeId=1",
+                        url: "{{ url('/api/product-by-sku') }}?sku=" + value + "&storeId=" + storeId,
                         cache: "false",
                         datatype: "html",
                         success: function (response) {
@@ -300,6 +318,7 @@
             $("#submit").click(function(){
               let payload = {
                 supplier_id: supplierId,
+                store_id: storeId,
                 submit_employee_id: "{{ auth()->id() }}",
                 note: note,
                 items: productInCart
