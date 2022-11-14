@@ -26,7 +26,7 @@
                         barang atau menambah quantity.</div>
                     <div class="position-absolute w-100">
                         <div class="card position-absolute border border-primary" id="resultSearchProduct"
-                            style="min-height: 12vh; z-index:99; overflow-y: scroll;" id="bodyResultSearchProduct">
+                            style="min-height: 12vh; max-height: 48vh; z-index:99; overflow-y: scroll;">
                             <a href="" class="border d-flex">
                                 <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="card-img-top"
                                   alt="" style="width: 60px;">
@@ -501,7 +501,7 @@
                 });
 
                 $('body').on('click', '.delete-cart', function () {
-                    let idNumber = $(this).attr('id');
+                    let idNumber = parseInt($(this).attr('id'));
                     var data = productInCart.filter(function (obj) {
                         return obj.id !== idNumber;
                     });
@@ -514,12 +514,12 @@
                     productInCart.splice(removeIndex, 1);
                     $("tr[data-id=" + idNumber + "]").remove();
 
+                    
                     subtotal = countSubtotal(productInCart)
                     total = subtotal - discount;
 
                     $("#subtotalAll").html("Rp " + formatRupiah(String(subtotal)))
                     $("#total").html("Rp " + formatRupiah(String(total)))
-                    
                 });
 
                 $('body').on('click', '.counter', function () {
