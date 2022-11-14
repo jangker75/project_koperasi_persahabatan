@@ -300,7 +300,7 @@
                             datatype: "html",
                             success: function (response) {
                                 let toPush = {
-                                    id: response.product.id,
+                                    id: parseInt(response.product.id),
                                     title: response.product.title,
                                     sku: response.product.sku,
                                     price: response.product.price,
@@ -469,7 +469,7 @@
                             datatype: "html",
                             success: function (response) {
                                 let toPush = {
-                                    id: response.product.id,
+                                    id: parseInt(response.product.id),
                                     title: response.product.title,
                                     sku: response.product.sku,
                                     price: response.product.price,
@@ -503,17 +503,17 @@
                 $('body').on('click', '.delete-cart', function () {
                     let idNumber = parseInt($(this).attr('id'));
                     var data = productInCart.filter(function (obj) {
-                        return obj.id !== idNumber;
+                        return obj.id != idNumber;
                     });
                     // get index of object with id:37
                     var removeIndex = productInCart.map(function (item) {
                         return item.id;
                     }).indexOf(idNumber);
+                    console.log(removeIndex, idNumber); 
 
                     // remove object
                     productInCart.splice(removeIndex, 1);
                     $("tr[data-id=" + idNumber + "]").remove();
-
                     
                     subtotal = countSubtotal(productInCart)
                     total = subtotal - discount;
