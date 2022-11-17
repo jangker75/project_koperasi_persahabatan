@@ -26,7 +26,7 @@
         <img src="{{ asset('assets/images/logo/logo3.png') }}" width="100px" height="100px" alt="">
         <p style="margin-top: 0px">Koperasi Karya Husada</p>
     </div>
-    <p style="text-align: center; font-size: 28px; margin-bottom: 70px;">Rekap Pelunasan Pinjaman karyawan</p>
+    <p style="text-align: center; font-size: 28px; margin-bottom: 70px;">REKAP PINJAMAN ANGGOTA <br>KOPERASI KARYA HUSADA</p>
     <table style="width: 100%;">
         <thead>
             <tr style="background-color: rgb(85, 205, 245); border-bottom: 4px double black;">
