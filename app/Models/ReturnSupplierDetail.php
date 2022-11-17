@@ -13,4 +13,8 @@ class ReturnSupplierDetail extends Model
     protected $fillable = [
       'return_supplier_id', 'product_id', 'qty', 'description', 'price', 'amount'
     ];
+
+    public function returnSupplier(){
+      return $this->belongsTo(ReturnSupplier::class, 'return_supplier_id');
+    }
 }

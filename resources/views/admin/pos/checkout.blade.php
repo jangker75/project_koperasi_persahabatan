@@ -21,12 +21,12 @@
             <div class="card">
                 <div class="card-body p-3 position-relative">
                     <input type="text" name="scanbarcode" autofocus id="scanBarcode"
-                        class="form-control form-control-sm border-primary" placeholder="Masukan Kode SKU">
+                        class="form-control form-control-sm border-primary" placeholder="Masukan Kode SKU" autocomplete="off">
                     <div id="scanBarcodeHelp" class="form-text text-small">Scan Barcode atau Ketik Kode SKU Barang untuk menambah
                         barang atau menambah quantity.</div>
                     <div class="position-absolute w-100">
                         <div class="card position-absolute border border-primary" id="resultSearchProduct"
-                            style="min-height: 12vh; z-index:99;" id="bodyResultSearchProduct">
+                            style="min-height: 12vh; max-height: 48vh; z-index:99; overflow-y: scroll;">
                             <a href="" class="border d-flex">
                                 <img src="http://127.0.0.1:8000/storage/default-image.jpg" class="card-img-top"
                                   alt="" style="width: 60px;">
@@ -205,115 +205,139 @@
 
                 $("#resultSearchProduct").hide();
                 listProductInSearch = [];
-                $("#scanBarcode").keyup(function () {
-                    let keyword = $(this).val();
-                    let storeId = $("#storeId").val();
-                    // console.log(value, storeId);
-
-                    let url = "{{ url('/api/search-product') }}";
-                    let param = {
-                        keyword: keyword,
-                        notInListProduct: '',
-                        originStore: storeId
-                    }
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: JSON.stringify(param),
-                        dataType: "json",
-                        enctype: 'multipart/form-data',
-                        processData: false,
-                        contentType: 'application/json',
-                        cache: false,
-                        success: function (response) {
-                            listProductInSearch = response.product
-                            console.log(listProductInSearch)
-                            renderSearchResult(listProductInSearch);
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(error)
+                $("#scanBarcode").keyup(function (e) {
+                    if (e.keyCode == 13) {
+                        $("#resultSearchProduct").hide();
+                        $(this).trigger("enterKey");
+                    }else{
+                      let keyword = $(this).val();
+                      let storeId = $("#storeId").val();
+                      if(isNaN(parseInt(keyword))){
+                        if(keyword.length > 1){
+                          let url = "{{ url('/api/search-product') }}";
+                          let param = {
+                              keyword: keyword,
+                              notInListProduct: '',
+                              originStore: storeId
+                          }
+                          $.ajax({
+                              type: "POST",
+                              url: url,
+                              data: JSON.stringify(param),
+                              dataType: "json",
+                              enctype: 'multipart/form-data',
+                              processData: false,
+                              contentType: 'application/json',
+                              cache: false,
+                              success: function (response) {
+                                  listProductInSearch = response.product
+                                  console.log(listProductInSearch)
+                                  renderSearchResult(listProductInSearch);
+                              },
+                              error: function (xhr, status, error) {
+                                  let data = {}
+                                  renderSearchResult(data, false);
+                                  console.log(error)
+                              }
+                          });
                         }
-                    });
+                      }
+                    }
                 })
 
-                function renderSearchResult(data){
+                function renderSearchResult(data, success = true){
                   $("#resultSearchProduct").html("")
-                  data.forEach(element => {
-                    let html = `<div class="border d-flex search-click" data-sku="` + element.productSKU + `">
-                        <img src="{{ url('storage') }}/` + element.productCover + `" class="card-img-top"
-                                  alt="" style="width: 60px;">
-                        <div class="p-2">
-                          <div class="fw-bold text-dark">` + truncateString(element.productName, 24) + `</div>
-                          <div class="fw-bold text-danger">` + formatRupiah(String(element.price), 'Rp ') + `</div>
-                        </div>
-                      </div>`;
-                    
-                    $("#resultSearchProduct").append(html)
-                    $('#resultSearchProduct').show()
-                  });
+                  if(success == true){
+                    data.forEach(element => {
+                      let html = `<div class="border d-flex search-click" data-sku="` + element.productSKU + `" data-id="` + element.productId + `">
+                          <img src="{{ url('image') }}/` + element.productCover + `" class="card-img-top"
+                                    alt="" style="width: 60px;">
+                          <div class="p-2">
+                            <div class="fw-bold text-dark">` + truncateString(element.productName, 24) + `</div>
+                            <div class="fw-bold text-danger">` + formatRupiah(String(element.price), 'Rp ') + `</div>
+                          </div>
+                        </div>`;
+                      
+                      $("#resultSearchProduct").append(html)
+                    });
+                  }else{
+                    let html = `<div class="border d-flex search-click close-click">
+                          <div class="p-4" style="text-align: center;">produk tidak ditemukan atau stok kosong</div>
+                        </div>`;
+                      
+                      $("#resultSearchProduct").append(html)
+                  }
+                  $('#resultSearchProduct').show()
                 }
 
                 $("body").on("click", ".search-click", function(){
-                  let value = String($(this).data('sku'))
-                  $("#scanBarcode").val(null)
-                  if (productInCart.length == 0) {
-                      $('#bodyCart').html("")
+                  if($(this).hasClass("close-click")){
+                    $("#resultSearchProduct").html("")
+                    $("#resultSearchProduct").hide();
+                  }else{
+                    let value = String($(this).data('id'))
+                    $("#scanBarcode").val(null)
+                    if (productInCart.length == 0) {
+                        $('#bodyCart').html("")
+                    }
+  
+                    const checker = productInCart.find(element => {
+                        if (element.id == value) {
+                            element.qty += 1;
+                            element.subtotal = element.price * element.qty
+                            return element;
+                        }
+  
+                        return false;
+                    });
+  
+                    if (checker == undefined) {
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ url('/api/product-by-id') }}?id=" + value + "&storeId=" +
+                                $("#storeId").val(),
+                            cache: "false",
+                            datatype: "html",
+                            success: function (response) {
+                                let toPush = {
+                                    id: parseInt(response.product.id),
+                                    title: response.product.title,
+                                    sku: response.product.sku,
+                                    price: response.product.price,
+                                    qty: 1,
+                                    discount: 0,
+                                    subtotal: response.product.price,
+                                    stock: response.product.stock,
+                                    cover: response.product.cover
+  
+                                }
+                                setTimeout(() => {
+                                  productInCart.push(toPush)
+                                  renderRowCart(toPush)
+                                }, 1000);
+                                
+                            },
+                            error: function (xhr, status, error) {
+                                swal({
+                                    title: "Gagal",
+                                    text: "Produk tidak ditemukan atau stock sedang kosong",
+                                    type: "error"
+                                });
+                            }
+                        });
+                    } else {
+                        // let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
+                        // valueBefore += 1;
+                        
+                        // console.log(checker);
+                        // console.log(valueBefore);
+                        updateSku(checker.sku, "qty", checker.qty, checker.subtotal);
+                    }
+  
+                    $("#resultSearchProduct").html("")
+                    $("#resultSearchProduct").hide();
+                    console.log(productInCart)
                   }
-
-                  const checker = productInCart.find(element => {
-                      if (element.sku === value) {
-                          element.qty += 1;
-                          element.subtotal = element.price * element.qty
-                          return element;
-                      }
-
-                      return false;
-                  });
-
-                  if (checker == undefined) {
-                      $.ajax({
-                          type: "GET",
-                          url: "{{ url('/api/product-by-sku') }}?sku=" + value + "&storeId=" +
-                              $("#storeId").val(),
-                          cache: "false",
-                          datatype: "html",
-                          success: function (response) {
-                              let toPush = {
-                                  title: response.product.title,
-                                  sku: response.product.sku,
-                                  price: response.product.price,
-                                  qty: 1,
-                                  discount: 0,
-                                  subtotal: response.product.price,
-                                  stock: response.product.stock,
-                                  cover: "{{ asset('storage') }}/" + response.product
-                                      .cover
-
-                              }
-                              setTimeout(() => {
-                                productInCart.push(toPush)
-                                renderRowCart(toPush)
-                              }, 1000);
-                              
-                          },
-                          error: function (xhr, status, error) {
-                              swal({
-                                  title: "Gagal",
-                                  text: "Produk tidak ditemukan atau stock sedang kosong",
-                                  type: "error"
-                              });
-                          }
-                      });
-                  } else {
-                      let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
-                      valueBefore += 1;
-                      
-                      console.log(checker);
-                      updateSku(value, "qty", valueBefore, checker.subtotal);
-                  }
-
-                  $("#resultSearchProduct").html("")
-                  $("#resultSearchProduct").hide();
                 })
 
                 $("body").on("click", ".btn-cash", function () {
@@ -332,12 +356,12 @@
                     renderElementCart(productInCart)
                 })
 
-                // $('#elementPaylater').hide()
                 $('#paymentCode').hide()
 
                 $('#buttonPaylater').click(function () {
                     $('#elementPaylater').toggle()
                 })
+
                 $('#paymentMethod').change(function () {
                     if ($(this).val() == 'paylater') {
                         // $('#elementPaylater').show()
@@ -424,6 +448,8 @@
                         $('#bodyCart').html("")
                     }
 
+                    $("#resultSearchProduct").hide();
+
                     const checker = productInCart.find(element => {
                         if (element.sku === value) {
                             element.qty += 1;
@@ -434,7 +460,6 @@
                         return false;
                     });
 
-
                     if (checker == undefined) {
                         $.ajax({
                             type: "GET",
@@ -444,6 +469,7 @@
                             datatype: "html",
                             success: function (response) {
                                 let toPush = {
+                                    id: parseInt(response.product.id),
                                     title: response.product.title,
                                     sku: response.product.sku,
                                     price: response.product.price,
@@ -451,8 +477,7 @@
                                     discount: 0,
                                     subtotal: response.product.price,
                                     stock: response.product.stock,
-                                    cover: "{{ asset('storage') }}/" + response.product
-                                        .cover
+                                    cover:  response.product.cover
 
                                 }
                                 productInCart.push(toPush)
@@ -468,47 +493,40 @@
                             }
                         });
                     } else {
-                        let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
-                        valueBefore += 1;
-                        
-                        console.log(checker);
-                        updateSku(value, "qty", valueBefore, checker.subtotal);
+
+                        updateById(checker.id, "qty", checker.qty, checker.subtotal);
                     }
 
 
                 });
-                $('#scanBarcode').keyup(function (e) {
-                    if (e.keyCode == 13) {
-                        $(this).trigger("enterKey");
-                    }
-                });
-
 
                 $('body').on('click', '.delete-cart', function () {
-                    let skuNumber = $(this).attr('id');
-                    skuNumber = skuNumber.replace("dlt", "");
+                    let idNumber = parseInt($(this).attr('id'));
                     var data = productInCart.filter(function (obj) {
-                        return obj.sku !== skuNumber;
+                        return obj.id != idNumber;
                     });
                     // get index of object with id:37
                     var removeIndex = productInCart.map(function (item) {
-                        return item.sku;
-                    }).indexOf(skuNumber);
+                        return item.id;
+                    }).indexOf(idNumber);
+                    console.log(removeIndex, idNumber); 
 
                     // remove object
                     productInCart.splice(removeIndex, 1);
-                    $("tr[data-sku=" + skuNumber + "]").remove();
-                    // renderElementCart(productInCart);
-                    // subtotal = countSubtotal(productInCart);
-                    // total = subtotal - discount;
-                    // $('#total').html("Rp " + total)
+                    $("tr[data-id=" + idNumber + "]").remove();
+                    
+                    subtotal = countSubtotal(productInCart)
+                    total = subtotal - discount;
+
+                    $("#subtotalAll").html("Rp " + formatRupiah(String(subtotal)))
+                    $("#total").html("Rp " + formatRupiah(String(total)))
                 });
 
                 $('body').on('click', '.counter', function () {
-                    let sku = $(this).data('sku');
+                    let id = $(this).data('id');
                     let dom = $(this);
                     const checker = productInCart.find(element => {
-                        if (element.sku == sku) {
+                        if (element.id == id) {
                             if (dom.hasClass('counter-plus')) {
                                 if (element.qty < element.stock) {
                                     element.qty += 1;
@@ -526,11 +544,13 @@
                         }
                         return false;
                     });
-                    updateSku(sku, "qty", checker.qty, checker.subtotal);
+                    // updateSku(sku, "qty", checker.qty, checker.subtotal);
+                    updateById(id, "qty", checker.qty, checker.subtotal);
                 })
 
                 $("body").on("keyup", ".discount", function () {
-                    let sku = $(this).data("sku");
+                    let id = $(this).data("id");
+                    // let sku = $(this).data("sku");
                     let value = $(this).val()
                     value = value.replace(".", "");
     
@@ -541,7 +561,7 @@
                     }
     
                     const checker = productInCart.find(element => {
-                        if (element.sku == sku) {
+                        if (element.id == id) {
                             if (value !== 0) {
                                 element.discount = value;
                                 element.subtotal = (element.price * element.qty) - element.discount
@@ -554,7 +574,8 @@
                     console.log(value);
                     console.log(checker);
                     if (checker !== undefined) {
-                        updateSku(sku, "discount", checker.discount, checker.subtotal);
+                        // updateSku(sku, "discount", checker.discount, checker.subtotal);
+                        updateById(checker.id, "discount", checker.discount, checker.subtotal);
                     }
                 })
     
@@ -615,7 +636,7 @@
                             }
                             let cash = $("#cash").val();
                             window.open('{{ url("admin/pos/print-receipt" ) }}/' + response.order
-                                .order_code, '_blank');
+                                .order_code, '',"width=800,height=400");
                             // if (response.print == true) {
                             // }
                             setTimeout(function () {
@@ -625,7 +646,7 @@
                         error: function (response) {
                             swal({
                                 title: "Gagal",
-                                text: response.message,
+                                text: response.responseJSON.message,
                                 type: "error"
                             });
                         }
@@ -649,21 +670,21 @@
                 }
 
                 let html = `
-                <tr data-sku="` + product.sku + `">
+                <tr data-sku="` + product.sku + `" data-id="` + product.id + `">
                     <td>
                         <div class="text-center">
-                            <img src="` + product.cover + `" alt="" class="cart-img text-center">
+                            <img src="{{ url('image') }}/` + product.cover + `" alt="" class="cart-img text-center">
                         </div>
                     </td>
                     <td class="fs-10 fw-bold">` + product.title + `</td>
                     <td class="fw-bold">` + formatRupiah(String(product.price)) + `</td>
                     <td>
                         <div class="handle-counter btn-group-sm" id="sku` + product.sku + `">
-                            <button type="button" data-sku="` + product.sku + `" class="counter-minus counter btn btn-sm btn-white lh-2 shadow-none">
+                            <button type="button" data-sku="` + product.sku + `" data-id="` + product.id + `" class="counter-minus counter btn btn-sm btn-white lh-2 shadow-none">
                                 <i class="fa fa-minus text-muted"></i>
                             </button>
-                            <input type="text" value="` + product.qty + `" data-sku="` + product.sku + `" class="qty form-control-sm" readonly>
-                            <button type="button" data-sku="` + product.sku + `" class="counter-plus counter btn btn-sm btn-white lh-2 shadow-none">
+                            <input type="text" value="` + product.qty + `" data-sku="` + product.sku + `" data-id="` + product.id + `" class="qty form-control-sm" readonly>
+                            <button type="button" data-sku="` + product.sku + `" data-id="` + product.id + `" class="counter-plus counter btn btn-sm btn-white lh-2 shadow-none">
                                 <i class="fa fa-plus text-muted"></i>
                             </button>
                         </div>
@@ -671,13 +692,13 @@
                     </td>
                     <td>
                       <input type="text" placeholder="0" class="form-control discount format-uang" 
-                      data-sku="` + product.sku + `">
+                      data-sku="` + product.sku + `" data-id="` + product.id + `">
                     </td>
-                    <td data-sku="` + product.sku + `" class="subtotal">` + formatRupiah(String(product.subtotal)) + `</td>
+                    <td data-sku="` + product.sku + `" data-id="` + product.id + `" class="subtotal">` + formatRupiah(String(product.subtotal)) + `</td>
                     <td>
                         <div class=" d-flex g-2">
                             <a class="btn text-danger bg-danger-transparent btn-icon py-1 delete-cart"
-                                data-bs-toggle="tooltip" data-bs-original-title="Delete" id="dlt` + product.sku + `"><span
+                                data-bs-toggle="tooltip" data-bs-original-title="Delete" id="` + product.id + `"><span
                                     class="bi bi-trash fs-16"></span></a>
                         </div>
                     </td>
@@ -694,6 +715,17 @@
             function updateSku(sku, param, value, subtotal) {
                 $("." + param + "[data-sku=" + sku + "]").val(value)
                 $(".subtotal[data-sku=" + sku + "]").html(formatRupiah(String(subtotal)))
+
+                subtotal = countSubtotal(productInCart)
+                total = subtotal - discount;
+
+                $("#subtotalAll").html("Rp " + formatRupiah(String(subtotal)))
+                $("#total").html("Rp " + formatRupiah(String(total)))
+            }
+
+            function updateById(id, param, value, subtotal) {
+                $("." + param + "[data-id=" + id + "]").val(value)
+                $(".subtotal[data-id=" + id + "]").html(formatRupiah(String(subtotal)))
 
                 subtotal = countSubtotal(productInCart)
                 total = subtotal - discount;

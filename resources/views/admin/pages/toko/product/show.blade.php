@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="p-2 border">
-                                <img src="{{ asset('storage/' . $product->cover) }}" alt="" class="w-100 img-thumbnail"
+                                <img src="{{ route('showimage', $product->cover) }}" alt="" class="w-100 img-thumbnail"
                                     style="height: 400px;object-fit: cover; overflow:hidden;">
                             </div>
                         </div>
@@ -74,6 +74,16 @@
                                                     --
                                                     @endif
                                                 </td>
+                                            </tr>
+                                            <tr>
+                                              <td class="fw-bold">Kategori Produk</td>
+                                              <td>
+                                                @if ($product->categories !== null)
+                                                  {{ implode(", ", collect($product->categories->pluck('name'))->toArray()) }}
+                                                @else
+                                                  --
+                                                @endif
+                                              </td>
                                             </tr>
                                         </tbody>
                                     </table>

@@ -1,7 +1,7 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
     <div class="row">
         <div class="col-1">
-            <a href="{{ route('admin.request-order.index') }}" class="btn btn-danger">back</a>
+            <a href="{{ route('admin.order.index') }}" class="btn btn-danger">back</a>
         </div>
     </div>
     <div class="row">
@@ -190,7 +190,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-end">
-                        @if ($order->transaction->is_paid !== 1)
+                        @if ($order->transaction->is_paid != 1)
                         <a href="{{ route('admin.order.paid', $order->order_code) }}"
                             class="btn btn-info ms-2">Bayar Order</a>
                         @endif

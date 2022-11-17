@@ -10,6 +10,7 @@ use App\Http\Controllers\Toko\API\OrderSupplierController;
 use App\Http\Controllers\Toko\API\PaymentMethodController;
 use App\Http\Controllers\Toko\API\ProductController;
 use App\Http\Controllers\Toko\API\PromoController;
+use App\Http\Controllers\Toko\API\ReturnSupplierController;
 use App\Http\Controllers\Toko\API\StoreController;
 use App\Http\Controllers\Toko\API\SupplierController;
 use App\Http\Controllers\Toko\API\TransferStockController;
@@ -44,6 +45,8 @@ Route::resource('order-supplier', OrderSupplierController::class);
 Route::resource('payment-method', PaymentMethodController::class);
 Route::resource('promo', PromoController::class);
 Route::resource('opname', OpnameController::class);
+Route::resource('return-supplier', ReturnSupplierController::class);
+
 Route::post("order-nasabah", [OrderController::class, "orderNasabah"]);
 Route::post('reject-order', [OrderController::class, 'rejectOrder']);
 Route::post('checkout-order', [OrderController::class, 'checkoutOrder']);
@@ -56,6 +59,7 @@ Route::post('search-employee', [EmployeeController::class, 'findEmployee']);
 Route::get('paginate-product-in-stock-from-store', [ProductController::class, "getProductOnStockPaginate"]);
 Route::post('search-product', [ProductController::class, "searchProduct"])->name('search-product');
 Route::get('product-by-sku', [ProductController::class, "searchProductBySKU"]);
+Route::get('product-by-id', [ProductController::class, "searchProductById"]);
 
 // transfer stock
 Route::get('transfer-stock-items/{id}', [TransferStockController::class, 'getDetailById']);

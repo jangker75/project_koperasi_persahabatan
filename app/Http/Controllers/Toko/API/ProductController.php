@@ -56,6 +56,30 @@ class ProductController extends Controller
       }
     }
 
+    public function searchProductById(Request $request){
+      try {
+        if(!$request->storeId){
+          $request->storeId = null;
+        }
+
+        $product = ProductStockRepositories::findProductById($request->id, $request->storeId);
+
+        if(!$product){
+          $data['message'] = "Failed Search Product";
+          return response()->json($data, 500);
+        }
+        $data['message'] = "Success Search Product";
+        $data['product'] = $product[0];
+
+        return response()->json($data, 200);
+      } catch (QueryException $e) {
+        $data['message'] = "Failed Search Product";
+        $data['error'] = $e;
+
+        return response()->json($data, 500);
+      }
+    }
+
     public function getProductOnStockPaginate(Request $request){
       try {
         if($request->categoryId){

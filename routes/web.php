@@ -98,7 +98,8 @@ Route::group([
     Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);
     Route::get('pos/request-order', [DashboardController::class, 'requestOrder'])->name('request-order.index');
     Route::get('pos/request-order/{orderCode}', [DashboardController::class, 'detailRequestOrder'])->name('request-order.detail');
-    Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printReceipt'])->name('print-receipt');
+    // Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printReceipt'])->name('print-receipt');
+    Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printStruk'])->name('print-receipt');
     Route::get('pos/history-order', [OrderController::class, 'index'])->name('order.index');
     Route::get('pos/history-order/{orderCode}', [OrderController::class, 'show'])->name('order.show');
     Route::get('pos/paid-order/{orderCode}', [OrderController::class, 'paid'])->name('order.paid');
@@ -112,7 +113,7 @@ Route::group([
       'prefix' => 'toko'
     ], function(){
       Route::resource('product', ProductController::class);
-    Route::resource('price', PriceController::class);
+      Route::resource('price', PriceController::class);
       Route::resource('category', CategoryController::class);
       Route::resource('store', StoreController::class);
       Route::resource('brand', BrandController::class);
@@ -206,6 +207,7 @@ Route::group([
     Route::get('datatables-order', [OrderController::class, 'getIndexDatatables'])->name('order.index.datatables');
     Route::get('datatables-opname', [OpnameController::class, 'getIndexDatatables'])->name('opname.index.datatables');
     Route::get('datatables-product', [ProductController::class, 'getIndexDatatables'])->name('product.index.datatables');
+    Route::get('datatables-return', [ReturnSupplierController::class, 'getIndexDatatables'])->name('return-supplier.index.datatables');
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');
     Route::get('datatables-loan-submission-index', [LoanSubmissionController::class, 'getIndexDatatables'])->name('loan-submission.index.datatables');

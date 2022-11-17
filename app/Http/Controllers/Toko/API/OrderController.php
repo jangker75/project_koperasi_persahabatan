@@ -32,22 +32,32 @@ class OrderController extends Controller
     public function store(Request $request){
       try {
         DB::beginTransaction();
-        $calculateService = new OrderService();
-        $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
+        // $calculateService = new OrderService();
+        // $subTotalAll = $calculateService->calculateAllSubtotal($request->item);
 
-        $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
+        $paymentMethod = PaymentMethod::where('name', "like", "%".$request->paymentMethod."%")->first();
+        if(!$paymentMethod){
+          throw new ModelNotFoundException('Payment method tidak ditemukan');
+        }
         $tax = ApplicationSetting::where('name', 'tax')->first();
         $status = 6;
 
-        // order
+        // // order
+        // $order = Order::create([
+        //   'subtotal' => $subTotalAll,
+        //   'discount' => $request->discount,
+        //   'total' => $subTotalAll - $request->discount + (int) $tax->content,
+        //   'status_id' => $status,
+        //   'employee_onduty_id' => $request->employeeOndutyId,
+        //   'store_id' => $request->storeId
+        // ]);
         $order = Order::create([
-          'subtotal' => $subTotalAll,
-          'discount' => $request->discount,
-          'total' => $subTotalAll - $request->discount + (int) $tax->content,
           'status_id' => $status,
           'employee_onduty_id' => $request->employeeOndutyId,
           'store_id' => $request->storeId
         ]);
+
+        $subtotalAll = 0;
 
         // order detail
         foreach ($request->item as $key => $product) {
@@ -63,6 +73,8 @@ class OrderController extends Controller
             'discount' => $product['discount'],
             'subtotal' => (int) ($productInfo[0]->price*$product['qty']) - (int) $product['discount']
           ]);
+
+          $subtotalAll += $orderDetail->subtotal;
 
           // update stock
           $stockNow = Stock::select("qty")
@@ -83,6 +95,11 @@ class OrderController extends Controller
             "orderCode" => $order->order_code
           ]);
         }
+
+        $order['subtotal'] = $subtotalAll;
+        $order['discount'] = $request->discount;
+        $order['total'] = $subtotalAll - $request->discount + (int) $tax->content;
+        $order->save();
 
         // table transaction
         $inputTransaksi = [

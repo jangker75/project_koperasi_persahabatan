@@ -75,4 +75,13 @@ class DashboardController extends BaseAdminController
       return $pdf->stream("kartu_anggota.pdf");    
       
     }
+
+    public function printStruk($orderCode, Request $request){
+      $data['order'] = Order::where('order_code', $orderCode)->first();
+      $records = DB::table('transactions')->select(DB::raw('*'))
+                  ->whereRaw('Date(transaction_date) = CURDATE()')->get();
+      $data['countBill'] = count($records);
+
+      return view('admin.export.PDF.receipt-order', $data);
+    }
 }
