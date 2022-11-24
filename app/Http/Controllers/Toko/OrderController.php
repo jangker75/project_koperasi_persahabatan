@@ -74,6 +74,7 @@ class OrderController extends Controller
         ->leftJoin('order_details', 'orders.id', '=','order_details.order_id')
         ->leftJoin('master_data_statuses', 'orders.status_id', '=', 'master_data_statuses.id')
         ->whereNull('order_details.deleted_at')
+        ->where('orders.status_id', 6)
         ->groupBy('orders.id');
 
         $datatable = new DataTables();

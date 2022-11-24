@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
         $this->call(CmsMenuSeeder::class);
         $this->call(ApplicationSettingSeeder::class);
         $this->call(CompanySeeder::class);
@@ -34,6 +33,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SupplierSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(ProductCategorySeeder::class);
-        // $this->call(OrderSeeder::class);
+        $this->call(OrderSeeder::class);
     }
 }

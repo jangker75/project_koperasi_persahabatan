@@ -58,6 +58,7 @@ Route::post('search-employee', [EmployeeController::class, 'findEmployee']);
 // product
 Route::get('paginate-product-in-stock-from-store', [ProductController::class, "getProductOnStockPaginate"]);
 Route::post('search-product', [ProductController::class, "searchProduct"])->name('search-product');
+Route::post('search-product-stock-zero', [ProductController::class, "searchProductStockZero"])->name('search-product-stock-zero');
 Route::get('product-by-sku', [ProductController::class, "searchProductBySKU"]);
 Route::get('product-by-id', [ProductController::class, "searchProductById"]);
 

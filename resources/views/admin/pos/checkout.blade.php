@@ -201,6 +201,7 @@
             let orderBy = "pos";
             let cash = "0";
             let change = 0;
+
             $(document).ready(function () {
 
                 $("#resultSearchProduct").hide();
@@ -326,11 +327,6 @@
                             }
                         });
                     } else {
-                        // let valueBefore = parseInt($(".qty[data-sku=" + value + "]").val());
-                        // valueBefore += 1;
-                        
-                        // console.log(checker);
-                        // console.log(valueBefore);
                         updateSku(checker.sku, "qty", checker.qty, checker.subtotal);
                     }
   
@@ -509,7 +505,6 @@
                     var removeIndex = productInCart.map(function (item) {
                         return item.id;
                     }).indexOf(idNumber);
-                    console.log(removeIndex, idNumber); 
 
                     // remove object
                     productInCart.splice(removeIndex, 1);
@@ -663,7 +658,6 @@
                 return sum;
             }
 
-
             function renderRowCart(product) {
                 if (productInCart.length == 0) {
                     $('#bodyCart').html("")
@@ -741,7 +735,6 @@
                     return str;
                 }
             }
-
         </script>
     </x-slot>
 </x-admin-kasir-component>

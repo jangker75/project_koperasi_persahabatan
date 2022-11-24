@@ -96,4 +96,27 @@ class ProductController extends Controller
       return response()->json($data,200);
       
     }
+
+    public function searchProductStockZero(){
+      $keyword = str(request()->get('keyword'))->slug();
+
+      $data = Product::query()
+                ->select(
+                  'products.id as productId',
+                  'products.name as productName',
+                  'products.sku as productSKU',
+                  'products.cover as productCover',
+                  DB::raw('(SELECT prices.revenue FROM prices WHERE prices.product_id = products.id ORDER BY prices.id DESC LIMIT 1) AS price'),
+                  DB::raw('SUM(stocks.qty) as qty')
+                )
+                ->leftJoin('stocks','products.id', '=', 'stocks.product_id')
+                ->where('products.slug','LIKE', '%' . $keyword . '%')
+                ->orWhere('products.sku', 'LIKE', '%' . $keyword . '%')
+                ->groupBy('products.id')
+                ->get();
+      
+      return response()->json([
+        'product' => $data
+      ], 200);
+    }
 }

@@ -113,4 +113,24 @@ class OrderRepository{
 
     return $data;
   }
+
+  public function getReportCloseCashier(){
+    $sql = "
+      SELECT
+        SUM(transactions.amount),
+        payment_methods.name
+      FROM
+        transactions
+        LEFT JOIN payment_methods ON transactions.payment_method_id = payment_methods.id
+      WHERE 
+        transactions.deleted_at IS NULL AND
+        date(transactions.transaction_date) = CURDATE()
+      GROUP BY 
+        transactions.payment_method_id
+    ";
+
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
 }

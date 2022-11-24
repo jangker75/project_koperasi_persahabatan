@@ -98,6 +98,7 @@ Route::group([
     Route::get('pos/checkout', [DashboardController::class, 'posCheckout']);
     Route::get('pos/request-order', [DashboardController::class, 'requestOrder'])->name('request-order.index');
     Route::get('pos/request-order/{orderCode}', [DashboardController::class, 'detailRequestOrder'])->name('request-order.detail');
+    Route::get('pos/close-cashier', [DashboardController::class, 'closeCashier'])->name('close-cashier');
     // Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printReceipt'])->name('print-receipt');
     Route::get('pos/print-receipt/{orderCode}', [DashboardController::class, 'printStruk'])->name('print-receipt');
     Route::get('pos/history-order', [OrderController::class, 'index'])->name('order.index');
