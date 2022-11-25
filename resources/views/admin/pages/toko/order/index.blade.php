@@ -78,15 +78,17 @@
                 url: "{{ url('admin/datatables-order') }}",
                 method: "GET"
             }).done(function (response) {
-                priceAll = response.data.map(item => item['total']);
+                priceAll = response.data.map(item => parseInt(item['total']));
                 totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
                 $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
 
                 dataPaylater = response.data.filter(function(data){
                   return data.isPaylater == 'ya'
                 })
-
+                dataPaylater = dataPaylater.map(item => parseInt(item['total']))
                 totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
+                // console.log(dataPaylater);
+                // console.log(totalPaylater);
                 $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
             });
 
@@ -108,8 +110,10 @@
                     dataPaylater = response.data.filter(function(data){
                       return data.isPaylater == 'ya'
                     })
-
+                    dataPaylater = dataPaylater.map(item => parseInt(item['total']))
                     totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
+                    // console.log(dataPaylater);
+                    // console.log(totalPaylater);
                     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
                 });
 
