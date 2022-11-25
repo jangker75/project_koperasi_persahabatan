@@ -117,7 +117,7 @@
                 <div class="card-body">
                     <div class="w-100">
                         <div class="table-responsive">
-                            <table class="table w-100 " id="datatable2">
+                            <table class="table w-100" id="datatable3">
                                 <thead class="table-success fw-bold text-uppercase">
                                     <th>No</th>
                                     <th>Kode</th>
@@ -168,8 +168,9 @@
             let originStore;
             let listProduk;
 
-            $("#datatable").DataTable();
+            // $("#datatable").DataTable();
             $("#datatable2").DataTable();
+            $("#datatable3").DataTable();
 
             $('.select2').select2({
                 minimumResultsForSearch: '',
