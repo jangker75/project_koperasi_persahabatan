@@ -113,4 +113,53 @@ class OrderRepository{
 
     return $data;
   }
+
+  public function calculateReportCloseCashier($storeId){
+    $sql = "
+      SELECT
+        payment_methods.name,
+        SUM(transactions.amount) as amount,
+        COUNT(transactions.id) as totalOrder,
+        SUM(orders.discount) as totalDiscount
+      FROM
+        transactions
+        LEFT JOIN payment_methods ON transactions.payment_method_id = payment_methods.id
+        LEFT JOIN orders ON transactions.order_id = orders.id
+      WHERE 
+        transactions.deleted_at IS NULL AND
+        date(transactions.transaction_date) = CURDATE() AND
+        orders.store_id = " . $storeId . "
+      GROUP BY 
+        transactions.payment_method_id
+    ";
+
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
+
+  public function itemReportCloseCashier($storeId){
+    $sql = "
+      SELECT
+        product_name AS productName,
+        products.sku AS productSKU,
+        SUM(order_details.qty) AS qty,
+        SUM(order_details.subtotal) AS subtotal
+      FROM
+        transactions
+        LEFT JOIN orders ON transactions.order_id = orders.id
+        LEFT JOIN order_details ON orders.id = order_details.id
+        LEFT JOIN products ON products.name = order_details.product_name
+      WHERE 
+        transactions.deleted_at IS NULL AND
+        date(transactions.transaction_date) = CURDATE() AND
+        orders.store_id = " . $storeId . "
+      GROUP BY 
+        order_details.product_name
+    ";
+
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
 }

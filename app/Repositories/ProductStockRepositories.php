@@ -33,11 +33,12 @@ class ProductStockRepositories{
     if($originStore !== null){
       $middle .= " AND stocks.store_id = " . $originStore;
     }
+
     if($notInListProduct !== null){
       $middle .= " AND stocks.product_id NOT IN (" . implode(",", $notInListProduct) . ")";
     }
     
-    $lastQuery = " GROUP BY products.id ORDER BY stocks.id DESC LIMIT 6";
+    $lastQuery = " GROUP BY products.id ORDER BY stocks.id DESC LIMIT 12";
     $query = $query.$middle.$lastQuery;
 
     $data = DB::select(DB::raw($query));

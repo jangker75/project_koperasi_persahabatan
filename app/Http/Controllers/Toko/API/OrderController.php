@@ -427,4 +427,16 @@ class OrderController extends Controller
       $orders = (new OrderRepository())->getAllOrders($request->params);
       return response()->json($orders, 200);
     }
+
+    public function reportToday($storeId){
+      $calculate = (new OrderRepository)->calculateReportCloseCashier($storeId);
+      $itemCalculate = (new OrderRepository)->itemReportCloseCashier($storeId);
+      
+      // $totalOrder = Transaction::select(DB::raw('COUNT(transactions.id) as total'))
+      //                           ->whereDate('transaction_date', '=', date('Y-m-d'))->get();
+      return response()->json([
+        'calculate' => $calculate,
+        'items' => $itemCalculate
+      ],200);
+    }
 }

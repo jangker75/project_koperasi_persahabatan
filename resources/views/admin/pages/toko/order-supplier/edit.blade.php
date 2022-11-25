@@ -210,11 +210,9 @@
                     let ul = element.find(".data-list-product");
                     ul.html("");
 
-                    let url = "{{ url('/api/search-product') }}";
+                    let url = "{{ url('/api/search-product-stock-zero') }}";
                     let param = {
-                        keyword: keyword,
-                        notInListProduct: '',
-                        originStore: ""
+                        keyword: keyword
                     }
                     $.ajax({
                         type: "POST",
