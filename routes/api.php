@@ -51,6 +51,7 @@ Route::post("order-nasabah", [OrderController::class, "orderNasabah"]);
 Route::post('reject-order', [OrderController::class, 'rejectOrder']);
 Route::post('checkout-order', [OrderController::class, 'checkoutOrder']);
 Route::post('get-data-order', [OrderController::class, 'getDataOrder']);
+Route::get("report-order-today/{storeId}", [OrderController::class, 'reportToday']);
 // Render Jquery DataTable Editable
 Route::post('jquery-data-editable', [JqueryEditableController::class, 'renderTable']);
 Route::post('payment-data-editable', [JqueryEditableController::class, 'paymentTable']);
