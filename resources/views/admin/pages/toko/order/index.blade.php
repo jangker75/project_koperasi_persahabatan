@@ -103,7 +103,7 @@
                     url: "{{ url('admin/datatables-order') }}?date=" + value,
                     method: "GET"
                 }).done(function (response) {
-                    priceAll = response.data.map(item => item['total']);
+                    priceAll = response.data.map(item => parseInt(item['total']));
                     totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
                     $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
 
