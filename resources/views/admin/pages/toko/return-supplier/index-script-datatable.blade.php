@@ -3,7 +3,7 @@
     $('#datatable thead tr').clone(true).appendTo( '#datatable thead' );
     // Setup - add a text input to each header cell
     $('#datatable thead tr:eq(1) th').each( function (i) {
-        if (i == 1 || i == 8 || i == 10) {
+        if (i == 1 || i == 7 || i == 8) {
             return $(this).html( '' );
         }
         var title = $(this).text();
@@ -25,12 +25,10 @@
             { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
             { data: "return_supplier_code", name: "return_supplier_code" },
             { data: "created_at", name: "created_at" },
-            { data: "supplierName", name: "supplierName" },
             { data: "storeName", name: "storeName" },
             { data: "employee", name: "employee" },
             { data: "note", name: "note" },
             { data: "totalQty", name: "totalQty" },
-            { data: "status", name: "status" },
             { data: "actions", name: "actions" },
         ],
         language: {

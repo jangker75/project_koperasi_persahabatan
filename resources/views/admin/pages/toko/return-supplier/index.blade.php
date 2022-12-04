@@ -18,12 +18,10 @@
                                   <th>No</th>
                                   <th>Kode</th>
                                   <th>tanggal</th>
-                                  <th>supplier</th>
                                   <th>toko</th>
                                   <th>requester</th>
                                   <th>catatan</th>
                                   <th>jumlah produk</th>
-                                  <th>status</th>
                                   <th>Action</th>
                                 </thead>
                             </table>

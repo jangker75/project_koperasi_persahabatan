@@ -10,15 +10,10 @@
                     <form method="post">
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <div class="mb-4">
-                                    <label for="supplierId" class="fw-bold">Pilih Supplier (Pemasok)</label>
-                                    <select class="form-select" name="supplier_id" id="supplierId"
-                                        placeholder="Pilih Supplier">
-                                        @foreach ($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="h5">
+                                  Pembuat Laporan : <span class="fw-bold">{{ auth()->user()->employee->getFullNameAttribute() }}</span>
                                 </div>
+                                <div class="small">nama pembuat laporan otomatis dibuat berdasarkan user yang sedang login</div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="mb-4">
@@ -97,13 +92,8 @@
     <script>
         $(document).ready(function () {
             let productInCart = [];
-            let supplierId = "{{ $suppliers[0]->id }}";
             let storeId = "{{ $stores[0]->id }}";
             let note = "--";
-
-            $("#supplierId").change(function () {
-                supplierId = $(this).val();
-            })
 
             $("#storeId").change(function () {
                 storeId = $(this).val();
@@ -130,8 +120,7 @@
 
             listProductInSearch = [];
 
-            $("#scanBarcode").keyup(function () {
-
+            $("#scanBarcode").keyup(function() {
                 let keyword = $(this).val();
                 let url = "{{ url('/api/search-product') }}";
 
@@ -139,24 +128,24 @@
                     keyword: keyword,
                     notInListProduct: '',
                     originStore: storeId
-                }
+                };
 
                 $.ajax({
-                  type: "POST",
-                  url: url,
-                  data: JSON.stringify(param),
-                  dataType: "json",
-                  enctype: 'multipart/form-data',
-                  processData: false,
-                  contentType: 'application/json',
-                  cache: false,
-                  success: function (response) {
-                      listProductInSearch = response.product
-                      renderSearchResult(listProductInSearch);
-                  },
-                  error: function (xhr, status, error) {
-                      console.log(error)
-                  }
+                    type: "POST",
+                    url: url,
+                    data: JSON.stringify(param),
+                    dataType: "json",
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: 'application/json',
+                    cache: false,
+                    success: function (response) {
+                        listProductInSearch = response.product
+                        renderSearchResult(listProductInSearch);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error)
+                    }
                 });
             })
 
@@ -317,7 +306,6 @@
 
             $("#submit").click(function(){
               let payload = {
-                supplier_id: supplierId,
                 store_id: storeId,
                 submit_employee_id: "{{ auth()->id() }}",
                 note: note,

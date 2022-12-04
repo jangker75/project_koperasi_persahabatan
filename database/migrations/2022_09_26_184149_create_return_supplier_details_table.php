@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->integer('return_supplier_id');
             $table->integer('product_id');
+            $table->string('product_name');
+            $table->string('product_sku');
             $table->integer('qty');
             $table->string('description')->nullable();
-            $table->integer('price')->nullable();
-            $table->integer('amount')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
