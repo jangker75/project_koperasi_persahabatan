@@ -16,7 +16,7 @@
                                 <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Laporan Penjualan</h5>
+                                            <h5 class="modal-title">Laporan Penjualan Hari Ini</h5>
                                             <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span>
                                             </button>

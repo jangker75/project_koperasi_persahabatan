@@ -16,9 +16,7 @@ return new class extends Migration
         Schema::create('return_suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('return_supplier_code');
-            $table->integer('supplier_id');
             $table->integer('store_id')->default(1);
-            $table->boolean('is_commit')->default(false);
             $table->integer('submit_employee_id');
             $table->string('note');
             $table->timestamps();

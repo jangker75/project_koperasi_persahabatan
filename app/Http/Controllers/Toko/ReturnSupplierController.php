@@ -7,8 +7,10 @@ use App\Models\MasterDataStatus;
 use App\Models\OpnameDetail;
 use App\Models\ReturnSupplier;
 use App\Models\ReturnSupplierDetail;
+use App\Models\Stock;
 use App\Models\Store;
 use App\Models\Supplier;
+use App\Services\HistoryStockService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +34,6 @@ class ReturnSupplierController extends Controller
     public function create(){
         $data['titlePage'] = "Buat Data Return Stock";
         $data['stores'] = Store::get();
-        $data['suppliers'] = Supplier::latest()->get();
         return view('admin.pages.toko.return-supplier.create', $data);
     }
 
@@ -60,8 +61,9 @@ class ReturnSupplierController extends Controller
     }
 
     public function show($id){
-      $returnSupplier = ReturnSupplier::find($id);
-      dd($returnSupplier);
+      $data['returnSupplier'] = ReturnSupplier::findOrFail($id);
+      $data['titlePage'] = "Detail Return Stock " . $data['returnSupplier']->return_supplier_code;
+      return view("admin.pages.toko.return-supplier.show", $data);
     }
 
     public function getIndexDatatables()
@@ -70,14 +72,11 @@ class ReturnSupplierController extends Controller
         ->select(
           'return_suppliers.*',
           DB::raw('IF(employees.first_name is null, "-", concat(employees.first_name, " ", employees.last_name)) as employee'),
-          'suppliers.name as supplierName',
           'stores.name as storeName',
-          DB::raw('SUM(return_supplier_details.qty) as totalQty'),
-          DB::raw('IF(return_suppliers.is_commit = 0, "Placed", "Commit") as status')
+          DB::raw('SUM(return_supplier_details.qty) as totalQty')
           )
         ->leftJoin('employees', 'return_suppliers.submit_employee_id', '=', 'employees.id')
         ->leftJoin('return_supplier_details', 'return_suppliers.id', '=', 'return_supplier_details.return_supplier_id')
-        ->leftJoin('suppliers', 'return_suppliers.supplier_id' , '=', 'suppliers.id')
         ->leftJoin('stores', 'return_suppliers.store_id', '=', 'stores.id')
         ->groupBy('return_suppliers.id');
         
@@ -95,10 +94,10 @@ class ReturnSupplierController extends Controller
               $sql = "CONCAT(employees.first_name,'-',employees.last_name) like ?";
               $query->whereRaw($sql, ["%{$keyword}%"]);
           })
-          ->filterColumn('supplierName', function($query, $keyword) {
-              $sql = "suppliers.name like ?";
-              $query->whereRaw($sql, ["%{$keyword}%"]);
-          })
+          // ->filterColumn('supplierName', function($query, $keyword) {
+          //     $sql = "suppliers.name like ?";
+          //     $query->whereRaw($sql, ["%{$keyword}%"]);
+          // })
           ->filterColumn('storeName', function($query, $keyword) {
               $sql = "stores.name like ?";
               $query->whereRaw($sql, ["%{$keyword}%"]);
@@ -114,5 +113,29 @@ class ReturnSupplierController extends Controller
           })
           ->rawColumns(['actions'])
           ->make(true);
+    }
+
+    public function destroy($id){
+      $returnSupplier = ReturnSupplier::findOrFail($id);
+
+      foreach ($returnSupplier->details as $key => $detail) {
+        $stock = Stock::where('product_id', $detail->product_id)
+                      ->where('store_id', $returnSupplier->store_id)
+                      ->first();
+        $stock->qty = $stock->qty + $detail->qty;
+        $stock->save();
+
+        (new HistoryStockService)->update('cancel-return', [
+          'returnCode' => $returnSupplier->return_supplier_code,
+          'productId' => $detail->product_id,
+          'qty' => $detail->qty
+        ]);
+      }
+
+      ReturnSupplierDetail::where('return_supplier_id', $returnSupplier->id)->delete();
+
+      ReturnSupplier::find($id)->delete();
+
+      return redirect()->route('admin.return-supplier.index');
     }
 }

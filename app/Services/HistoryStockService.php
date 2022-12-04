@@ -27,6 +27,12 @@ class HistoryStockService{
     }else if($mode == "rejection"){
       $title = "Penambahan Stock karna pembatalan Order : " . $params['orderCode'] . " dengan jumlah ". $params['qty'];
       $type = 'induction';
+    }else if($mode == "return"){
+      $title = "Stock berkurang dari Return, kode : " . $params['returnCode'];
+      $type = "deduction";
+    }else if($mode == "cancel-return"){
+      $title = "Stock bertambah dari Pembatalan Return, kode : " . $params['returnCode'];
+      $type = "induction";
     }
 
     HistoryStock::create([
