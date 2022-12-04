@@ -47,7 +47,8 @@
                             placeholder="Input nama produk atau sku untuk menambah produk">
                         <div class="position-relative">
                             <div class="card card-search-product position-absolute border border-dark p-2">
-                                <ul class="list-group list-group-flush data-list-product p-0">
+                                <ul class="list-group list-group-flush data-list-product p-0 border" 
+                                style="max-height:16em; overflow-y:scroll; --webkit-scrollbar-button: blue;">
                                     <li class="list-group-item product-show p-2">testdad</li>
                                 </ul>
                             </div>
@@ -159,11 +160,9 @@
                     let ul = element.find(".data-list-product");
                     ul.html("");
 
-                    let url = "{{ url('/api/search-product') }}";
+                    let url = "{{ url('/api/search-product-stock-zero') }}";
                     let param = {
-                        keyword: keyword,
-                        notInListProduct: '',
-                        originStore: ""
+                        keyword: keyword
                     }
                     $.ajax({
                         type: "POST",
@@ -187,7 +186,6 @@
                                     console.log("asdasdsad");
                                 }
                             });
-
                         },
                         error: function (xhr, status, error) {
                             ul.html(

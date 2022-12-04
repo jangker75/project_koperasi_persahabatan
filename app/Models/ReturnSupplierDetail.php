@@ -11,7 +11,7 @@ class ReturnSupplierDetail extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-      'return_supplier_id', 'product_id', 'qty', 'description', 'price', 'amount'
+      'return_supplier_id', 'product_id', 'product_name','product_sku', 'qty', 'description'
     ];
 
     public function returnSupplier(){
