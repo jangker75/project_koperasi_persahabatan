@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Form Opname</title>
+    <title>Form Opname {{ $location->name }} - {{ date('d/m/Y') }}</title>
     <style>
         /* * {
             outline: 1px solid red;
@@ -100,18 +100,22 @@
         }
 
         td{
-          padding: 4px;
+          padding: 1px;
         }
-        .col-name,.col-sku{
-          width: 15%;
-        }
-        .col-data,.col-temuan, .col-diff{
-          width:10%;
+        /* .col-name,.col-sku{
+          width: 40%;
+        } */
+        .col-data,.col-temuan, .col-diff, .col-number{
+          width:5%;
           text-align: center;
         }
         /* .col-desc{
           width: 40%;
         } */
+
+        .text-uppercase{
+          text-transform: uppercase;
+        }
     </style>
 </head>
 
@@ -132,22 +136,24 @@
             <p style="margin-top: 50px; margin-bottom: 50px; text-align: center; font-weight: 700">
                 FORMULIR STOCK OPNAME <?php date('DD-MM-YYYY') ?>
             </p>
+            <p class="text-uppercase">Lokasi : {{ $location->name }}</p>
+            <p class="text-uppercase">Metode : {{ $title }}</p>
         </div>
     </section>
     <section class="content-nasabah">
         <table class="content-table">
             <thead>
               <tr>
-                <th>No</th>
-                <th class="col-name">Nama</th>
-                <th class="col-sku">SKU</th>
+                <th class="col-number">No</th>
+                <th class="col-name">Nama Produk</th>
+                {{-- <th class="col-sku">SKU</th> --}}
                 <th class="col-data">Data</th>
                 @if (request('mode') == 'orderToday')
                   <th>Jumlah terjual</th>
                 @endif
                 <th class="col-temuan">Jumlah Temuan</th>
                 <th class="col-diff">Jumlah Perbedaan</th>
-                <th class="col-desc">Keterangan</th>
+                {{-- <th class="col-desc">Keterangan</th> --}}
               </tr>
             </thead>
             <tbody>
@@ -155,14 +161,14 @@
                 <tr>
                   <td>{{ $i+1 }}</td>
                   <td>{{ $opnam->name }}</td>
-                  <td>{{ $opnam->sku }}</td>
+                  {{-- <td>{{ $opnam->sku }}</td> --}}
                   <td class="col-data">{{ $opnam->qty }}</td>
                   @if (request('mode') == 'orderToday')
                     <td style="text-align: center;">{{ $opnam->qtyOrder }}</td>
                   @endif
                   <td></td>
                   <td></td>
-                  <td></td>
+                  {{-- <td></td> --}}
                 </tr>
               @endforeach
             </tbody>

@@ -183,18 +183,24 @@ class OpnameController extends Controller
     }
 
     public function printFormOpname(Request $request){
+
+      $data['location'] = Store::find($request->storeId);
       if($request->mode == "orderToday"){
         $data['opname'] = (new ProductStockRepositories())->getProdukFromOrderToday($request->storeId);
+        $data['title'] = "Opname berdasarkan Order Harian";
       }elseif ($request->mode == "category") {
         $data['opname'] = (new ProductStockRepositories())->getProductByCategoryId($request->storeId, $request->categoryId);
+        $category = Category::find($request->categoryId);
+        $data['title'] = "Opname berdasarkan Kategori Produk (" . $category->name . ")";
       }elseif ($request->mode == "allProduct") {
         $data['opname'] = (new ProductStockRepositories())->indexStock($request->storeId);
+        $data['title'] = "Opname berdasarkan Semua Produk";
       }
       else{
         $data['opname'] = [];
       }
-      // return view('admin.export.PDF.opname', $data);
-      $pdf = Pdf::loadView('admin.export.PDF.opname', $data);
-      return $pdf->download("opname-". date("YYYY-MM-DD") .".pdf");
+      return view('admin.export.PDF.opname', $data);
+      // $pdf = Pdf::loadView('admin.export.PDF.opname', $data);
+      // return $pdf->download("opname-". date("YYYY-MM-DD") .".pdf");
     }
 }
