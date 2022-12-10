@@ -9,7 +9,7 @@
     <title>{{ $order->order_code }}</title>
     <style>
         * {
-            font-size: 9px;
+            font-size: 11px;
             font-family: 'sans-serif';
             margin: 0;
             padding: 0;
@@ -45,8 +45,8 @@
 
         td.subtotal,
         th.subtotal {
-            width: 50px;
-            max-width: 50px;
+            width: 48px;
+            max-width: 48px;
             text-align: right;
             align-content: right;
         }
@@ -163,8 +163,9 @@
         <table class="table-header">
             <tbody>
                 <tr>
-                    <td style="width:50%;">Struk #{{ $countBill + 1}}</td>
-                    <td class="text-end" style="width:50%;">{{ date('Y-m-d H:m') }}</td>
+                    <td style="width:40%;">Struk #{{ $countBill + 1}}</td>
+                    <td class="text-end" style="width:40%;">{{ date('Y-m-d H:m') }}</td>
+                    <td style="width:10%;"></td>
                 </tr>
                 <tr>
                     <td colspan="2">Oleh : {{ Auth::user()->employee->full_name }}</td>
@@ -191,7 +192,7 @@
                 <tr>
                     <th class="description">Product</th>
                     <th class="price">Harga</th>
-                    <th class="quantity">Jumlah</th>
+                    <th class="quantity">qty</th>
                     <th class="subtotal">Subtotal</th>
                 </tr>
             </thead>
@@ -256,9 +257,11 @@
     <hr>
     <script type="text/javascript">
         try {
-            this.print();
+            window.print();
+            setTimeout(window.close, 0);
         } catch (e) {
             window.onload = window.print;
+            setTimeout(window.close, 0);
         }
 
     </script>

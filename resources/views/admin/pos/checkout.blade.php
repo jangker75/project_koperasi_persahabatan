@@ -208,47 +208,47 @@
                                 <div class="col-6">
                                     <div class="row">
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="1">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="1">
                                                 1</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="2">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="2">
                                                 2</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="3">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="3">
                                                 3</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="4">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="4">
                                                 4</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="5">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="5">
                                                 5</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="6">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="6">
                                                 6</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="7">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="7">
                                                 7</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="8">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="8">
                                                 8</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-sm w-100" data-price="9">
+                                            <div class="btn btn-outline-primary btn-number btn-sm w-100" data-price="9">
                                                 9</div>
                                         </div>
                                         <div class="col-4 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-number w-100" data-price="0">
+                                            <div class="btn btn-outline-primary btn-number w-100" data-price="0">
                                                 0</div>
                                         </div>
                                         <div class="col-8 p-1">
-                                            <div class="btn btn-outline-primary btn-cash btn-number w-100" data-price="00">
+                                            <div class="btn btn-outline-primary btn-number w-100" data-price="00">
                                                 00</div>
                                         </div>
                                     </div>
@@ -487,9 +487,22 @@
 
                 $("body").on("click", ".btn-number", function(){
                   let data = String($(this).data('price'));
-                  let newcash = cash.split(".").join("");
-                  if(newCash != "0"){
-                    newCash = newCash+data;
+                  var newCash = cash.split(".").join("");
+                  console.log(data, newCash)
+                  if(data == "0" || data == "00"){
+                    if(newCash != "0"){
+                      newCash = newCash+data;
+                      cash = formatRupiah(String(newCash))
+                      $("#cashInput").val(cash)
+                      change = newCash - total;
+                      $("#change").html(formatRupiah(String(change), "Rp"))
+                    }
+                  }else{
+                    if(newCash == "0"){
+                      newCash = data;
+                    }else{
+                      newCash = newCash+data;
+                    }
                     cash = formatRupiah(String(newCash))
                     $("#cashInput").val(cash)
                     change = newCash - total;
@@ -766,11 +779,11 @@
                         orderBy: orderBy,
                         paymentMethod: $('#paymentMethod').val(),
                         employeeOndutyId: "{{ auth()->user()->employee->id }}",
-                        employeeRequester: $("#mySelect2").val()
+                        employeeRequester: $("#mySelect2").val(),
                     }
                     if ($('#paymentMethod').val() == 'paylater') {
                         checkoutValue.paylater = $("#mySelect2").val()
-                    } else if ($('#paymentMethod').val() !== 'cash' && $('#paymentMethod').val() !==
+                    } else if ($('#paymentMethod').val() !== 'CASH' && $('#paymentMethod').val() !==
                         'paylater') {
                         checkoutValue.paymentCode = paymentCode
                     } else {
@@ -810,8 +823,6 @@
                             window.open('{{ url("admin/pos/print-receipt" ) }}/' + response
                                 .order
                                 .order_code, '', "width=800,height=400");
-                            // if (response.print == true) {
-                            // }
                             setTimeout(function () {
                                 location.reload();
                             }, 1000)
