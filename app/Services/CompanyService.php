@@ -3,23 +3,22 @@ namespace App\Services;
 
 use App\Models\CompanyBalance;
 use App\Models\CompanyBalanceHistory;
-
 class CompanyService {
     public function addDebitBalance($value, $balance_type, $description = '')
     {
         $this->saveToHistoryBalance(
-            debitOrCredit: 'debit', 
-            value: $value, 
-            balance_type: $balance_type, 
+            debitOrCredit: 'debit',
+            value: $value,
+            balance_type: $balance_type,
             description: $description);
     }
 
     public function addCreditBalance($value, $balance_type, $description = '')
     {
         $this->saveToHistoryBalance(
-            debitOrCredit: 'credit', 
-            value: $value, 
-            balance_type: $balance_type, 
+            debitOrCredit: 'credit',
+            value: $value,
+            balance_type: $balance_type,
             description: $description);
     }
 
@@ -42,7 +41,7 @@ class CompanyService {
             // "total_balance" => $savedHistory->balance_after,
         ]);
         $this->calculateTotalBalance();
-        
+
     }
     protected function calculateTotalBalance(){
         $companyBalance = CompanyBalance::findOrFail(1);   

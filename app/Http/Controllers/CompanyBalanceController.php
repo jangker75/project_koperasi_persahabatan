@@ -129,7 +129,7 @@ class CompanyBalanceController extends BaseAdminController
                 value: $input['amount'],
                 saving_type: "voluntary_savings_balance",
                 description: $notes);
-            (new CompanyService())->addDebitBalance($input['amount'] , $input['company_balance'], $notes);
+            // (new CompanyService())->addDebitBalance($input['amount'] , $input['company_balance'], $notes);
         }else{
             $typeTrans = "Penambahan";
             $notes = $typeTrans. ' Simpanan Sukarela From '.$employee->full_name. ' To KOPERASI ('. __('balance_company.'.$input["company_balance"]) . (($request->input('description') != null) ? '). Description : '. $input['description'] : '');
@@ -138,7 +138,7 @@ class CompanyBalanceController extends BaseAdminController
                 value: $input['amount'],
                 saving_type: "voluntary_savings_balance",
                 description: $notes);
-            (new CompanyService())->addCreditBalance($input['amount'] , $input['company_balance'], $notes);
+            // (new CompanyService())->addCreditBalance($input['amount'] , $input['company_balance'], $notes);
         }
         return redirect()->route('admin.company-balance.index')->with('success', $typeTrans. ' Simpanan Sukarela sukses');
     }
