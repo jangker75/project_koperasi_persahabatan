@@ -258,10 +258,10 @@
     <script type="text/javascript">
         try {
             window.print();
-            setTimeout(window.close, 0);
+            setTimeout(window.close, 1000);
         } catch (e) {
             window.onload = window.print;
-            setTimeout(window.close, 0);
+            setTimeout(window.close, 1000);
         }
 
     </script>
