@@ -3,6 +3,9 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-end">
+                    <a href="{{ route('admin.download.export-simpanan-anggota') }}">
+                        <button class="btn btn-success me-1">Download data simpanan</button>
+                    </a>
                     <div class="dropdown me-1">
                         <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-print me-2"></i>Download Data Nasabah

@@ -188,6 +188,8 @@ Route::group([
     Route::get('download-form-akad/{loan}', [LoanListController::class, 'downloadFormAkadPDF'])->name('download.form-akad');
     Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
     Route::get('download-loan-list-simulation/{loan}', [LoanListController::class, 'downloadFormSimulationPDF'])->name('download.loan-list-simulation');
+    Route::get('download-export-simpanan-anggota', [EmployeeController::class, 'downloadExportSimpanan'])->name('download.export-simpanan-anggota');
+    Route::post('download-report-cash-transaction', [CashTransactionController::class, 'downloadReportCashTransaction'])->name('download.report-cash-transaction');
     Route::get('print-receipt-order/{orderId}', [PrintReceiptController::class, 'printOrderReceipt'])->name('order.receipt');
     // Download PDF End
 
@@ -225,17 +227,6 @@ Route::group([
 Route::get('image/{filename?}', [DynamicImageService::class, 'showImage'])->where('filename', '.*')
         ->name('showimage')->middleware('auth'); //show image
 
-Route::get("create-data", function(){
-  for ($i=0; $i < 200; $i++) { 
-    $pro = rand(1,3386);
-    $cat = rand(1,20);
-
-    DB::table('category_has_product')->insert([
-      'category_id' => $cat,
-      'product_id' => $pro
-    ]);
-  }
-});
 // //Redirect all wild domain
 // Route::get('{any}', function () {
 //     return redirect(route('admin.dashboard'));
