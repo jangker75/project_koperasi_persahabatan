@@ -96,7 +96,7 @@ class EmployeeController extends BaseAdminController
         $employee->savings()->save($savings);
         $notes = "Pendaftaran anggota baru (".$employee->full_name.")";
         (new EmployeeService())->addCreditBalance($employee->savings->id, 25000, ConstantEnum::SAVINGS_BALANCE_TYPE['POKOK'],$notes);
-        (new CompanyService())->addCreditBalance(value: 25000, balance_type: 'other_balance', description:$notes);
+        (new CompanyService())->addCreditBalance(value: 25000, balance_type: 'other_balance', description: $notes);
         $role = checkPositionRole($employee->position->position_code);
         $user->assignRole($role);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_add_new_data_success'));
@@ -112,6 +112,11 @@ class EmployeeController extends BaseAdminController
     {
         $data = $this->data;
         $data['employee'] = $employee;
+        $savings = $data['employee']->savings;
+        $totalSavings = $savings->principal_savings_balance + $savings->mandatory_savings_balance
+        + $savings->activity_savings_balance + $savings->voluntary_savings_balance;
+        // dd($totalSavings);
+        $data["total_savings"] = $totalSavings;
         return view('admin.pages.employee.detail', $data);
     }
 
@@ -297,6 +302,29 @@ class EmployeeController extends BaseAdminController
             return (new BasicReportExport(datas: $data['datas'], headers: $data['headers'], title: $data['title']))
                 ->download('data_nasabah.xlsx');
         }
+    }
+    public function downloadExportSimpanan()
+    {
+        $employee = DB::table('employees')->select('nik',DB::raw('concat(first_name, " ", last_name) as fullname'),
+        'departments.name as gol', 'master_data_statuses.name as status','salary_number', 'nip', 'rekening', 'savings.principal_savings_balance', 'savings.mandatory_savings_balance', 'savings.activity_savings_balance', 'savings.voluntary_savings_balance')
+        ->join('savings','employees.id','=','savings.employee_id')
+        ->join('departments','employees.department_id','=','departments.id')
+        ->join('master_data_statuses','employees.status_employee_id','=','master_data_statuses.id')
+        ->get();
+        $employee->map(function ($item) {
+            $item->nik = convertNumberToStringExcel($item->nik);
+            $item->rekening = convertNumberToStringExcel($item->rekening);
+            $item->salary_number = convertNumberToStringExcel($item->salary_number);
+            $item->nip = convertNumberToStringExcel($item->nip);
+            $item->total = $item->principal_savings_balance + $item->mandatory_savings_balance
+            + $item->activity_savings_balance + $item->voluntary_savings_balance;
+            return $item;
+        });
+        $data['title'] = 'Data Simpanan Nasabah';
+        $data['headers'] = ['NIK', 'Nama', 'GOL', 'Status', 'No Gaji', 'NIP', 'No Rekening', 'Simpanan Pokok', 'Simpanan Wajib', 'Simpanan Aktivitas', 'Simpanan Sukarela', 'Total Simpanan'];
+        $data['datas'] = $employee->toArray();
+        return (new BasicReportExport(datas: $data['datas'], headers: $data['headers'], title: $data['title']))
+                ->download('data_simpanan_nasabah.xlsx');
     }
     public function downloadFormPendaftaran(Employee $employee)
     {
