@@ -28,6 +28,15 @@ class LoanListController extends BaseAdminController
     {
         $data = $this->data;
         $data['titlePage'] = 'Data Pinjaman';
+        $loan = Loan::query()
+        ->select('remaining_amount', 'contract_type_id')
+        ->where('is_lunas', 0)
+        ->approved()->get();
+        $data['totalPinjaman'] = [
+            "Total Pinjaman Uang" => $loan->where('contract_type_id', 1)->sum('remaining_amount'),
+            "Total Pinjaman Barang" => $loan->where('contract_type_id', 2)->sum('remaining_amount'),
+            "Total Pinjaman Lainnya" => $loan->where('contract_type_id', 3)->sum('remaining_amount')
+        ];
         return view('admin.pages.loan_list.index', $data);
     }
 

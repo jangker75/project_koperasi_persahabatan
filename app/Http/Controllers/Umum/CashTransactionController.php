@@ -9,6 +9,8 @@ use App\Http\Requests\CashTransactionRequest;
 use App\Models\DivisiUmumTransaction;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 
@@ -108,8 +110,26 @@ class CashTransactionController extends BaseAdminController
             ->rawColumns(['actions', 'full_name'])
             ->make(true);
     }
-    public function downloadReportCashTransaction(Request $request)
+    public function downloadReportCashTransaction()
     {
-        dd($request->all());
+        // dd($request->all());
+        $data['title'] = 'Laporan Kas Kokarda';
+        $data['date_from'] = request("date_from");
+        $data['date_to'] = request("date_to");
+        $data["data"] = DivisiUmumTransaction::query()
+        ->with('user.employee')
+        ->select('divisi_umum_transactions.*')
+        ->where("transaction_date", ">=", request("date_from")." 00:00:01")
+        ->where("transaction_date", "<=", request("date_to")." 23:59:59")
+        ->orderBy('transaction_date', 'asc')
+        ->get();
+        
+        // dd($data["data"]->where('transaction_type','debit')->sum('amount'));
+        $pdf = Pdf::loadView('admin.export.PDF.laporan_kas', $data);
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->getCanvas(); 
+        $canvas->page_text(520, 810, "Hal {PAGE_NUM} dari {PAGE_COUNT}", null, 11, [0, 0, 0]);
+        return $pdf->stream("Laporan Kas Kokarda.pdf");
     }
 }

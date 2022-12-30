@@ -7,7 +7,7 @@
             <span aria-hidden="true">×</span>
         </button>
       </div>
-      <form action="{{ route('admin.download.report-cash-transaction', ['type' => 'pdf']) }}" id="formDownloadReport" method="post">
+      <form target="_blank" action="{{ route('admin.download.report-cash-transaction', ['type' => 'pdf']) }}" id="formDownloadReport" method="post">
         @csrf
       <div class="modal-body">
         <div class="row mb-4">
@@ -17,8 +17,9 @@
                     <div class="input-group-text">
                         <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
                     </div>
-                    {!! Form::text('date_from', now()->format('Y-m-d'), [
+                    {!! Form::text('date_from', null, [
                         'id' => 'date_from',
+                        "required" => "required",
                         'class' => 'form-control fc-datepicker'.
                             ($errors->has('date_from') ? ' is-invalid' : '') .
                             (!$errors->has('date_from') && old('date_from') ? ' is-valid' : ''),
@@ -33,8 +34,9 @@
                     <div class="input-group-text">
                         <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
                     </div>
-                    {!! Form::text('date_to', now()->addMonth()->format('Y-m-d'), [
+                    {!! Form::text('date_to', null, [
                         'id' => 'date_to',
+                        "required" => "required",
                         'class' => 'form-control fc-datepicker'.
                             ($errors->has('date_to') ? ' is-invalid' : '') .
                             (!$errors->has('date_to') && old('date_to') ? ' is-valid' : ''),
@@ -45,7 +47,7 @@
       </div>
        <div class="modal-footer">
             <button type="submit" id="btnDownloadReport" class="btn btn-success">Download</button>
-            <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
        </div>
     </form>
     </div>

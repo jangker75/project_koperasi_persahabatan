@@ -3,6 +3,27 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header row">
+                    @foreach ($totalPinjaman as $key => $item)
+                        <div class="col-4">
+                            <div class="card" style="background-color: rgb(214, 211, 211)">
+                                <div class="row">
+                                    <div class="col-4 align-items-center">
+                                        <div
+                                            class="card-img-absolute  circle-icon bg-success align-items-center text-center box-success-shadow bradius">
+                                            <img src="{{ asset('assets/images/svgs/circle.svg') }}" alt="img" class="card-img-absolute">
+                                            <i class="pe-7s-cash fs-30 text-white mt-4"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-4">
+                                            <p class="mb-2 fw-normal mt-2 fs-6">{{ $key }}</p>
+                                            <p class="fw-bold fs-5 mb-0">{{ format_uang($item) }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                     <div>
                         <span>Download report</span>
                     </div>
