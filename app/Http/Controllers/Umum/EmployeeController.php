@@ -271,7 +271,7 @@ class EmployeeController extends BaseAdminController
             ->with(['statusEmployee' => function($query){
                 $query->select('id', 'name');
             }])    
-            ->select(DB::raw('concat(first_name, " ", last_name) as fullname'),
+            ->select(DB::raw('concat(COALESCE(first_name,""), " ", COALESCE(last_name,"")) as fullname'),
                 'first_name', 'last_name','nik','status_employee_id', 'bank', 'rekening')
             ->get();
         
@@ -305,7 +305,7 @@ class EmployeeController extends BaseAdminController
     }
     public function downloadExportSimpanan()
     {
-        $employee = DB::table('employees')->select('nik',DB::raw('concat(first_name, " ", last_name) as fullname'),
+        $employee = DB::table('employees')->select('nik',DB::raw('concat(COALESCE(first_name,""), " ", COALESCE(last_name,"")) as fullname'),
         'departments.name as gol', 'master_data_statuses.name as status','salary_number', 'nip', 'rekening', 'savings.principal_savings_balance', 'savings.mandatory_savings_balance', 'savings.activity_savings_balance', 'savings.voluntary_savings_balance')
         ->join('savings','employees.id','=','savings.employee_id')
         ->join('departments','employees.department_id','=','departments.id')

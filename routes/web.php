@@ -186,7 +186,7 @@ Route::group([
     Route::get('download-kontrak-peminjaman/{loan_id}', [LoanListController::class, 'downloadKontrakPeminjamanPDF'])->name('download.kontrak.peminjaman');
     Route::get('download-bukti-pelunasan/{loan}', [LoanListController::class, 'downloadBuktiPelunasanPDF'])->name('download.bukti-pelunasan');
     Route::get('download-form-akad/{loan}', [LoanListController::class, 'downloadFormAkadPDF'])->name('download.form-akad');
-    Route::get('download-loan-report', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
+    Route::get('download-loan-report/{type}', [LoanListController::class, 'downloadLoanReport'])->name('download.loan.report');
     Route::get('download-loan-list-simulation/{loan}', [LoanListController::class, 'downloadFormSimulationPDF'])->name('download.loan-list-simulation');
     Route::get('download-export-simpanan-anggota', [EmployeeController::class, 'downloadExportSimpanan'])->name('download.export-simpanan-anggota');
     Route::post('download-report-cash-transaction', [CashTransactionController::class, 'downloadReportCashTransaction'])->name('download.report-cash-transaction');
