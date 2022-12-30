@@ -45,28 +45,28 @@
             .search( this.value )
             .draw();
     });
-        $('#datatable').on('click', '.btn-cairkan-simpanan', function(e) {
-            let employeeId = $(this).data('employeeid')
-            let url = $(this).val()
-            $('#btnCairkan').attr('disabled', false)
-            $('#formCairkanSimpanan').attr('action', url)
-            console.log($(this).data('employeeid'));
-            $.ajax({
-                type: "get",
-                url: "{{ url('admin/employee-balance-information') }}/"+employeeId,
-                dataType: "json",
-                success: function (response) {
-                    $('#modalTitle').text(response['name'])
-                    $("#activity_savings").text(response['activity_savings_balance'])
-                    $("#mandatory_savings").text(response['mandatory_savings_balance'])
-                    $("#principal_savings").text(response['principal_savings_balance'])
-                    $("#voluntary_savings").text(response['voluntary_savings_balance'])
-                    $("#total_savings").text(response['total_savings_balance'])
-                    if(response['total_savings_value'] <= 0){
-                        $('#btnCairkan').attr('disabled', true)
-                    }
+    $('#datatable').on('click', '.btn-cairkan-simpanan', function(e) {
+        let employeeId = $(this).data('employeeid')
+        let url = $(this).val()
+        $('#btnCairkan').attr('disabled', false)
+        $('#formCairkanSimpanan').attr('action', url)
+        console.log($(this).data('employeeid'));
+        $.ajax({
+            type: "get",
+            url: "{{ url('admin/employee-balance-information') }}/"+employeeId,
+            dataType: "json",
+            success: function (response) {
+                $('#modalTitle').text(response['name'])
+                $("#activity_savings").text(response['activity_savings_balance'])
+                $("#mandatory_savings").text(response['mandatory_savings_balance'])
+                $("#principal_savings").text(response['principal_savings_balance'])
+                $("#voluntary_savings").text(response['voluntary_savings_balance'])
+                $("#total_savings").text(response['total_savings_balance'])
+                if(response['total_savings_value'] <= 0){
+                    $('#btnCairkan').attr('disabled', true)
                 }
-            }); 
-        })
+            }
+        }); 
+    })
     
 </script>

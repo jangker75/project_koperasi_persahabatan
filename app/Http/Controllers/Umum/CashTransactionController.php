@@ -108,4 +108,8 @@ class CashTransactionController extends BaseAdminController
             ->rawColumns(['actions', 'full_name'])
             ->make(true);
     }
+    public function downloadReportCashTransaction(Request $request)
+    {
+        dd($request->all());
+    }
 }

@@ -30,6 +30,7 @@
             { data: "transaction_number", name: "transaction_number" },
             { data: "loan_date", name: "loan_date" },
             { data: "full_name", name: "full_name" },
+            { data: "contracttype.name", name: "contracttype.name" },
             { data: "total_loan_amount", name: "total_loan_amount" },
             { data: "remaining_amount", name: "remaining_amount" },
             { data: "approvalstatus.name", name: "approvalstatus.name" },

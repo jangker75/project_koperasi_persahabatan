@@ -163,7 +163,7 @@ class ExEmployeeController extends BaseAdminController
                 saving_type: 'activity_savings_balance',
                 description: $notesEmployee);
         }
-        (new CompanyService())->addDebitBalance($total , 'loan_balance', $notesCompany);
+        // (new CompanyService())->addDebitBalance($total , 'loan_balance', $notesCompany);
         return redirect()->route('admin.ex-employee.index')->with('success', 'Pencairan saldo berhasil');
     }
     public function downloadFormKeluar(Employee $employee)
