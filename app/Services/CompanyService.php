@@ -7,7 +7,7 @@ class CompanyService {
     public function addDebitBalance($value, $balance_type, $description = '')
     {
         $this->saveToHistoryBalance(
-            debitOrCredit: 'debit',
+            debitOrCredit: "debit",
             value: $value,
             balance_type: $balance_type,
             description: $description);
