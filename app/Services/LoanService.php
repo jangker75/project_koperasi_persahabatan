@@ -19,13 +19,13 @@ class LoanService
         (new EmployeeService())->addCreditBalance($loan->employee->savings->id, $this->profitEmployee, 'activity_savings_balance', $description);
     }
 
-    public function addCreditLoanHistory($loanId, $value, $description)
-    {
-        $loan = Loan::findOrFail($loanId);
-        $this->saveToLoanHistory('credit', $loan, $value, $description);
-        (new CompanyService())->addDebitBalance($this->profitCompany, 'loan_balance');
-        (new EmployeeService())->addDebitBalance($loan->employee->savings->id, $this->profitEmployee, 'activity_savings_balance');
-    }
+    // public function addCreditLoanHistory($loanId, $value, $description)
+    // {
+    //     $loan = Loan::findOrFail($loanId);
+    //     $this->saveToLoanHistory('credit', $loan, $value, $description);
+    //     (new CompanyService())->addDebitBalance($this->profitCompany, 'loan_balance');
+    //     (new EmployeeService())->addDebitBalance($loan->employee->savings->id, $this->profitEmployee, 'activity_savings_balance');
+    // }
 
     public function fullPayment($loanId, $description = '')
     {
