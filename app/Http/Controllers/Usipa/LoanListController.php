@@ -180,14 +180,23 @@ class LoanListController extends BaseAdminController
         return redirect()->back()->with('success', 'Delete Attachment berhasil');
     }
 
-    public function downloadLoanReport()
+    public function downloadLoanReport($type)
     {
         $data = [];
-        $loans = Loan::with('employee')->get();
+        $contractTypelist = [
+            "uang" => 1,
+            "barang" => 2,
+            "lainnya" => 3,
+        ];
+        $loans = Loan::with('employee')->where('is_lunas', 0)
+        ->when($type != 'all', function($row) use($type, $contractTypelist){
+            $row->where('contract_type_id', $contractTypelist[$type]);
+        })
+        ->get();
         $loans->map(function($item) use(&$data){
             $data[$item->loan_date][] = $item;
         });
-        // dd(collect($data['2022-08-04'])->sum('remaining_amount'));
+        
         $data['loans'] = $data;
         $data['title'] = 'Data Nasabah';
         $pdf = Pdf::loadView('admin.export.Excel.loan_report', $data)->setPaper('a4', 'landscape');
@@ -253,10 +262,12 @@ class LoanListController extends BaseAdminController
         $keyword = request('keyword');
         $status = request('status');
         $query = Loan::query()
-        ->with('approvalstatus', 'employee')
+        ->with('approvalstatus', 'employee', 'contracttype')
         ->select('loans.*')
-        // ->where('is_lunas', 0)
-        ->when($status != '' && $status != 'All', function($row) use($status){
+        ->when($status == "Lunas", function($row){
+            $row->where('is_lunas',1);
+        })
+        ->when($status != '' && $status != 'All' && $status != 'Lunas', function($row) use($status){
             $row->whereHas('approvalstatus', function($query) use($status){
                 $query->statusLoanApproval()->where('name', $status);
             });
