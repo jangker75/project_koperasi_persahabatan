@@ -198,7 +198,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        App\Providers\AdminSideMenuProvider::class,
+        // App\Providers\AdminSideMenuProvider::class,
         App\Providers\NavigationProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,

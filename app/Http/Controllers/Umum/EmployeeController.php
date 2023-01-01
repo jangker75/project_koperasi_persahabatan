@@ -270,9 +270,10 @@ class EmployeeController extends BaseAdminController
         $employee = Employee::query()
             ->with(['statusEmployee' => function($query){
                 $query->select('id', 'name');
-            }])    
+            }])
             ->select(DB::raw('concat(COALESCE(first_name,""), " ", COALESCE(last_name,"")) as fullname'),
                 'first_name', 'last_name','nik','status_employee_id', 'bank', 'rekening')
+            ->whereNull('employees.deleted_at')
             ->get();
         
         //Reformat field
@@ -310,6 +311,7 @@ class EmployeeController extends BaseAdminController
         ->join('savings','employees.id','=','savings.employee_id')
         ->join('departments','employees.department_id','=','departments.id')
         ->join('master_data_statuses','employees.status_employee_id','=','master_data_statuses.id')
+        ->whereNull('employees.deleted_at')
         ->get();
         $employee->map(function ($item) {
             $item->nik = convertNumberToStringExcel($item->nik);
