@@ -198,6 +198,7 @@ class LoanListController extends BaseAdminController
             "lainnya" => 3,
         ];
         $loans = Loan::with('employee')->where('is_lunas', 0)->approved()
+        ->whereNull('deleted_at')
         ->when($type != 'all', function($row) use($type, $contractTypelist){
             $row->where('contract_type_id', $contractTypelist[$type]);
         })

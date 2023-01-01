@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Toko;
 
+use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\ApplicationSetting;
 use App\Models\Employee;
@@ -16,10 +17,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
-class OrderController extends Controller
+class OrderController extends BaseAdminController
 {
     public function __construct()
     {
+        parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.order.index');
     }
