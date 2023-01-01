@@ -4,13 +4,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-end">
                     <div class="dropdown me-1">
-                        <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a target="_blank" type="button" class="btn btn-info fw-bold" data-bs-toggle="modal" data-bs-target="#modalDownloadReport" aria-expanded="false">
                                 <i class="fa fa-print me-2"></i>Download laporan
-                            </button>
-                        <div class="dropdown-menu" style="">
-                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDownloadReport" href="">Export PDF</a>
-                            {{-- <a class="dropdown-item" target="_blank" href="{{ route('admin.download.data-nasabah', ['type' => 'xls']) }}">Export Excel</a> --}}
-                        </div>
+                            </a>
                     </div>
                     {{-- <a href="{{ route('admin.employee.out') }}">
                         <button class="btn btn-warning me-1">Anggota Keluar</button>
