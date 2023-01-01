@@ -3,17 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\ApplicationSetting;
+use App\Models\Category;
 use App\Models\Loan;
 use App\Models\Order;
 use App\Models\PaymentMethod;
+use App\Models\PrintLabel;
+use App\Models\Product;
 use App\Models\Store;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaylaterRepository;
+use App\Repositories\ProductStockRepositories;
+use App\Services\GeneralService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Milon\Barcode\DNS1D;
 
 class DashboardController extends BaseAdminController
 {
@@ -83,5 +89,11 @@ class DashboardController extends BaseAdminController
       $data['countBill'] = count($records);
 
       return view('admin.export.PDF.receipt-order', $data);
+    }
+
+    public function printLabel(){
+      $data['titlePage'] = 'Halaman cetak harga';
+      $data['categories'] = Category::get();
+      return view('admin.pages.toko.product.print-label',$data);
     }
 }

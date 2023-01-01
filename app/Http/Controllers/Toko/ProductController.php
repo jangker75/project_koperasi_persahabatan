@@ -258,4 +258,42 @@ class ProductController extends BaseAdminController
 
       return redirect()->route("admin.product.show", $productId);
     }
+
+    public function getIndexDatatablesLabel()
+    {
+        $query = Product::query()
+        ->select(
+          'products.id',
+          'products.name',
+          'products.sku',
+          DB::raw('IFNULL(brands.name, "--") as brand'), 
+          DB::raw('IFNULL(GROUP_CONCAT(categories.name),"--") as category'),
+          DB::raw('concat("Rp. ", format(prices.revenue, 0)) as price')
+        )
+        ->leftJoin('brands', 'products.brand_id', '=', 'brands.id')
+        ->leftJoin('prices', function($join){
+          $join->on('products.id', '=', 'prices.product_id');
+          $join->on('prices.is_active','=', DB::raw("'". 1 . "'"));
+        })
+        ->join('category_has_product','products.id','=','category_has_product.product_id')
+        ->join('categories','category_has_product.category_id','=','categories.id')
+        ->groupBy('products.id');
+        
+        $datatable = new DataTables();
+        return $datatable->eloquent($query)
+          ->addIndexColumn(true)
+          ->addColumn('checkbox', function ($item) {
+            return '<input type="checkbox" id="manual_entry_'.$item->id.'" class="manual_entry_cb" value="'.$item->id.'" />';
+          })
+          ->filterColumn('brand', function($query, $keyword) {
+              $sql = "brands.name like ?";
+              $query->whereRaw($sql, ["%{$keyword}%"]);
+          })
+          ->filterColumn('category', function($query, $keyword) {
+              $sql = "categories.name like ?";
+              $query->whereRaw($sql, ["%{$keyword}%"]);
+          })
+          ->rawColumns(['action', 'checkbox'])
+          ->make(true);
+    }
 }
