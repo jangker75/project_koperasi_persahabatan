@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Toko\API\ProductController;
 use App\Models\ApplicationSetting;
+use App\Models\Category;
 use App\Models\Loan;
 use App\Models\Order;
 use App\Models\PaymentMethod;
+use App\Models\Price;
+use App\Models\PrintLabel;
+use App\Models\Product;
 use App\Models\Store;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaylaterRepository;
+use App\Repositories\ProductStockRepositories;
+use App\Services\GeneralService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Milon\Barcode\DNS1D;
 
 class DashboardController extends BaseAdminController
 {
@@ -83,5 +91,39 @@ class DashboardController extends BaseAdminController
       $data['countBill'] = count($records);
 
       return view('admin.export.PDF.receipt-order', $data);
+    }
+
+    public function formLabel(){
+      $data['titlePage'] = 'Halaman cetak harga';
+      $data['categories'] = Category::get();
+      return view('admin.pages.toko.product.print-label',$data);
+    }
+
+    public function printLabel(Request $request){
+      // dd($request->all());
+      $data['titlePage'] = 'Halaman cetak harga';
+      $data['product'] = [];
+      if($request->mode == "category"){
+        $data = explode(",", $request->data);
+        $product = DB::table('products')->select("products.*")
+                    ->leftJoin('category_has_product', 'products.id', '=', 'category_has_product.product_id')
+                    ->whereIn('category_has_product.category_id', $data)
+                    ->groupBy('products.id')
+                    ->get()->toArray();
+        $data['product'] = $product;
+      }else{
+        $data = explode(",", $request->data);
+        $product = Product::whereIn('id', $data)->get()->toArray();
+        $data['product'] = $product;
+      }
+      
+      foreach ($data['product'] as $key => $product) {
+        $data['product'][$key]->barcode = (new DNS1D)->getBarcodeSVG($product->sku, 'C128',1.2,36);
+        $data['product'][$key]->price = Price::where('product_id', $product->id)->where('is_active', 1)->first()->cost;
+      }
+
+      $data['height'] = 121;
+      $data['width'] = 242;
+      return view('admin.export.PDF.print-label',$data);
     }
 }
