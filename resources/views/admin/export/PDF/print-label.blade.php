@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="style.css">
-    <title>Hallo</title>
+    <title>cetak label</title>
     <style>
         * {
             font-size: 11px;
@@ -31,10 +31,14 @@
 
         }
 
+        h5{
+          font-size: 16px;
+        }
+
         .canvas{
           border: 1px solid black;
           position: absolute;
-          padding: 34px 8px;
+          /* padding: 34px 8px; */
         }
 
         td,
@@ -58,6 +62,8 @@
           display: flex;
           justify-content: center;
           align-items: center;
+          padding: 2px;
+          box-sizing: border-box;
         }
 
         .layout{
@@ -73,6 +79,9 @@
           align-items: center;
         }
 
+        .text-name{
+          max-width: 180px;
+        }
     </style>
 </head>
 
@@ -84,11 +93,10 @@
             <div class="label">
               <div class="content">
                 <div>
-                  {!! $prod['barcode'] !!}
+                  {!! $prod->barcode !!}
                 </div>
-                {{-- <span>{{ $prod->sku }}</span> --}}
-                <b style="margin-top: 4px;">{{ str($prod->name)->upper()->limit(20); }}</b>
-                <b>{{ format_uang($prod->activePrice[0]->revenue) }}</b>
+                <h5 class="text-name" style="margin-top: 4px; text-align:center;">{{ $prod->name }}</h5>
+                <h5>{{ format_uang($prod->price) }}</>
               </div>
             </div>
           </div>
@@ -150,8 +158,11 @@
       var pitch = document.querySelectorAll(".pitch");
 
       pitch.forEach(element => {
-        element.style.height = verticalPitch+"px";
-        element.style.width = horizontalPitch+"px";
+
+        // element.style.height = verticalPitch+"px";
+        // element.style.width = horizontalPitch+"px";
+        element.style.height = "{{ $height+1 }}px";
+        element.style.width = "{{ $width+1 }}px";
       });
       
       var label = document.querySelectorAll(".label");

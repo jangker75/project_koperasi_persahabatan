@@ -132,7 +132,8 @@ Route::group([
 
       Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
       Route::get('print-form-opname', [OpnameController::class, 'printFormOpname']);
-      Route::get('print-label', [DashboardController::class, 'printLabel']);
+      Route::get('form-label', [DashboardController::class, 'formLabel'])->name("form-label-harga");
+      Route::post('print-label', [DashboardController::class, 'printLabel'])->name("print-label-harga");
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);

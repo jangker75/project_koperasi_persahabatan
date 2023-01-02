@@ -8,7 +8,7 @@
                 </div>
                 <div class="card-body">
                     <div class="accordion" id="accordionExample">
-                        <div class="accordion-item" >
+                        <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOne" data-mode="category">
                                 <button class="accordion-button text-uppercase" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -27,13 +27,12 @@
                                                 @endforeach
                                             </div>
                                             <small class="text-danger">*hanya bisa maksimal 3 kategori</small><br>
-                                            <button class="btn btn-primary my-4">Pilih Kategori</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item" >
+                        <div class="accordion-item">
                             <h2 class="accordion-header" id="headingTwo" data-mode="product">
                                 <button class="accordion-button collapsed text-uppercase" type="button"
                                     data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
@@ -67,10 +66,14 @@
                                     <hr>
                                     <div class="d-flex flex-wrap" id="bodyCart">
                                     </div>
+                                    <small class="text-danger">klik produk untuk menghapus dari list</small>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
+                    @csrf
+                    <button class="btn btn-primary my-4" id="submitData">Print Label</button>
                 </div>
             </div>
         </div>
@@ -98,18 +101,17 @@
     @slot('script')
     @include('admin.pages.toko.product.index-script-datatable-label')
     <script>
-      var productInCart = [];
-      let pickCategory = [];
-      let mode = "category";
+        var productInCart = [];
+        let pickCategory = [];
+        let mode = "category";
         $(document).ready(function () {
-            $('.accordion-header').click(function(){
+            $('.accordion-header').click(function () {
                 mode = $(this).data('mode');
                 pickCategory = [];
                 productInCart = [];
                 $("#bodyCart").html("");
                 $(".categories").removeClass("selected")
             })
-
 
             $('.categories').click(function () {
                 let id = $(this).data('id')
@@ -128,7 +130,6 @@
                 }
                 console.log(pickCategory)
             })
-
 
             listProductInSearch = [];
             $("#scanBarcode").keyup(function (e) {
@@ -172,18 +173,18 @@
                 }
             })
 
-            $("body").on('click', '.product-item', function(){
-                    let idNumber = $(this).data('id');
-                    var removeIndex = productInCart.map(function (item) {
-                        return item.id;
-                    }).indexOf(idNumber);
+            $("body").on('click', '.product-item', function () {
+                let idNumber = $(this).data('id');
+                var removeIndex = productInCart.map(function (item) {
+                    return item.id;
+                }).indexOf(idNumber);
 
-                    // remove object
-                    productInCart.splice(removeIndex, 1);
-                    // $(".product-item[data-id='" + idNumber + "']").remove();
-                    $(this).remove();
-                    console.log(productInCart)
-                })
+                // remove object
+                productInCart.splice(removeIndex, 1);
+                // $(".product-item[data-id='" + idNumber + "']").remove();
+                $(this).remove();
+                console.log(productInCart)
+            })
 
             $("body").on("click", ".search-click", function () {
                 if ($(this).hasClass("close-click")) {
@@ -206,12 +207,12 @@
 
                     if (checker == undefined) {
                         let toPush = {
-                          id: $(this).data('id'),
-                          title: $(this).data('title')
+                            id: $(this).data('id'),
+                            title: $(this).data('title')
                         }
                         productInCart.push(toPush);
                         renderRowCart(toPush);
-                    } 
+                    }
 
                     $("#resultSearchProduct").html("")
                     $("#resultSearchProduct").hide();
@@ -260,11 +261,60 @@
                 }
 
                 let html = `
-                  <div class="btn btn-outline-primary mx-1 product-item" data-id="`+product.id+`">`+product.title+`</div>
+                  <div class="btn btn-outline-primary mx-1 product-item" data-id="` + product.id + `">` + product
+                    .title + `</div>
                 `;
                 $('#bodyCart').append(html)
             }
+
+            $("#submitData").click(function(){
+              submit();
+            });
+
+            function submit() {
+              let param = {
+                mode:mode,
+                "_token": $("[name='_token']").val()
+              }
+
+              if (mode == 'category'){
+                param.data = pickCategory;
+              }else{
+                listId = productInCart.map(function(element){
+                  return element.id
+                })
+                param.data = listId;
+              }
+
+              if(param.data.length == 0){
+                alert("data belum ditambahkan");
+                return false;
+              }
+
+              postAndRedirect("{{ route('admin.print-label-harga') }}", param);
+            }
         })
+
+
+        function postAndRedirect(url, postData)
+        {
+            var postFormStr = "<form method='POST' action='" + url + "'>\n";
+
+            for (var key in postData)
+            {
+                if (postData.hasOwnProperty(key))
+                {
+                    postFormStr += "<input type='hidden' name='" + key + "' value='" + postData[key] + "'></input>";
+                }
+            }
+
+            postFormStr += "</form>";
+
+            var formElement = $(postFormStr);
+
+            $('body').append(formElement);
+            $(formElement).submit();
+        }
 
     </script>
     @endslot
