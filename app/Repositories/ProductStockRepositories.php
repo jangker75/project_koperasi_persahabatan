@@ -170,7 +170,7 @@ class ProductStockRepositories{
 
   public function indexStock($storeId = null){
     if($storeId !== null){
-      $whereClause = " WHERE stocks.store_id = ". $storeId;
+      $whereClause = " AND stocks.store_id = ". $storeId;
     }else{
       $whereClause = "";
     }
@@ -182,14 +182,16 @@ class ProductStockRepositories{
         products.sku AS sku,
         (SELECT GROUP_CONCAT(stores.name)  FROM stores) AS store_name,
         stocks.qty AS qty,
-        JSON_ARRAYAGG(
+        GROUP_CONCAT(
             JSON_OBJECT(
               'store_id', stocks.store_id,
               'quantity' , stocks.qty
             )
+          SEPARATOR '@'
         ) AS qtyResult
       FROM stocks 
         LEFT JOIN products ON stocks.product_id = products.id AND products.deleted_at IS NULL
+      WHERE products.id IS NOT NULL
       " . $whereClause . "
       GROUP BY 
         stocks.product_id
