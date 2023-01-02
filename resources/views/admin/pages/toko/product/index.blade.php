@@ -9,7 +9,7 @@
                             <button class="btn btn-success me-3">Buat Produk Baru</button>
                         </a>
                         
-                        <a href="{{ route("admin.form-label-harga") }}">
+                        <a href="{{ route("admin.form-label-harga") }}" target="_blank">
                             <button class="btn btn-info me-3">Cetak Label Produk</button>
                         </a>
                     </div>
