@@ -113,7 +113,7 @@ class DashboardController extends BaseAdminController
         $data['product'] = $product;
       }else{
         $data = explode(",", $request->data);
-        $product = Product::whereIn('id', $data)->get()->toArray();
+        $product = Product::whereIn('id', $data)->get();
         $data['product'] = $product;
       }
       
