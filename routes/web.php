@@ -132,6 +132,8 @@ Route::group([
 
       Route::get('opname-print/{id}', [OpnameController::class, 'print'])->name('opname.print');
       Route::get('print-form-opname', [OpnameController::class, 'printFormOpname']);
+      Route::get('form-label', [DashboardController::class, 'formLabel'])->name("form-label-harga");
+      Route::post('print-label', [DashboardController::class, 'printLabel'])->name("print-label-harga");
 
       // transfer-stock
       Route::get('confirm-ticket-transfer-stock/{id}', [ManagementStockController::class, 'confirmTicket']);
@@ -210,6 +212,7 @@ Route::group([
     Route::get('datatables-order', [OrderController::class, 'getIndexDatatables'])->name('order.index.datatables');
     Route::get('datatables-opname', [OpnameController::class, 'getIndexDatatables'])->name('opname.index.datatables');
     Route::get('datatables-product', [ProductController::class, 'getIndexDatatables'])->name('product.index.datatables');
+    Route::get('datatables-product-label', [ProductController::class, 'getIndexDatatablesLabel'])->name('product.index.datatables.label');
     Route::get('datatables-return', [ReturnSupplierController::class, 'getIndexDatatables'])->name('return-supplier.index.datatables');
     Route::get('datatables-employee-index', [EmployeeController::class, 'getIndexDatatables'])->name('employee.index.datatables');
     Route::get('datatables-ex-employee-index', [ExEmployeeController::class, 'getIndexDatatables'])->name('ex-employee.index.datatables');

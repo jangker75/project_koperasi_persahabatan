@@ -80,13 +80,16 @@
                                         <td>{{ $stock->name }}</td>
                                         <td>{{ $stock->sku}}</td>
                                         <?php
-                                          $qtyResult = json_decode($stock->qtyResult, true);
-                                          // dd($qtyResult);
+                                          $qtyResult = explode("@", $stock->qtyResult);
+                                          foreach ($qtyResult as $key => $qtyRes) {
+                                            $qtyResult[$key] = json_decode($qtyRes, true);
+                                          }
+                                          
                                           foreach ($stores as $store) {
                                             $qty = array_filter($qtyResult, function($result) use ($store){
                                               return $result['store_id'] == $store->id;
                                             });
-                                            
+
                                             if(count($qty) > 0){
                                               $qty = array_values($qty)[0];
                                               echo("<td>".$qty['quantity']."</td>");

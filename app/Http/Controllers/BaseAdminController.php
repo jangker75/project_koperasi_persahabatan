@@ -17,7 +17,7 @@ class BaseAdminController extends Controller
             $urlPath = explode('/', $urlPath);
             $url = $urlPath[count($urlPath)-1];
             $this->middleware("can:read ${url}", ['only' => ['index']]);
-            $this->middleware("can:create ${url}", ['only' => ['create','store']]);
+            // $this->middleware("can:create ${url}", ['only' => ['create','store']]);
             // $this->middleware("can:edit ${url}", ['only' => ['edit','update']]);
             // $this->middleware("can:delete ${url}", ['only' => ['destroy']]);
         
