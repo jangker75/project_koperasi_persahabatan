@@ -117,6 +117,11 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        'kokardamonthlyloan' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/monthly-loan-payment.log'),
+            'level' => 'info',
+        ],
     ],
 
 ];

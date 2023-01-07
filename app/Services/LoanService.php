@@ -103,6 +103,7 @@ class LoanService
         $loans = Loan::with('approvalstatus')
         ->approved()
         ->where('is_lunas', 0)
+        // ->where("loans.id",">",373) //Custom running
         ->get();
         $countLunas = 0;
         $loanNumber = [];
@@ -113,10 +114,14 @@ class LoanService
             //Get Cicilan ke-#
             $payNumber = (LoanHistory::where('loan_id', $loan->id)
             ->where('transaction_type','debit')->count()) + 1;
-
+            if(now()->subMonth()->format('M') == "Dec"){
+                $year = now()->subMonth()->locale('id')->format('Y');
+            }else{
+                $year = now()->locale('id')->format('Y');
+            }
             $notes = __('loan.notes_monthly_payment', [
                 'month' => now()->subMonth()->format('M'),
-                'year' => now()->locale('id')->format('Y'),
+                'year' => $year,
                 'transaction_number' => $loan->transaction_number. " Cicilan ke-${payNumber}",
             ]);
             
