@@ -227,7 +227,7 @@ class ProductStockRepositories{
       SELECT
         products.id,
         products.sku,
-        order_details.qty as qtyOrder, 
+        sum(order_details.qty) as qtyOrder, 
         order_details.product_name as name,
         stocks.qty
       FROM orders
