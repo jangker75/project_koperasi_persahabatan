@@ -8,6 +8,7 @@ use App\Models\CompanyBalanceHistory;
 use App\Models\Employee;
 use App\Models\Loan;
 use App\Models\LoanHistory;
+use App\Models\Savings;
 use App\Repositories\EmployeeRepository;
 use App\Services\CompanyService;
 use App\Services\EmployeeService;
@@ -32,6 +33,28 @@ class CompanyBalanceController extends BaseAdminController
         $data['loanRejected'] = Loan::rejected()->count();
         $data['loan'] = Loan::with('loanhistory')->approved()->get();
         $data['loanPaid'] = LoanHistory::where('transaction_type', 'debit')->get();
+        $savings = Savings::whereHas('employee', function($q){
+            $q->whereNull("employees.resign_date");
+        })->get();
+        $tmp = [
+            "principal_savings_balance" => "Total Simpanan Pokok",
+            "mandatory_savings_balance" => "Total Simpanan Wajib",
+            "activity_savings_balance" => "Total Simpanan Aktifitas",
+            "voluntary_savings_balance" => "Total Simpanan Sukarela"
+        ];
+        // $data['totalBalanceEmployee'] = collect([
+        //     "total_principal_savings_balance" => $savings->sum("principal_savings_balance"),
+        //     "total_mandatory_savings_balance" => $savings->sum("mandatory_savings_balance"),
+        //     "total_activity_savings_balance" => $savings->sum("activity_savings_balance"),
+        //     "total_voluntary_savings_balance" => $savings->sum("principal_savings_balance"),
+        // ]);
+        foreach ($tmp as $key => $value) {
+            $a = collect([]);
+            $a->text = $value;
+            $a->value = $savings->sum($key);    
+            $data['totalBalanceEmployee'][] = $a;
+        }
+        $data['totalBalanceEmployee'] = collect($data['totalBalanceEmployee']);
         return view('admin.pages.company_balance.index', $data);
     }
     public function create()
