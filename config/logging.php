@@ -122,6 +122,11 @@ return [
             'path' => storage_path('logs/monthly-loan-payment.log'),
             'level' => 'info',
         ],
+        'kokardamonthlymandatory' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/monthly-mandatory-savings.log'),
+            'level' => 'info',
+        ],
     ],
 
 ];
