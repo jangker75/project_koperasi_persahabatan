@@ -25,7 +25,10 @@
         </div>
         
         <div class="col-md-6 col-lg-3">
-            <x-employee.employee-balance-card-component :text="__('balance_company.total_balance')" :value="$company->balance->total_balance" type_balance="total_balance"/>
+            @php
+                $totalB = $company->balance->loan_balance + $company->balance->store_balance + $company->balance->other_balance;
+            @endphp
+            <x-employee.employee-balance-card-component :text="__('balance_company.total_balance')" :value="$totalB" type_balance="total_balance"/>
         </div>
     </div>
     {{-- END PROFIT SECTION --}}
