@@ -33,7 +33,8 @@ class MonthlyMandatorySavings extends Command
     {
         $savings = Savings::whereHas('employee', function($q){
             $q->whereNull('employees.resign_date');
-            // ->whereIn("employees.id",[]);
+            // ->whereIn("employees.id",[
+            // ]);
         })
         ->get();
         $amount_to_savings = 25000;
@@ -44,6 +45,7 @@ class MonthlyMandatorySavings extends Command
                 value: $amount_to_savings,
                 saving_type: 'mandatory_savings_balance',
                 description: "Iuran wajib Bulanan"
+                // description: "Iuran wajib Bulanan. (Revisi bulan desember 2023)"
             );
             // (new CompanyService())->addCreditBalance($amount_to_savings , 'other_balance', "Iuran wajib Bulanan ". $value->employee->full_name);
             Log::channel("kokardamonthlymandatory")->info("Iuran wajib bulanan ".$amount_to_savings." : employee_id=". $value->employee_id);
