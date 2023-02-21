@@ -119,7 +119,7 @@ class DashboardController extends BaseAdminController
       
       foreach ($data['product'] as $key => $product) {
         $data['product'][$key]->barcode = (new DNS1D)->getBarcodeSVG($product->sku, 'C128',1.2,36);
-        $data['product'][$key]->price = Price::where('product_id', $product->id)->where('is_active', 1)->first()->cost;
+        $data['product'][$key]->price = Price::where('product_id', $product->id)->where('is_active', 1)->first()->revenue;
       }
 
       $data['height'] = 121;
