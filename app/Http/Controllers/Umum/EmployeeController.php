@@ -96,7 +96,7 @@ class EmployeeController extends BaseAdminController
         $employee->savings()->save($savings);
         $notes = "Pendaftaran anggota baru (".$employee->full_name.")";
         (new EmployeeService())->addCreditBalance($employee->savings->id, 25000, ConstantEnum::SAVINGS_BALANCE_TYPE['POKOK'],$notes);
-        (new CompanyService())->addCreditBalance(value: 25000, balance_type: 'other_balance', description: $notes);
+        // (new CompanyService())->addCreditBalance(value: 25000, balance_type: 'other_balance', description: $notes);
         $role = checkPositionRole($employee->position->position_code);
         $user->assignRole($role);
         return redirect()->route('admin.employee.index')->with('success', __('general.notif_add_new_data_success'));

@@ -25,8 +25,8 @@ class EmployeeService {
             'amount' => $value,
             'balance_before' => $saving->{$saving_type},
             'balance_after' => ($debitOrCredit == 'debit')
-                            ? $saving->{$saving_type} - $value
-                            : $saving->{$saving_type} + $value,
+                            ? (string) ($saving->{$saving_type} - $value)
+                            : (string)($saving->{$saving_type} + $value),
             'transaction_date' => now(),
             'description' => $description,
         ]);
