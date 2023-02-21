@@ -32,10 +32,11 @@ class CompanyService {
             'amount' => $value,
             'balance_before' => $companyBalance->{$balance_type},
             'balance_after' => ($debitOrCredit == 'debit') 
-                            ? $companyBalance->{$balance_type} - $value 
-                            : $companyBalance->{$balance_type} + $value,
+                            ? (string) ($companyBalance->{$balance_type} - $value)
+                            : (string) ($companyBalance->{$balance_type} + $value),
             'description' => $description,
         ]);
+        $cek['companyBalance'] = $companyBalance;
         $companyBalance->update([
             "{$balance_type}" => $savedHistory->balance_after,
             // "total_balance" => $savedHistory->balance_after,
@@ -47,7 +48,7 @@ class CompanyService {
         $companyBalance = CompanyBalance::findOrFail(1);   
         $total = $companyBalance->loan_balance + $companyBalance->store_balance + $companyBalance->other_balance ;
             $companyBalance->update([
-                'total_balance' => $total
+                'total_balance' => (string) $total
             ]);
     }
 }

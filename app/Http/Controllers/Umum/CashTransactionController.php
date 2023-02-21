@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Umum;
 
 use App\Enums\ConstantEnum;
 use App\Http\Controllers\BaseAdminController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\CashTransactionRequest;
 use App\Models\DivisiUmumTransaction;
 use App\Services\CompanyService;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\DataTables;
 
