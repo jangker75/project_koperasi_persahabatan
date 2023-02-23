@@ -126,6 +126,9 @@ class OrderController extends Controller
                 $date = explode(",", request('date'));
                 $sql = "orders.order_date between '" . $date[0] ." 00:00:00' AND '" . $date[1] . " 23:59:59'" ;
                 $queryNew->whereRaw($sql);
+              }else{
+                $sql = "orders.order_date between '" . date("Y-m-d") ." 00:00:00' AND '" . date("Y-m-d") . " 23:59:59'" ;
+                $queryNew->whereRaw($sql);
               }
           })
           ->rawColumns(['actions'])
