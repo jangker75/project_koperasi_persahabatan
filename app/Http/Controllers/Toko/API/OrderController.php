@@ -424,8 +424,21 @@ class OrderController extends Controller
     }
 
     public function getDataOrder(Request $request){
-      $orders = (new OrderRepository())->getAllOrders($request->params);
-      return response()->json($orders, 200);
+      $data = (new OrderRepository())->getAllOrders($request->page, $request->params);
+      $pagination = (new OrderRepository())->paginateOrder($request->page, $request->params);
+      $total = array_sum(array_values(array_column($data, "total")));
+      $totalPaylater = array_filter($data, function($d){
+        return $d['isPaylater'] == "1";
+      });
+      $totalPaylater = array_sum(array_values(array_column($totalPaylater, "total")));
+
+      $result = [
+        'data' => $data,
+        'pagination' => $pagination,
+        'totalPrice' => $total,
+        'totalPaylater' => $totalPaylater
+      ];
+      return response()->json($result, 200);
     }
 
     public function reportToday($storeId){

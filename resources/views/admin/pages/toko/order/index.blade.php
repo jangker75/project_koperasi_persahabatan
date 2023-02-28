@@ -37,15 +37,14 @@
                             <table class="table table-bordered" id="datatable">
                                 <thead class="table-primary">
                                     <tr>
-                                        <th></th>
                                         <th>No</th>
-                                        <th>Kode Order</th>
-                                        <th>Total</th>
-                                        <th>Tanggal</th>
-                                        <th>Nasabah</th>
-                                        <th>Paylater</th>
-                                        <th>Delivery</th>
-                                        <th>Lunas</th>
+                                        <th data-id="date">Tanggal</th>
+                                        <th data-id="orderCode">Kode Order</th>
+                                        <th data-id="total">Total</th>
+                                        <th data-id="nasabah">Nasabah</th>
+                                        <th data-id="paylater">Paylater</th>
+                                        <th data-id="delivery">Delivery</th>
+                                        <th data-id="lunas">Lunas</th>
                                         <th>Produk Terjual</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -74,23 +73,23 @@
             let dataPaylater = [];
             let totalPaylater = 0;
 
-            $.ajax({
-                url: "{{ url('admin/datatables-order') }}",
-                method: "GET"
-            }).done(function (response) {
-                priceAll = response.data.map(item => parseInt(item['total']));
-                totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
-                $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
+            // $.ajax({
+            //     url: "{{ url('admin/datatables-order') }}",
+            //     method: "GET"
+            // }).done(function (response) {
+            //     priceAll = response.data.map(item => parseInt(item['total']));
+            //     totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
+            //     $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
 
-                dataPaylater = response.data.filter(function(data){
-                  return data.isPaylater == 'ya'
-                })
-                dataPaylater = dataPaylater.map(item => parseInt(item['total']))
-                totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
-                // console.log(dataPaylater);
-                // console.log(totalPaylater);
-                $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
-            });
+            //     dataPaylater = response.data.filter(function(data){
+            //       return data.isPaylater == 'ya'
+            //     })
+            //     dataPaylater = dataPaylater.map(item => parseInt(item['total']))
+            //     totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
+            //     // console.log(dataPaylater);
+            //     // console.log(totalPaylater);
+            //     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
+            // });
 
             $('input[name="daterange"]').change(function () {
                 let value = $(this).val();
@@ -99,27 +98,28 @@
                 value[1] = value[1].replace(" ", "");
                 value = value.join(',');
 
-                $.ajax({
-                    url: "{{ url('admin/datatables-order') }}?date=" + value,
-                    method: "GET"
-                }).done(function (response) {
-                    priceAll = response.data.map(item => parseInt(item['total']));
-                    totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
-                    $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
+                // $.ajax({
+                //     url: "{{ url('admin/datatables-order') }}?date=" + value,
+                //     method: "GET"
+                // }).done(function (response) {
+                //     priceAll = response.data.map(item => parseInt(item['total']));
+                //     totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
+                //     $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
 
-                    dataPaylater = response.data.filter(function(data){
-                      return data.isPaylater == 'ya'
-                    })
-                    dataPaylater = dataPaylater.map(item => parseInt(item['total']))
-                    totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
-                    // console.log(dataPaylater);
-                    // console.log(totalPaylater);
-                    $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
-                });
+                //     dataPaylater = response.data.filter(function(data){
+                //       return data.isPaylater == 'ya'
+                //     })
+                //     dataPaylater = dataPaylater.map(item => parseInt(item['total']))
+                //     totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
+                //     // console.log(dataPaylater);
+                //     // console.log(totalPaylater);
+                //     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
+                // });
 
             })
         })
 
+        
     </script>
     @endslot
 </x-admin-layout>

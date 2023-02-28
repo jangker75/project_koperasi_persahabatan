@@ -2,8 +2,10 @@
   
 namespace App\Repositories;
 
+use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use PDO;
 
 class OrderRepository{
 
@@ -50,30 +52,50 @@ class OrderRepository{
     return $data;
   }
 
-  public function getAllOrders($params){
+  public function getAllOrders($page, $params){
     $where = "";
-    $page = 1;
+    if($page == NULL){
+      $page = 1;
+    }
+
+    $date = array_filter($params, function($param){
+      return $param['key'] == "date";
+    });
+
+    if(count($date) == 0){
+      $where .= " AND orders.order_date BETWEEN '" . date("Y-m-d") . " 00:00:00' AND '" . date("Y-m-d") . " 23:59:59'";
+    }
 
     foreach ($params as $key => $param) {
       if($param['key'] == "date"){
         if($param['value']['startDate'] !== null && $param['value']['endDate'] !== null){
           $start = Carbon::parse(strtotime($param['value']['startDate']))->format('Y-m-d');
           $end = Carbon::parse(strtotime($param['value']['endDate']))->format('Y-m-d');
+          $where .= " AND orders.order_date BETWEEN '" . $start . " 00:00:00' AND '" . $end . " 23:59:59'";
         }
-        $where .= " AND orders.order_date BETWEEN '" . $start . " 00:00:00' AND '" . $end . " 23:59:59'";
       }
       
       else if($param['key'] == "employeeId"){
         $where .= " AND transactions.requester_employee_id = '" . $param['value'] . "'";
       }
-      else if($param['key'] == "page"){
-        $page = (int) $param['value'];
+      else if($param['key'] == "employee"){
+        $where .= " AND CONCAT(employees.first_name,' ',employees.last_name) like '%". $param['value'] ."%'";
+      }
+      
+      else if($param['key'] == "isPaylater"){
+        if($param['value'] = 1){
+          $where .= " AND transactions.is_paylater = 1";
+        }else{
+          $where .= " AND transactions.is_paylater != 1";
+        }
+      }
+      else if($param['key'] == "totalPrice"){
+        $where .= " AND orders.total like '%" . $param['value'] . "%'";
       }
       else{
         $where .= " AND orders." . strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $param['key'])) . " = '" . $param['value'] . "'";
       }
     }
-
 
     $sql = "
       SELECT
@@ -106,10 +128,9 @@ class OrderRepository{
         orders.id
       ORDER BY 
         orders.id DESC
-      LIMIT 20 OFFSET " . ($page - 1)*100 . "
+      LIMIT 20 OFFSET " . ($page - 1)*20 . "
     ";
-    // dd($sql);
-    $data = DB::select(DB::raw($sql));
+    $data = json_decode(json_encode(DB::select(DB::raw($sql))), true);
 
     return $data;
   }
@@ -159,6 +180,79 @@ class OrderRepository{
     ";
 
     $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
+
+  public function paginateOrder($page, $params){
+    $sql = Order::query()->select(
+      'orders.*',
+      DB::raw('concat("Rp. ", format(orders.total, 0)) as totalPrice'),
+      DB::raw('IF(employees.first_name is null, "-", concat(employees.first_name, " ", employees.last_name)) as employee'),
+      DB::raw('SUM(order_details.qty) as totalQtyProduct'),
+      DB::raw('IF(transactions.is_paylater = 1, "ya", "tidak") as isPaylater'),
+      DB::raw('IF(transactions.is_delivery = 1, "ya", "tidak") as isDelivery'),
+      DB::raw('IF(transactions.is_paid = 1, "Lunas", "Belum Lunas") as isPaid'),
+      'master_data_statuses.name as statusOrder'
+    )
+    ->leftJoin('transactions', 'orders.id', '=', 'transactions.order_id')
+    ->leftJoin('employees', 'transactions.requester_employee_id', '=', 'employees.id')
+    ->leftJoin('order_details', 'orders.id', '=','order_details.order_id')
+    ->leftJoin('master_data_statuses', 'orders.status_id', '=', 'master_data_statuses.id')
+    ->where('orders.status_id', "6");
+    
+    if(count($params) > 0){
+      foreach ($params as $key => $param) {
+        if($param['key'] == 'order_code'){
+          $sql->where('orders.order_code', $param['value']);
+        }
+        else if($param['key'] == "date"){
+          $start = Carbon::parse(strtotime($param['value']['startDate']))->format('Y-m-d');
+          $end = Carbon::parse(strtotime($param['value']['endDate']))->format('Y-m-d');
+          $sql->whereBetween('orders.order_date', [$start ." 00:00:00", $end ." 23:59:59"]);
+        }
+        else if($param['key'] == "employee"){
+          $sql->where('CONCAT(employees.first_name," ",employees.last_name)', 'like', "%".$param['value']."%");
+        }
+        else if($param['key'] == "is_paylater"){
+          if($param['value'] = 1){
+            $sql->where('transactions.is_paylater', 1);
+          }else{
+            $sql->whereNot('transactions.is_paylater', 1);
+          }
+        }
+        else if($param['key'] == "totalPrice"){
+          $sql->where("orders.total", "like", "%" . $param['value'] . "%");
+        }
+        // else{
+        //   $where .= " AND orders." . strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $param['key'])) . " = '" . $param['value'] . "'";
+        // }
+      }
+    }
+
+    $date = array_filter($params, function($param){
+      return $param['key'] == "date";
+    });
+
+    if(count($date) == 0){
+      $sql->whereBetween('orders.order_date', [date("Y-m-d")." 00:00:00", date("Y-m-d")." 23:59:59"]);
+    }
+
+    if($page != NULL){
+      $page == 1;
+    }
+
+    $sql->groupBy('orders.id');
+    $paginate = $sql->paginate(20)->toArray();
+
+    $data = [
+      'current' => $paginate['current_page'],
+      'total' => $paginate['total'],
+      'perPage' => $paginate['per_page'],
+      'first' => $paginate['from'],
+      'last' => $paginate['to'],
+      'links' => $paginate['links']
+    ];
 
     return $data;
   }
