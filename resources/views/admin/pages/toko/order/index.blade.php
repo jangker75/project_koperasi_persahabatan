@@ -31,7 +31,7 @@
                           <div class="fw-bold text-success m-0">Total Pendapatan : <span id="totalPrice"></span></div>
                         </div>
                     </div>
-
+                    <input type="hidden" name="page" value="1">
                     <div class="w-100">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="datatable">
@@ -67,59 +67,27 @@
     @slot('script')
     @include('admin.pages.toko.order.index-script-datatable')
     <script>
-        $(document).ready(function () {
-            let priceAll = [];
-            let totalPrice = 0;
-            let dataPaylater = [];
-            let totalPaylater = 0;
-
-            // $.ajax({
-            //     url: "{{ url('admin/datatables-order') }}",
-            //     method: "GET"
-            // }).done(function (response) {
-            //     priceAll = response.data.map(item => parseInt(item['total']));
-            //     totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
-            //     $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
-
-            //     dataPaylater = response.data.filter(function(data){
-            //       return data.isPaylater == 'ya'
-            //     })
-            //     dataPaylater = dataPaylater.map(item => parseInt(item['total']))
-            //     totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
-            //     // console.log(dataPaylater);
-            //     // console.log(totalPaylater);
-            //     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
-            // });
-
-            $('input[name="daterange"]').change(function () {
-                let value = $(this).val();
-                value = value.split('to')
-                value[0] = value[0].replace(" ", "");
-                value[1] = value[1].replace(" ", "");
-                value = value.join(',');
-
-                // $.ajax({
-                //     url: "{{ url('admin/datatables-order') }}?date=" + value,
-                //     method: "GET"
-                // }).done(function (response) {
-                //     priceAll = response.data.map(item => parseInt(item['total']));
-                //     totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
-                //     $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
-
-                //     dataPaylater = response.data.filter(function(data){
-                //       return data.isPaylater == 'ya'
-                //     })
-                //     dataPaylater = dataPaylater.map(item => parseInt(item['total']))
-                //     totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
-                //     // console.log(dataPaylater);
-                //     // console.log(totalPaylater);
-                //     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
-                // });
-
-            })
+        $(document).ready(function(){
+          $('input[name="daterange"]').daterangepicker({
+              locale: {
+                  format: 'YYYY-MM-DD',
+                  separator: " to "
+              }
+          });
+      
+          $('input[name="daterange"]').change(function () {
+              getData();
+          })
+      
+          $("#resetDate").click(function () {
+              $('input[name="daterange"]').val("")
+          })
+      
+          $("body").on("click", "#buttonSearch", function(){
+            getData();
+            console.log("asdasdasd");
+          })
         })
-
-        
     </script>
     @endslot
 </x-admin-layout>

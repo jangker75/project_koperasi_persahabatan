@@ -19,77 +19,9 @@
         }
     });
 
-    
-
-
-
-
-    // let table = $('#datatable').DataTable({
-    //     orderCellsTop: true,
-    //     fixedHeader: true,
-    //     order: [[0, "desc"]],
-    //     processing: true,
-    //     serverSide: true,
-    //     lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-    //     // dom: 'lBfrtip',
-    //     ajax: {
-    //         url: "{{ route('admin.order.index.datatables') }}",
-    //     },
-    //     columns: [
-    //         { data: "id", name: "id", visible: false},
-    //         { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
-    //         { data: "order_code", name: "order_code" },
-    //         { data: "totalPrice", name: "totalPrice" },
-    //         { data: "order_date", name: "order_date" },
-    //         { data: "employee", name: "employee" },
-    //         { data: "isPaylater", name: "isPaylater" },
-    //         { data: "isDelivery", name: "isDelivery" },
-    //         { data: "isPaid", name: "isPaid" },
-    //         { data: "totalQtyProduct", name: "totalQtyProduct" },
-    //         { data: "statusOrder", name: "statusOrder" },
-    //         { data: "actions", name: "actions" },
-    //     ],
-    //     language: {
-    //         searchPlaceholder: 'Search...',
-    //         scrollX: "100%",
-    //         sSearch: '',
-    //     }
-    // });
-
-    // // Filter event handler
-    // $( table.table().container() ).on( 'keyup', 'thead input', function () {
-    //     table
-    //         .column($(this).data('index') )
-    //         .search( this.value )
-    //         .draw();
-    // } );
-
-    $('input[name="daterange"]').daterangepicker({
-        locale: {
-            format: 'YYYY-MM-DD',
-            separator: " to "
-        }
-    });
-
-    // // date
-    // $('input[name="daterange"]').change(function () {
-    //     let value = $(this).val();
-    //     value = value.split('to')
-    //     value[0] = value[0].replace(" ", "");
-    //     value[1] = value[1].replace(" ", "");
-    //     value = value.join(',');
-
-    //     table.ajax.url("{{ url('admin/datatables-order') }}?date="+value).draw();
-        
-    // })
-    $("#resetDate").click(function () {
-        $('input[name="daterange"]').val("")
-    })
-
-    $("body").on("click", "#buttonSearch", function(){
+    function getData(){
       let orderCode = $("#orderCode").val();
       let total = $("#total").val();
-      let date = $("#date").val();
       let nasabah = $("#nasabah").val();
       let paylater = $("#paylater").val();
       let delivery = $("#delivery").val();
@@ -154,6 +86,34 @@
           })
         }
       }
-      console.log(param)
-    })
+
+      let date = $("input[name='daterange']").val();
+      date = date.split('to')
+      startDate = date[0].replace(" ", "");
+      endDate = date[1].replace(" ", "");
+
+      param.push({
+        "key": "date",
+        "value": {
+          "startDate": startDate,
+          "endDate": endDate
+        }
+      })
+
+      let page = $("[name=page]").val();
+
+      $.ajax({
+        type: "post",
+        url: '{{ route("api-get-data-order") }}?page='+page,
+        dataType: 'json',
+        data: {
+          params: param
+        },
+        beforeSend: function() {
+            // unlock_browser();
+        }
+      }).done(function(res){
+        console.log(res)
+      });
+    }
 </script>
