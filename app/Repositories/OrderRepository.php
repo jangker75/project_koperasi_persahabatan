@@ -113,7 +113,7 @@ class OrderRepository{
         transactions.is_paylater AS isPaylater,
         transactions.is_delivery AS isDelivery,
         transactions.delivery_fee AS deliveryFee,
-        CONCAT(employees.first_name, ' ', employees.last_name) AS requesterName,
+        IFNULL(CONCAT(employees.first_name, ' ', employees.last_name), '-') AS requesterName,
         transactions.transaction_date AS requestDate,
         SUM(order_details.qty) as totalQtyProduct
       FROM orders

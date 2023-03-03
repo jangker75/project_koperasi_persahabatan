@@ -55,6 +55,10 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div id="pagination"></div>
+                            <div id="information"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,31 +95,35 @@
             //     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
             // });
 
-            $('input[name="daterange"]').change(function () {
-                let value = $(this).val();
-                value = value.split('to')
-                value[0] = value[0].replace(" ", "");
-                value[1] = value[1].replace(" ", "");
-                value = value.join(',');
+            // $('input[name="daterange"]').change(function () {
+            //     let value = $(this).val();
+            //     value = value.split('to')
+            //     value[0] = value[0].replace(" ", "");
+            //     value[1] = value[1].replace(" ", "");
+            //     value = value.join(',');
 
-                // $.ajax({
-                //     url: "{{ url('admin/datatables-order') }}?date=" + value,
-                //     method: "GET"
-                // }).done(function (response) {
-                //     priceAll = response.data.map(item => parseInt(item['total']));
-                //     totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
-                //     $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
+            //     // $.ajax({
+            //     //     url: "{{ url('admin/datatables-order') }}?date=" + value,
+            //     //     method: "GET"
+            //     // }).done(function (response) {
+            //     //     priceAll = response.data.map(item => parseInt(item['total']));
+            //     //     totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
+            //     //     $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
 
-                //     dataPaylater = response.data.filter(function(data){
-                //       return data.isPaylater == 'ya'
-                //     })
-                //     dataPaylater = dataPaylater.map(item => parseInt(item['total']))
-                //     totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
-                //     // console.log(dataPaylater);
-                //     // console.log(totalPaylater);
-                //     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
-                // });
+            //     //     dataPaylater = response.data.filter(function(data){
+            //     //       return data.isPaylater == 'ya'
+            //     //     })
+            //     //     dataPaylater = dataPaylater.map(item => parseInt(item['total']))
+            //     //     totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
+            //     //     // console.log(dataPaylater);
+            //     //     // console.log(totalPaylater);
+            //     //     $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
+            //     // });
 
+            // })
+
+            $(".btn-page").on("click", function(){
+                let link = $(this).data("link");
             })
         })
 

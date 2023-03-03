@@ -166,13 +166,17 @@
                 <td data-id="date">` + value.date + `</td>
                 <td data-id="orderCode">` + value.orderCode + `</td>
                 <td data-id="total">` + formatRupiah(value.total) + `</td>
-                <td data-id="nasabah">` + value.employeeName + `</td>
+                <td data-id="nasabah">` + value.requesterName + `</td>
                 <td data-id="paylater">` + value.paylater == 1 ? "ya" : "tidak" + `</td>
                 <td data-id="delivery">` + value.paylater == 1 ? "ya" : "tidak" + `</td>
                 <td data-id="lunas">` + value.paylater == 1 ? "lunas" : "belum lunas" + `</td>
-                <td>` + value.qtyProduct + `</td>
-                <td>` + value.status + `</td>
-                <td>` + value.action + `</td>
+                <td>` + value.totalQtyProduct + `</td>
+                <td class="btn btn-small `+ value.statusOrderColorButton +`">` + value.statusOrderName + `</td>
+                <td>
+                  <a href="'.route('admin.order.show', $row['order_code']).'"
+                  class="btn btn-primary btn-sm me-1" data-toggle="tooltip" data-placement="top"
+                  target="_blank" title="Lihat Detail Produk">Lihat Detail</a>
+                </td>
             </tr>`;
         });
     }
@@ -188,4 +192,17 @@
         return 'Rp. '+rupiah.split('',rupiah.length-1).reverse().join('');
     }
 
+    function processPagination(page){
+      let pageHtml = '<div class="pagination">';
+      
+      if(page.length > 0){
+        page.forEach(pag => {
+          pageHtml = pageHtml + `<span class="btn btn-small ` + (pag.active == true ? "btn-primary" : "btn-outline-primary") + ` btn-page m-1" data-link="` + pag.link + `">` + pag.content + `</span>`
+        });
+      }
+
+      pageHtml = pageHtml + '</div>';
+
+      $("#pagination").html(pageHtml);
+    }
 </script>
