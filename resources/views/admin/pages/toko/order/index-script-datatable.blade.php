@@ -114,6 +114,43 @@
         }
       }).done(function(res){
         console.log(res)
+        processDisplay(res.data)
       });
+    }
+
+    function processDisplay(Data){
+        let html = "";
+        if(Data.length == 0){
+          html = `<tr><td colspan='11' align='center' >Data Kosong</td></tr>`;
+        }else{
+          Data.forEach(function(value, index) {
+            html = html + 
+              `<tr>
+                  <td>` + (index+1) + `</td>
+                  <td data-id="date">` + value.orderDate + `</td>
+                  <td data-id="orderCode">` + value.orderCode + `</td>
+                  <td data-id="total">` + formatRupiah(value.total) + `</td>
+                  <td data-id="nasabah">` + value.employeeName + `</td>
+                  <td data-id="paylater">` + (value.paylater == 1 ? "ya" : "tidak") + `</td>
+                  <td data-id="delivery">` + (value.paylater == 1 ? "ya" : "tidak") + `</td>
+                  <td data-id="lunas">` + (value.paylater == 1 ? "lunas" : "belum lunas") + `</td>
+                  <td></td>
+                  <td>` + value.statusOrderName + `</td>
+                  <td></td>
+              </tr>`;
+          });
+        }
+        $("#bodyTable").html(html)
+    }
+
+    function formatRupiah(angka) {
+        var rupiah = '';    
+        var angkarev = angka.toString().split('').reverse().join('');
+        for(var i = 0; i < angkarev.length; i++) {
+            if(i%3 == 0) {
+            rupiah += angkarev.substr(i,3)+'.';
+            }
+        }    
+        return 'Rp. '+rupiah.split('',rupiah.length-1).reverse().join('');
     }
 </script>

@@ -122,13 +122,14 @@ class OrderRepository{
       LEFT JOIN master_data_statuses statusOrder ON transactions.status_transaction_id = statusOrder.id
       LEFT JOIN master_data_statuses statusPaylater ON transactions.status_paylater_id = statusPaylater.id
       LEFT JOIN employees ON transactions.requester_employee_id = employees.id and employees.deleted_at IS NULL
-      WHERE 
+      WHERE
+        orders.status = 1 AND
         orders.deleted_at IS NULL". $where ."
       GROUP BY
         orders.id
       ORDER BY 
         orders.id DESC
-      LIMIT 20 OFFSET " . ($page - 1)*20 . "
+      LIMIT 10 OFFSET " . ($page - 1)*10 . "
     ";
     $data = json_decode(json_encode(DB::select(DB::raw($sql))), true);
 
@@ -243,7 +244,7 @@ class OrderRepository{
     }
 
     $sql->groupBy('orders.id');
-    $paginate = $sql->paginate(20)->toArray();
+    $paginate = $sql->paginate(10)->toArray();
 
     $data = [
       'current' => $paginate['current_page'],
