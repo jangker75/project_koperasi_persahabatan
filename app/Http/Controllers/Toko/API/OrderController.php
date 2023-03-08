@@ -426,22 +426,12 @@ class OrderController extends Controller
     public function getDataOrder(Request $request){
       $data = (new OrderRepository())->getAllOrders($request->page, $request->params);
       $pagination = (new OrderRepository())->paginateOrder($request->page, $request->params);
-      if(count($data) > 0){
-        $total = array_sum(array_values(array_column($data, "total")));
-        $totalPaylater = array_filter($data, function($d){
-          return $d['isPaylater'] == "1";
-        });
-        $totalPaylater = array_sum(array_values(array_column($totalPaylater, "total")));
-      }else{
-        $total = 0;
-        $totalPaylater = 0;
-      }
+      $total = (new OrderRepository())->getAllOrders($request->page, $request->params, 1)[0];
 
       $result = [
         'data' => $data,
         'pagination' => $pagination,
-        'totalPrice' => $total,
-        'totalPaylater' => $totalPaylater
+        'total' => $total
       ];
       return response()->json($result, 200);
     }

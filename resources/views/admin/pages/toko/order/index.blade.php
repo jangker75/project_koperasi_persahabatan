@@ -33,6 +33,7 @@
                     </div>
                     <input type="hidden" name="page" value="1">
                     <div class="w-100">
+                        <span>*secara default akan menampilkan data order hari ini</span>
                         <div class="table-responsive">
                             <table class="table table-bordered" id="datatable">
                                 <thead class="table-primary">
@@ -55,6 +56,10 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div id="pagination"></div>
+                            <div id="information"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -74,8 +79,11 @@
                   separator: " to "
               }
           });
+
+          getData();
       
           $('input[name="daterange"]').change(function () {
+              $("[name=page]").val("1")
               getData();
           })
       
@@ -84,8 +92,20 @@
           })
       
           $("body").on("click", "#buttonSearch", function(){
+            $("[name=page]").val("1")
             getData();
-            console.log("asdasdasd");
+          })
+
+          $("body").on("click", ".btn-page", function(){
+              let link = $(this).data("link");
+              console.log(link)
+              if(link == "« Previous"){
+                link = parseInt($("[name=page]").val()) - 1;
+              }else if(link == "Next »"){
+                link = parseInt($("[name=page]").val()) + 1;
+              }
+              $("[name=page]").val(link)
+              getData();
           })
         })
     </script>
