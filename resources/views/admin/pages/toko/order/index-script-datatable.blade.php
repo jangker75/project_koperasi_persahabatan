@@ -13,6 +13,9 @@
           $(this).html('<div class="btn btn-secondary w-100 border border-1 border-white" id="buttonSearch">Cari</div>');
         }else if(title == "Status" || title == "Action"){
           $(this).remove();
+        }else if(title == "Total"){
+          let newId = $(this).data("id")
+          $(this).html( '<input class="form-control format-uang" type="text" placeholder="' + title + '" id="' + newId + '" data-index="' + i + '" />' );
         }else{
           let newId = $(this).data("id")
           $(this).html( '<input class="form-control" type="text" placeholder="'+title+'" id="'+newId+'" data-index="'+i+'" />' );
@@ -36,9 +39,10 @@
         })
       }
       if(total !== ""){
+        let newTotal = total.split(".").join("");
         param.push({
           "key": "total",
-          "value": total
+          "value": newTotal
         })
       }
       if(nasabah !== ""){
@@ -74,12 +78,12 @@
         }
       }
       if(lunas !== ""){
-        if(lunas == "ya"){
+        if(lunas == "lunas"){
           param.push({
             "key": "isPaid",
             "value": 1
           })
-        }else if(lunas == "tidak"){
+        }else if(lunas == "belum lunas"){
           param.push({
             "key": "isPaid",
             "value": 0
@@ -101,6 +105,8 @@
       })
 
       let page = $("[name=page]").val();
+
+      console.log(param)
 
       $.ajax({
         type: "post",

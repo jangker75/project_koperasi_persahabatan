@@ -80,7 +80,9 @@ class OrderRepository{
         $where .= " AND transactions.requester_employee_id = '" . $param['value'] . "'";
       }
       else if($param['key'] == "employee"){
-        $where .= " AND (CONCAT(employees.first_name, ' ', employees.last_name)) like '%". $param['value'] ."%'";
+        $employeeId = (new EmployeeRepository())->findEmployeeByNameOrNik($param['value']);
+        $employeeId = implode(",",array_values(array_column($employeeId, 'id')));
+        $where .= " AND transactions.requester_employee_id IN (" . $employeeId . ")";
       }
       
       else if($param['key'] == "isPaylater"){
@@ -251,7 +253,10 @@ class OrderRepository{
           $sql->whereBetween('orders.order_date', [$start ." 00:00:00", $end ." 23:59:59"]);
         }
         else if($param['key'] == "employee"){
-          $sql->where('CONCAT(employees.first_name," ",employees.last_name)', 'like', "%".$param['value']."%");
+          $employeeId = (new EmployeeRepository())->findEmployeeByNameOrNik($param['value']);
+          $employeeId = array_values(array_column($employeeId, 'id'));
+          // $where .= " AND transactions.requester_employee_id IN (" . $employeeId . ")";
+          $sql->whereIn("transactions.requester_employee_id", $employeeId);
         }
         else if($param['key'] == "isPaylater"){
           if($param['value'] = 1){
