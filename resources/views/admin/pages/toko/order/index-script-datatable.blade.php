@@ -116,9 +116,10 @@
           params: param
         },
         beforeSend: function() {
-            // unlock_browser();
+            $("#loaderResult").show();
         }
       }).done(function(res){
+        $("#loaderResult").hide();
         console.log(res)
         processDisplay(res.data)
         processPagination(res.pagination.links)
