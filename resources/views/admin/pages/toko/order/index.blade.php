@@ -27,13 +27,25 @@
                         </div>
                         <div class="col-3"></div>
                         <div class="col-6">
-                          <div class="fw-bold text-danger mb-2">Total Paylater : <span id="totalPaylater"></span></div>
-                          <div class="fw-bold text-success m-0">Total Pendapatan : <span id="totalPrice"></span></div>
+                            <div class="fw-bold text-danger mb-2">Total Paylater : <span id="totalPaylater"></span>
+                            </div>
+                            <div class="fw-bold text-success m-0">Total Pendapatan : <span id="totalPrice"></span></div>
                         </div>
                     </div>
                     <input type="hidden" name="page" value="1">
-                    <div class="w-100">
-                        <span>*secara default akan menampilkan data order hari ini</span>
+                    <span>*secara default akan menampilkan data order hari ini</span>
+                    <div class="w-100 position-relative">
+                        <div class="row position-absolute w-100 h-100"
+                            style="background-color: #fff; opacity: 0.8;" id="loaderResult">
+                            <div class="d-flex justify-center align-items-center">
+                              <div class="w-100" align="center">
+                                  <button class="btn btn-primary my-1" type="button" disabled="">
+                                      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                      Loading...
+                                  </button>
+                              </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered" id="datatable">
                                 <thead class="table-primary">
@@ -72,42 +84,44 @@
     @slot('script')
     @include('admin.pages.toko.order.index-script-datatable')
     <script>
-        $(document).ready(function(){
-          $('input[name="daterange"]').daterangepicker({
-              locale: {
-                  format: 'YYYY-MM-DD',
-                  separator: " to "
-              }
-          });
+        $(document).ready(function () {
+            $("#loaderResult").hide();
+            $('input[name="daterange"]').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: " to "
+                }
+            });
 
-          getData();
-      
-          $('input[name="daterange"]').change(function () {
-              $("[name=page]").val("1")
-              getData();
-          })
-      
-          $("#resetDate").click(function () {
-              $('input[name="daterange"]').val("")
-          })
-      
-          $("body").on("click", "#buttonSearch", function(){
-            $("[name=page]").val("1")
             getData();
-          })
 
-          $("body").on("click", ".btn-page", function(){
-              let link = $(this).data("link");
-              console.log(link)
-              if(link == "« Previous"){
-                link = parseInt($("[name=page]").val()) - 1;
-              }else if(link == "Next »"){
-                link = parseInt($("[name=page]").val()) + 1;
-              }
-              $("[name=page]").val(link)
-              getData();
-          })
+            $('input[name="daterange"]').change(function () {
+                $("[name=page]").val("1")
+                getData();
+            })
+
+            $("#resetDate").click(function () {
+                $('input[name="daterange"]').val("")
+            })
+
+            $("body").on("click", "#buttonSearch", function () {
+                $("[name=page]").val("1")
+                getData();
+            })
+
+            $("body").on("click", ".btn-page", function () {
+                let link = $(this).data("link");
+                console.log(link)
+                if (link == "« Previous") {
+                    link = parseInt($("[name=page]").val()) - 1;
+                } else if (link == "Next »") {
+                    link = parseInt($("[name=page]").val()) + 1;
+                }
+                $("[name=page]").val(link)
+                getData();
+            })
         })
+
     </script>
     @endslot
 </x-admin-layout>
