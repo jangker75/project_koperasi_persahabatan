@@ -27,25 +27,37 @@
                         </div>
                         <div class="col-3"></div>
                         <div class="col-6">
-                          <div class="fw-bold text-danger mb-2">Total Paylater : <span id="totalPaylater"></span></div>
-                          <div class="fw-bold text-success m-0">Total Pendapatan : <span id="totalPrice"></span></div>
+                            <div class="fw-bold text-danger mb-2">Total Paylater : <span id="totalPaylater"></span>
+                            </div>
+                            <div class="fw-bold text-success m-0">Total Pendapatan : <span id="totalPrice"></span></div>
                         </div>
                     </div>
-
-                    <div class="w-100">
+                    <input type="hidden" name="page" value="1">
+                    <span>*secara default akan menampilkan data order hari ini</span>
+                    <div class="w-100 position-relative">
+                        <div class="row position-absolute w-100 h-100"
+                            style="background-color: #fff; opacity: 0.8;" id="loaderResult">
+                            <div class="d-flex justify-center align-items-center">
+                              <div class="w-100" align="center">
+                                  <button class="btn btn-primary my-1" type="button" disabled="">
+                                      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                      Loading...
+                                  </button>
+                              </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered" id="datatable">
                                 <thead class="table-primary">
                                     <tr>
-                                        <th></th>
                                         <th>No</th>
-                                        <th>Kode Order</th>
-                                        <th>Total</th>
-                                        <th>Tanggal</th>
-                                        <th>Nasabah</th>
-                                        <th>Paylater</th>
-                                        <th>Delivery</th>
-                                        <th>Lunas</th>
+                                        <th data-id="date">Tanggal</th>
+                                        <th data-id="orderCode">Kode Order</th>
+                                        <th data-id="total">Total</th>
+                                        <th data-id="nasabah">Nasabah</th>
+                                        <th data-id="paylater">Paylater</th>
+                                        <th data-id="delivery">Delivery</th>
+                                        <th data-id="lunas">Lunas</th>
                                         <th>Produk Terjual</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -55,6 +67,10 @@
 
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div id="pagination"></div>
+                            <div id="information"></div>
                         </div>
                     </div>
                 </div>
@@ -69,54 +85,40 @@
     @include('admin.pages.toko.order.index-script-datatable')
     <script>
         $(document).ready(function () {
-            let priceAll = [];
-            let totalPrice = 0;
-            let dataPaylater = [];
-            let totalPaylater = 0;
-
-            $.ajax({
-                url: "{{ url('admin/datatables-order') }}",
-                method: "GET"
-            }).done(function (response) {
-                priceAll = response.data.map(item => parseInt(item['total']));
-                totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
-                $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
-
-                dataPaylater = response.data.filter(function(data){
-                  return data.isPaylater == 'ya'
-                })
-                dataPaylater = dataPaylater.map(item => parseInt(item['total']))
-                totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
-                // console.log(dataPaylater);
-                // console.log(totalPaylater);
-                $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
+            $("#loaderResult").hide();
+            $('input[name="daterange"]').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: " to "
+                }
             });
 
+            getData();
+
             $('input[name="daterange"]').change(function () {
-                let value = $(this).val();
-                value = value.split('to')
-                value[0] = value[0].replace(" ", "");
-                value[1] = value[1].replace(" ", "");
-                value = value.join(',');
+                $("[name=page]").val("1")
+                getData();
+            })
 
-                $.ajax({
-                    url: "{{ url('admin/datatables-order') }}?date=" + value,
-                    method: "GET"
-                }).done(function (response) {
-                    priceAll = response.data.map(item => parseInt(item['total']));
-                    totalPrice = priceAll.reduce((partialSum, a) => partialSum + a, 0);
-                    $("#totalPrice").html(formatRupiah(String(totalPrice), "Rp "));
+            $("#resetDate").click(function () {
+                $('input[name="daterange"]').val("")
+            })
 
-                    dataPaylater = response.data.filter(function(data){
-                      return data.isPaylater == 'ya'
-                    })
-                    dataPaylater = dataPaylater.map(item => parseInt(item['total']))
-                    totalPaylater = dataPaylater.reduce((partialSum, a) => partialSum + a, 0);
-                    // console.log(dataPaylater);
-                    // console.log(totalPaylater);
-                    $("#totalPaylater").html(formatRupiah(String(totalPaylater), "Rp "));
-                });
+            $("body").on("click", "#buttonSearch", function () {
+                $("[name=page]").val("1")
+                getData();
+            })
 
+            $("body").on("click", ".btn-page", function () {
+                let link = $(this).data("link");
+                console.log(link)
+                if (link == "« Previous") {
+                    link = parseInt($("[name=page]").val()) - 1;
+                } else if (link == "Next »") {
+                    link = parseInt($("[name=page]").val()) + 1;
+                }
+                $("[name=page]").val(link)
+                getData();
             })
         })
 

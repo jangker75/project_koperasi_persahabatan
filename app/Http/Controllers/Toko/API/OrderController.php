@@ -424,8 +424,16 @@ class OrderController extends Controller
     }
 
     public function getDataOrder(Request $request){
-      $orders = (new OrderRepository())->getAllOrders($request->params);
-      return response()->json($orders, 200);
+      $data = (new OrderRepository())->getAllOrders($request->page, $request->params);
+      $pagination = (new OrderRepository())->paginateOrder($request->page, $request->params);
+      $total = (new OrderRepository())->getAllOrders($request->page, $request->params, 1)[0];
+
+      $result = [
+        'data' => $data,
+        'pagination' => $pagination,
+        'total' => $total
+      ];
+      return response()->json($result, 200);
     }
 
     public function reportToday($storeId){
