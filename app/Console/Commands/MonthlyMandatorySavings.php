@@ -53,7 +53,8 @@ class MonthlyMandatorySavings extends Command
             // ->whereIn("employees.id",[
             // ]);
             // ->where("employees.id", ">",656);
-            });
+            })
+            ->get(["savings.*"]);
         }
         // dd($savings[0]);
         $amount_to_savings = 25000;
