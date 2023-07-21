@@ -24,10 +24,10 @@
                                         <div class="modal-body">
                                             <div class="row">
                                               <div class="col-6 h5 fw-bold text-success">
-                                                Jumlah Transaksi : <span id="countOrder">122</span>
+                                                Jumlah Transaksi : <span id="countOrder">0</span>
                                               </div>
                                               <div class="col-6 h5 fw-bold text-success">
-                                                Total Pendapatan : <span id="sumTotalPrice">Rp 134.000</span> 
+                                                Total Pendapatan : <span id="sumTotalPrice">Rp 0</span> 
                                               </div>
                                               <div class="col-12 my-2">
                                                 <div class="h5 mb-2">Jenis Transaksi</div>
@@ -846,17 +846,19 @@
                     type: "GET",
                     url: "{{ url('api/report-order-today') }}/" + $("#storeId").val(),
                     success: function(response){
-                      transactionReport = response.calculate;
-                      itemReport = response.items;
-
-                      renderTransactionReport(response.calculate);
-                      renderItemReport(response.items)
-
-                      amount = calculateTotal(response.calculate, 'amount');
-                      countOrder = calculateTotal(response.calculate, 'totalOrder')
-
-                      $("#countOrder").html(countOrder)
-                      $("#sumTotalPrice").html(formatRupiah(String(amount), "Rp"))
+                      if(response.calculate.length > 0 && response.items.length > 0){
+                        transactionReport = response.calculate;
+                        itemReport = response.items;
+  
+                        renderTransactionReport(response.calculate);
+                        renderItemReport(response.items)
+  
+                        amount = calculateTotal(response.calculate, 'amount');
+                        countOrder = calculateTotal(response.calculate, 'totalOrder')
+  
+                        $("#countOrder").html(countOrder)
+                        $("#sumTotalPrice").html(formatRupiah(String(amount), "Rp"))
+                      }
                     }
                   })
                 })
