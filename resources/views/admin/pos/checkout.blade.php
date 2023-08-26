@@ -41,9 +41,7 @@
                                                   </thead>
                                                   <tbody id="transactionReport">
                                                     <tr>
-                                                      <td>Cash</td>
-                                                      <td>12</td>
-                                                      <td>Rp 978.000</td>
+                                                      <td colspan="3" align="center">Belum ada transaksi</td>
                                                     </tr>
                                                   </tbody>
                                                 </table>
@@ -60,9 +58,7 @@
                                                   </thead>
                                                   <tbody id="itemReport">
                                                     <tr>
-                                                      <td>HYDRO COCO ORIGINAL 250ML</td>
-                                                      <td>2</td>
-                                                      <td>Rp 14.000</td>
+                                                      <td colspan="3" align="center">Belum ada transaksi</td>
                                                     </tr>
                                                   </tbody>
                                                 </table>

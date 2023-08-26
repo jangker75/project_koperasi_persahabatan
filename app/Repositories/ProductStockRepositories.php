@@ -261,4 +261,62 @@ class ProductStockRepositories{
 
     return DB::select(DB::raw($sql));
   }
+
+  public function listingRekapitulasiData($download = false, $request){
+
+    $page = isset($request->page) ? $request->page : 1;
+    $limit = isset($request->size) ? $request->size : 10;
+    $order_by = isset($request->order_by) ? $request->order_by : 'products.id';
+    $order_method = isset($request->order_method) ? $request->order_method : 'asc';
+    $store = isset($request->store) ? $request->store : 1;
+    $search = isset($request->search) ? implode(' ', explode('-',$request->search)) : null;
+
+    $query = DB::query()->select(
+      'products.id',
+      'products.name',
+      'products.sku',
+      'stocks.store_id',
+      'stores.name as store_name',
+      'stocks.qty',
+      DB::raw('(SELECT prices.cost FROM prices WHERE prices.product_id = products.id and is_active = 1 ORDER BY prices.id DESC LIMIT 1) AS cost'),
+      DB::raw('(SELECT prices.revenue FROM prices WHERE prices.product_id = products.id and is_active = 1 ORDER BY prices.id DESC LIMIT 1) AS revenue'),
+    )->from('products')
+      ->leftJoin('stocks', 'products.id', '=', 'stocks.product_id')
+      ->leftJoin('stores', 'stocks.store_id', '=', 'stores.id')
+    ->whereNull('products.deleted_at')
+    ->where('stocks.store_id', $store);
+
+    if($download == false){
+      if($search != null){
+        $query->where('products.name', 'like','%' . $search . '%');
+      }
+    }
+
+    $query->groupBy('products.id');
+    $query->groupBy('stocks.store_id');
+
+    if($download == false){
+      if($order_by == 'prices.cost'){
+        $query->orderByRaw('(select cost from prices where prices.product_id = products.id and is_active = 1 ORDER BY prices.id DESC LIMIT 1) '. $order_method);
+      }else if($order_by == 'prices.revenue'){
+        $query->orderByRaw('(select cost from prices where prices.product_id = products.id  and is_active = 1 ORDER BY prices.id DESC LIMIT 1) '.  $order_method);
+      }else{
+        $query->orderBy($order_by, $order_method);
+      }
+      $paginate = $query->paginate($limit)->toArray();
+      $data = [
+        'current' => $paginate['current_page'],
+        'total' => $paginate['total'],
+        'perPage' => $paginate['per_page'],
+        'first' => $paginate['from'],
+        'last' => $paginate['to'],
+        'links' => $paginate['links'],
+        'data' => $paginate['data']
+      ];
+    }else{
+      $data = $query->get()->toArray();
+    }
+
+    return $data;
+  }
 }

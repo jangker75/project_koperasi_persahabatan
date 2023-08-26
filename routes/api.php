@@ -11,6 +11,7 @@ use App\Http\Controllers\Toko\API\PaymentMethodController;
 use App\Http\Controllers\Toko\API\ProductController;
 use App\Http\Controllers\Toko\API\PromoController;
 use App\Http\Controllers\Toko\API\ReturnSupplierController;
+use App\Http\Controllers\Toko\API\StockController;
 use App\Http\Controllers\Toko\API\StoreController;
 use App\Http\Controllers\Toko\API\SupplierController;
 use App\Http\Controllers\Toko\API\TransferStockController;
@@ -74,6 +75,7 @@ Route::get('order-supplier-items/{id}', [OrderSupplierController::class, 'getDet
 Route::post('order-supplier-receive', [OrderSupplierController::class, 'receiveOrder']);
 Route::get('order-supplier-paid/{id}', [OrderSupplierController::class, 'changeToPaid']);
 
+Route::get('rekapitulasi-stock', [StockController::class, 'rekapitulasiStock']);
 
 // opname
 Route::get('opname-commit/{id}', [OpnameController::class, 'commit'])->name('opname.commit');
