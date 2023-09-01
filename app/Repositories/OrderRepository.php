@@ -70,8 +70,10 @@ class OrderRepository{
     foreach ($params as $key => $param) {
       if($param['key'] == "date"){
         if($param['value']['startDate'] !== null && $param['value']['endDate'] !== null){
-          $start = Carbon::parse(strtotime($param['value']['startDate']))->format('Y-m-d');
-          $end = Carbon::parse(strtotime($param['value']['endDate']))->format('Y-m-d');
+          // $start = Carbon::parse(strtotime($param['value']['startDate']))->format('Y-m-d');
+          // $end = Carbon::parse(strtotime($param['value']['endDate']))->format('Y-m-d');
+          $start = date('Y-m-d', strtotime($param['value']['startDate']));
+          $end = date('Y-m-d', strtotime($param['value']['endDate']));
           $where .= " AND orders.order_date BETWEEN '" . $start . " 00:00:00' AND '" . $end . " 23:59:59'";
         }
       }
@@ -194,7 +196,7 @@ class OrderRepository{
       GROUP BY 
         transactions.payment_method_id
     ";
-
+    
     $data = DB::select(DB::raw($sql));
 
     return $data;
