@@ -147,6 +147,9 @@ Route::group([
       Route::get('reject-order-supplier/{id}', [OrderSupplierController::class, 'rejectTicket']);
       Route::get('order-supplier-receive/{id}', [OrderSupplierController::class, 'receiveView'])->name('order-supplier.receive');
       // order-supplier
+
+      Route::get('rekapitulasi-stock', [ManagementStockController::class, 'rekapitulasiStock'])->name('rekapitulasi-stock');
+      Route::get('rekapitulasi-print', [ManagementStockController::class, 'exportDataRekapitulasiStock'])->name('rekapitulasi-print');
     });
 
     //toko-online

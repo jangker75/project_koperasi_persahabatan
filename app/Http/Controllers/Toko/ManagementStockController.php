@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Toko;
 
+use App\Exports\RekapitulasiExport;
 use App\Http\Controllers\BaseAdminController;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -19,6 +20,7 @@ use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementStockController extends BaseAdminController
 {
@@ -232,5 +234,18 @@ class ManagementStockController extends BaseAdminController
         $data['historyStock'] = HistoryStock::where('product_id', $productId)->latest()->get();
         $data['titlePage'] = "Detail History Stok Produk : " .  $product->name;
         return view('admin.pages.toko.stock.history', $data);
+    }
+
+    public function rekapitulasiStock(){
+      $data['titlePage'] = "Rekapitulasi Stok Produk";
+      $data['stores'] = Store::get();
+
+      return view('admin.pages.toko.stock.rekapitulasi', $data);
+    }
+
+    public function exportDataRekapitulasiStock(Request $request)
+    {
+      $store = Store::find($request->store);
+      return Excel::download(new RekapitulasiExport($request->store), "rekapitulasi_stok_" . $store->name . "_". date('Ymd') . ".xlsx");
     }
 }
