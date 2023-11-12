@@ -8,8 +8,19 @@
                     <div class="card-options">
                       <a href="{{ route('admin.paylater.index') }}" class="btn btn-primary">Refresh <i class="fa fa-refresh    "></i></a>
                     </div>
+                    
                 </div>
                 <div class="card-body">
+                    <div class="row mb-5">
+                        <div>
+                            <span>Download report</span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary fw-bold text-wrap" id="btnDownload">
+                                <i class="fa fa-print me-2"></i>Download Report
+                            </button>
+                        </div>
+                    </div>
                     <div class="row mb-5">
                       <div class="col-12 col-md-3">
                         <h5>Total Tagihan Belum Lunas : <strong class="fw-bold text-danger">{{ format_uang($totalNotPaid) }}</strong></h5>
@@ -60,6 +71,11 @@
             </div>
         </div>
     </div>
+    <div>
+        <form id="formDownload" action="{{ route('download.history-paylater') }}" method="POST">
+            @csrf
+        </form>
+    </div>
     <x-slot name="scriptVendor">
         <script src="{{ asset('/assets/plugins/fileuploads/js/fileupload.js') }}"></script>
     </x-slot>
@@ -69,7 +85,9 @@
         $(document).ready(function () {
             $("#datatable").DataTable();
         })
-
+        $("#btnDownload").on("click", function(){
+            $("#formDownload").submit()
+        })
     </script>
     @endslot
 </x-admin-layout>

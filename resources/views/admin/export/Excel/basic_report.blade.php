@@ -41,7 +41,7 @@
                 <tr>
                     <td style="padding: 5px">{{ $loop->iteration }}</td>
                     @foreach ($data as $item)
-                        <td style="padding: 5px">{{ $item }}</td>
+                        <td style="padding: 5px">{!! $item !!}</td>
                     @endforeach
                 </tr>
             @endforeach
