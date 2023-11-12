@@ -1,6 +1,6 @@
 <script>
     $(document).on("ready", function(){
-        getTotalHeader()
+        // getTotalHeader()
     })
 
     let table = $('#datatable').DataTable({
@@ -119,63 +119,6 @@
                     $("#totalPaylater").html(formatRupiah(data.totalpaylater))
                     $("#totalPrice").html(formatRupiah(data.grandtotal))
                 }
-            }
-        });
-        
-    }
-    function initData(){
-        // $('#datatable').dataTable().fnClearTable();
-        // $('#datatable').dataTable().fnDestroy();
-        $('#datatable').DataTable().clear().destroy();
-        table = $('#datatable').DataTable({
-            destroy: true,
-            orderCellsTop: true,
-            fixedHeader: true,
-            order: [[0, "asc"]],
-            processing: true,
-            serverSide: false,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-            // dom: 'lBfrtip',
-            ajax: {
-                url: "{{ route('get-data-order.datatables') }}",
-                data: function(d){
-                    d.startDate = $("#startDate").val()
-                    d.endDate = $("#endDate").val()
-                }
-            },
-            columns: [
-                { data: "order_id", name: "order_id", visible: false},
-                { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
-                { data: "order_date", name: "order_date" },
-                { data: "order_code", name: "order_code" },
-                { data: "total_txt", name: "total_txt" },
-
-                { data: "subtotal", name: "subtotal", render: function(data, type, row){
-                    return formatRupiah(data) ;
-                } },
-                { data: "requester_name", name: "requester_name" },
-                { data: "is_paylater", name: "is_paylater" },
-                // { data: "is_paylater", render: function(data, type, row){
-                //     return (data != null && data == 1) ?
-                //             "ya" : 'tidak';
-                // } },
-                { data: "is_delivery", render: function(data, type, row){
-                    return (data != null && data == 1) ?
-                            "ya" : 'tidak';
-                } },
-                { data: "is_paid", render: function(data, type, row){
-                    return (data != null && data == 1) ?
-                            "ya" : 'tidak';
-                } },
-
-                { data: "qty_item", name: "qty_item" },
-                { data: "status", name: "status" },
-                { data: "actions", name: "actions" },
-            ],
-            language: {
-                searchPlaceholder: 'Search...',
-                scrollX: "100%",
-                sSearch: '',
             }
         });
         
