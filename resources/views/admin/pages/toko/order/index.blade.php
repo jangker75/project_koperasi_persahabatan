@@ -68,7 +68,7 @@
             </div>
         </div>
         <div style="display: none">
-            <form action="{{ route("download.history-order") }}" method="post" id="formdownload">
+            <form action="{{ route('download.history-order') }}" method="post" id="formdownload">
                 @csrf
                 <input type="hidden" name="startDate" value="{{ date('Y-m-d') }}" id="startDate">
                 <input type="hidden" name="endDate" value="{{ date('Y-m-d') }}" id="endDate">
