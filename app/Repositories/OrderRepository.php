@@ -3,9 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Carbon\Carbon;
+use Illuminate\Queue\Console\RetryCommand;
 use Illuminate\Support\Facades\DB;
 use PDO;
+use stdClass;
 
 class OrderRepository{
 
@@ -136,7 +139,7 @@ class OrderRepository{
         transactions.delivery_fee AS deliveryFee,
         IFNULL(CONCAT(IFNULL(employees.first_name, ''), ' ', IFNULL(employees.last_name, '')), '-') AS requesterName,
         transactions.transaction_date AS requestDate,
-        SUM(order_details.qty) as totalQtyProduct
+        SUM(transactions.qty) as totalQtyProduct
       ";
     } else{
       $sql .= "
@@ -172,7 +175,6 @@ class OrderRepository{
         LIMIT 10 OFFSET " . ($page - 1)*10 . "
       ";
     }
-    // dd($sql);
     $data = json_decode(json_encode(DB::select(DB::raw($sql))), true);
 
     return $data;
@@ -315,5 +317,111 @@ class OrderRepository{
     ];
 
     return $data;
+  }
+
+  public function getListDataHistory($startDate, $endDate, $isDownload = false)
+  {
+    $sql = Order::query();
+    if($isDownload) {
+      $sql->selectRaw("
+      orders.id AS order_id,
+        orders.order_date AS order_date,
+        orders.order_code AS order_code,
+        orders.total AS total,
+        orders.subtotal AS subtotal,
+        coalesce(CONCAT(coalesce(employees.first_name, ''), ' ', coalesce(employees.last_name, '')), '-') AS requester_name,
+        
+        transactions.is_paylater AS is_paylater,
+        transactions.is_delivery AS is_delivery,
+        transactions.is_paid AS is_paid
+        ");
+    }else{
+      $sql->selectRaw("orders.id AS order_id,
+        orders.order_code AS order_code,
+        orders.subtotal AS subtotal,
+        orders.total AS total,
+        orders.note AS note,
+        orders.order_date AS order_date,
+        
+        statusOrder.name AS status_order_name,
+        statusOrder.color_button AS status_order_color_button,
+        statusPaylater.name AS status_paylater_name,
+        statusPaylater.color_button AS status_paylater_color_button,
+        transactions.is_paid AS is_paid,
+        transactions.is_paylater AS is_paylater,
+        transactions.is_delivery AS is_delivery,
+        transactions.delivery_fee AS delivery_fee,
+        coalesce(CONCAT(coalesce(employees.first_name, ''), ' ', coalesce(employees.last_name, '')), '-') AS requester_name,
+        transactions.transaction_date AS request_date");
+    }
+    $sql->leftJoin("transactions", function($leftjoin){
+      $leftjoin->on("orders.id", "=", "transactions.order_id")
+        ->whereNull("transactions.deleted_at");
+    })
+    
+    ->leftJoin("master_data_statuses as statusOrder", "transactions.status_transaction_id", "=", "statusOrder.id")
+    ->leftJoin("master_data_statuses as statusPaylater", "transactions.status_paylater_id", "=", "statusPaylater.id")
+    
+    ->leftJoin("employees", function($leftjoin){
+      $leftjoin->on("transactions.requester_employee_id", "=", "employees.id")
+        ->whereNull("employees.deleted_at");
+    })
+    ->whereNull("orders.deleted_at");
+
+    if($startDate != null || $startDate != ""){
+      $sql->whereBetween("orders.order_date", [$startDate,$endDate]);
+    }
+    $sql = $sql->groupBy("order_id")
+    ->get();
+    $orderIdIn = [];
+    for ($i=0; $i < $sql->count(); $i++) { 
+        array_push($orderIdIn, $sql[$i]->order_id);
+    }
+    $orderIdQty = (new OrderRepository())->getTotalItemOrder($orderIdIn);
+    $mappOrderIdQty = new stdClass();
+    for ($i=0; $i < $orderIdQty->count(); $i++) { 
+      $mappOrderIdQty->{$orderIdQty[$i]->order_id} = $orderIdQty[$i]->totalqty;
+    }
+    for ($i=0; $i < $sql->count(); $i++) { 
+      $sql[$i]->qty_item = $mappOrderIdQty->{$sql[$i]->order_id};
+    }
+    
+    return $sql;
+  }
+
+  public function getGrandTotal($startDate, $endDate)
+  {
+    $rtn = DB::table("orders")
+      ->selectRaw("coalesce(count(*), 0) as totalqty, 
+              coalesce(sum(orders.total), 0) as grandtotal")
+      ->whereNull("orders.deleted_at")
+      ->whereBetween("orders.order_date", [$startDate, $endDate])
+      ->get();
+      return $rtn[0];
+  }
+  
+  public function getTotalPayLater($startDate, $endDate)
+  {
+    $rtn = DB::table("orders")
+      ->selectRaw("coalesce(SUM(orders.total), 0) as totalPaylater")
+      ->leftJoin("transactions", function($leftjoin){
+        $leftjoin->on("orders.id", "=", "transactions.order_id")
+          ->whereNull("transactions.deleted_at");
+      })
+      ->where("transactions.is_paylater", "=", "1")
+      ->whereBetween("orders.order_date", [$startDate, $endDate])
+      ->get();
+      $totalPaylater = $rtn[0]->totalPaylater;
+      
+      return $totalPaylater;
+  }
+
+  public function getTotalItemOrder($orderIdIn)
+  {
+    $rtn = OrderDetail::selectRaw("order_id, SUM(order_details.qty) as totalqty")
+    ->whereIn("order_id",$orderIdIn)
+    ->groupBy("order_id")
+    ->get();
+    return $rtn;
   }
 }
