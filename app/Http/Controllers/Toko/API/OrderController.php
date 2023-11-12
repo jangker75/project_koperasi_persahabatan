@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Toko\API;
 
+use App\Exports\BasicReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\ApplicationSetting;
 use App\Models\Delivery;
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use stdClass;
+use Yajra\DataTables\DataTables;
 
 class OrderController extends Controller
 {

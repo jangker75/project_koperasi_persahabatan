@@ -107,7 +107,6 @@ Route::group([
     Route::get('pos/history-paylater', [PaylaterController::class, 'index'])->name('paylater.index');
     Route::get('pos/history-paylater/{staffId}', [PaylaterController::class, 'show'])->name('paylater.show');
 
-
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
     Route::group([
@@ -222,13 +221,17 @@ Route::group([
     Route::get('datatables-loan-submission-index', [LoanSubmissionController::class, 'getIndexDatatables'])->name('loan-submission.index.datatables');
     Route::get('datatables-loan-list-index', [LoanListController::class, 'getIndexDatatables'])->name('loan-list.index.datatables');
     Route::get('datatables-cash-in-out-index', [CashTransactionController::class, 'getIndexDatatables'])->name('cash-in-out.index.datatables');
+    
     // Datatables Route End
     
     //Logout custom
     // Route::post('custom-logout', [LogoutController::class, 'logout'])->name('logout');
 
 });
-
+Route::post("download-history-paylater", [PaylaterController::class, "downloadPaylaterhistory"])->name("download.history-paylater");
+Route::post("download-history-order", [OrderController::class, "downloadReporthistoryorder"])->name("download.history-order");
+Route::get("get-total-header-order", [OrderController::class, "getTotalHeader"])->name("get-data-total-header-order");
+Route::get('datatables-data-order', [OrderController::class, 'getDataOrderV2'])->name("get-data-order.datatables");
 //Images routes non spatie
 Route::get('image/{filename?}', [DynamicImageService::class, 'showImage'])->where('filename', '.*')
         ->name('showimage')->middleware('auth'); //show image
