@@ -27,7 +27,8 @@ class CompanyBalanceController extends BaseAdminController
     {
         $data = $this->data;
         $data['titlePage'] = 'Saldo Koperasi';
-        $data['company'] = Company::with('balance', 'balance.balancehistory')->find(1);
+        $data['company'] = Company::with('balance')->find(1);
+        // $data['company'] = Company::with('balance', 'balance.balancehistory')->find(1);
         $data['loanWaiting'] = Loan::waitingApproval()->count();
         $data['loanApproved'] = Loan::approved()->count();
         $data['loanRejected'] = Loan::rejected()->count();
