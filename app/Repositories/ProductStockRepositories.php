@@ -1,5 +1,5 @@
-<?php 
-  
+<?php
+
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ class ProductStockRepositories{
     $middle = "";
 
     $query = "
-      SELECT 
+      SELECT
         products.id AS productId,
         products.name AS productName,
         products.sku AS productSKU,
@@ -24,7 +24,7 @@ class ProductStockRepositories{
       FROM stocks
         LEFT JOIN products ON stocks.product_id = products.id
         LEFT JOIN prices ON products.id = prices.product_id AND prices.is_active = 1 AND prices.deleted_at is null
-      WHERE 
+      WHERE
         products.deleted_at IS NULL AND
         (products.slug LIKE '%" . $keyword ."%' OR products.sku LIKE '%" . $keyword ."%')
         AND stocks.qty > 0
@@ -37,7 +37,7 @@ class ProductStockRepositories{
     if($notInListProduct !== null){
       $middle .= " AND stocks.product_id NOT IN (" . implode(",", $notInListProduct) . ")";
     }
-    
+
     $lastQuery = " GROUP BY products.id ORDER BY stocks.id DESC LIMIT 12";
     $query = $query.$middle.$lastQuery;
 
@@ -52,7 +52,7 @@ class ProductStockRepositories{
     if($storeId !== null){
       $storeQuery = " AND stocks.store_id = " . $storeId . " AND stocks.qty > 0";
     }
-    
+
     $sql = "
         SELECT
           products.id AS id,
@@ -64,7 +64,7 @@ class ProductStockRepositories{
 	        IF(brands.name IS NULL, '--', brands.name) AS brandName,
           (SELECT prices.revenue FROM prices WHERE prices.product_id = products.id ORDER BY prices.id DESC LIMIT 1) AS price,
           stocks.qty AS stock
-        FROM 
+        FROM
           products
           LEFT JOIN stocks ON products.id = stocks.product_id
           LEFT JOIN brands ON products.brand_id = brands.id
@@ -83,7 +83,7 @@ class ProductStockRepositories{
     if($storeId !== null){
       $storeQuery = " AND stocks.store_id = " . $storeId . " AND stocks.qty > 0";
     }
-    
+
     $sql = "
         SELECT
           products.id AS id,
@@ -95,7 +95,7 @@ class ProductStockRepositories{
 	        IF(brands.name IS NULL, '--', brands.name) AS brandName,
           (SELECT prices.revenue FROM prices WHERE prices.product_id = products.id ORDER BY prices.id DESC LIMIT 1) AS price,
           stocks.qty AS stock
-        FROM 
+        FROM
           products
           LEFT JOIN stocks ON products.id = stocks.product_id
           LEFT JOIN brands ON products.brand_id = brands.id
@@ -115,7 +115,7 @@ class ProductStockRepositories{
         products.sku AS sku,
         products.cover,
         (SELECT prices.revenue FROM prices WHERE prices.product_id = products.id AND prices.is_active = true ORDER BY prices.id DESC LIMIT 1) AS price
-      FROM 
+      FROM
         products
       WHERE
         products.sku IN (" . $sku . ")
@@ -152,12 +152,12 @@ class ProductStockRepositories{
         (SELECT prices.revenue FROM prices WHERE prices.product_id = products.id ORDER BY prices.id DESC LIMIT 1) AS price,
         stocks.qty AS stock,
         stocks.store_id AS storeId
-      FROM 
+      FROM
         products
-        LEFT JOIN stocks ON products.id = stocks.product_id " . 
+        LEFT JOIN stocks ON products.id = stocks.product_id " .
         $joinCategory . "
-      WHERE 
-        stocks.store_id = " . $storeId 
+      WHERE
+        stocks.store_id = " . $storeId
         . " AND stocks.qty > 0 " . $clauseCategory . "
       ORDER BY products.id DESC
       LIMIT 20 OFFSET " . ($pages - 1) * 20 . "
@@ -189,11 +189,11 @@ class ProductStockRepositories{
             )
           SEPARATOR '@'
         ) AS qtyResult
-      FROM stocks 
+      FROM stocks
         LEFT JOIN products ON stocks.product_id = products.id AND products.deleted_at IS NULL
       WHERE products.id IS NOT NULL
       " . $whereClause . "
-      GROUP BY 
+      GROUP BY
         stocks.product_id
       ORDER BY
         stocks.store_id ASC
@@ -214,7 +214,7 @@ class ProductStockRepositories{
       FROM products
       LEFT JOIN prices ON products.id = prices.product_id AND prices.deleted_at IS NULL AND prices.is_active = 1
       LEFT JOIN brands ON products.brand_id = brands.id AND brands.deleted_at IS NULL
-      GROUP BY 
+      GROUP BY
         products.id
     ";
     $data = DB::select(DB::raw($sql));
@@ -227,16 +227,16 @@ class ProductStockRepositories{
       SELECT
         products.id,
         products.sku,
-        sum(order_details.qty) as qtyOrder, 
+        sum(order_details.qty) as qtyOrder,
         order_details.product_name as name,
         stocks.qty
       FROM orders
         LEFT JOIN order_details ON orders.id = order_details.order_id AND order_details.deleted_at IS NULL
         LEFT JOIN products ON order_details.product_name = products.name
         LEFT JOIN stocks ON stocks.store_id = " . $storeId . " AND products.id = stocks.product_id
-      WHERE 
+      WHERE
         DATE(orders.order_date) = CURDATE() AND
-        orders.deleted_at IS NULL	
+        orders.deleted_at IS NULL
       GROUP BY order_details.product_name
     ";
 
@@ -245,7 +245,7 @@ class ProductStockRepositories{
 
   public function getProductByCategoryId($storeId, $categoryId){
     $sql = "
-      SELECT 
+      SELECT
         products.id,
         products.sku,
         products.name,
@@ -268,7 +268,7 @@ class ProductStockRepositories{
     $limit = isset($request->size) ? $request->size : 10;
     $order_by = isset($request->order_by) ? $request->order_by : 'products.id';
     $order_method = isset($request->order_method) ? $request->order_method : 'asc';
-    $store = isset($request->store) ? $request->store : 1;
+    $store = isset($request['store']) ? $request['store'] : (isset($request->store) ? $request->store : 1);
     $search = isset($request->search) ? implode(' ', explode('-',$request->search)) : null;
 
     $query = DB::query()->select(

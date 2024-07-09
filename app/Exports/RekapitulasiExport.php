@@ -18,7 +18,7 @@ class RekapitulasiExport implements FromView
     public function view(): View
     {
         return view('admin.export.Excel.rekapitulasi_stok_report', [
-            'datas' => (new ProductStockRepositories)->listingRekapitulasiData(true, $this->store)
+            'datas' => (new ProductStockRepositories)->listingRekapitulasiData(true, ['store' => $this->store])
         ]);
     }
 }
