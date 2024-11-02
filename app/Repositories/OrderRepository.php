@@ -214,7 +214,7 @@ class OrderRepository{
       FROM
         transactions
         LEFT JOIN orders ON transactions.order_id = orders.id
-        LEFT JOIN order_details ON orders.id = order_details.id
+        LEFT JOIN order_details ON orders.id = order_details.order_id
         LEFT JOIN products ON products.name = order_details.product_name
       WHERE 
         transactions.deleted_at IS NULL AND
