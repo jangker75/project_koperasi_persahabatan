@@ -46,6 +46,22 @@
                                                   </tbody>
                                                 </table>
                                               </div>
+                                              {{-- <div class="col-12 my-2">
+                                                <div class="h5 mb-2">Setoran Cash</div>
+                                                <table class="table table-bordered">
+                                                  <thead class="table-primary">
+                                                    <tr>
+                                                      <th>Nama Kasir</th>
+                                                      <th>Total Pendapatan</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody id="transactionStore">
+                                                    <tr>
+                                                      <td colspan="3" align="center">Belum ada transaksi</td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </div> --}}
                                               <div class="col-12 my-2">
                                                 <div class="h5 mb-2">Produk Terjual</div>
                                                 <table class="table table-bordered">
@@ -842,19 +858,23 @@
                     type: "GET",
                     url: "{{ url('api/report-order-today') }}/" + $("#storeId").val(),
                     success: function(response){
-                      if(response.calculate.length > 0 && response.items.length > 0){
-                        transactionReport = response.calculate;
-                        itemReport = response.items;
-  
-                        renderTransactionReport(response.calculate);
-                        renderItemReport(response.items)
-  
-                        amount = calculateTotal(response.calculate, 'amount');
-                        countOrder = calculateTotal(response.calculate, 'totalOrder')
-  
-                        $("#countOrder").html(countOrder)
-                        $("#sumTotalPrice").html(formatRupiah(String(amount), "Rp"))
-                      }
+                        $("#transactionReport").html("");
+                        // $("#transactionStore").html("");
+                        $("#itemReport").html("");
+                        if(response.calculate.length > 0 && response.items.length > 0){
+                            transactionReport = response.calculate;
+                            itemReport = response.items;
+    
+                            renderTransactionReport(response.calculate);
+                            renderItemReport(response.items)
+                            renderTransactionStore(response.byEmployee);
+    
+                            amount = calculateTotal(response.calculate, 'amount');
+                            countOrder = calculateTotal(response.calculate, 'totalOrder')
+    
+                            $("#countOrder").html(countOrder)
+                            $("#sumTotalPrice").html(formatRupiah(String(amount), "Rp"))
+                        }
                     }
                   })
                 })
@@ -955,12 +975,26 @@
               item.forEach(element => {
                 let html  = `
                   <tr>
-                    <td>` + element.name + `</td>
+                    <td>KASIR <b class="fw-bold">` + element.employee + '</b> <i class="text-danger text-uppercase">' + element.name + `</i></td>
                     <td>` + element.totalOrder + `</td>
                     <td>` + formatRupiah(String(parseInt(element.amount)), "Rp")  + `</td>
                   </tr>
                 `;
                 $("#transactionReport").append(html);
+              });
+            }
+
+            function renderTransactionStore(item){
+              $("#transactionStore").html("");
+
+              item.forEach(element => {
+                let html  = `
+                  <tr>
+                    <td>KASIR ` + element.employee + `</td>
+                    <td>` + formatRupiah(String(parseInt(element.amount)), "Rp")  + `</td>
+                  </tr>
+                `;
+                $("#transactionStore").append(html);
               });
             }
 
