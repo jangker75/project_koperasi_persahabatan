@@ -442,12 +442,12 @@ class OrderController extends Controller
     public function reportToday($storeId){
       $calculate = (new OrderRepository)->calculateReportCloseCashier($storeId);
       $itemCalculate = (new OrderRepository)->itemReportCloseCashier($storeId);
+      $calculateEmployee = (new OrderRepository)->calculateReportCloseCashierGroupByEmployee($storeId);      
       
-      // $totalOrder = Transaction::select(DB::raw('COUNT(transactions.id) as total'))
-      //                           ->whereDate('transaction_date', '=', date('Y-m-d'))->get();
       return response()->json([
         'calculate' => $calculate,
-        'items' => $itemCalculate
+        'items' => $itemCalculate,
+        'byEmployee' => $calculateEmployee,
       ],200);
     }
 }

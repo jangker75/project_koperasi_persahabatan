@@ -3,14 +3,21 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header row">
-                    <div>
-                        <span>Download report</span>
+                    <div class="mb-3">
+                        <div>
+                            <span>Download report</span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary fw-bold text-wrap" id="btnDownload">
+                                <i class="fa fa-print me-2"></i>Download Report
+                            </button>
+                            {{-- <button type="button" class="btn btn-primary fw-bold text-wrap" id="btnDownload">
+                                Laporan Produk Keluar
+                            </button> --}}
+                        </div>
                     </div>
-                    <div>
-                        <button type="button" class="btn btn-primary fw-bold text-wrap" id="btnDownload">
-                            <i class="fa fa-print me-2"></i>Download Report
-                        </button>
-                    </div>
+                    
+                    <br>
                     
                     <div class="col-8">
                         <div>

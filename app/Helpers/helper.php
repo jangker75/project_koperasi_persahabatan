@@ -292,3 +292,17 @@ if(!function_exists('convertNumberToStringExcel')) {
         return '="' . $number . '"';
     }
 }
+
+if(!function_exists('groupByKey')){
+    function groupByKey(array $array, string $key): array {
+        $result = [];
+        
+        foreach ($array as $item) {
+            if (array_key_exists($key, $item)) {
+                $result[$item[$key]][] = $item;
+            }
+        }
+        
+        return $result;
+    }
+}

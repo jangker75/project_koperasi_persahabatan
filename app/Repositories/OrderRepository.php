@@ -186,17 +186,51 @@ class OrderRepository{
         payment_methods.name,
         SUM(transactions.amount) as amount,
         COUNT(transactions.id) as totalOrder,
-        SUM(orders.discount) as totalDiscount
+        SUM(orders.discount) as totalDiscount,
+        transactions.requester_employee_id,
+        IF(employees.first_name is null, '-', concat(employees.first_name, ' ', IFNULL(employees.last_name, ''))) as employee
       FROM
         transactions
         LEFT JOIN payment_methods ON transactions.payment_method_id = payment_methods.id
         LEFT JOIN orders ON transactions.order_id = orders.id
+        LEFT JOIN employees ON orders.employee_onduty_id = employees.id
       WHERE 
         transactions.deleted_at IS NULL AND
-        date(transactions.transaction_date) = CURDATE() AND
+        date(orders.order_date) = CURDATE() AND
         orders.store_id = " . $storeId . "
       GROUP BY 
-        transactions.payment_method_id
+        transactions.payment_method_id,
+        orders.employee_onduty_id
+      ORDER BY
+        orders.employee_onduty_id
+    ";
+    
+    $data = DB::select(DB::raw($sql));
+
+    return $data;
+  }
+
+  public function calculateReportCloseCashierGroupByEmployee($storeId){
+    $sql = "
+      SELECT
+        payment_methods.name,
+        SUM(transactions.amount) as amount,
+        COUNT(transactions.id) as totalOrder,
+        SUM(orders.discount) as totalDiscount,
+        transactions.requester_employee_id,
+        IF(employees.first_name is null, '-', concat(employees.first_name, ' ', IFNULL(employees.last_name, ''))) as employee
+      FROM
+        transactions
+        LEFT JOIN payment_methods ON transactions.payment_method_id = payment_methods.id
+        LEFT JOIN orders ON transactions.order_id = orders.id
+        LEFT JOIN employees ON orders.employee_onduty_id = employees.id
+      WHERE 
+        transactions.deleted_at IS NULL AND
+        transactions.payment_method_id = 1 AND
+        date(orders.order_date) = CURDATE() AND
+        orders.store_id = " . $storeId . "
+      GROUP BY 
+        orders.employee_onduty_id
     ";
     
     $data = DB::select(DB::raw($sql));
@@ -210,15 +244,18 @@ class OrderRepository{
         product_name AS productName,
         products.sku AS productSKU,
         SUM(order_details.qty) AS qty,
-        SUM(order_details.subtotal) AS subtotal
+        SUM(order_details.subtotal) AS subtotal,
+        orders.employee_onduty_id employee_id,
+        IF(employees.first_name is null, '-', concat(employees.first_name, ' ', IFNULL(employees.last_name, ''))) as employee
       FROM
         transactions
         LEFT JOIN orders ON transactions.order_id = orders.id
         LEFT JOIN order_details ON orders.id = order_details.order_id
         LEFT JOIN products ON products.name = order_details.product_name
+        LEFT JOIN employees ON orders.employee_onduty_id = employees.id
       WHERE 
         transactions.deleted_at IS NULL AND
-        date(transactions.transaction_date) = CURDATE() AND
+        date(orders.order_date) = CURDATE() AND
         orders.store_id = " . $storeId . "
       GROUP BY 
         order_details.product_name
