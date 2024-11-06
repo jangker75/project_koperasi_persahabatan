@@ -15,6 +15,7 @@
                                     <th>Judul</th>
                                     <th>Tipe</th>
                                     <th>Jumlah Selisih</th>
+                                    <th>Tanggal</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -24,6 +25,7 @@
                                     <td>{{ $stock->title }}</td>
                                     <td>{{ $stock->type }}</td>
                                     <td>{{ $stock->qty }}</td>
+                                    <td>{{ $stock->created_at }}</td>
                                   </tr>
                                 @endforeach
                             </tbody>
