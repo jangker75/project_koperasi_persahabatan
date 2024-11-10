@@ -26,7 +26,7 @@
                         href="{{ route('nasabah.profile.edit', ['employee' => $employee->id]) }}">Edit profile</a>
                     <div class="d-flex">
                       <a class="btn btn-primary btn-sm me-2"
-                            href="{{ route('nasabah.profile.changepassword', ['employee' => $employee->id]) }}">Change Password</a>
+                            href="{{ route('nasabah.profile.changepassword.get', ['employee' => $employee->id]) }}">Change Password</a>
                       {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}
                       <button type="submit" class="btn btn-warning btn-sm">
                           <i class="dropdown-icon fe fe-alert-circle"></i> Sign out

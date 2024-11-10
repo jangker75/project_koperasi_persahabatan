@@ -11,9 +11,9 @@
                             <button type="button" class="btn btn-primary fw-bold text-wrap" id="btnDownload">
                                 <i class="fa fa-print me-2"></i>Download Report
                             </button>
-                            {{-- <button type="button" class="btn btn-primary fw-bold text-wrap" id="btnDownload">
-                                Laporan Produk Keluar
-                            </button> --}}
+                            <a href="{{route('admin.daily-sales-report.index')}}" class="btn btn-primary fw-bold text-wrap">
+                                Laporan Penjualan Harian
+                            </a>
                         </div>
                     </div>
                     

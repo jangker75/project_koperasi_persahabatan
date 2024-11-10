@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-lg-12">
                 {!! Form::open([
-                    'route' => ['nasabah.profile.changepassword'],
+                    'route' => ['nasabah.profile.changepassword.post'],
                     'method' => 'POST',
                     'files' => true,
                 ]) !!}

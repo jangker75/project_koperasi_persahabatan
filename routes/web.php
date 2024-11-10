@@ -74,12 +74,12 @@ Route::group([
     Route::put('edit-profile/{employee}', [ProfileController::class, "update"])->name('profile.update');
     Route::get('profile', [PagesController::class, "profile"])->name('profile');
     Route::get('profile', [PagesController::class, "profile"])->name('profile');
-    Route::get('profile/changepassword', [PagesController::class, "changepassword"])->name('profile.changepassword');
-    Route::post('profile/changepassword', [PagesController::class, "postChangepassword"])->name('profile.changepassword');
+    Route::get('profile/changepassword', [PagesController::class, "changepassword"])->name('profile.changepassword.get');
+    Route::post('profile/changepassword', [PagesController::class, "postChangepassword"])->name('profile.changepassword.post');
     Route::get('riwayat-order', [PagesController::class, "orderHistory"])->name('history-order');
     Route::get('detail-order/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
     Route::get('riwayat-paylater', [PagesController::class, "paylaterHistory"])->name('history-paylater');
-    Route::get('detail-paylater/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-order');
+    Route::get('detail-paylater/{orderCode}', [PagesController::class, "detailOrder"])->name('detail-paylater');
 
     Route::post("calculate-loan-simulation", [LoanSubmissionController::class, "calculateLoanSimulation"])->name("loan-simulation");
     Route::post("download-loan-simulation", [LoanSubmissionController::class, "downloadLoanSimulation"])->name("download-loan-simulation");
@@ -106,6 +106,7 @@ Route::group([
     Route::get('pos/paid-order/{orderCode}', [OrderController::class, 'paid'])->name('order.paid');
     Route::get('pos/history-paylater', [PaylaterController::class, 'index'])->name('paylater.index');
     Route::get('pos/history-paylater/{staffId}', [PaylaterController::class, 'show'])->name('paylater.show');
+    Route::get('pos/daily-sales-report', [OrderController::class, 'dailySalesReport'])->name('daily-sales-report.index');
 
     //toko-online
     Route::get('master-data-status', [MasterDataStatusController::class, 'index'])->name('master-status.index');
