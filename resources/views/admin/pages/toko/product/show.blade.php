@@ -278,15 +278,15 @@
               switch (key) {
                 case "cost":
                   cost = value
-                  profit = cost*margin/(100-margin);
+                  profit = cost*margin/(100);
                   break;
                 case "margin":
                   margin = value
-                  profit = Math.round(cost*margin/(100-margin));
+                  profit = Math.round(cost*margin/(100));
                   break;
                 case "profit":
                   profit = value
-                  if(profit*100/(cost+profit) < limit){
+                  if((profit*100/cost) < limit){
                     swal({
                         title: "Gagal",
                         text: "Harga harus memiliki minimal margin "+limit+"%",
@@ -294,7 +294,7 @@
                     });
                     return false;
                   }else{
-                    margin = Math.ceil(profit*100/(cost+profit));
+                    margin = Math.ceil(profit*100/cost);
                   }
                   break;
               
