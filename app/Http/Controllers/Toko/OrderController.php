@@ -11,6 +11,7 @@ use App\Models\MasterDataStatus;
 use App\Models\Order;
 use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Models\Store;
 use App\Repositories\OrderRepository;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
@@ -215,5 +216,22 @@ class OrderController extends BaseAdminController
       $rtn["totalpaylater"] = (new OrderRepository())->getTotalPayLater($start, $end);
       
       return response()->json($rtn,200);
+    }
+
+    public function dailySalesReport(Request $request){
+      $data['titlePage'] = "Laporan Penjualan Harian";
+      $data['tanggal'] = request("tanggal") ? request("tanggal") : null;
+      $data['storeid'] = request("storeid") ? request("storeid") : 2;
+      $data['result'] = request("tanggal") ? request("tanggal") : null;
+      $data['dropdown_store'] = Store::where('is_warehouse', 0)->get();
+
+      if($data['tanggal']){
+        $data['calculate'] = (new OrderRepository)->calculateReportCloseCashier($data['storeid'], $data['tanggal']);
+        $data['itemCalculate'] = (new OrderRepository)->itemReportCloseCashier($data['storeid'], $data['tanggal']);
+        $data['calculateEmployee'] = (new OrderRepository)->calculateReportCloseCashierGroupByEmployee($data['storeid'], $data['tanggal']); 
+
+      }
+
+      return view('admin.pos.daily-sales', $data);
     }
 }

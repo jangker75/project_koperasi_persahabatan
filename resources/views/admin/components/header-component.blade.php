@@ -118,7 +118,7 @@
                                         </div>
                                     </div>
                                     <div class="dropdown-divider m-0"></div>
-                                    <a class="dropdown-item" href="{{ route('nasabah.profile.changepassword') }}">
+                                    <a class="dropdown-item" href="{{ route('nasabah.profile.changepassword.get') }}">
                                         <i class="dropdown-icon fe fe-user"></i> Profile
                                     </a>
                                     {!! Form::open(['route' => 'admin.logout', 'method' => 'POST']) !!}

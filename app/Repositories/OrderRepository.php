@@ -180,7 +180,9 @@ class OrderRepository{
     return $data;
   }
 
-  public function calculateReportCloseCashier($storeId){
+  public function calculateReportCloseCashier($storeId, $tanggal = null){
+    $where  = ($tanggal ? ('date(orders.order_date) = "' . $tanggal . '" AND ') : 'date(orders.order_date) = CURDATE() AND ');
+
     $sql = "
       SELECT
         payment_methods.name,
@@ -195,9 +197,9 @@ class OrderRepository{
         LEFT JOIN orders ON transactions.order_id = orders.id
         LEFT JOIN employees ON orders.employee_onduty_id = employees.id
       WHERE 
-        transactions.deleted_at IS NULL AND
-        date(orders.order_date) = CURDATE() AND
-        orders.store_id = " . $storeId . "
+        transactions.deleted_at IS NULL AND " .
+        $where .
+        "orders.store_id = " . $storeId . "
       GROUP BY 
         transactions.payment_method_id,
         orders.employee_onduty_id
@@ -210,7 +212,9 @@ class OrderRepository{
     return $data;
   }
 
-  public function calculateReportCloseCashierGroupByEmployee($storeId){
+  public function calculateReportCloseCashierGroupByEmployee($storeId, $tanggal = null){
+    $where  = ($tanggal ? ('date(orders.order_date) = "' . $tanggal . '" AND ') : 'date(orders.order_date) = CURDATE() AND ');
+
     $sql = "
       SELECT
         payment_methods.name,
@@ -226,9 +230,9 @@ class OrderRepository{
         LEFT JOIN employees ON orders.employee_onduty_id = employees.id
       WHERE 
         transactions.deleted_at IS NULL AND
-        transactions.payment_method_id = 1 AND
-        date(orders.order_date) = CURDATE() AND
-        orders.store_id = " . $storeId . "
+        transactions.payment_method_id = 1 AND " .
+        $where .
+        "orders.store_id = " . $storeId . "
       GROUP BY 
         orders.employee_onduty_id
     ";
@@ -238,7 +242,9 @@ class OrderRepository{
     return $data;
   }
 
-  public function itemReportCloseCashier($storeId){
+  public function itemReportCloseCashier($storeId, $tanggal = null){
+    $where  = ($tanggal ? ('date(orders.order_date) = "' . $tanggal . '" AND ') : 'date(orders.order_date) = CURDATE() AND ');
+
     $sql = "
       SELECT
         product_name AS productName,
@@ -254,9 +260,9 @@ class OrderRepository{
         LEFT JOIN products ON products.name = order_details.product_name
         LEFT JOIN employees ON orders.employee_onduty_id = employees.id
       WHERE 
-        transactions.deleted_at IS NULL AND
-        date(orders.order_date) = CURDATE() AND
-        orders.store_id = " . $storeId . "
+        transactions.deleted_at IS NULL AND " .
+        $where .
+        "orders.store_id = " . $storeId . "
       GROUP BY 
         order_details.product_name
     ";
