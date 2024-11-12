@@ -54,6 +54,7 @@ class OrderController extends Controller
         //   'employee_onduty_id' => $request->employeeOndutyId,
         //   'store_id' => $request->storeId
         // ]);
+
         $order = Order::create([
           'status_id' => $status,
           'employee_onduty_id' => $request->employeeOndutyId,
@@ -91,12 +92,14 @@ class OrderController extends Controller
                       ]);
 
           // update history stock
+          
+          $employeeOnduty = Employee::findOrFail( $request->employeeOndutyId)->toArray();
           $history = new HistoryStockService();
           $history->update("order",[
             "productId" => $productInfo[0]->id,
             "qty" => $orderDetail->qty,
             "orderCode" => $order->order_code
-          ]);
+          ], $employeeOnduty);
         }
 
         $order['subtotal'] = $subtotalAll;
@@ -323,12 +326,15 @@ class OrderController extends Controller
                       ]);
 
           // update history stocks
+          
+        $employeeOnduty = Employee::findOrFail( $request->employeeOndutyId)->toArray();
+        // dd($employeeOnduty);
           $history = new HistoryStockService();
           $history->update("rejection",[
             "productId" => $product->id,
             "qty" => $detail->qty,
             "orderCode" => $order->order_code
-          ]);
+          ], $employeeOnduty);
         }
 
         $transaction = $order->transaction;

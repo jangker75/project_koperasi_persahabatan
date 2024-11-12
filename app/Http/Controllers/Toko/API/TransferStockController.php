@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Toko\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransferStock;
+use App\Models\Employee;
 use App\Models\HistoryTransferStock;
 use App\Models\Product;
 use App\Models\Stock;
@@ -157,12 +158,13 @@ class TransferStockController extends Controller
         $stockOrigin->save();
         $destinationOrigin->save();
 
+        $employeeOnduty = Employee::findOrFail($transferStock->req_empl_id)->toArray();
         (new HistoryStockService)->update("transfer", [
           "from" => $transferStock->fromStore->name,
           "destination" => $transferStock->toStore->name,
           "qty" => $item->receive_qty,
           "productId" => $item->product_id
-        ]);
+        ], $employeeOnduty);
 
       }
 

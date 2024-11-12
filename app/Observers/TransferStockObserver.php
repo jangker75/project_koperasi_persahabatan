@@ -19,7 +19,7 @@ class TransferStockObserver
 
     public function created(TransferStock $TransferStock){
       HistoryTransferStock::create([
-        'title' => $TransferStock->Requester->name . " telah membuat ticket transfer stock dengan Kode: ". $TransferStock->transfer_stock_code,
+        'title' => $TransferStock->Requester->name . " telah membuat ticket transfer stock dengan Kode: ". $TransferStock->transfer_stock_code . " | by: " . $TransferStock->Requester->name,
         'status' => 'Create Ticket',
         'transfer_stock_id' => $TransferStock->id
       ]);

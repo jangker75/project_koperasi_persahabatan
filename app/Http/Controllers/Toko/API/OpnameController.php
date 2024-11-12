@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\Opname;
 use App\Models\OpnameDetail;
 use App\Models\Price;
@@ -226,13 +227,14 @@ class OpnameController extends Controller
             throw new ModelNotFoundException('Opname sudah di commit');
           }
 
+          $employeeOnduty = Employee::findOrFail($opname->employee_id)->toArray(); 
           foreach ($opname->detail as $key => $detail) {
             (new HistoryStockService())->update("opname", [
               'type' => $detail->type,
               'opnameCode' => $opname->opname_code,
               'productId' => $detail->product_id,
               'qty' => $detail->quantity
-            ]);
+            ], $employeeOnduty);
 
             $stock = Stock::where('store_id', $opname->store_id)->where('product_id', $detail->product_id)->first();
             if($detail->type == "plus"){
