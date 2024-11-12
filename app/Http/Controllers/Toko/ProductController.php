@@ -241,7 +241,7 @@ class ProductController extends BaseAdminController
         Stock::where('id', $stockId)->update(['qty' => $value]);
 
         $input = [
-          "title" => "Edit Manual Stok produk sku : " . $product->sku . " dari stok " . $stockBefore->qty . " menjadi " . $value,
+          "title" => "Edit Manual Stok produk sku : " . $product->sku . " dari stok " . $stockBefore->qty . " menjadi " . $value . " | by: " . auth()->user()->employee->full_name,
           "product_id" => $productId
         ];
 

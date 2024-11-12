@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toko\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\MasterDataStatus;
 use App\Models\Price;
 use App\Models\ReturnSupplier;
@@ -34,11 +35,12 @@ class ReturnSupplierController extends Controller
         $stock->qty = $stock->qty - (int) $item['qty'];
         $stock->save();
 
+        $employeeOnduty = Employee::findOrFail($returnSupplier->submit_employee_id)->toArray();
         (new HistoryStockService)->update("return", [
           'returnCode' => $returnSupplier->return_supplier_code,
           'productId' => $item['id'],
           'qty' => $stock->qty
-        ]);
+        ], $employeeOnduty);
       }
 
       return response()->json([

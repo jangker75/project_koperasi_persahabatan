@@ -9,26 +9,27 @@ use Illuminate\Support\Facades\Auth;
 
 class HistoryTransferStockService{
 
-  public static function update($status, $transferStockId){
+  public static function update($status, $transferStockId, $user = null){
     $transferStock = TransferStock::find($transferStockId);
+    $userby = ($user ? (" | by: " . $user['first_name'] . " " . $user['last_name']) : (auth()->user() ? (" | by: " . auth()->user()->employee->full_name) : ""));
 
     if($status == "Create Ticket"){
-      $title = Auth::user()->employee->full_name . " telah membuat ticket transfer stock dengan Kode: ". $transferStock->transfer_stock_code;
+      $title = Auth::user()->employee->full_name . " telah membuat ticket transfer stock dengan Kode: ". $transferStock->transfer_stock_code . $userby;
     }
     else if($status == "Approved Ticket"){
-      $title = "Pengajuan sudah disetujui, transfer stock Kode: " . $transferStock->transfer_stock_code;
+      $title = "Pengajuan sudah disetujui, transfer stock Kode: " . $transferStock->transfer_stock_code . $userby;
     }
     else if($status == "Ordering"){
-      $title = Auth::user()->employee->full_name . " telah memulai proses order, transfer stock Kode: " . $transferStock->transfer_stock_code;
+      $title = Auth::user()->employee->full_name . " telah memulai proses order, transfer stock Kode: " . $transferStock->transfer_stock_code . $userby;
     }
     else if($status == "Processing"){
-      $title = "Konfirmasi ketersediaan berhasil, Order sedang disiapkan, transfer stock Kode: " . $transferStock->transfer_stock_code;
+      $title = "Konfirmasi ketersediaan berhasil, Order sedang disiapkan, transfer stock Kode: " . $transferStock->transfer_stock_code . $userby;
     }
     else if($status == "Receive"){
-      $title = "Order Sudah diterima, transfer stock Kode: " . $transferStock->transfer_stock_code;
+      $title = "Order Sudah diterima, transfer stock Kode: " . $transferStock->transfer_stock_code . $userby;
     }
     else if($status == "reject"){
-      $title = "Order Sudah dibatalkan, transfer stock Kode: " . $transferStock->transfer_stock_code;
+      $title = "Order Sudah dibatalkan, transfer stock Kode: " . $transferStock->transfer_stock_code . $userby;
     }
 
     HistoryTransferStock::create([

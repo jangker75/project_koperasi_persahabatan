@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toko\API;
 use App\Http\Controllers\Controller;
 use App\Models\ApplicationSetting;
 use App\Models\DetailOrderSupplier;
+use App\Models\Employee;
 use App\Models\MasterDataStatus;
 use App\Models\OrderSupplier;
 use App\Models\Price;
@@ -148,11 +149,12 @@ class OrderSupplierController extends Controller
               ->where("product_id", $detail->product_id)->first();
           $stock->qty = $stock->qty + $detail->all_quantity_in_units;
           $stock->save();
+          $employeeOnduty = Employee::findOrFail($orderSupplier->req_empl_id)->toArray(); 
           (new HistoryStockService())->update("supply", [
             "orderSupplyCode" => $orderSupplier->order_supplier_code,
             "productId" => $detail->product_id,
             'qty' => $detail->all_quantity_in_units
-          ]);
+          ], $employeeOnduty);
 
           $oldPrice = Price::where('product_id', $item['productId'])
                           ->where('is_active', true)->first();
