@@ -824,6 +824,8 @@
                         dataType: "json",
                         enctype: 'multipart/form-data',
                         success: function (response) {
+                            $('#paymentMethod').val("cash");
+                            $('#paymentMethod').trigger("change");
                             if (response.status) {
                                 swal({
                                     title: "Sukses",
@@ -835,11 +837,15 @@
                             window.open('{{ url("admin/pos/print-receipt" ) }}/' + response
                                 .order
                                 .order_code, '', "width=800,height=400");
+
                             setTimeout(function () {
                                 location.reload();
-                            }, 1000)
+                            }, 500);
                         },
                         error: function (response) {
+                            $('#paymentMethod').val("CASH");
+                            $('#paymentMethod').trigger("change");
+
                             swal({
                                 title: "Gagal",
                                 text: response.responseJSON.message,

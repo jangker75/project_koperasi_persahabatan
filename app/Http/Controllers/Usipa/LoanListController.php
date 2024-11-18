@@ -206,9 +206,23 @@ class LoanListController extends BaseAdminController
         $loans->map(function($item) use(&$data){
             $data[$item->loan_date][] = $item;
         });
-        
+
+        $total = 0;
+        $loan = Loan::query()
+        ->select('remaining_amount', 'contract_type_id')
+        ->where('is_lunas', 0)
+        ->approved()->get();
+        if($type == "uang"){
+            $total = $loan->where('contract_type_id', 1)->sum('remaining_amount');
+        }elseif($type == "barang"){
+            $total = $loan->where('contract_type_id', 2)->sum('remaining_amount');
+        }else{
+            $total = $loan->where('contract_type_id', 3)->sum('remaining_amount');
+        }
+
         $data['loans'] = $data;
         $data['title'] = 'Data Nasabah';
+        $data['total'] = $total;
         $pdf = Pdf::loadView('admin.export.Excel.loan_report', $data)->setPaper('a4', 'landscape');
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();

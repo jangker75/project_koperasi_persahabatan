@@ -71,6 +71,7 @@
             @endforeach
         </tbody>
     </table>
+    <div style="float: right; font-weight: bold; border: 1px solid black; padding: 8px 12px;">Total Akhir : {{format_uang($total)}}</div>
 </body>
 
 </html>
