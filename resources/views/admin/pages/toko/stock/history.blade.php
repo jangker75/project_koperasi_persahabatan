@@ -1,7 +1,7 @@
 <x-admin-layout titlePage="{{ $titlePage }}">
     <div class="row row-sm">
         <div class="col-lg-12">
-            <a href="{{ route('admin.product.show', $historyStock[0]->product_id) }}" class="btn btn-danger mb-4">Kembali</a>
+            <a href="{{ route('admin.product.show', $productId) }}" class="btn btn-danger mb-4">Kembali</a>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <span class="card-title">Table untuk {{ $titlePage }}</span>
@@ -19,15 +19,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($historyStock as $k => $stock)
-                                  <tr>
-                                    <td>{{ $k+1 }}</td>
-                                    <td>{{ $stock->title }}</td>
-                                    <td>{{ $stock->type }}</td>
-                                    <td>{{ $stock->qty }}</td>
-                                    <td>{{ $stock->created_at }}</td>
-                                  </tr>
-                                @endforeach
+                                @if(count($historyStock) > 0)
+                                    @foreach ($historyStock as $k => $stock)
+                                    <tr>
+                                        <td>{{ $k+1 }}</td>
+                                        <td>{{ $stock->title }}</td>
+                                        <td>{{ $stock->type }}</td>
+                                        <td>{{ $stock->qty }}</td>
+                                        <td>{{ $stock->created_at }}</td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="5" align="center">Belum ada history Stok</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>

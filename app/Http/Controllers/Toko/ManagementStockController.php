@@ -231,6 +231,7 @@ class ManagementStockController extends BaseAdminController
 
     public function historyStock($productId){
         $product = Product::find($productId);
+        $data['productId'] = $productId;
         $data['historyStock'] = HistoryStock::where('product_id', $productId)->latest()->get();
         $data['titlePage'] = "Detail History Stok Produk : " .  $product->name;
         return view('admin.pages.toko.stock.history', $data);
