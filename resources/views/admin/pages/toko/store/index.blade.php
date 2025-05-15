@@ -42,7 +42,7 @@
                                                 style="display: none;">
                                             <input type="file" class="dropify mb-4" name="cover" data-bs-height="180"
                                                 data-max-file-size="2M" />
-                                            <button type="submit" class="btn btn-primary w-100">Submit New Data</button>
+                                            <button type="submit" class="btn btn-primary w-100" id="buttonSubmitForm">Submit New Data</button>
                                         </div>
                                     </form>
                                 </div>
@@ -145,8 +145,8 @@
 
             // send store / update
             $("#storeForm").submit(function (e) {
-
                 e.preventDefault();
+                $("#buttonSubmitForm").prop('disabled', true);
                 let name = $(this).find('input').val();
                 let formData = new FormData(this);
 
@@ -177,12 +177,14 @@
                         $("#modalStore").modal('hide')
                     },
                     error: function (response) {
+                        $("#buttonSubmitForm").prop('disabled', false);
                         swal({
                             title: "Failed!",
-                            text: response.message,
-                            type: "failed"
+                            text: 'Gagal menambah toko',
+                            type: "error"
                         });
                         $("#modalStore").modal('hide')
+                
                     }
                 });
 

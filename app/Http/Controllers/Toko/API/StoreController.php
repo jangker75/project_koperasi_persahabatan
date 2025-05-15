@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Toko\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Stock;
 use App\Models\Store;
 use App\Services\DynamicImageService;
 use Doctrine\DBAL\Query\QueryException;
@@ -18,15 +20,15 @@ class StoreController extends Controller
     public function index()
     {
         try {
-          $data['store'] = Store::latest()->get();
-          $data['table']['head'] = ['name', 'description', 'cover'];
-          $data['table']['body'] = Store::latest()->get();
-          $data['table']['editable'] = "1,2,3";
-          return response()->json([
-              'message' => 'Success get data',
-              'data' => $data
-          ], 200);
-          
+            $data['store'] = Store::latest()->get();
+            $data['table']['head'] = ['name', 'description', 'cover'];
+            $data['table']['body'] = Store::latest()->get();
+            $data['table']['editable'] = "1,2,3";
+            return response()->json([
+                'message' => 'Success get data',
+                'data' => $data
+            ], 200);
+        
         } catch (QueryException $e) {
             return response()->json([
                 'message' => 'Failed get data',
@@ -49,11 +51,21 @@ class StoreController extends Controller
 
             // upload image
             if($request->hasFile('cover')){
-              $imgSrvc = new DynamicImageService();
-              $input['image'] = $imgSrvc->upload('cover', $request, 'store', $input['name'])['path'];
+                $imgSrvc = new DynamicImageService();
+                $input['image'] = $imgSrvc->upload('cover', $request, 'store', $input['name'])['path'];
             }
 
             $Store = Store::create($input);
+
+            $allProduct = Product::get();
+            foreach ($allProduct as $key => $product) {
+                Stock::create([
+                    'product_id' => $product->id,
+                    'store_id' => $Store->id,
+                    'qty' => 0
+                ]);
+            }
+
 
             return response()->json([
                 'message' => 'Success storing data',
@@ -110,8 +122,8 @@ class StoreController extends Controller
 
             // upload image
             if($request->hasFile('cover')){
-              $imgSrvc = new DynamicImageService();
-              $input['image'] = $imgSrvc->update('cover', $request, 'store', $input['name'], $Store->cover)['path'];
+                $imgSrvc = new DynamicImageService();
+                $input['image'] = $imgSrvc->update('cover', $request, 'store', $input['name'], $Store->cover)['path'];
             }
 
             $Store->update($input);
