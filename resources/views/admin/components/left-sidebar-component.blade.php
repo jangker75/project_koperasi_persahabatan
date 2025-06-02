@@ -36,9 +36,19 @@
                                     <h3>{{ $menu->name }}</h3>
                                 </li>
                             @elseif($menu->subMenus->count() == 0)
+                                @if($menu->name == 'Checkout Order')
+                                    <x-multi-sidebar text="{{ $menu->name }}" icon="{{ $menu->icon }}"
+                                        link="{{ $menu->url }}">
+                                        @foreach ($stores as $store)
+                                            <x-sub-multi-sidebar link="{{ $menu->url }}?store_code={{ $store->store_code }}" text="{{ $store->name }}">
+                                            </x-sub-multi-sidebar>
+                                        @endforeach
+                                    </x-multi-sidebar>
+                                @else
                                 <x-basic-sidebar link="{{ $menu->url }}" text="{{ $menu->name }}"
                                     icon="{{ $menu->icon }}">
                                 </x-basic-sidebar>
+                                @endif
                             @else
                                 <x-multi-sidebar text="{{ $menu->name }}" icon="{{ $menu->icon }}"
                                     link="{{ $menu->url }}">

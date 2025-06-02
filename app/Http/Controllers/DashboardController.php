@@ -39,9 +39,13 @@ class DashboardController extends BaseAdminController
         return view('admin.pages.dashboard.index', $data);
     }
 
-    public function posCheckout(){
+    public function posCheckout(Request $request){
       $data['titlePage'] = 'Checkout Order';
-      $data['stores'] = Store::where('is_warehouse', false)->get();
+      if($request->has('store_code')){
+        $data['stores'] = Store::where('store_code', $request->store_code)->get();
+      }else{
+        $data['stores'] = Store::where('is_warehouse', false)->get();
+      }
       $data['paymentMethod'] = PaymentMethod::get();
       return view('admin.pos.checkout', $data);
     }
@@ -65,6 +69,7 @@ class DashboardController extends BaseAdminController
     public function printReceipt($orderCode, Request $request){
       // $data['cash'] = $request->cash;
       $data['order'] = Order::where('order_code', $orderCode)->first();
+      $data['store'] = Store::find($data['order']->store_id);
       $records = DB::table('transactions')->select(DB::raw('*'))
                   ->whereRaw('Date(transaction_date) = CURDATE()')->get();
       $data['countBill'] = count($records);
@@ -86,6 +91,7 @@ class DashboardController extends BaseAdminController
 
     public function printStruk($orderCode, Request $request){
       $data['order'] = Order::where('order_code', $orderCode)->first();
+      $data['store'] = Store::find($data['order']->store_id);
       $records = DB::table('transactions')->select(DB::raw('*'))
                   ->whereRaw('Date(transaction_date) = CURDATE()')->get();
       $data['countBill'] = count($records);
