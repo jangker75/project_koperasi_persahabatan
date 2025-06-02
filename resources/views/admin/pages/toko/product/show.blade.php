@@ -63,7 +63,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold">{{ __('product.stock') }}</td>
-                                                <td>{{ $product->stock[count($product->stock) - 1]->qty }}</td>
+                                                <td>{{ $product->totalStock() }}</td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold">{{ __('product.brand') }}</td>

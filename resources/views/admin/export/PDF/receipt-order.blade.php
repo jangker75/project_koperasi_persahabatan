@@ -158,7 +158,7 @@
 <body>
     <div class="ticket">
         <p class="centered">Koperasi Karya Husada
-            <br>RSUP Persahabatan</p>
+            <br>RSUP Persahabatan<br><strong>({{ $store->name }})</strong></p>
         <br><br>
         <table class="table-header">
             <tbody>

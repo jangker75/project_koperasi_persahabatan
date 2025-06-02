@@ -37,4 +37,16 @@ class Product extends Model
     public function activePrice(){
       return $this->price()->where("is_active", "=", "1");
     }
+
+    /**
+     * Get the total stock quantity for the product across all stores.
+     *
+     * @return int
+     */
+    public function totalStock(): int
+    {
+        // Sum the 'quantity' column from all related stock records.
+        // If there are no stock records, sum() will return 0, which is appropriate.
+        return $this->stock()->sum('qty');
+    }
 }

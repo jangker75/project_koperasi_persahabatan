@@ -2,10 +2,12 @@
 
 namespace App\View\Components;
 
+use App\Models\Store;
 use Illuminate\View\Component;
 
 class LeftSidebar extends Component
 {
+    public $stores;
     /**
      * Create a new component instance.
      *
@@ -13,7 +15,7 @@ class LeftSidebar extends Component
      */
     public function __construct()
     {
-        //
+        $this->stores = Store::where('is_warehouse', 0)->get();
     }
 
     /**

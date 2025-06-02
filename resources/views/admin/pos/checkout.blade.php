@@ -551,6 +551,7 @@
                 })
 
                 $("#discount").keyup(function () {
+                    subtotal = countSubtotal(productInCart)
                     if (subtotal - $(this).val() > -1) {
                         discount = $(this).val()
                         total = subtotal - discount
