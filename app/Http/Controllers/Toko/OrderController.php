@@ -189,6 +189,10 @@ class OrderController extends BaseAdminController
               return ($row->is_paylater != null && $row->is_paylater == 1) ?
               "ya" : 'tidak';
           })
+          ->addColumn('store_name', function($row){
+            $btn =  $row->store_name;
+            return $btn;
+          })
           ->addColumn('status', function($row){
             $btn = '<span class="btn btn-sm '. $row->status_order_color_button .'">'. $row->status_order_name .'</span>';
             return $btn;

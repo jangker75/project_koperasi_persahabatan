@@ -23,6 +23,7 @@
             { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false},
             { data: "order_date_txt", name: "order_date" },
             { data: "order_code", name: "order_code" },
+            { data: "store_name", name: "store_name" },
             { data: "total", render: function(data, type, row){
                 return formatRupiah(data)
             }},
@@ -45,7 +46,7 @@
             // { data: "is_delivery", name: 'is_delivery' },
             // { data: "is_paid", name: "is_paid"},
 
-            { data: "qty_item", name: "qty_item" },
+            // { data: "qty_item", name: "qty_item" },
             { data: "status", name: "status" },
             { data: "actions", name: "actions" },
         ],
@@ -110,7 +111,7 @@
             url: "{{ route('get-data-total-header-order') }}",
             data: {
                 startDate : $("#startDate").val(),
-                endDate : $("#endDate").val()
+                endDate : $("#endDate").val(),
             },
             dataType: "jSON",
             success: function (data) {

@@ -370,6 +370,7 @@ class OrderRepository{
       orders.id AS order_id,
         orders.order_date AS order_date,
         orders.order_code AS order_code,
+        stores.name as store_name,
         orders.total AS total,
         orders.subtotal AS subtotal,
         coalesce(CONCAT(coalesce(employees.first_name, ''), ' ', coalesce(employees.last_name, '')), '-') AS requester_name,
@@ -385,6 +386,7 @@ class OrderRepository{
         orders.total AS total,
         orders.note AS note,
         orders.order_date AS order_date,
+        stores.name as store_name,
         
         statusOrder.name AS status_order_name,
         statusOrder.color_button AS status_order_color_button,
@@ -401,7 +403,7 @@ class OrderRepository{
       $leftjoin->on("orders.id", "=", "transactions.order_id")
         ->whereNull("transactions.deleted_at");
     })
-    
+    ->leftJoin("stores", "orders.store_id", "=", "stores.id")
     ->leftJoin("master_data_statuses as statusOrder", "transactions.status_transaction_id", "=", "statusOrder.id")
     ->leftJoin("master_data_statuses as statusPaylater", "transactions.status_paylater_id", "=", "statusPaylater.id")
     
@@ -426,9 +428,9 @@ class OrderRepository{
       $mappOrderIdQty->{$orderIdQty[$i]->order_id} = $orderIdQty[$i]->totalqty;
     }
     for ($i=0; $i < $sql->count(); $i++) { 
-      $sql[$i]->qty_item = $mappOrderIdQty->{$sql[$i]->order_id};
+      // $sql[$i]->qty_item = $mappOrderIdQty->{$sql[$i]->order_id};
     }
-    
+
     return $sql;
   }
 
