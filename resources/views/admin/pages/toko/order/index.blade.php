@@ -54,6 +54,7 @@
                                     <th>NO</th>
                                     <th>TANGGAL</th>
                                     <th>KODE ORDER</th>
+                                    <th>TOKO</th>
                                     <th>TOTAL</th>
                                     
                                     <th>SUB TOTAL</th>
@@ -62,7 +63,7 @@
                                     <th>DELIVERY</th>
                                     <th>LUNAS</th>
 
-                                    <th>PRODUK TERJUAL</th>
+                                    {{-- <th>QTY PRODUK</th> --}}
                                     <th>STATUS</th>
                                     <th>Actions</th>
                                 </tr>
