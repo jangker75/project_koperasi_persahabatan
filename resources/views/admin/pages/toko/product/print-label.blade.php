@@ -173,6 +173,54 @@
                 }
             })
 
+            $('#scanBarcode').bind("enterKey", function (e) {
+                let value = $(this).val()
+                $(this).val(null)
+                if (productInCart.length == 0) {
+                    $('#bodyCart').html("")
+                }
+
+                $("#resultSearchProduct").hide();
+
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('/api/product-by-sku') }}?sku=" + value ,
+                    cache: "false",
+                    datatype: "html",
+                    success: function (response) {
+                        const checker = productInCart.find(element => {
+                            if (element.id == parseInt(response.product.id)) {
+                                swal({
+                                    title: "Gagal",
+                                    text: "Produk Sudah masuk antrian",
+                                    type: "error"
+                                });
+                                return element;
+                            }
+
+                            return false;
+                        });
+
+                        if (checker == undefined) {
+                            let toPush = {
+                                id: parseInt(response.product.id),
+                                title: response.product.title,
+                            }
+                            productInCart.push(toPush)
+                            renderRowCart(toPush)
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        swal({
+                            title: "Gagal",
+                            text: "Produk tidak ditemukan atau stock sedang kosong",
+                            type: "error"
+                        });
+                    }
+                });
+            });
+
             $("body").on('click', '.product-item', function () {
                 let idNumber = $(this).data('id');
                 var removeIndex = productInCart.map(function (item) {
