@@ -236,6 +236,7 @@ class ProductStockRepositories{
         LEFT JOIN stocks ON stocks.store_id = " . $storeId . " AND products.id = stocks.product_id
       WHERE
         DATE(orders.order_date) = CURDATE() AND
+        orders.store_id = " . $storeId . " AND
         orders.deleted_at IS NULL
       GROUP BY order_details.product_name
     ";
