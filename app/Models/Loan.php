@@ -13,7 +13,7 @@ class Loan extends Model
     protected $fillable = [
         'employee_id', 'total_loan_amount', 'remaining_amount',
         'received_amount', 'contract_type_id', 'transaction_number',
-        'loan_date', 'interest_amount', 'interest_amount_type',
+        'loan_date', 'interest_amount', 'interest_amount_yearly', 'interest_amount_type',
         'interest_scheme_type_id', 'profit_company_ratio',
         'profit_employee_ratio', 'total_pay_month', 'pay_per_x_month',
         'first_payment_date', 'notes', 'loan_approval_status_id','is_lunas',

@@ -170,7 +170,7 @@ class ProductStockRepositories{
 
   public function indexStock($storeId = null){
     if($storeId !== null){
-      $whereClause = " AND stocks.store_id = ". $storeId;
+      $whereClause = " AND stocks.store_id = ". $storeId . " AND orders.store_id = " . $storeId;
     }else{
       $whereClause = "";
     }
@@ -191,6 +191,8 @@ class ProductStockRepositories{
         ) AS qtyResult
       FROM stocks
         LEFT JOIN products ON stocks.product_id = products.id AND products.deleted_at IS NULL
+        LEFT JOIN order_details ON order_details.product_name = products.name
+        LEFT JOIN orders ON order_details.order_id = orders.id
       WHERE products.id IS NOT NULL
       " . $whereClause . "
       GROUP BY
@@ -255,8 +257,11 @@ class ProductStockRepositories{
       LEFT JOIN category_has_product ON categories.id = category_has_product.category_id
       LEFT JOIN products ON category_has_product.product_id = products.id
       LEFT JOIN stocks ON products.id = stocks.product_id AND stocks.store_id = " . $storeId . "
+      LEFT JOIN order_details ON order_details.product_name = products.name
+      LEFT JOIN orders ON order_details.order_id = orders.id
       WHERE
         categories.id = " . $categoryId . " AND categories.deleted_at IS NULL
+        AND orders.store_id = " . $storeId . "
       GROUP BY category_has_product.product_id
     ";
 

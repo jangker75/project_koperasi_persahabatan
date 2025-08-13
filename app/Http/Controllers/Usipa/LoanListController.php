@@ -69,6 +69,7 @@ class LoanListController extends BaseAdminController
      */
     public function show(Loan $loan_list, Request $request)
     {
+        // (new LoanService)->runMonthlyPaymentAnuitasCustom();
         if ($request->ajax()) {
             $data['loan'] = $loan_list;
             return view('admin.pages.loan_list.detail_card_loan', $data);
@@ -76,6 +77,14 @@ class LoanListController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Detail Data';
         $data['loan'] = $loan_list;
+        if($loan_list->interest_scheme_type_id == 3){
+            $data['data_this_month'] = (new LoanService)->hitungAngsuranAnuitas(
+                $loan_list->total_loan_amount,
+                $loan_list->interest_amount_yearly,
+                $loan_list->total_pay_month,
+                $loan_list->first_payment_date
+            );
+        }
         return view('admin.pages.loan_list.detail', $data);
     }
 
@@ -142,6 +151,9 @@ class LoanListController extends BaseAdminController
             case 2: //if contract pinjaman barang
                 $pdf = Pdf::loadView('admin.export.PDF.permohonan_kredit_barang', $data);
                 break;
+            case 4: //if contract pinjaman kendaraan
+                $pdf = Pdf::loadView('admin.export.PDF.permohonan_kredit_kendaraan', $data);
+                break;
             
             default:
                 $pdf = Pdf::loadView('admin.export.PDF.permohonan_kredit_barang', $data);
@@ -159,14 +171,14 @@ class LoanListController extends BaseAdminController
         $imgWidth = $imgHeight = 430; 
         
         // Set image opacity 
-        $canvas->set_opacity(.2); 
+        $canvas->set_opacity(0.16); 
         
         // Specify horizontal and vertical position 
         $x = (($w-$imgWidth)/2); 
         $y = (($h-$imgHeight)/2); 
         
         // Add an image to the pdf 
-        $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
+        // $canvas->image($imageURL, $x, $y, $imgWidth, $imgHeight); 
         
         return $pdf->stream('kontrak.pdf');
     }
@@ -243,12 +255,24 @@ class LoanListController extends BaseAdminController
         $data['title'] = 'Form Akad';
         if ($loan->contract_type_id == 1) {
             $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT UNIT SIMPAN PINJAM";
-        }
-        else if ($loan->contract_type_id == 2) {
+        }else if ($loan->contract_type_id == 2) {
             $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT BARANG";
+        }else if ($loan->contract_type_id == 4) {
+            $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT KENDARAAN";
         }else{
             $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT LAINNYA";
         }
+
+        if($loan->interest_scheme_type_id == 3){
+            $data['anuitas'] = (new LoanService)->hitungAngsuranAnuitas(
+                $loan->total_loan_amount,
+                $loan->interest_amount_yearly,
+                $loan->total_pay_month,
+                $loan->first_payment_date
+            );
+        }
+        
+        // return view('admin.export.PDF.form_akad_pinjaman', $data);die;
         $pdf = Pdf::loadView('admin.export.PDF.form_akad_pinjaman', $data);
         return $pdf->stream($data['title'].'.pdf');
     }

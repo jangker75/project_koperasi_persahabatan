@@ -85,10 +85,17 @@
             <p style="text-align: center;">
                 <u style="font-size: 1.1em;"><b>{{ $titleFormAkad }}</b></u>
             </p>
+            @if ($loan->interest_scheme_type_id == 3)
+            <p style="text-align: center; margin-top: -10px;">
+                <b>KOPERASI KARYA HUSADA</b><br>
+                Nomor : __________/Kredit-Kokarda/20_____
+            </p>
+            @else
             <p style="text-align: center; margin-top: -10px;">
                 <b>KOPERASI KARYA HUSADA</b><br>
                 Nomor : __________/Usipa/Kokarda/____/20_____
             </p>
+            @endif
             {{-- <p style="margin-top: 50px; text-align: center; font-weight: 700">
                 Form Akad
             </p> --}}
@@ -115,6 +122,25 @@
         </table>
         <p>Dalam hal ini bertindak atas nama sendiri dan untuk selanjutnya disebut <b>DEBITUR</b></p>
         <table class="content-table">
+            @if ($loan->interest_scheme_type_id == 3)
+
+            <tr>
+                <td>Nama</td>
+                <td class="separator">:</td>
+                <td>Dede Hidayat, SST, Ft SKM</td>
+            </tr>
+            <tr>
+                <td>Jabatan</td>
+                <td class="separator">:</td>
+                <td>Ketua Koperasi</td>
+            </tr>
+            <tr>
+                <td>Alamat</td>
+                <td class="separator">:</td>
+                <td>Griya Bukit Jaya Blok c15/20 Tlajung Udik Gunung Putri</td>
+            </tr>
+            @else
+
             <tr>
                 <td>Nama</td>
                 <td class="separator">:</td>
@@ -130,11 +156,88 @@
                 <td class="separator">:</td>
                 <td>___________________________________________</td>
             </tr>
+            @endif
         </table>
         <p style="text-indent: 50px;">
             Dalam hal ini bertindak atas nama Koperasi Karya Husada (KOKARDA) RSUP Persahabatan yang berwenang mewakili KOKARDA RSUP Persahabatan yang selanjutnya disebut <b>KREDITUR</b>.
         </p>
     </section>
+    @if ($loan->interest_scheme_type_id == 3)
+    <section class="pasal">
+        <p>Kedua belah pihak dengan ini menerangkan bahwa antara KREDITUR dan DEBITUR sepakat dan karenanya saling mengikatkan diri untuk mengadakan perjanjian Pengambilan kredit barang dengan ketentuan dan syarat syarat yang telah disepakati bersama ,sebagai mana diatur dalam pasal pasal sebagai berikut :</p>
+        <p class="pasal-title">Pasal 1</p>
+        <p class="pasal-content">
+            KREDITUR telah memberikan kepada DEBITUR berupa {{ format_uang($loan->total_loan_amount) }} ( {{ terbilang($loan->total_loan_amount) }} ) dan DEBITUR menyatakan mengaku dan menerima barang tersebut.
+        </p>
+        <p class="pasal-title">Pasal 2</p>
+        <p class="pasal-content">
+            DEBITUR harus membayar kepada KREDITUR berupa :<br>
+            <table style="margin-left: 75px;">
+                <tbody>
+                    <tr>
+                        <td>a.</td>
+                        <td>Jasa Pinjaman</td>
+                        <td style="padding: 0 15px">:</td>
+                        <td>Secara Anuitas</td>
+                    </tr>
+                    <tr>
+                        <td>b.</td>
+                        <td>Jaminan Kredit</td>
+                        <td style="padding: 0 15px">:</td>
+                        <td>BPKB</td>
+                    </tr>
+                </tbody>
+            </table>
+        </p>
+        
+        <p class="pasal-title">Pasal 3</p>
+        <p class="pasal-content">
+            Pengambilan barang tersebut diberikan untuk jangka waktu <strong> {{ $loan->total_pay_month }} bulan</strong>, dimulai bulan <strong>{{ \Carbon\Carbon::parse($loan->first_payment_date)->format('m-Y') }} s/d {{ \Carbon\Carbon::parse($loan->last_period)->format("m-Y") }}</strong> dengan cicilan per bulan <strong>{{ format_uang($anuitas['angsuran']) }}</strong> dibayar setiap diterimanya gaji pegawai atau tanggal 1 setiap bulannya.
+        </p>
+        <section class="footer">
+            <div>
+                <p style="text-align: center; margin-bottom: 0px; font-size: 0.8em;">{{ getAppSettingContent('address') }}</p>
+            </div>
+        </section>
+        <footer></footer>
+        <div style="page-break-before: always;"></div>
+        <p class="pasal-title">Pasal 4</p>
+        <p class="pasal-content">
+            Apabila dikemudian hari terjadi PHK/pindah kerja maka seluruh pendapatan pihak kedua berupa Gaji, simpanan  pokok, simpanan wajib, dan simpanan khusus  Koperasi akan menjadi sumber pelunasan pinjaman pihak kedua. Namun apabila tidak mencukupi maka pihak kedua bersedia untuk melunasi tanggung jawab saya tersebut dari sumber lainnya dan akan di tanggung oleh pihak ahli waris saya. (pihak kedua)
+        </p>
+        <p class="pasal-title">Pasal 5</p>
+        <p class="pasal-content">
+            Untuk pemotongan cicilan, setiap bulannya melalui rekening Debitur di Bank Mandiri pada saat :<br>
+            <table style="margin-left: 75px;">
+                <tbody>
+                    <tr>
+                        <td>a.</td>
+                        <td>Waktu penerimaan gaji Debitur</td>
+                    </tr>
+                    <tr>
+                        <td>b.</td>
+                        <td>Waktu penerimaan Remunerasi Debitur</td>
+                    </tr>
+                    <tr>
+                        <td>c.</td>
+                        <td>Waktu Penerimaan lainnya Debitur</td>
+                    </tr>
+                </tbody>
+            </table>
+        </p>
+        <p class="pasal-title">Pasal 6</p>
+        <p class="pasal-content">
+            Jika dana tagihan di dalam saldo tidak mencukupi nilai cicilan, maka pada bulan berikutnya , Kokarda melalui Bank Mandiri akan melakukan pemblokiran rekening Debitur sampai jumlah cicilan terpenuhi dan membebaskan kokarda dari tuntutan hukum atas pemblokiran ini.
+        </p>
+        <p class="pasal-title">Pasal 7</p>
+        <p class="pasal-content">
+            Mengenai perjanjian ini segala akibat hukumnya ,kedua belah pihak memilih domisili hukum yang tetap di kantor panitera pengadilan negri Jakarta timur.
+        </p>
+        <p class="pasal-content">
+            Demikian surat perjanjian ini disetujui dan di tanda tangani.
+        </p>
+    </section>
+    @else
     <section class="pasal">
         <p>
             Kedua belah pihak dengan ini menerangkan bahwa antara KREDITUR dan DEBITUR sepakat dan karenanya yang telah disepakati bersama, sebagaimana diatur dalam pasal pasal berikut:
@@ -196,13 +299,20 @@
             Demikian surat perjanjian ini disetujui dan ditandatangani.
         </p>
     </section>
+    @endif
     <section class="persetujuan" style="margin-top:25px;">
         <div class="row" style="margin-top: 50px">
             <div style="float: left; width: 50%">
                 <p style="font-weight: 800;"><br>
                     KREDITUR<br>Koperasi Karya Husada<br>"KOKARDA" RSUP Persahabatan</p>
                 <p style="text-align: left" class="persetujuan-separator">...............................................</p>
-                <p>Ketua : </p>
+                @if ($loan->interest_scheme_type_id == 3)
+                    
+                <p><strong>Dede Hidayat SSt, Ft, SKM<br>Ketua</strong></p>
+                @else
+                    
+                <p>Ketua :  </p>
+                @endif
             </div>
             <div style="float: right; width: 50%">
                 <p style="text-align: center">Jakarta, {{ format_tanggal($loan->loan_date) }}</p>
