@@ -1,7 +1,54 @@
 <script>
     $(document).ready(function(){
+        // $("#tenor_tahunan").hide();
         $("[name='profit_company_ratio']").val(50)
         $("[name='profit_employee_ratio']").val(50)
+
+        $("#interest_scheme").change(function(){
+            let interest = $(this).find(':selected').text()
+            console.log(interest);
+            if(interest == "Anuitas"){ //anuitas
+                $("#admin_fee_percentage").val(0);
+                $("#admin_fee_percentage").prop('readonly', true);
+                $("#admin_fee").val(0);
+                $("#admin_fee").trigger("keyup");
+                $("#admin_fee").prop('readonly', true);
+                
+                $("#profit_company_ratio").val(100);
+                $("#profit_company_ratio").trigger("keyup");
+                $("#profit_company_ratio").prop('readonly', true);
+
+                $("#interest_amount").prop('readonly', true);
+                $("#interest_amount_yearly").prop('readonly', false);
+
+
+                // $("#tenor_bulanan").hide();
+                $("#total_pay_month").html(`
+                <option value="12">12</option>
+                <option value="24">24</option>
+                <option value="36">36</option>
+                `);
+            }else{
+                $("#admin_fee_percentage").prop('readonly', false);
+                $("#admin_fee").prop('readonly', false);
+                $("#admin_fee").trigger("keyup");
+                $("#profit_company_ratio").val(50);
+                $("#profit_company_ratio").trigger("keyup");
+                $("#profit_company_ratio").prop('readonly', false);
+                $("#interest_amount").prop('readonly', false);
+                $("#interest_amount_yearly").prop('readonly', true);
+
+                $("#total_pay_month").html(`
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                `);
+                // $("#tenor_bulanan").show();
+                // $("#tenor_tahunan").hide();
+            }
+        })
     })
     $("[name='profit_company_ratio']").on('keyup',function(){
         if ($(this).val() > 100) {
@@ -20,7 +67,7 @@
         let interestScheme = $('#interest_scheme').find(':selected').text()
         let totalPayMonth = $('#total_pay_month').find(':selected').text()
         let payPerXMonth = $('#pay_per_x_month').val()
-        let totalInterestAmount = parseInt($('#interest_amount').val())
+        let totalInterestAmount = (interestScheme == "Anuitas" ? (parseFloat($('#interest_amount_yearly').val())/12) : parseFloat($('#interest_amount').val()))
         let profitCompanyRatio = parseInt($("input[name='profit_company_ratio']").val())
         
         let input1 = $("<input>").attr("type", "hidden").attr("name", "firstPaymentDate").val(firstPaymentDate);
@@ -53,7 +100,8 @@
         let interestScheme = $('#interest_scheme').find(':selected').text()
         let totalPayMonth = $('#total_pay_month').find(':selected').text()
         let payPerXMonth = $('#pay_per_x_month').val()
-        let totalInterestAmount = parseInt($('#interest_amount').val())
+        // let totalInterestAmount = parseFloat($('#interest_amount').val())
+        let totalInterestAmount = (interestScheme == "Anuitas" ? (parseFloat($('#interest_amount_yearly').val())/12) : parseFloat($('#interest_amount').val()))
         let profitCompanyRatio = parseInt($("input[name='profit_company_ratio']").val())
 
         $.ajax({
@@ -73,6 +121,9 @@
             dataType: "json",
             success: function (response) {
                 addLoanSimulationToTable(response)
+            },
+            error: function(response){
+                swal("Oops!", "Terjadi kesalahan saat memproses data, mohon koreksi lagi konfigurasi cicilan anda.", "error");
             }
         });
     }

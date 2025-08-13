@@ -85,7 +85,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-4">
+                    {{-- <div class="row mb-4">
                         {!! Form::label('total_loan_amount', __('loan.total_loan_amount'), ['class' => 'col-md-3 form-label required']) !!}
                         <div class="col-md-9">
                             <div class="input-group">
@@ -115,7 +115,7 @@
                             <div class="input-group">
                                 <label class="input-group-text">Rp.</label>
                             {!! Form::text('admin_fee', null, [
-                                'required' => 'required',
+                                // 'required' => 'required',
                                 'id' => 'admin_fee',
                                 'inputmode'=> 'numeric',
                                 'class' =>
@@ -163,7 +163,7 @@
                                 ]) !!}
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     @include('admin.pages.loan_submission.loan_simulation_payment')
                 </div>
                 <div class="card-footer">

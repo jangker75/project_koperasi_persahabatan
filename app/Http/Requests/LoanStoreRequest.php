@@ -34,6 +34,7 @@ class LoanStoreRequest extends FormRequest
             "notes" => "",
             "interest_amount_type" => "required",
             "interest_amount" => "required",
+            "interest_amount_yearly" => "required",
             "profit_company_ratio" => "required",
             "profit_employee_ratio" => "required",
             "interest_scheme_type_id" => "required",

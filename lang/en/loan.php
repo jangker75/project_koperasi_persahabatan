@@ -8,6 +8,7 @@ return [
     'transaction_number' => 'Nomor Kontrak',
     'loan_date' => 'Tanggal Pinjaman',
     'interest_amount' => 'Bunga',
+    'interest_amount_yearly' => 'Suku Bunga / Tahun',
     'status' => 'Status Approved',
     'interest_amount_type' => 'Satuan Bunga',
     'interest_scheme_type_id' => 'Skema perhitungan Bunga',

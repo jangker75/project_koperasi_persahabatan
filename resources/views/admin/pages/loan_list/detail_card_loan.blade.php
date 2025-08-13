@@ -73,11 +73,19 @@
                         <td>{{ __('loan.received_amount') }}</td>
                         <td>{{ format_uang($loan->received_amount) }}</td>
                     </tr>
+                    @if ($loan->interestscheme->name == "Anuitas")
+                    <tr>
+                        <td>{{ __('loan.interest_amount_yearly') }}</td>
+                        <td>{{ $loan->interest_amount_type == 'percentage' ? $loan->interest_amount_yearly . ' %' : format_uang($loan->interest_amount) }}
+                        </td>
+                    </tr>
+                    @else
                     <tr>
                         <td>{{ __('loan.interest_amount') }}</td>
                         <td>{{ $loan->interest_amount_type == 'percentage' ? $loan->interest_amount . ' %' : format_uang($loan->interest_amount) }}
                         </td>
                     </tr>
+                    @endif
                     <tr>
                         <td>{{ __('loan.interest_scheme_type_id') }}</td>
                         <td>{{ $loan->interestscheme->name }}</td>
@@ -90,15 +98,33 @@
                         <td>{{ __('loan.total_pay_month') }}</td>
                         <td>{{ $loan->total_pay_month }} Bulan, Per {{ $loan->pay_per_x_month }} Bulan </td>
                     </tr>
+                    @if ($loan->interestscheme->name == "Anuitas")
+                    <tr>
+                        <td>Pembayaran pokok</td>
+                        <td>{{ format_uang($data_this_month['pokok']) }}</td>
+                    </tr>
+                    @else
                     <tr>
                         <td>Pembayaran pokok</td>
                         <td>{{ format_uang($loan->payment_tenor) }}/Bulan</td>
                     </tr>
+                    @endif
+
                     @if (!$loan->is_lunas)
                         <tr>
-                            <td>Bunga bulan ini</td>
+                            <td>Bunga</td>
+                            @if ($loan->interestscheme->name == "Anuitas")
+                            <td>{{ format_uang($data_this_month['bunga']) }}</td>                                
+                            @else
                             <td>{{ format_uang($loan->actual_interest_amount) }}</td>
+                            @endif
                         </tr>
+                    @endif
+                    @if ($loan->interestscheme->name == "Anuitas")
+                    <tr>
+                        <td>Total Angsuran</td>
+                        <td>{{ format_uang($data_this_month['angsuran']) }}/Bulan</td>
+                    </tr>
                     @endif
                     <tr>
                         <td>{{ __('loan.notes') }}</td>

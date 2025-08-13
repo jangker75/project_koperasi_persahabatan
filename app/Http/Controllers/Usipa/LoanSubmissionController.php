@@ -72,6 +72,9 @@ class LoanSubmissionController extends BaseAdminController
         $data['created_by'] = auth()->user()->employee->id;
         $data['loan_approval_status_id'] = 50;
         $input->received_amount = str_replace(',','',$input->received_amount);
+        if($input->interest_scheme_type_id == 3){
+            $input->interest_amount = floatval($input->interest_amount_yearly/12);
+        }
         Loan::create($input->merge($data)->all());
         
         return redirect()->route('admin.loan-submission.index')->with('success', __('general.notif_add_new_data_success'));
@@ -88,6 +91,14 @@ class LoanSubmissionController extends BaseAdminController
         $data = $this->data;
         $data['titlePage'] = 'Detail Data';
         $data['loan'] = $loan_submission;
+
+        // untuk anuitas
+        $data['data_this_month'] = (new LoanService)->hitungAngsuranAnuitas(
+            $loan_submission->total_loan_amount,
+            $loan_submission->interest_amount_yearly,
+            $loan_submission->total_pay_month,
+            $loan_submission->first_payment_date
+        );
         return view('admin.pages.loan_submission.detail', $data);
     }
 
