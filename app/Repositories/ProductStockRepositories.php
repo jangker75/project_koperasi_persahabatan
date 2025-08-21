@@ -182,7 +182,7 @@ class ProductStockRepositories{
         products.sku AS sku,
         (SELECT GROUP_CONCAT(stores.name)  FROM stores) AS store_name,
         stocks.qty AS qty,
-        GROUP_CONCAT(
+        GROUP_CONCAT(DISTINCT
             JSON_OBJECT(
               'store_id', stocks.store_id,
               'quantity' , stocks.qty
