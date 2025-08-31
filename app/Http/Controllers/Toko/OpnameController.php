@@ -205,7 +205,7 @@ class OpnameController extends Controller
         $category = Category::find($request->categoryId);
         $data['title'] = "Opname berdasarkan Kategori Produk (" . $category->name . ")";
       }elseif ($request->mode == "allProduct") {
-        $data['opname'] = (new ProductStockRepositories())->indexStock($request->storeId);
+        $data['opname'] = (new ProductStockRepositories())->indexStockByStore($request->storeId);
         $data['title'] = "Opname berdasarkan Semua Produk";
       }
       else{

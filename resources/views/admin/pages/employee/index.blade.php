@@ -45,8 +45,51 @@
                 </div>
             </div>
         </div>
+        
+        <div class="modal fade changePasswordModal" id="" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="modalPasswordLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalPasswordLabel">Change Password for <span id="employeeName"></span></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="changePasswordForm" method="POST" action="{{ route('admin.employee.change-password') }}">
+                            @csrf
+                            <input type="hidden" name="employee_id" id="employeeId">
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="text" class="form-control" id="newPassword" name="new_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                <input type="text" class="form-control" id="confirmPassword" name="confirm_password" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" form="changePasswordForm" class="btn btn-primary">Change Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     @slot('script')
         @include('admin.pages.employee.index-script-datatable')
+        <script>
+            $(document).ready(function () {
+
+                // Gunakan delegated event handler pada tabel itu sendiri
+                $('#datatable').on('click', '.changePassword', function() {
+                    var employeeId = $(this).data('employeeid');
+                    var employeeName = $(this).data('employeename');
+                    $('#employeeId').val(employeeId);
+                    $('#employeeName').text(employeeName);
+                });
+            });
+        </script>
     @endslot
 </x-admin-layout>

@@ -104,7 +104,7 @@
                         <tr>
                             <td>Total Pinjaman</td>
                             <td>:</td>
-                            <td>{{ format_uang(str_replace(".","",$data[0]['saldo_hutang'])) }}</td>
+                            <td>{{ format_uang(str_replace(".","",($loan->interest_scheme_type_id == 3 ? $loan->received_amount : $data[0]['saldo_hutang']))) }}</td>
                         </tr>
                         <tr>
                             <td>Simpanan Khusus</td>
