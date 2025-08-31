@@ -211,8 +211,8 @@ class OpnameController extends Controller
       else{
         $data['opname'] = [];
       }
-      return view('admin.export.PDF.opname', $data);
-      // $pdf = Pdf::loadView('admin.export.PDF.opname', $data);
-      // return $pdf->download("opname-". date("YYYY-MM-DD") .".pdf");
+      // return view('admin.export.PDF.opname', $data);
+      $pdf = Pdf::loadView('admin.export.PDF.opname', $data);
+      return $pdf->download("opname-". date("YYYY-MM-DD") .".pdf");
     }
 }
