@@ -205,30 +205,70 @@ class ProductStockRepositories{
   }
 
   public function indexStockByStore($storeId){
-    $sql = "
+    $queryFromOrder = "
       SELECT
-        stocks.product_id AS id,
-        order_details.product_name as product_name,
-        products.name AS name,
-        products.sku AS sku,
-        stores.name AS store_name,
-        stocks.qty AS qty,
-        JSON_OBJECT(
-          'store_id', stocks.store_id,
-          'quantity' , stocks.qty
-        ) AS qtyResult
+        DISTINCT order_details.product_name
       FROM order_details
       LEFT JOIN orders ON order_details.order_id = orders.id
-      LEFT JOIN stores ON orders.store_id = stores.`id`
-      LEFT JOIN products ON order_details.product_name = products.`name`
-      LEFT JOIN stocks ON orders.store_id = stocks.store_id AND products.id = stocks.product_id
       WHERE
         orders.store_id = " . $storeId . " AND
-        products.id IS NOT NULL AND
-        orders.deleted_at IS NULL
-      GROUP BY
-        products.id, products.name, stores.name, stocks.qty
+        orders.deleted_at IS NULL AND
+        order_details.product_name IS NOT NULL  
     ";
+    $productFromHistoryOrder = DB::select(DB::raw($queryFromOrder));
+    $arrayOfArrays = array_map(function ($value) {
+        return $value->product_name;
+    }, $productFromHistoryOrder);
+    
+    $sql = "
+    SELECT
+      products.id,
+      products.name as product_name,
+      products.name,
+      products.sku,
+      stocks.qty AS qty,
+      JSON_OBJECT(
+        'store_id', ". $storeId . ",
+        'quantity' , stocks.qty
+      ) AS qtyResult
+      
+    FROM stocks
+    LEFT JOIN stores ON stocks.store_id = stores.id
+    LEFT JOIN products ON stocks.product_id = products.id
+    WHERE
+      stores.id = " . $storeId . " AND
+      products.id IS NOT NULL AND
+      products.name IN ('" . implode("','", $arrayOfArrays) . "')
+      
+    GROUP BY
+      products.id
+    ";
+    
+    // dd($arrayOfArrays);
+    // $sql = "
+    //   SELECT
+    //     stocks.product_id AS id,
+    //     order_details.product_name as product_name,
+    //     products.name AS name,
+    //     products.sku AS sku,
+    //     stores.name AS store_name,
+    //     stocks.qty AS qty,
+    //     JSON_OBJECT(
+    //       'store_id', stocks.store_id,
+    //       'quantity' , stocks.qty
+    //     ) AS qtyResult
+    //   FROM order_details
+    //   LEFT JOIN orders ON order_details.order_id = orders.id
+    //   LEFT JOIN stores ON orders.store_id = stores.`id`
+    //   LEFT JOIN products ON order_details.product_name = products.`name`
+    //   LEFT JOIN stocks ON orders.store_id = stocks.store_id AND products.id = stocks.product_id
+    //   WHERE
+    //     orders.store_id = " . $storeId . " AND
+    //     products.id IS NOT NULL AND
+    //     orders.deleted_at IS NULL
+    //   GROUP BY
+    //     products.id, products.name, stores.name, stocks.qty
+    // ";
 
     return DB::select(DB::raw($sql));
   }
