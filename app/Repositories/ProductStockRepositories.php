@@ -208,18 +208,15 @@ class ProductStockRepositories{
     $sql = "
       SELECT
         stocks.product_id AS id,
-        order_details.product_name,
-              products.name AS name,
-              products.sku AS sku,
-              stores.name AS store_name,
-              stocks.qty AS qty,
-              GROUP_CONCAT(DISTINCT
-                  JSON_OBJECT(
-                    'store_id', stocks.store_id,
-                    'quantity' , stocks.qty
-                  )
-                SEPARATOR '@'
-              ) AS qtyResult
+        order_details.product_name as product_name,
+        products.name AS name,
+        products.sku AS sku,
+        stores.name AS store_name,
+        stocks.qty AS qty,
+        JSON_OBJECT(
+          'store_id', stocks.store_id,
+          'quantity' , stocks.qty
+        ) AS qtyResult
       FROM order_details
       LEFT JOIN orders ON order_details.order_id = orders.id
       LEFT JOIN stores ON orders.store_id = stores.`id`
@@ -230,7 +227,7 @@ class ProductStockRepositories{
         products.id IS NOT NULL AND
         orders.deleted_at IS NULL
       GROUP BY
-        order_details.product_name
+        products.id, products.name, stores.name, stocks.qty
     ";
 
     return DB::select(DB::raw($sql));
