@@ -213,6 +213,6 @@ class OpnameController extends Controller
       }
       // return view('admin.export.PDF.opname', $data);
       $pdf = Pdf::loadView('admin.export.PDF.opname', $data);
-      return $pdf->download("opname-". date("YYYY-MM-DD") .".pdf");
+      return $pdf->download("opname-". date("Ymd") .".pdf");
     }
 }
