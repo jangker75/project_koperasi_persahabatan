@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Opname;
 use App\Models\OpnameDetail;
 use App\Models\Product;
+use App\Models\Stock;
 use App\Models\Store;
 use App\Repositories\ProductStockRepositories;
 use App\Services\HistoryStockService;
@@ -27,10 +28,21 @@ class OpnameController extends Controller
     public function index()
     {
         $data['titlePage'] = 'Kelola Data Opname Stock';
-        $data['stocks'] = (new ProductStockRepositories())->indexStock();
+        // $data['stocks'] = (new ProductStockRepositories())->indexStock();
         $data['stores'] = Store::get();
         $data['categories'] = Category::latest()->get();
         $data['opnames'] = Opname::latest()->get();
+        // ambil produk yg hanya memiliki stok lebih dari 0
+        $data['products'] = Product::with(['stock' => function($query) {
+            $query->select('product_id', 'store_id', DB::raw('SUM(qty) as qty'))
+                  ->groupBy('product_id', 'store_id');
+        }])->has('stock')->get(); 
+        // $data['products'] = Product::latest()->get();
+        // $data['stocks'] = Stock::latest()->get();
+        // $stock = $data['stocks']->where('store_id', 1)
+        //             ->where('product_id', 5)
+        //             ->first();
+        // dd($stock);
 
         return view('admin.pages.toko.opname.index', $data);
     }
@@ -193,7 +205,7 @@ class OpnameController extends Controller
         $category = Category::find($request->categoryId);
         $data['title'] = "Opname berdasarkan Kategori Produk (" . $category->name . ")";
       }elseif ($request->mode == "allProduct") {
-        $data['opname'] = (new ProductStockRepositories())->indexStock($request->storeId);
+        $data['opname'] = (new ProductStockRepositories())->indexStockByStore($request->storeId);
         $data['title'] = "Opname berdasarkan Semua Produk";
       }
       else{

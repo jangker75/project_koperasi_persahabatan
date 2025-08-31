@@ -204,6 +204,38 @@ class ProductStockRepositories{
     return DB::select(DB::raw($sql));
   }
 
+  public function indexStockByStore($storeId){
+    $sql = "
+      SELECT
+        stocks.product_id AS id,
+        order_details.product_name,
+              products.name AS name,
+              products.sku AS sku,
+              stores.name AS store_name,
+              stocks.qty AS qty,
+              GROUP_CONCAT(DISTINCT
+                  JSON_OBJECT(
+                    'store_id', stocks.store_id,
+                    'quantity' , stocks.qty
+                  )
+                SEPARATOR '@'
+              ) AS qtyResult
+      FROM order_details
+      LEFT JOIN orders ON order_details.order_id = orders.id
+      LEFT JOIN stores ON orders.store_id = stores.`id`
+      LEFT JOIN products ON order_details.product_name = products.`name`
+      LEFT JOIN stocks ON orders.store_id = stocks.store_id AND products.id = stocks.product_id
+      WHERE
+        orders.store_id = " . $storeId . " AND
+        products.id IS NOT NULL AND
+        orders.deleted_at IS NULL
+      GROUP BY
+        order_details.product_name
+    ";
+
+    return DB::select(DB::raw($sql));
+  }
+
   public function indexProduct(){
     $sql = "
       SELECT

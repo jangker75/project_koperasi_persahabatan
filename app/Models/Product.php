@@ -38,6 +38,12 @@ class Product extends Model
       return $this->price()->where("is_active", "=", "1");
     }
 
+    // Get the stock for the product in a specific store.
+    public function stockInStore($storeId)
+    {
+        return $this->stock()->where('store_id', $storeId);
+    }
+
     /**
      * Get the total stock quantity for the product across all stores.
      *

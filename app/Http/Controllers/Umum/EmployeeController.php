@@ -189,6 +189,9 @@ class EmployeeController extends BaseAdminController
                 $btn = '<div class="btn-list align-center d-flex justify-content-center">';
                 $btn = $btn . '<a class="btn btn-sm btn-warning badge" href="' . route("admin.employee.show", [$row]) . '" type="button"><i class="fa fa-eye"></i></a>';
                 $btn = $btn . '<a class="btn btn-sm btn-primary badge" href="' . route("admin.employee.edit", [$row]) . '" type="button"><i class="fa fa-pencil"></i></a>';
+                if(auth()->user()->can('update-employee-password')){
+                    $btn = $btn . '<a class="btn btn-sm btn-info badge changePassword modal-trigger" data-bs-toggle="modal" data-bs-target=".changePasswordModal" data-employeeid="' . $row->id . '" data-employeename="' . $row->first_name . ' ' . $row->last_name . '" href="#" type="button"><i class="fa fa-key"></i></a>';
+                }
                 $btn = $btn . '<a class="btn btn-sm btn-danger badge delete-button" type="button">
                             <i class="fa fa-trash"></i>
                         </a>
@@ -360,6 +363,20 @@ class EmployeeController extends BaseAdminController
             "total_savings_value" => $employee->savings->total_balance
         ];
         return response()->json($result);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $input = $request->validate([
+            "employee_id" => "required",
+            "new_password" => "required|min:6",
+            "confirm_password" => "required|same:new_password",
+        ]);
+        $employee = Employee::findOrFail($input['employee_id']);
+        $employee->user->update([
+            'password' => Hash::make($input['new_password'])
+        ]);
+        return redirect()->route('admin.employee.index')->with('success', __('Password changed successfully'));
     }
     
 }

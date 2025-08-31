@@ -75,29 +75,17 @@
                                     @endforeach
                                 </thead>
                                 <tbody>
-                                    @foreach ($stocks as $stock)
+                                    
+                                    @foreach ($products as $product)
                                     <tr>
-                                        <td>{{ $stock->name }}</td>
-                                        <td>{{ $stock->sku}}</td>
-                                        <?php
-                                          $qtyResult = explode("@", $stock->qtyResult);
-                                          foreach ($qtyResult as $key => $qtyRes) {
-                                            $qtyResult[$key] = json_decode($qtyRes, true);
-                                          }
-                                          
-                                          foreach ($stores as $store) {
-                                            $qty = array_filter($qtyResult, function($result) use ($store){
-                                              return $result['store_id'] == $store->id;
-                                            });
-
-                                            if(count($qty) > 0){
-                                              $qty = array_values($qty)[0];
-                                              echo("<td>".$qty['quantity']."</td>");
-                                            }else{
-                                              echo("<td>0</td>");
-                                            }
-                                          }
-                                        ?>
+                                        <td>{{ $product->name }}</td>
+                                        <td>{{ $product->sku }}</td>
+                                        @foreach ($stores as $store)
+                                            @php
+                                                $stock = $product->stock->where('store_id', $store->id)->first();
+                                            @endphp
+                                            <td>{{ $stock ? $stock->qty : 0 }}</td>
+                                        @endforeach
                                     </tr>
                                     @endforeach
                                 </tbody>

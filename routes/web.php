@@ -158,6 +158,7 @@ Route::group([
     Route::resource('employee', EmployeeController::class);
     Route::get('employee-out', [EmployeeController::class, 'employeeOut'])->name('employee.out');
     Route::post('employee-store', [EmployeeController::class, 'employeeOutStore'])->name('employee.out.store');
+    Route::post('employee-change-password', [EmployeeController::class, 'changePassword'])->name('employee.change-password');
     Route::post('check-status-loan-employee', [EmployeeController::class, 'checkStatusLoanEmployee'])->name('check.status.loan.employee');
     Route::resource('ex-employee', ExEmployeeController::class);
     Route::get('employee-download-card/{employee}', [EmployeeController::class, 'downloadEmployeeCard'])->name('employee.download.card');
