@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductStockRepositories{
 
@@ -217,7 +218,7 @@ class ProductStockRepositories{
     ";
     $productFromHistoryOrder = DB::select(DB::raw($queryFromOrder));
     $arrayOfArrays = array_map(function ($value) {
-        return $value->product_name;
+        return Str::slug($value->product_name);
     }, $productFromHistoryOrder);
     
     $sql = "
@@ -238,7 +239,7 @@ class ProductStockRepositories{
     WHERE
       stores.id = " . $storeId . " AND
       products.id IS NOT NULL AND
-      products.name IN ('" . implode("','", $arrayOfArrays) . "')
+      products.slug IN ('" . implode("','", $arrayOfArrays) . "')
       
     GROUP BY
       products.id

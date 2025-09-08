@@ -210,7 +210,7 @@
     </section>
     <footer></footer> --}}
     <script>
-      // window.print();
+      window.print();
     </script>
 </body>
 
