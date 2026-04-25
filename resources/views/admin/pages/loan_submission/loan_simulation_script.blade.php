@@ -1,8 +1,10 @@
 <script>
     $(document).ready(function(){
         // $("#tenor_tahunan").hide();
-        $("[name='profit_company_ratio']").val(50)
-        $("[name='profit_employee_ratio']").val(50)
+        let defaultMarginCompany = $("#default_margin_company").val();
+        let defaultMarginEmployee = 100 - defaultMarginCompany;
+        $("[name='profit_company_ratio']").val(defaultMarginCompany)
+        $("[name='profit_employee_ratio']").val(defaultMarginEmployee)
 
         $("#interest_scheme").change(function(){
             let interest = $(this).find(':selected').text()
@@ -32,7 +34,8 @@
                 $("#admin_fee_percentage").prop('readonly', false);
                 $("#admin_fee").prop('readonly', false);
                 $("#admin_fee").trigger("keyup");
-                $("#profit_company_ratio").val(50);
+                // $("#profit_company_ratio").val(50);
+                $("#profit_company_ratio").val(defaultMarginCompany);
                 $("#profit_company_ratio").trigger("keyup");
                 $("#profit_company_ratio").prop('readonly', false);
                 $("#interest_amount").prop('readonly', false);

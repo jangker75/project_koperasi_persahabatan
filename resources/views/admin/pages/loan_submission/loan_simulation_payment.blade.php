@@ -60,6 +60,7 @@
     <div class="col-md-3">
         <label>Percent Ratio Koperasi</label>
         <div class="input-group">
+            <input name="default_margin_company" id="default_margin_company" type="hidden" value="{{ $defaultMarginCompany ? $defaultMarginCompany->content : 0 }}">
             <input name="profit_company_ratio" class="form-control" id="profit_company_ratio" inputmode="numeric">
             <label class="input-group-text">%</label>
         </div>

@@ -1,64 +1,135 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Sistem Informasi Koperasi Persahabatan
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web untuk mengelola operasional Koperasi Persahabatan, mencakup manajemen simpan-pinjam, transaksi toko, inventori, dan manajemen anggota.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Manajemen Simpanan**: Kelola simpanan anggota dengan berbagai jenis simpanan
+- **Manajemen Pinjaman**: Proses pengajuan, persetujuan, dan cicilan pinjaman dengan skema bunga
+- **Manajemen Toko**: Point of Sale (POS), inventori, stok, dan supplier
+- **Transaksi**: Pencatatan transaksi lengkap dengan berbagai metode pembayaran
+- **Laporan**: Export laporan ke Excel dan PDF
+- **Manajemen Anggota**: Data karyawan/anggota dan departemen
+- **Role & Permission**: Manajemen hak akses pengguna menggunakan Spatie Permission
+- **Barcode**: Generate dan print label barcode produk
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Persyaratan Sistem
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **PHP**: >= 8.0.2
+- **MySQL/MariaDB**: >= 5.7 / >= 10.3
+- **Composer**: >= 2.0
+- **Node.js**: >= 14.x
+- **NPM**: >= 6.x
 
-## Learning Laravel
+## Teknologi yang Digunakan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Framework**: Laravel 9.x
+- **Frontend**: Vite, Sass, Axios
+- **Authentication**: Laravel Fortify, Laravel Sanctum
+- **Database**: MySQL
+- **Export**: Maatwebsite Excel, DomPDF
+- **Datatables**: Yajra Laravel DataTables
+- **Permission**: Spatie Laravel Permission
+- **Barcode**: Milon Barcode Generator
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalasi
 
-## Laravel Sponsors
+1. **Clone repository**
+   ```bash
+   git clone <repository-url>
+   cd project_koperasi_persahabatan
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+2. **Install dependencies PHP**
+   ```bash
+   composer install
+   ```
 
-### Premium Partners
+3. **Install dependencies Node.js**
+   ```bash
+   npm install
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+4. **Setup environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Contributing
+5. **Konfigurasi database**
+   
+   Edit file `.env` dan sesuaikan konfigurasi database:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=koperasi_persahabatan
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. **Jalankan migration dan seeder**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-## Code of Conduct
+6.1 **Kalo mau jalanin dari hasil backup hosting**
+   ```bash
+   docker compose exec -T db mysql -uroot -psecret db_rs_koperasi < database/{nama_file_backup}.sql
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+7. **Buat symbolic link untuk storage**
+   ```bash
+   php artisan storage:link
+   ```
 
-## Security Vulnerabilities
+8. **Build assets**
+   ```bash
+   npm run build
+   ```
+   
+   Atau untuk development:
+   ```bash
+   npm run dev
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+9. **Jalankan aplikasi**
+   ```bash
+   php artisan serve
+   ```
+   
+   Aplikasi akan berjalan di `http://localhost:8000`
+   
 
-## License
+## Struktur Database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Aplikasi ini mengelola berbagai entitas utama:
+- Users & Employees (Pengguna & Karyawan)
+- Savings & Loans (Simpanan & Pinjaman)
+- Products, Stocks, & Inventory (Produk, Stok, & Inventori)
+- Transactions & Orders (Transaksi & Pesanan)
+- Suppliers & Stores (Supplier & Toko)
+- Payments & Company Balance (Pembayaran & Saldo Koperasi)
+
+## Development
+
+Untuk development dengan hot-reload:
+```bash
+npm run dev
+```
+
+Untuk production build:
+```bash
+npm run build
+```
+
+## Testing
+
+Jalankan test dengan PHPUnit:
+```bash
+php artisan test
+```
+
+## Lisensi
+
+Aplikasi ini menggunakan framework Laravel yang berlisensi [MIT license](https://opensource.org/licenses/MIT).
