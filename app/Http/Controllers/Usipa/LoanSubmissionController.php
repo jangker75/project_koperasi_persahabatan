@@ -9,6 +9,7 @@ use App\Models\ContractType;
 use App\Models\Employee;
 use App\Models\InterestSchemeType;
 use App\Models\Loan;
+use App\Models\ApplicationSetting;
 use App\Repositories\EmployeeRepository;
 use App\Services\CodeService;
 use App\Services\CompanyService;
@@ -27,6 +28,7 @@ class LoanSubmissionController extends BaseAdminController
         parent::__construct();
         $this->data['isadd'] = false;
         $this->data['currentIndex'] = route('admin.loan-submission.index');
+        $this->data['defaultMarginCompany'] = ApplicationSetting::where("name", "percentage_company_tax")->first();
     }
     /**
      * Display a listing of the resource.
