@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -8,6 +6,8 @@ services:
     container_name: koperasi_app
     restart: unless-stopped
     working_dir: /var/www
+    env_file:
+      - .env
     volumes:
       - .:/var/www
       - ./storage:/var/www/storage
@@ -18,7 +18,7 @@ services:
       - redis
 
   webserver:
-    image: nginx:alpine
+    image: nginx:1.24-alpine
     container_name: koperasi_nginx
     restart: unless-stopped
     ports:
@@ -32,32 +32,41 @@ services:
       - app
 
   db:
-    image: mysql:8.0
+    image: mysql:8.0.36
     container_name: koperasi_db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: db_rs_koperasi
       MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_HOST: '%'
       MYSQL_PASSWORD: secret
       MYSQL_USER: koperasi
     ports:
       - "3307:3306"
     volumes:
-      - koperasi_db_data:/var/lib/mysql
+      - ./koperasi/mysql:/var/lib/mysql
+      - ./docker/databases/01-init-database.sql:/docker-entrypoint-initdb.d/01-init-database.sql
     networks:
       - koperasi_network
 
   redis:
-    image: redis:alpine
+    image: redis:7.2-alpine
     container_name: koperasi_redis
     restart: unless-stopped
+    command: redis-server --maxmemory 1gb --maxmemory-policy allkeys-lru
     ports:
-      - "6379:6379"
+      - "6377:6379"
+    volumes:
+      - ./koperasi/redis:/data
     networks:
       - koperasi_network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
   mailhog:
-    image: mailhog/mailhog:latest
+    image: mailhog/mailhog:v1.0.1
     container_name: koperasi_mailhog
     restart: unless-stopped
     ports:
@@ -69,7 +78,3 @@ services:
 networks:
   koperasi_network:
     driver: bridge
-
-volumes:
-  koperasi_db_data:
-    driver: local
