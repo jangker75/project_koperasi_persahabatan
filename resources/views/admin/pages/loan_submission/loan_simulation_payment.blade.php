@@ -42,7 +42,6 @@
     </div>
     <div class="col-md-3 mb-2">
             {!! Form::text('interest_amount_yearly', 0, [
-                'required' => 'required',
                 'id' => 'interest_amount_yearly',
                 'inputmode'=> 'numeric',
                 'readonly' => true,
@@ -52,7 +51,7 @@
                     (!$errors->has('interest_amount_yearly') && old('interest_amount_yearly') ? ' is-valid' : ''),
                 'placeholder' => 'Input ' . __('loan.interest_amount_yearly'),
             ]) !!}
-            <small>* Suku Bunga per Tahun</small>
+            <small>* Suku Bunga per Tahun (Wajib untuk Anuitas)</small>
     </div>
 </div>
 <div class="row mb-4">

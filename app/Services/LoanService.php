@@ -447,7 +447,7 @@ class LoanService
 
     public function hitungAngsuranAnuitas($pinjaman, $bungaTahunan, $tenor, $tanggalPeminjaman, $tanggalSekarang = null) {
         $bungaBulanan = $bungaTahunan / 12 / 100;
-        $angsuranBulanan = $pinjaman * $bungaBulanan / (1 - pow(1 + $bungaBulanan, -$tenor));
+        $angsuranBulanan = $pinjaman * $bungaBulanan / (1 - pow(1 + $bungaBulanan, - $tenor));
 
         $awal = Carbon::parse($tanggalPeminjaman);
         $sekarang = ($tanggalSekarang ? Carbon::parse($tanggalSekarang) : Carbon::now());

@@ -34,12 +34,25 @@ class LoanStoreRequest extends FormRequest
             "notes" => "",
             "interest_amount_type" => "required",
             "interest_amount" => "required",
-            "interest_amount_yearly" => "required",
+            "interest_amount_yearly" => "required_if:interest_scheme_type_id,3|nullable|numeric|gt:0",
             "profit_company_ratio" => "required",
             "profit_employee_ratio" => "required",
             "interest_scheme_type_id" => "required",
             "total_pay_month" => "required",
             "pay_per_x_month" => "required",
+        ];
+    }
+
+    /**
+     * Get custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages()
+    {
+        return [
+            "interest_amount_yearly.required_if" => "Suku Bunga / Tahun wajib diisi untuk skema perhitungan Anuitas.",
+            "interest_amount_yearly.gt" => "Suku Bunga / Tahun harus lebih besar dari 0 untuk skema perhitungan Anuitas.",
         ];
     }
 }

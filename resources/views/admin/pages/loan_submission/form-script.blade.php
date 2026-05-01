@@ -77,4 +77,17 @@
             $('#interest_scheme').attr('disabled', false)
         }
     })
+
+    // Validasi form sebelum submit
+    $('form').on('submit', function(e) {
+        let interestScheme = $('#interest_scheme').find(':selected').text();
+        let interestAmountYearly = parseFloat($('#interest_amount_yearly').val());
+        
+        if (interestScheme == "Anuitas" && (!interestAmountYearly || interestAmountYearly <= 0)) {
+            e.preventDefault();
+            swal("Perhatian!", "Suku Bunga / Tahun wajib diisi dan harus lebih besar dari 0 untuk skema perhitungan Anuitas.", "warning");
+            $('#interest_amount_yearly').focus();
+            return false;
+        }
+    });
 </script>

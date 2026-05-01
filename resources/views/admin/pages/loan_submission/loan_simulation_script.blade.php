@@ -22,6 +22,7 @@
 
                 $("#interest_amount").prop('readonly', true);
                 $("#interest_amount_yearly").prop('readonly', false);
+                $("#interest_amount_yearly").prop('required', true);
 
 
                 // $("#tenor_bulanan").hide();
@@ -40,6 +41,8 @@
                 $("#profit_company_ratio").prop('readonly', false);
                 $("#interest_amount").prop('readonly', false);
                 $("#interest_amount_yearly").prop('readonly', true);
+                $("#interest_amount_yearly").prop('required', false);
+                $("#interest_amount_yearly").val(0);
 
                 $("#total_pay_month").html(`
                     <option value="5">5</option>
