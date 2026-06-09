@@ -27,7 +27,10 @@
 
                 // $("#tenor_bulanan").hide();
                 $("#total_pay_month").html(`
+                <option value="10">10</option>
                 <option value="12">12</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
                 <option value="24">24</option>
                 <option value="36">36</option>
                 `);
