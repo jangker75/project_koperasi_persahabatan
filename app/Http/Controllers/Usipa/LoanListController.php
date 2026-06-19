@@ -35,6 +35,7 @@ class LoanListController extends BaseAdminController
         $data['totalPinjaman'] = [
             "Total Pinjaman Uang" => $loan->where('contract_type_id', 1)->sum('remaining_amount'),
             "Total Pinjaman Barang" => $loan->where('contract_type_id', 2)->sum('remaining_amount'),
+            "Total Kredit Anuitas" => $loan->where('contract_type_id', 4)->sum('remaining_amount'),
             "Total Pinjaman Lainnya" => $loan->where('contract_type_id', 3)->sum('remaining_amount')
         ];
         return view('admin.pages.loan_list.index', $data);
@@ -207,6 +208,7 @@ class LoanListController extends BaseAdminController
         $contractTypelist = [
             "uang" => 1,
             "barang" => 2,
+            "anuitas" => 4,
             "lainnya" => 3,
         ];
         $loans = Loan::with('employee')->where('is_lunas', 0)->approved()
@@ -228,6 +230,8 @@ class LoanListController extends BaseAdminController
             $total = $loan->where('contract_type_id', 1)->sum('remaining_amount');
         }elseif($type == "barang"){
             $total = $loan->where('contract_type_id', 2)->sum('remaining_amount');
+        }elseif($type == "anuitas"){
+            $total = $loan->where('contract_type_id', 4)->sum('remaining_amount');
         }else{
             $total = $loan->where('contract_type_id', 3)->sum('remaining_amount');
         }
@@ -258,7 +262,7 @@ class LoanListController extends BaseAdminController
         }else if ($loan->contract_type_id == 2) {
             $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT BARANG";
         }else if ($loan->contract_type_id == 4) {
-            $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT KENDARAAN";
+            $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT ANUITAS";
         }else{
             $data['titleFormAkad'] = "SURAT PERJANJIAN KREDIT LAINNYA";
         }
