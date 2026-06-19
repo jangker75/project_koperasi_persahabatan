@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header row">
                     @foreach ($totalPinjaman as $key => $item)
-                        <div class="col-4">
+                        <div class="col-3">
                             <div class="card" style="background-color: rgb(214, 211, 211)">
                                 <div class="row">
                                     <div class="col-4 align-items-center">
@@ -37,6 +37,7 @@
                             <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'all']) }}">All</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'uang']) }}">Pinjaman Uang</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'barang']) }}">Pinjaman Barang</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'anuitas']) }}">Pinjaman Kredit Anuitas</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'lainnya']) }}">Pinjaman Lainnya</a>
                         </div>
                     </div>
