@@ -38,7 +38,7 @@
                             <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'uang']) }}">Pinjaman Uang</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'barang']) }}">Pinjaman Barang</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'anuitas']) }}">Pinjaman Kredit Anuitas</a>
-                            <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'lainnya']) }}">Pinjaman Lainnya</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('admin.download.loan.report', ['type' => 'lainnya']) }}">Pinjaman Uang Anuitas</a>
                         </div>
                     </div>
                     <div>

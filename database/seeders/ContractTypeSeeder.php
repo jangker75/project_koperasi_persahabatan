@@ -25,7 +25,7 @@ class ContractTypeSeeder extends Seeder
                 'contract_type_code' => 'P002',
             ],
             [
-                'name' => 'Pinjaman Lainnya',
+                'name' => 'Pinjaman Uang Anuitas',
                 'contract_type_code' => 'P099',
             ],
         ];
