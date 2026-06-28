@@ -41,7 +41,7 @@
     </div>
     @if (Request::segment(1) == null || Request::segment(1) == 'product')
 
-    <div class="p-2 w-100 mt-2">
+    <!-- <div class="p-2 w-100 mt-2">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Cari Produk.." aria-label="Cari Produk.."
                 aria-describedby="basic-addon2" id="inputSearchProduct" autocomplete="off">
@@ -52,7 +52,7 @@
               
             </div>
         </div>
-    </div>
+    </div> -->
     @endif
 </nav>
 
