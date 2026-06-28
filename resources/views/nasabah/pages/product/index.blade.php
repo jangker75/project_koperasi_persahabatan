@@ -8,6 +8,18 @@
         <option value="{{ $store->id }}">{{ $store->name }}</option>
         @endforeach
     </select>
+    <div class="mt-1 w-100">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Cari Produk.." aria-label="Cari Produk.."
+                aria-describedby="basic-addon2" id="inputSearchProduct" autocomplete="off">
+            <span class="input-group-text" id="basic-addon2"><i class="fe fe-search"></i></span>
+        </div>
+        <div class="position-relative">
+            <div class="card position-absolute border border-primary mt-3" id="resultSearchProduct" style="min-height: 12vh; z-index:99; display:none;" id="bodyResultSearchProduct">
+                
+            </div>
+        </div>
+    </div>
 </section>
 <section class="col-12 p-0 px-2 mb-5">
     <div class="row">

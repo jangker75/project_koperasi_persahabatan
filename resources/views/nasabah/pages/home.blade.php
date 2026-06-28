@@ -48,7 +48,7 @@
       
     </div>
     @endif
-    <div class="row p-2">
+    <!-- <div class="row p-2">
         <div class="col-6 mb-3">
             <a href="{{ route('nasabah.loan-submission.index') }}" style="text-decoration: none;color: inherit;">
                 <div class="card shadow py-5">
@@ -73,7 +73,7 @@
                 </div>
             </a>
         </div>
-    </div>
+    </div> -->
 </section>
 
 <section class="col-12">
@@ -81,13 +81,25 @@
         <div class="col-12">
             <div class="row">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="h4 fw-bold">List Produk Toko : </h4>
+                    <h4 class="h4 fw-bold">Pilih Toko : </h4>
                     <div class="form-group">
                         <select class="form-select" name="store_id" id="storeId">
                             @foreach ($stores as $store)
                             <option value="{{ $store->id }}">{{ $store->name }}</option>
                             @endforeach
                         </select>
+                    </div>
+                </div>
+                <div class="p-2 w-100">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Cari Produk.." aria-label="Cari Produk.."
+                            aria-describedby="basic-addon2" id="inputSearchProduct" autocomplete="off">
+                        <span class="input-group-text" id="basic-addon2"><i class="fe fe-search"></i></span>
+                    </div>
+                    <div class="position-relative">
+                        <div class="card position-absolute border border-primary mt-3" id="resultSearchProduct" style="min-height: 12vh; z-index:99; display:none;" id="bodyResultSearchProduct">
+                            
+                        </div>
                     </div>
                 </div>
                 <div class="col-12">

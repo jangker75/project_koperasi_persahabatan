@@ -33,7 +33,9 @@
                 <option value="15">15</option>
                 <option value="20">20</option>
                 <option value="24">24</option>
+                <option value="30">30</option>
                 <option value="36">36</option>
+                <option value="40">40</option>
                 `);
             }else{
                 $("#admin_fee_percentage").prop('readonly', false);
