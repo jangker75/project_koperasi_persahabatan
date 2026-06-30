@@ -183,6 +183,9 @@ class OrderRepository{
   public function calculateReportCloseCashier($storeId, $tanggal = null){
     $where  = ($tanggal ? ('date(orders.order_date) = "' . $tanggal . '" AND ') : 'date(orders.order_date) = CURDATE() AND ');
 
+    $where .= "transactions.payment_method_id IS NOT NULL AND ";
+    $where .= "orders.status_id = 6 AND ";
+
     $sql = "
       SELECT
         payment_methods.name,
@@ -215,6 +218,9 @@ class OrderRepository{
   public function calculateReportCloseCashierGroupByEmployee($storeId, $tanggal = null){
     $where  = ($tanggal ? ('date(orders.order_date) = "' . $tanggal . '" AND ') : 'date(orders.order_date) = CURDATE() AND ');
 
+    $where .= "transactions.payment_method_id IS NOT NULL AND ";
+    $where .= "orders.status_id = 6 AND ";
+
     $sql = "
       SELECT
         payment_methods.name,
@@ -244,6 +250,9 @@ class OrderRepository{
 
   public function itemReportCloseCashier($storeId, $tanggal = null){
     $where  = ($tanggal ? ('date(orders.order_date) = "' . $tanggal . '" AND ') : 'date(orders.order_date) = CURDATE() AND ');
+
+    $where .= "transactions.payment_method_id IS NOT NULL AND ";
+    $where .= "orders.status_id = 6 AND ";
 
     $sql = "
       SELECT

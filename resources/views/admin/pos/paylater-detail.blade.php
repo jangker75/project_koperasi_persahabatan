@@ -251,7 +251,7 @@
 
                 $('#paymentMethod').change(function () {
 
-                    if ($(this).val() == 'cash') {
+                    if ($(this).val() == 'cash' || $(this).val() == 'CASH') {
                         $('#paymentCode').hide()
                         $('#cash').show()
                     } else {
@@ -334,7 +334,7 @@
                         item: detail
                     }
 
-                    if ($('#paymentMethod').val() == 'cash') {
+                    if ($('#paymentMethod').val() == 'cash' || $('#paymentMethod').val() == 'CASH') {
                         setCash = parseInt(cash.split(".").join(''));
                         if (setCash < total) {
                             swal({
