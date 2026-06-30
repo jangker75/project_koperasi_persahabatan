@@ -46,7 +46,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 py-2">
+        <!-- detail saldo -->
+        <!-- <div class="col-12 py-2">
             <div class="card bg-primary-gradient text-white m-0">
                 <div class="card-body">
                     <div class="h4 fw-bold">Detail Saldo {{ $employee->full_name }}</div>
@@ -94,7 +95,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+        <!-- detail saldo -->
         <div class="col-12">
             <div class="border bg-danger-transparent p-3 mb-2" style="border-radius: 8px;">
                 <span class="h5 text-danger m-0">Total Tagihan Paylater : {{ format_uang($totalPaylater) }}</span>
