@@ -391,12 +391,14 @@ class OrderController extends Controller
 
         if($transaction->is_paylater == 0){
           if(!$request->paymentMethod){
+            DB::rollBack();
             throw new ModelNotFoundException('User belum menginput metode Pembayaran');
           }
-          if($request->paymentMethod !== "cash"){
+          if(strtolower($request->paymentMethod) !== "cash"){
             $paymentMethod = PaymentMethod::where('name', $request->paymentMethod)->first();
   
-            if($request->paymentCode == "" || !$request->paymentCode){
+            if(($request->paymentCode == "" || !$request->paymentCode) && strtolower($request->paymentMethod) !== "cash"){
+              DB::rollBack();
               throw new ModelNotFoundException('User belum menginput Kode Pembayaran');
             }
             $transaction->payment_method_id = $paymentMethod->id;
@@ -405,8 +407,9 @@ class OrderController extends Controller
             $transaction->cash = $order->total;
             $transaction->change = 0;
           }else{
-            $transaction->cash = $request->cash;
-            $transaction->change = $request->cash - $order->total;
+            $cash = implode("", explode(".", $request->cash));
+            $transaction->cash = $cash;
+            $transaction->change = $cash - $order->total;
           }
           (new CompanyService())->addCreditBalance($transaction->amount, 'store_balance', $request->paymentMethod);
         }
@@ -455,5 +458,15 @@ class OrderController extends Controller
         'items' => $itemCalculate,
         'byEmployee' => $calculateEmployee,
       ],200);
+    }
+
+    public function requestOrderByStore($storeId){
+      $orders = Order::with('status', 'detail', 'transaction.requester')
+        ->where('store_id', $storeId)
+        ->whereHas('status', function($query){
+          $query->where('name', 'waiting');
+        })
+        ->get();
+      return response()->json($orders, 200);
     }
 }

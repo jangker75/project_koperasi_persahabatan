@@ -88,7 +88,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8">
+                        
+                        <div class="col-6">
                             <select class="form-select w-100 form-select-sm" aria-label="Default select example"
                                 name="store_id" id="storeId">
                                 @foreach ($stores as $store)
