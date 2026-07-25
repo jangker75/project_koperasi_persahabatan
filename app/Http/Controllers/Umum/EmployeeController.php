@@ -153,7 +153,9 @@ class EmployeeController extends BaseAdminController
         $imageService = (new DynamicImageService());
         //Save Image if there is update
         if ($request->hasFile('profile_image')) {
-            $imageService->delete($employee->user->profile_image);
+            if($employee->user->profile_image){
+                $imageService->delete($employee->user->profile_image);
+            }
             $data['profile_image'] = $imageService->uploadImage($request->file('profile_image'), config('constant.USER_IMAGE_PATH'));
             $employee->user->update($data);
          }
