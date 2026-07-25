@@ -77,8 +77,17 @@ class DynamicImageService
     public function delete($pathbefore)
     {
         try {
-            $exists = Storage::disk('public')->exists($pathbefore);
-            if($exists){
+            // $exists = Storage::disk('public')->exists($pathbefore);
+            // if($exists){
+            //     Storage::disk('public')->delete($pathbefore);
+            // }
+            // Tambahkan pengecekan if(!$path) atau if(empty($path))
+            if (! $pathbefore || empty($pathbefore)) {
+                return false; // Atau beri return response sesuai kebutuhan kamu
+            }
+
+            // Kode eksisting kamu (misal):
+            if (Storage::disk('public')->exists($pathbefore)) {
                 Storage::disk('public')->delete($pathbefore);
             }
             return true;
